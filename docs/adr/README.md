@@ -19,6 +19,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0011](0011-color-generation-and-contrast.md) | Colour generation in OKLCH and contrast maths | Accepted |
 | [0012](0012-pnpm-11.md) | Package manager: pnpm 11 | Accepted |
 | [0013](0013-vitest-4-now-5-later.md) | Vitest 4 now, Vitest 5 after Angular 22.2 | Accepted |
+| [0014](0014-browser-floor-follows-angular.md) | Browser floor follows Angular's supported set | Proposed |
 
 ## Template
 

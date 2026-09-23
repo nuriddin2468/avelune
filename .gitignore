@@ -14,7 +14,7 @@ storybook-static/
 .eslintcache
 .stylelintcache
 
-# Test output
+# Test output and browser-automation artefacts
 coverage/
 test-results/
 playwright-report/
@@ -33,3 +33,4 @@ playwright-report/
 
 # Agent tooling: per-user settings stay local
 .claude/settings.local.json
+.playwright-mcp/

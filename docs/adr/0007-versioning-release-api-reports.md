@@ -28,3 +28,19 @@ Consumers must be able to upgrade safely. Every public API change must be visibl
 
 - The API-report diff is a required review item in the merge-request template.
 - Deprecations follow the policy in ROADMAP.md: `@deprecated` with a replacement, one dev-mode warning, removal only in the next major, always with a migration.
+
+## Phase 1 spike result (2026-09-23)
+
+**The primary path holds; the fallback is not needed.** API Extractor 7.59.1 (bundled TypeScript 5.9.3) analyses the `.d.ts` that ng-packagr 22.1.1 emits with TypeScript 6.0.3 without parse errors. It prints a notice that the project uses a newer TypeScript; that notice is expected until rushstack PR #5841 ships.
+
+Implementation: `packages/ui/scripts/api-report.mjs`, Nx target `ui:api-report` (depends on `build`). One report per entry point in `packages/ui/api/<specifier>.api.md`; `--update` rewrites them locally, the default mode fails when a report differs. All compiler, extractor and TSDoc messages are errors, with one exception below. Both failure modes were proven: an export without a release tag, and a tagged export whose report was not updated.
+
+Findings that shape the implementation:
+
+1. **Cross-entry-point imports.** Inside the package, `import … from '@avelune/ui/sample'` resolves as a TypeScript self-reference, which API Extractor treats as local, so every shared type became `ae-forgotten-export`. The script analyses a copy of each `.d.ts` outside the package and places the package under `node_modules/`, so those imports are external, as they are for consumers.
+2. **Release tags are required** (`ae-missing-release-tag`). `@experimental` is not an API Extractor release tag. The component statuses in ROADMAP.md map to release tags: experimental → `@alpha`, beta → `@beta`, stable → `@public`; `@internal` for anything not meant for consumers.
+3. **`ae-undocumented` is off.** Angular writes undocumented static members (`ɵfac`, `ɵdir`, `ɵcmp`) into every `.d.ts`. JSDoc coverage of public inputs and outputs is enforced by ESLint on the sources in Phase 3 instead. The `ɵdir`/`ɵcmp` lines stay in the reports on purpose: they show the selector, input aliases, `required` flags and outputs, so a change to any of them is visible in review.
+4. **`{@link}` with an import path** (`@avelune/ui/sample#AveSample`) is not supported by API Extractor's TSDoc resolver. Refer to other entry points in prose.
+5. **ES2024 lib.** The analysis tsconfig uses `lib: ES2024` because TypeScript 5.9 does not know ES2025, as the context above anticipated.
+
+CI wiring (merge-request diff, stage order) is Phase 3.

@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 0 complete and approved (2026-09-23). Next: Phase 1, first item. Start it in a fresh session.
+**Current position:** Phase 1 done except the agent-tooling install, which waits for the product owner's permission (2026-09-23). ADR 0014 (browser floor) is Proposed and waits for the product owner. Next: Phase 2, first item.
 
 ## Parameters
 
@@ -41,13 +41,14 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 - [x] Product-owner go-ahead; ADRs set to Accepted (2026-09-23)
 
 ### Phase 1: Workspace
-- [ ] `git init`; Nx 23.2.1 + pnpm 11.27.1 workspace; verify `nx graph`, `affected` and pruning (ADR 0012)
-- [ ] Layout per brief §3; Nx layer tags + `@nx/enforce-module-boundaries`
-- [ ] `@avelune/ui` library with a sample entry point + `testing` entry point; `entry.json` layer manifest
-- [ ] `ng add` / `ng update` schematics collections (empty migrations)
-- [ ] lefthook pre-commit (lint + type-check on staged files); commitlint (conventional)
-- [ ] API Extractor spike on TS 6 output; result appended to ADR 0007
-- [ ] Angular agent skills + Angular CLI MCP configured; full `AGENTS.md`, `CLAUDE.md`, README, CONTRIBUTING skeleton
+- [x] `git init`; Nx 23.2.1 + pnpm 11.27.1 workspace; verify `nx graph`, `affected` and pruning (ADR 0012, addendum)
+- [x] Layout per brief §3; Nx layer tags + `@nx/enforce-module-boundaries` (proven on three violations; permanent fixtures in Phase 3)
+- [x] `@avelune/ui` library with a sample entry point + `testing` entry point; `entry.json` layer manifest
+- [x] `ng add` / `ng update` schematics collections (empty migrations)
+- [x] lefthook pre-commit (lint + type-check on staged files, plus Prettier); commitlint (conventional, Nx-project scopes)
+- [x] API Extractor spike on TS 6 output; result appended to ADR 0007 (primary path holds; `ui:api-report` target)
+- [x] Full `AGENTS.md`, `CLAUDE.md`, README, CONTRIBUTING skeleton, `docs/ARCHITECTURE.md` (Phase 1 sections)
+- [ ] Angular agent skill (`angular-developer`) vendored in `.claude/skills/` + Angular CLI MCP in `.mcp.json`: prepared and described in AGENTS.md; the write was blocked by the agent's permission guard and needs the product owner's approval
 
 ### Phase 2: Tokens
 - [ ] Colour generation script (OKLCH, colorjs.io) and primitive scales (ADR 0011)
@@ -59,6 +60,9 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 - [ ] **STOP:** Foundations screenshots (light, dark) → approve palette, accent, typography and motion values
 
 ### Phase 3: Guardrails (before any component)
+
+Carried over from Phase 1: permanent fixtures for the three module-boundary violations (tokens → ui, icons → ui, relative cross-project import); a SchematicTestRunner test for `ng-add` and the empty migration collection; failing fixtures for `ui:api-report` (untagged export, stale report); an ESLint rule for JSDoc on public API (API Extractor's `ae-undocumented` is off, ADR 0007); a check that every Nx project carries a layer or type tag; if ADR 0014 is accepted, a check of `.browserslistrc` against Angular's supported set.
+
 - [ ] TS + Angular compiler strictness (brief §5.1)
 - [ ] ESLint config + custom rules (`avelune/entry-point-layers`, raw-element template rule), with failing fixtures
 - [ ] Stylelint config (brief §5.3, ADR 0009), with failing fixtures; CSS nesting × emulated encapsulation fixture (ADR 0005)
@@ -72,6 +76,7 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 - [ ] `motion.css` with `ave-motion-*` classes; reduced-motion overrides via tokens
 - [ ] `provideAvelune()` (brief's `provideUi`), `AveTheme` service (theme, density, motion signals; persisted)
 - [ ] Icons package with a generated `IconName` union; `<ave-icon>`
+- [ ] Delete the `packages/ui/sample` scaffolding entry point and its API reports once the first real entry point exists
 
 ### Phase 5: Components
 Waves and status: see the tables below.
@@ -151,9 +156,9 @@ Waves and status: see the tables below.
 | Status | Entry criteria |
 |---|---|
 | planned | Listed here; for anything not in the waves, an accepted RFC (CONTRIBUTING.md) |
-| experimental | Code merged; JSDoc `@experimental`; stories exist; may change in any release; not for production screens |
-| beta | Full definition of done (brief §9.3) met; used in the showcase; API changes still allowed with changeset + migration |
-| stable | Beta criteria + manual a11y checklist passed (keyboard-only; NVDA + Firefox and Chrome; VoiceOver + Safari; 200% and 400% zoom; forced colours) + **no API change for one minor release** |
+| experimental | Code merged; release tag `@alpha` (API Extractor has no `@experimental`, ADR 0007); stories exist; may change in any release; not for production screens |
+| beta | Full definition of done (brief §9.3) met; release tag `@beta`; used in the showcase; API changes still allowed with changeset + migration |
+| stable | Beta criteria + release tag `@public` + manual a11y checklist passed (keyboard-only; NVDA + Firefox and Chrome; VoiceOver + Safari; 200% and 400% zoom; forced colours) + **no API change for one minor release** |
 | deprecated | `@deprecated` with named replacement; one dev-mode console warning; replacement documented; removed only in the next major, always with an `ng update` migration |
 
 ## Versioning and releases
@@ -187,6 +192,7 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 
 | Upgrade | Trigger |
 |---|---|
+| `@angular/cdk` + `@angular/aria` 22.2.0, `ng-packagr` 22.2.0, `prettier` 3.9.9, `@microsoft/api-extractor` 7.59.2 | held back by the 24-hour maturity rule on 2026-09-23 (ADR 0012 addendum); upgrade from 2026-09-24, one merge request, compatibility.md updated |
 | Angular 22.2 | stable release (currently rc.0) |
 | Vitest 5 | Angular 22.2 + Storybook addon-vitest + `@nx/vitest` all peer it (ADR 0013) |
 | Storybook 11 | `angular-vite` stable; drop the `@angular/animations` devDependency (ADR 0008) |
@@ -196,6 +202,9 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 
 ## Open questions (for the product owner)
 
+- Browser floor: accept ADR 0014 (Chrome/Edge 117 → 119, following Angular 22's supported set)?
+- Agent tooling: allow writing `.claude/skills/angular-developer/` and `.mcp.json` (blocked by the agent's permission guard in Phase 1)?
+- Licence of the published packages: currently `UNLICENSED` (proprietary, internal).
 - Consumer product names (for the adoption plan).
 - Registry and GitLab edition (Phase 3 CI, CODEOWNERS enforcement).
 - Icon set style: asked at the Foundations milestone (taste).
