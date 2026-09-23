@@ -4,5 +4,48 @@
   "projectType": "library",
   "sourceRoot": "tools/tokens-check",
   "tags": ["type:tool"],
-  "targets": {}
+  "implicitDependencies": ["tokens"],
+  "targets": {
+    "check": {
+      "executor": "nx:run-commands",
+      "dependsOn": [{ "projects": ["tokens"], "target": "build" }],
+      "inputs": [
+        "production",
+        "{workspaceRoot}/packages/tokens/sources.json",
+        "{workspaceRoot}/packages/tokens/contrast-pairs.json",
+        "{workspaceRoot}/packages/tokens/src/**/*",
+        { "dependentTasksOutputFiles": "**/*.css" },
+        { "externalDependencies": ["colorjs.io"] }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node src/cli.ts"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "dependsOn": [{ "projects": ["tokens"], "target": "build" }],
+      "inputs": [
+        "default",
+        "{workspaceRoot}/packages/tokens/sources.json",
+        "{workspaceRoot}/packages/tokens/contrast-pairs.json",
+        "{workspaceRoot}/packages/tokens/src/**/*",
+        { "dependentTasksOutputFiles": "**/*.css" },
+        { "externalDependencies": ["colorjs.io"] }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node --test \"src/**/*.spec.ts\""
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "tsc -p tsconfig.json"
+      }
+    }
+  }
 }

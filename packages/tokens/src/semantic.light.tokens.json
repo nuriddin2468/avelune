@@ -23,11 +23,11 @@
         "$description": "The scrim behind modal dialogs and drawers."
       },
       "hover": {
-        "$value": "{color.neutral-alpha.8}",
-        "$description": "State layer over any surface for a hovered item without a fill of its own (ghost buttons, menu items, rows)."
+        "$value": "{color.neutral-alpha.4}",
+        "$description": "State layer for a hovered item that has no fill of its own (ghost buttons, menu items, rows), over the canvas, a surface or a raised surface. Not over surface-sunken, where subtle text would drop below 4.5:1."
       },
       "active": {
-        "$value": "{color.neutral-alpha.12}",
+        "$value": "{color.neutral-alpha.8}",
         "$description": "State layer for the same items while pressed."
       },
       "disabled": {

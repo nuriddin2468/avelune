@@ -1,0 +1,17 @@
+{
+  "tiers": {
+    "primitive": ["src/primitives.tokens.json"],
+    "semantic": ["src/semantic.tokens.json", "src/semantic.light.tokens.json", "src/semantic.dark.tokens.json"],
+    "component": ["src/component.tokens.json", "src/density.compact.tokens.json"]
+  },
+  "overrides": {
+    "src/semantic.dark.tokens.json": {
+      "base": "src/semantic.light.tokens.json",
+      "names": "same"
+    },
+    "src/density.compact.tokens.json": {
+      "base": "src/component.tokens.json",
+      "names": "subset"
+    }
+  }
+}

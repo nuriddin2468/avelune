@@ -3,6 +3,8 @@ node_modules/
 
 # Build output
 dist/
+# ...except the built CSS inside tokens-check fixtures, which is test input
+!/tools/tokens-check/fixtures/*/dist/
 out-tsc/
 tmp/
 storybook-static/

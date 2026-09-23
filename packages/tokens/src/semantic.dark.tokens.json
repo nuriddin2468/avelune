@@ -23,11 +23,11 @@
         "$description": "The scrim behind modal dialogs and drawers."
       },
       "hover": {
-        "$value": "{color.white-alpha.8}",
-        "$description": "State layer over any surface for a hovered item without a fill of its own (ghost buttons, menu items, rows)."
+        "$value": "{color.white-alpha.4}",
+        "$description": "State layer for a hovered item that has no fill of its own (ghost buttons, menu items, rows), over the canvas, a surface or a raised surface. Not over surface-sunken, where subtle text would drop below 4.5:1."
       },
       "active": {
-        "$value": "{color.white-alpha.12}",
+        "$value": "{color.white-alpha.8}",
         "$description": "State layer for the same items while pressed."
       },
       "disabled": {
@@ -53,23 +53,23 @@
         "$description": "Text and icons of disabled controls. Exempt from contrast minimums (WCAG 1.4.3); never the only sign of the state."
       },
       "on-accent": {
-        "$value": "{color.white}",
+        "$value": "{color.neutral.950}",
         "$description": "Text and icons on color.accent.bg and its hover and active states."
       },
       "on-info": {
-        "$value": "{color.white}",
+        "$value": "{color.neutral.950}",
         "$description": "Text and icons on color.info.bg."
       },
       "on-success": {
-        "$value": "{color.white}",
+        "$value": "{color.neutral.950}",
         "$description": "Text and icons on color.success.bg."
       },
       "on-warning": {
-        "$value": "{color.white}",
+        "$value": "{color.neutral.950}",
         "$description": "Text and icons on color.warning.bg."
       },
       "on-danger": {
-        "$value": "{color.white}",
+        "$value": "{color.neutral.950}",
         "$description": "Text and icons on color.danger.bg."
       },
       "link": {
@@ -103,14 +103,14 @@
     },
     "accent": {
       "bg": {
-        "$value": "{color.orange.600}",
-        "$description": "Solid fill. The accent: primary actions, selection, focus. Text on it uses color.fg.on-accent. The brand colour itself fails 4.5:1 with white text, so this is the nearest passing step (ADR 0011)."
+        "$value": "{color.orange.400}",
+        "$description": "Solid fill. The accent: primary actions, selection, focus. Text on it uses color.fg.on-accent. In dark the fill is a lighter, less saturated step with dark text, so a filled control keeps 3:1 against the dark surface."
       },
       "bg-hover": {
-        "$value": "{color.orange.700}"
+        "$value": "{color.orange.300}"
       },
       "bg-active": {
-        "$value": "{color.orange.800}"
+        "$value": "{color.orange.200}"
       },
       "bg-subtle": {
         "$value": "{color.orange.850}",
@@ -127,14 +127,14 @@
     },
     "info": {
       "bg": {
-        "$value": "{color.blue.600}",
+        "$value": "{color.blue.400}",
         "$description": "Solid fill. Neutral information. Text on it uses color.fg.on-info."
       },
       "bg-hover": {
-        "$value": "{color.blue.700}"
+        "$value": "{color.blue.300}"
       },
       "bg-active": {
-        "$value": "{color.blue.800}"
+        "$value": "{color.blue.200}"
       },
       "bg-subtle": {
         "$value": "{color.blue.850}",
@@ -151,14 +151,14 @@
     },
     "success": {
       "bg": {
-        "$value": "{color.green.600}",
+        "$value": "{color.green.400}",
         "$description": "Solid fill. A completed or positive result. Text on it uses color.fg.on-success."
       },
       "bg-hover": {
-        "$value": "{color.green.700}"
+        "$value": "{color.green.300}"
       },
       "bg-active": {
-        "$value": "{color.green.800}"
+        "$value": "{color.green.200}"
       },
       "bg-subtle": {
         "$value": "{color.green.850}",
@@ -175,14 +175,14 @@
     },
     "warning": {
       "bg": {
-        "$value": "{color.amber.600}",
+        "$value": "{color.amber.400}",
         "$description": "Solid fill. A risk the user should check before continuing. Text on it uses color.fg.on-warning."
       },
       "bg-hover": {
-        "$value": "{color.amber.700}"
+        "$value": "{color.amber.300}"
       },
       "bg-active": {
-        "$value": "{color.amber.800}"
+        "$value": "{color.amber.200}"
       },
       "bg-subtle": {
         "$value": "{color.amber.850}",
@@ -199,14 +199,14 @@
     },
     "danger": {
       "bg": {
-        "$value": "{color.red.600}",
+        "$value": "{color.red.400}",
         "$description": "Solid fill. Errors and destructive actions. Text on it uses color.fg.on-danger."
       },
       "bg-hover": {
-        "$value": "{color.red.700}"
+        "$value": "{color.red.300}"
       },
       "bg-active": {
-        "$value": "{color.red.800}"
+        "$value": "{color.red.200}"
       },
       "bg-subtle": {
         "$value": "{color.red.850}",

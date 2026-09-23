@@ -1,0 +1,13 @@
+{
+  "color": {
+    "$type": "color",
+    "bg": {
+      "surface": {
+        "$value": "{color.grey.900}"
+      },
+      "hover": {
+        "$value": "{color.black-alpha.8}"
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "color": {
+    "$type": "color",
+    "bg": {
+      "surface": {
+        "$value": "{color.white}"
+      },
+      "hover": {
+        "$value": "{color.black-alpha.8}"
+      },
+      "grey-panel": {
+        "$value": "{color.grey.100}"
+      }
+    },
+    "fg": {
+      "default": {
+        "$value": "{color.grey.900}"
+      }
+    }
+  }
+}

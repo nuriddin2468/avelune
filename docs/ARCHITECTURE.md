@@ -129,7 +129,7 @@ packages/tokens/
 
 **Build** (`pnpm nx build tokens`, ADR 0017). Style Dictionary resolves the sources once per mode: the base mode (light theme, comfortable density, full motion) and one mode per override file (dark, compact, reduced motion). `dist/tokens.css` holds every semantic and component token as a `--ave-*` custom property inside `@layer tokens`, in px, with one block per mode: `:root`, `[data-theme='light']`, `prefers-color-scheme: dark` and `[data-theme='dark']`, `[data-density='compact']`, `prefers-reduced-motion` and `[data-motion='reduced']`. `dist/tokens.ts` exports `tokens` (typed values, CSS names, per-mode values), `TokenName` and `tokenVar()`; it is compiled to the package's JS and `.d.ts`. The build first runs `tokens:colors`, so it never builds from stale colour primitives.
 
-**Adding a token.** Put it in the file of its tier (ADR 0016): a purpose name, a reference to the tier below, a `$description` saying when to use it. Themed colours go into both theme files. Run `pnpm nx build tokens` and `pnpm nx run tokens:test`, look at the new lines in `dist/tokens.css`, and add contrast pairs for any new text or boundary colour (Phase 2, `tools/tokens-check`).
+**Adding a token.** Put it in the file of its tier (ADR 0016): a purpose name, a reference to the tier below, a `$description` saying when to use it. Themed colours go into both theme files. Run `pnpm nx build tokens` and `pnpm nx run tokens:test`, look at the new lines in `dist/tokens.css`, and declare contrast pairs in `contrast-pairs.json` for any new text or boundary colour; `pnpm nx run tokens-check:check` must pass.
 
 **Colour primitives.** Every scale (`neutral`, `orange`, `red`, `amber`, `green`, `blue`) has twelve steps, 50–950 plus 850, at the same OKLCH lightness per step, so a step plays the same contrast role in every hue. The brand colour is kept exact at `orange.500`. The ladder's contracts (which step carries text or boundaries on which surface) are checked on every generation; see ADR 0011, addendum. To change the palette: edit `palette.config.ts`, run `pnpm nx run tokens:colors --update`, review the diff of the generated file (each token's `$description` shows its OKLCH), commit both.
 
@@ -146,6 +146,7 @@ What is checked today, by which tool, at which stage. Phase 3 completes this tab
 | Public API unchanged or report updated; release tags present | API Extractor (`ui:api-report`) | no | Phase 3 |
 | No dependency younger than 24 h; install scripts only where listed | pnpm (`minimumReleaseAge`, `allowBuilds`) | `pnpm install` | `pnpm install` |
 | Colour primitives are exactly what the config generates (no hand edits) | `tokens:colors` | no | Phase 3 |
+| DTCG schema, references, naming, tier direction and literals, line-height grid, theme parity, contrast pairs in both themes, no primitives in `dist/tokens.css` | `tokens-check:check`, proven by `tokens-check:test` (a fixture per rule) | no | Phase 3 |
 | Palette rules: ladder contracts, exact lightness and hue, brand lightness, neutral tint | `generatePalette` (`tokens:colors`), proven by `tokens:test` | no | Phase 3 |
 
 Hooks are a fast local gate and are never bypassed (`--no-verify` is not used). CI runs the same checks on the whole affected graph.

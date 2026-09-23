@@ -1,0 +1,18 @@
+{
+  "neverText": [],
+  "pairs": [
+    {
+      "reason": "Text on the surface",
+      "minimum": 4.5,
+      "foreground": ["color.fg.default"],
+      "background": ["color.bg.surface"]
+    },
+    {
+      "reason": "Text on a hovered item",
+      "minimum": 4.5,
+      "foreground": ["color.fg.default"],
+      "background": ["color.bg.hover"],
+      "over": ["color.bg.surface"]
+    }
+  ]
+}

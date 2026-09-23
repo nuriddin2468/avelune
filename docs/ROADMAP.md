@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 2 in progress (2026-09-23). Colour generation, token sources and build done; next: `tools/tokens-check` (fourth item).
+**Current position:** Phase 2 in progress (2026-09-23). Colours, token sources, build and `tools/tokens-check` done; next: fonts (fifth item).
 
 ## Parameters
 
@@ -55,7 +55,7 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 - [x] Colour generation script (OKLCH, colorjs.io) and primitive scales (ADR 0011, addendum; scripts in TS per ADR 0015)
 - [x] Semantic light + dark, density compact, motion, component sources (DTCG 2025.10; files and tier rules in ADR 0016)
 - [x] Style Dictionary 5 build → `tokens.css`, `tokens.ts` (`TokenName` union) (ADR 0017)
-- [ ] `tools/tokens-check`: schema, references, naming, tier direction, contrast pairs, dark parity, no primitives in output; with failing fixtures
+- [x] `tools/tokens-check`: schema, references, naming, tier direction, contrast pairs, dark parity, no primitives in output; with failing fixtures (25 fixtures, one per violation)
 - [ ] Fonts: cmap check on the shipped woff2 subsets; self-hosted IBM Plex Sans; metric-tuned fallback `@font-face`
 - [ ] Foundations stories: palette + contrast, type specimen (ru, uz-Latn with Oʻ/Gʻ, uz-Cyrl), spacing, radius, elevation, z-index, motion playground
 - [ ] **STOP:** Foundations screenshots (light, dark) → approve palette, accent, typography and motion values

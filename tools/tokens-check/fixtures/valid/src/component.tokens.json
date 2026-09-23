@@ -1,0 +1,13 @@
+{
+  "control": {
+    "height": {
+      "$type": "dimension",
+      "md": {
+        "$value": "{size.control.md}"
+      },
+      "lg": {
+        "$value": "{size.control.lg}"
+      }
+    }
+  }
+}

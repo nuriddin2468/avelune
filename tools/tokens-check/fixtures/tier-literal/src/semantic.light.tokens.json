@@ -1,0 +1,22 @@
+{
+  "color": {
+    "$type": "color",
+    "bg": {
+      "surface": {
+        "$value": "{color.white}"
+      },
+      "hover": {
+        "$value": "{color.black-alpha.8}"
+      }
+    },
+    "fg": {
+      "default": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.102, 0.102, 0.102],
+          "hex": "#1a1a1a"
+        }
+      }
+    }
+  }
+}

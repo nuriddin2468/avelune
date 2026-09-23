@@ -1,0 +1,48 @@
+{
+  "space": {
+    "$type": "dimension",
+    "1": {
+      "$value": "{dimension.4}"
+    }
+  },
+  "size": {
+    "$type": "dimension",
+    "control": {
+      "sm": {
+        "$value": "{dimension.28}"
+      },
+      "md": {
+        "$value": "{dimension.32}"
+      },
+      "lg": {
+        "$value": "{dimension.36}"
+      }
+    }
+  },
+  "font": {
+    "body": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font-family.sans}",
+        "fontSize": "{dimension.16}",
+        "fontWeight": "{font-weight.400}",
+        "letterSpacing": "{dimension.0}",
+        "lineHeight": 1.5
+      }
+    }
+  },
+  "duration": {
+    "$type": "duration",
+    "fast": {
+      "$value": {
+        "value": 120,
+        "unit": "ms"
+      }
+    }
+  },
+  "z-index": {
+    "base": {
+      "$value": 0
+    }
+  }
+}

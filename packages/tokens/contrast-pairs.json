@@ -1,0 +1,120 @@
+{
+  "$comment": "Every foreground/background pair the kit relies on, checked in both themes by tools/tokens-check (ADR 0011). Declared, never inferred (brief §4.3). Each entry pairs every foreground with every background; `over` composites a translucent background onto each listed surface first.",
+  "neverText": [
+    {
+      "token": "color.brand.mark",
+      "reason": "The exact brand colour fails 4.5:1 against white; it is for logos, illustrations and data marks only (ADR 0011)."
+    }
+  ],
+  "pairs": [
+    {
+      "reason": "Text on surfaces",
+      "minimum": 4.5,
+      "foreground": ["color.fg.default", "color.fg.muted", "color.fg.subtle", "color.fg.link"],
+      "background": ["color.bg.canvas", "color.bg.surface", "color.bg.surface-raised", "color.bg.surface-sunken"]
+    },
+    {
+      "reason": "Text on a hovered or pressed item",
+      "minimum": 4.5,
+      "foreground": ["color.fg.default", "color.fg.muted", "color.fg.subtle"],
+      "background": ["color.bg.hover", "color.bg.active"],
+      "over": ["color.bg.canvas", "color.bg.surface", "color.bg.surface-raised"]
+    },
+    {
+      "reason": "Text on a solid accent fill, in every state",
+      "minimum": 4.5,
+      "foreground": ["color.fg.on-accent"],
+      "background": ["color.accent.bg", "color.accent.bg-hover", "color.accent.bg-active"]
+    },
+    {
+      "reason": "Text on a solid info fill, in every state",
+      "minimum": 4.5,
+      "foreground": ["color.fg.on-info"],
+      "background": ["color.info.bg", "color.info.bg-hover", "color.info.bg-active"]
+    },
+    {
+      "reason": "Text on a solid success fill, in every state",
+      "minimum": 4.5,
+      "foreground": ["color.fg.on-success"],
+      "background": ["color.success.bg", "color.success.bg-hover", "color.success.bg-active"]
+    },
+    {
+      "reason": "Text on a solid warning fill, in every state",
+      "minimum": 4.5,
+      "foreground": ["color.fg.on-warning"],
+      "background": ["color.warning.bg", "color.warning.bg-hover", "color.warning.bg-active"]
+    },
+    {
+      "reason": "Text on a solid danger fill, in every state",
+      "minimum": 4.5,
+      "foreground": ["color.fg.on-danger"],
+      "background": ["color.danger.bg", "color.danger.bg-hover", "color.danger.bg-active"]
+    },
+    {
+      "reason": "Role-coloured text on surfaces",
+      "minimum": 4.5,
+      "foreground": ["color.accent.fg", "color.info.fg", "color.success.fg", "color.warning.fg", "color.danger.fg"],
+      "background": ["color.bg.canvas", "color.bg.surface", "color.bg.surface-raised", "color.bg.surface-sunken"]
+    },
+    {
+      "reason": "Text inside a accent-tinted area",
+      "minimum": 4.5,
+      "foreground": ["color.fg.default", "color.fg.muted", "color.accent.fg"],
+      "background": ["color.accent.bg-subtle"]
+    },
+    {
+      "reason": "Text inside a info-tinted area",
+      "minimum": 4.5,
+      "foreground": ["color.fg.default", "color.fg.muted", "color.info.fg"],
+      "background": ["color.info.bg-subtle"]
+    },
+    {
+      "reason": "Text inside a success-tinted area",
+      "minimum": 4.5,
+      "foreground": ["color.fg.default", "color.fg.muted", "color.success.fg"],
+      "background": ["color.success.bg-subtle"]
+    },
+    {
+      "reason": "Text inside a warning-tinted area",
+      "minimum": 4.5,
+      "foreground": ["color.fg.default", "color.fg.muted", "color.warning.fg"],
+      "background": ["color.warning.bg-subtle"]
+    },
+    {
+      "reason": "Text inside a danger-tinted area",
+      "minimum": 4.5,
+      "foreground": ["color.fg.default", "color.fg.muted", "color.danger.fg"],
+      "background": ["color.danger.bg-subtle"]
+    },
+    {
+      "reason": "Boundaries a user needs to find a control (WCAG 1.4.11)",
+      "minimum": 3,
+      "foreground": ["color.border.strong"],
+      "background": ["color.bg.canvas", "color.bg.surface", "color.bg.surface-raised", "color.bg.surface-sunken"]
+    },
+    {
+      "reason": "The focus ring against the surface behind it",
+      "minimum": 3,
+      "foreground": ["color.border.focus"],
+      "background": ["color.bg.canvas", "color.bg.surface", "color.bg.surface-raised", "color.bg.surface-sunken"]
+    },
+    {
+      "reason": "Role-coloured boundaries: invalid inputs, selected cards (WCAG 1.4.11)",
+      "minimum": 3,
+      "foreground": [
+        "color.accent.border",
+        "color.info.border",
+        "color.success.border",
+        "color.warning.border",
+        "color.danger.border"
+      ],
+      "background": ["color.bg.canvas", "color.bg.surface", "color.bg.surface-raised", "color.bg.surface-sunken"]
+    },
+    {
+      "reason": "Solid fills that show a state on their own: checked checkbox, switch track, selected radio (WCAG 1.4.11)",
+      "minimum": 3,
+      "foreground": ["color.accent.bg", "color.info.bg", "color.success.bg", "color.warning.bg", "color.danger.bg"],
+      "background": ["color.bg.canvas", "color.bg.surface", "color.bg.surface-raised", "color.bg.surface-sunken"]
+    }
+  ]
+}

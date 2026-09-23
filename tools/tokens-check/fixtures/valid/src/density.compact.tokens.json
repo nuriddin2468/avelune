@@ -1,0 +1,10 @@
+{
+  "control": {
+    "height": {
+      "$type": "dimension",
+      "md": {
+        "$value": "{size.control.sm}"
+      }
+    }
+  }
+}
