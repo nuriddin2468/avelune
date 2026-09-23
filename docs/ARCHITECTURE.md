@@ -12,7 +12,7 @@ How Avelune is built. Decisions and their reasons live in the [ADRs](adr/README.
 | `packages/eslint-config` | `eslint-config` | `type:config` | Shared ESLint config for consumers (Phase 3) |
 | `packages/stylelint-config` | `stylelint-config` | `type:config` | Shared Stylelint config for consumers (Phase 3) |
 | `apps/showcase` | `showcase` | `type:app` | Real Angular app composing the kit into screens |
-| `apps/storybook` | `storybook` | `type:app` | Docs, stories, interaction and a11y tests (Phase 3) |
+| `apps/storybook` | `storybook` | `type:app` | Foundations pages (Phase 2); component docs, stories, interaction and a11y tests (Phase 3) |
 | `tools/tokens-check` | `tokens-check` | `type:tool` | Token validation |
 | `tools/fonts` | `fonts` | `type:tool` | Builds and checks the web font in `packages/ui/styles/fonts` |
 | `tools/lint-rules` | `lint-rules` | `type:tool` | Custom ESLint rules (Phase 3) |
@@ -133,6 +133,12 @@ packages/tokens/
 **Adding a token.** Put it in the file of its tier (ADR 0016): a purpose name, a reference to the tier below, a `$description` saying when to use it. Themed colours go into both theme files. Run `pnpm nx build tokens` and `pnpm nx run tokens:test`, look at the new lines in `dist/tokens.css`, and declare contrast pairs in `contrast-pairs.json` for any new text or boundary colour; `pnpm nx run tokens-check:check` must pass.
 
 **Colour primitives.** Every scale (`neutral`, `orange`, `red`, `amber`, `green`, `blue`) has twelve steps, 50–950 plus 850, at the same OKLCH lightness per step, so a step plays the same contrast role in every hue. The brand colour is kept exact at `orange.500`. The ladder's contracts (which step carries text or boundaries on which surface) are checked on every generation; see ADR 0011, addendum. To change the palette: edit `palette.config.ts`, run `pnpm nx run tokens:colors --update`, review the diff of the generated file (each token's `$description` shows its OKLCH), commit both.
+
+## Storybook
+
+`apps/storybook` runs `@storybook/angular-vite` with AOT compilation (ADR 0008 and its addendum). `pnpm nx serve storybook` builds the tokens first and serves on `http://127.0.0.1:6006`; `pnpm nx build storybook` writes `dist/apps/storybook`. The toolbar switches theme, density and motion through the `data-*` attributes on `<html>`.
+
+The **Foundations** pages live in `apps/storybook/src/foundations`: colour roles and every declared contrast pair per theme (WCAG ratio, APCA Lc for information), the type specimen in uz-Latn, uz-Cyrl, ru and en, spacing and control sizes, radius, elevation and stacking order, and the motion playground. They read `tokens` from `@avelune/tokens` and style themselves with tokens only; primitives never appear. Component stories will live next to their components (`packages/ui/<name>/<name>.stories.ts`) from Phase 5.
 
 ## Fonts
 

@@ -415,7 +415,7 @@ function checkOverrides(manifest: Manifest, byFile: ReadonlyMap<string, readonly
   }
 }
 
-interface Rgba {
+export interface Rgba {
   readonly rgb: readonly [number, number, number];
   readonly alpha: number;
 }
@@ -545,12 +545,15 @@ const colorjsSpaces: Readonly<Record<string, string>> = {
   'xyz-d50': 'xyz-d50',
 };
 
-/** Source-over compositing in gamma-encoded sRGB, as browsers paint. */
-function composite(top: Rgba, bottom: Rgba): Rgba {
+/**
+ * Source-over compositing in gamma-encoded sRGB, rounded to 8 bits per channel, as browsers paint. Without the
+ * rounding a pair can pass at 4.50:1 while the painted pixels give 4.49:1 (axe found one).
+ */
+export function composite(top: Rgba, bottom: Rgba): Rgba {
   const alpha = top.alpha + bottom.alpha * (1 - top.alpha);
   if (alpha === 0) return { rgb: [0, 0, 0], alpha: 0 };
   const channel = (index: 0 | 1 | 2) =>
-    (top.rgb[index] * top.alpha + bottom.rgb[index] * bottom.alpha * (1 - top.alpha)) / alpha;
+    Math.round(((top.rgb[index] * top.alpha + bottom.rgb[index] * bottom.alpha * (1 - top.alpha)) / alpha) * 255) / 255;
   return { rgb: [channel(0), channel(1), channel(2)], alpha };
 }
 

@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 2 in progress (2026-09-23). Colours, token sources, build, `tools/tokens-check` and fonts done; next: Foundations stories (sixth item).
+**Current position:** Phase 2 at the **STOP** (2026-09-23): everything built; waiting for the product owner's approval of the Foundations screenshots (palette, accent, typography, motion) before Phase 3.
 
 ## Parameters
 
@@ -57,7 +57,7 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 - [x] Style Dictionary 5 build → `tokens.css`, `tokens.ts` (`TokenName` union) (ADR 0017)
 - [x] `tools/tokens-check`: schema, references, naming, tier direction, contrast pairs, dark parity, no primitives in output; with failing fixtures (25 fixtures, one per violation)
 - [x] Fonts: cmap check on the shipped woff2 subsets; self-hosted IBM Plex Sans; metric-tuned fallback `@font-face` (`tools/fonts`, ADR 0018: shipped as "Avelune Sans")
-- [ ] Foundations stories: palette + contrast, type specimen (ru, uz-Latn with Oʻ/Gʻ, uz-Cyrl), spacing, radius, elevation, z-index, motion playground
+- [x] Foundations stories: palette + contrast, type specimen (ru, uz-Latn with Oʻ/Gʻ, uz-Cyrl), spacing, radius, elevation, z-index, motion playground (Storybook set up early, ADR 0008 addendum; axe-clean in both themes, both motion modes, at 320, 390 and 1280 px)
 - [ ] **STOP:** Foundations screenshots (light, dark) → approve palette, accent, typography and motion values
 
 ### Phase 3: Guardrails (before any component)
@@ -67,7 +67,7 @@ Carried over from Phase 1: permanent fixtures for the three module-boundary viol
 - [ ] TS + Angular compiler strictness (brief §5.1)
 - [ ] ESLint config + custom rules (`avelune/entry-point-layers`, raw-element template rule), with failing fixtures
 - [ ] Stylelint config (brief §5.3, ADR 0009), with failing fixtures; CSS nesting × emulated encapsulation fixture (ADR 0005)
-- [ ] Vitest browser mode + coverage thresholds; Storybook angular-vite + addon-vitest + a11y `error`
+- [ ] Vitest browser mode + coverage thresholds; Storybook angular-vite (running since Phase 2) + addon-vitest + a11y `error`
 - [ ] Playwright visual in pinned amd64 Docker; axe sweep; invariants skeleton; size-limit
 - [ ] API reports; changesets; `.gitlab-ci.yml` stages (brief §5.6); CODEOWNERS + review rule in CONTRIBUTING
 - [ ] Every guardrail proven to fail on a violation
@@ -188,6 +188,8 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 | Style Dictionary DTCG duration WIP | custom transform, pinned by test | 0003 |
 | `stylelint-plugin-logical-css` has one maintainer | fixtures make a swap to `stylelint-use-logical` safe | 0009 |
 | amd64 emulation slows local visual runs | filtered and affected runs | 0010 |
+| Chromium's Intl formats `uz`/`uz-Latn` with root patterns (`UZS 1,234,567.80`, `2026 M09 23`); `uz-Cyrl` dates are right but currency is `UZS`, not `сўм` (observed in Chromium 153, 2026-09-23; Node's full ICU is right) | check Chrome, Edge, Firefox and Safari before Wave 2; if confirmed, the kit ships its own uz formatting data for dates and numbers (ADR in Wave 2, before DatePicker) | none yet |
+| Storybook's dev server exits when a story file fails to index | restart; CI builds Storybook statically | 0008 |
 
 ## Tracked upgrades
 

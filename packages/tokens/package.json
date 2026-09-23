@@ -11,10 +11,12 @@
       "default": "./dist/tokens.js"
     },
     "./tokens.css": "./dist/tokens.css",
+    "./contrast-pairs.json": "./contrast-pairs.json",
     "./package.json": "./package.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "contrast-pairs.json"
   ],
   "sideEffects": [
     "*.css"

@@ -16,6 +16,8 @@
     "module": "preserve",
     "types": [],
     "paths": {
+      "@avelune/tokens": ["./packages/tokens/dist/tokens.ts"],
+      "@avelune/tokens/contrast-pairs.json": ["./packages/tokens/contrast-pairs.json"],
       "@avelune/ui": ["./packages/ui/index.ts"],
       "@avelune/ui/*": ["./packages/ui/*/index.ts"]
     }

@@ -14,7 +14,7 @@ export const paletteConfig = definePalette({
     100: 0.965,
     200: 0.925,
     300: 0.855,
-    400: 0.745,
+    400: 0.76,
     500: 0.62,
     600: 0.52,
     700: 0.445,
@@ -24,7 +24,10 @@ export const paletteConfig = definePalette({
     950: 0.225,
   },
 
-  /** Share of a scale's peak chroma per step, before the sRGB limit. Tints and shades stay calm, 500–600 are vivid. */
+  /**
+   * Share of a scale's peak chroma per step, before the sRGB limit. Tints stay calm and 500–600 are vivid; the dark end
+   * falls off steeply, because the dark theme uses 850–950 as tinted backgrounds (brief §4.2: reduced chroma in dark).
+   */
   chromaCurve: {
     50: 0.06,
     100: 0.14,
@@ -34,10 +37,10 @@ export const paletteConfig = definePalette({
     500: 1,
     600: 1,
     700: 0.92,
-    800: 0.8,
-    850: 0.66,
-    900: 0.52,
-    950: 0.4,
+    800: 0.72,
+    850: 0.45,
+    900: 0.34,
+    950: 0.26,
   },
 
   /**

@@ -44,6 +44,7 @@ Run from the repository root. `pnpm` switches itself to the pinned 11.27.1 (`pac
 | Install | `pnpm install` (also installs the git hooks) |
 | Build the library | `pnpm nx build ui` |
 | Build or serve the showcase | `pnpm nx build showcase`, `pnpm nx serve showcase` |
+| Storybook: serve / build (Foundations pages) | `pnpm nx serve storybook` / `pnpm nx build storybook` |
 | Lint, type-check everything | `pnpm nx run-many -t lint typecheck` |
 | Only what a change affects | `pnpm nx affected -t lint typecheck build` |
 | API reports: check / update | `pnpm nx run ui:api-report` / `pnpm nx run ui:api-report --update` |

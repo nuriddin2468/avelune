@@ -30,7 +30,10 @@ Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` an
 | | `pnpm` | 11.27.1 | ADR 0012 |
 | Unit tests | `vitest`, `@vitest/browser-playwright`, `@vitest/coverage-v8` | 4.1.11 | `@angular/build` 22.1 peers `^4.0.8`; `@storybook/addon-vitest` and `@nx/vitest` peer `^3 \|\| ^4` (ADR 0013) |
 | | `vite` | 8.3.0 | Required by `@storybook/angular-vite` |
-| Storybook | `storybook`, `@storybook/angular-vite`, `@storybook/addon-{vitest,a11y,docs}` | 10.6.0 | ADR 0008 |
+| Storybook | `storybook`, `@storybook/angular-vite`, `@storybook/addon-{vitest,a11y,docs}` | 10.6.0 | ADR 0008. Installed in Phase 2 without `addon-vitest` (Phase 3) |
+| | `@analogjs/vite-plugin-angular` | 2.7.2 | Required peer of `angular-vite` (≥ 2.0.0) |
+| | `@angular/animations` | 22.1.7 | Required peer of `angular-vite` 10.6; devDependency only, never imported (ADR 0005, 0008). npm marks it deprecated |
+| | `@angular-devkit/architect` | 0.2201.8 | Required peer of `angular-vite`; matches CLI 22.1.8 |
 | E2E / visual | `@playwright/test` | 1.63.0 | Docker `mcr.microsoft.com/playwright:v1.63.0-noble` (amd64 + arm64) |
 | | `axe-core`, `@axe-core/playwright` | 4.13.0 | |
 | Lint (TS/HTML) | `eslint` | 10.11.0 | |

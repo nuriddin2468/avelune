@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { join } from 'node:path';
 import { describe, it } from 'node:test';
-import { checkTokens, rules, type Rule } from './check.ts';
+import { checkTokens, composite, rules, type Rule } from './check.ts';
 import { overlay, readFiles } from './files.ts';
 
 const fixtures = join(import.meta.dirname, '..', 'fixtures');
@@ -91,4 +91,15 @@ describe('tokens-check', () => {
       );
     });
   }
+});
+
+describe('composite', () => {
+  it('rounds to 8 bits per channel, as the browser paints', () => {
+    // White at 8% over #342f2d paints #44403e; unrounded it would be 68.2, 63.6, 61.8.
+    const painted = composite({ rgb: [1, 1, 1], alpha: 0.08 }, { rgb: [0x34 / 255, 0x2f / 255, 0x2d / 255], alpha: 1 });
+    assert.deepEqual(
+      painted.rgb.map((channel) => Math.round(channel * 255 * 1000) / 1000),
+      [0x44, 0x40, 0x3e],
+    );
+  });
 });

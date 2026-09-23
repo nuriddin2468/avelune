@@ -36,6 +36,9 @@ catalog:
   '@schematics/angular': 22.1.8
   '@angular/cdk': 22.1.7
   '@angular/aria': 22.1.7
+  # Storybook peer only, never imported (ADR 0005, 0008)
+  '@angular/animations': 22.1.7
+  '@angular-devkit/architect': 0.2201.8
   ng-packagr: 22.1.1
   rxjs: 7.8.2
   tslib: 2.8.1
@@ -56,6 +59,13 @@ catalog:
   '@commitlint/cli': 21.2.3
   '@commitlint/config-conventional': 21.2.3
   '@commitlint/config-nx-scopes': 21.2.3
+  # Storybook (ADR 0008)
+  storybook: 10.6.0
+  '@storybook/angular-vite': 10.6.0
+  '@storybook/addon-docs': 10.6.0
+  '@storybook/addon-a11y': 10.6.0
+  '@analogjs/vite-plugin-angular': 2.7.2
+  vite: 8.3.0
   # API reports
   '@microsoft/api-extractor': 7.59.1
   # Tokens (ADR 0003, 0011)

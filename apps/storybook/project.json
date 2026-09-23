@@ -4,5 +4,34 @@
   "projectType": "application",
   "sourceRoot": "apps/storybook",
   "tags": ["type:app"],
-  "targets": {}
+  "implicitDependencies": ["tokens"],
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "continuous": true,
+      "dependsOn": [{ "projects": ["tokens"], "target": "build" }],
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "storybook dev --host 127.0.0.1 --port 6006 --config-dir .storybook --no-open --ci"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": [{ "projects": ["tokens"], "target": "build" }],
+      "outputs": ["{workspaceRoot}/dist/apps/storybook"],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "storybook build --config-dir .storybook --output-dir ../../dist/apps/storybook --quiet"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "dependsOn": [{ "projects": ["tokens"], "target": "build" }],
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "ngc -p tsconfig.json --noEmit"
+      }
+    }
+  }
 }

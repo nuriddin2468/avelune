@@ -31,8 +31,11 @@
     "tslib": "catalog:"
   },
   "devDependencies": {
+    "@analogjs/vite-plugin-angular": "catalog:",
+    "@angular-devkit/architect": "catalog:",
     "@angular-devkit/core": "catalog:",
     "@angular-devkit/schematics": "catalog:",
+    "@angular/animations": "catalog:",
     "@angular/build": "catalog:",
     "@angular/cli": "catalog:",
     "@angular/compiler-cli": "catalog:",
@@ -45,6 +48,9 @@
     "@nx/eslint-plugin": "catalog:",
     "@nx/js": "catalog:",
     "@schematics/angular": "catalog:",
+    "@storybook/addon-a11y": "catalog:",
+    "@storybook/addon-docs": "catalog:",
+    "@storybook/angular-vite": "catalog:",
     "@types/fontkit": "catalog:",
     "@types/node": "catalog:",
     "colorjs.io": "catalog:",
@@ -56,9 +62,11 @@
     "ng-packagr": "catalog:",
     "nx": "catalog:",
     "prettier": "catalog:",
+    "storybook": "catalog:",
     "style-dictionary": "catalog:",
     "subset-font": "catalog:",
     "typescript": "catalog:",
-    "typescript-eslint": "catalog:"
+    "typescript-eslint": "catalog:",
+    "vite": "catalog:"
   }
 }

@@ -1,0 +1,12 @@
+/* Stories and the Storybook config, compiled AOT by the Analog Vite plugin with the workspace strictness. Vite reads
+   the path mappings (@avelune/*) from the nearest tsconfig.json, so it lives here, not in .storybook. */
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "../..",
+    "outDir": "../../dist/out-tsc/storybook",
+    "resolveJsonModule": true,
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts", ".storybook/*.ts"]
+}

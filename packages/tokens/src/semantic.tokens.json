@@ -31,7 +31,7 @@
     "target": {
       "$description": "Minimum hit area of anything interactive.",
       "min": { "$value": "{dimension.24}", "$description": "WCAG 2.5.8 Target Size (Minimum)." },
-      "coarse": { "$value": "{dimension.44}", "$description": "Under `(pointer: coarse)`." }
+      "coarse": { "$value": "{dimension.44}", "$description": "Under the media query (pointer: coarse)." }
     }
   },
   "radius": {
