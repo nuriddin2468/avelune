@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "AveluneNgAdd",
+  "title": "Avelune ng-add options",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "Name of the application to set up.",
+      "$default": { "$source": "projectName" }
+    }
+  }
+}

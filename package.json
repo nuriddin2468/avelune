@@ -1,0 +1,57 @@
+{
+  "name": "@avelune/source",
+  "version": "0.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "packageManager": "pnpm@11.27.1",
+  "engines": {
+    "node": "^24.15.0",
+    "pnpm": ">=11.27.1 <12"
+  },
+  "scripts": {
+    "prepare": "lefthook install",
+    "build": "nx run-many -t build",
+    "lint": "nx run-many -t lint",
+    "typecheck": "nx run-many -t typecheck",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "graph": "nx graph"
+  },
+  "dependencies": {
+    "@angular/common": "catalog:",
+    "@angular/compiler": "catalog:",
+    "@angular/core": "catalog:",
+    "@angular/forms": "catalog:",
+    "@angular/platform-browser": "catalog:",
+    "@angular/router": "catalog:",
+    "@angular/cdk": "catalog:",
+    "@angular/aria": "catalog:",
+    "rxjs": "catalog:",
+    "tslib": "catalog:"
+  },
+  "devDependencies": {
+    "@angular-devkit/core": "catalog:",
+    "@angular-devkit/schematics": "catalog:",
+    "@angular/build": "catalog:",
+    "@angular/cli": "catalog:",
+    "@angular/compiler-cli": "catalog:",
+    "@commitlint/cli": "catalog:",
+    "@commitlint/config-conventional": "catalog:",
+    "@commitlint/config-nx-scopes": "catalog:",
+    "@eslint/js": "catalog:",
+    "@microsoft/api-extractor": "catalog:",
+    "@nx/eslint": "catalog:",
+    "@nx/eslint-plugin": "catalog:",
+    "@nx/js": "catalog:",
+    "@schematics/angular": "catalog:",
+    "eslint": "catalog:",
+    "globals": "catalog:",
+    "lefthook": "catalog:",
+    "ng-packagr": "catalog:",
+    "nx": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:"
+  }
+}

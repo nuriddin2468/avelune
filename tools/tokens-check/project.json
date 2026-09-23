@@ -1,0 +1,8 @@
+{
+  "name": "tokens-check",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "tools/tokens-check",
+  "tags": ["type:tool"],
+  "targets": {}
+}

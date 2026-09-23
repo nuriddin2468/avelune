@@ -1,0 +1,56 @@
+{
+  "name": "showcase",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/showcase/src",
+  "tags": ["type:app"],
+  "targets": {
+    "build": {
+      "executor": "@angular/build:application",
+      "outputs": ["{workspaceRoot}/dist/apps/showcase"],
+      "options": {
+        "outputPath": "dist/apps/showcase",
+        "browser": "apps/showcase/src/main.ts",
+        "index": "apps/showcase/src/index.html",
+        "tsConfig": "apps/showcase/tsconfig.app.json"
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kB",
+              "maximumError": "1MB"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "showcase:build:production"
+        },
+        "development": {
+          "buildTarget": "showcase:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "ngc -p tsconfig.app.json --noEmit"
+      }
+    }
+  }
+}

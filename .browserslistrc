@@ -1,0 +1,6 @@
+# Browser floor (ADR 0005). Change only through a new ADR.
+Chrome >= 117
+Edge >= 117
+Firefox >= 129
+Safari >= 17.5
+iOS >= 17.5

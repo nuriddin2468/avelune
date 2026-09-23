@@ -1,0 +1,29 @@
+{
+  "name": "@avelune/ui",
+  "version": "0.0.0",
+  "description": "Avelune Angular UI kit. Import components from their entry points, for example @avelune/ui/button.",
+  "license": "UNLICENSED",
+  "peerDependencies": {
+    "@angular/cdk": "^22.1.0",
+    "@angular/common": "^22.1.0",
+    "@angular/core": "^22.1.0"
+  },
+  "dependencies": {
+    "tslib": "^2.8.1"
+  },
+  "sideEffects": false,
+  "schematics": "./schematics/collection.json",
+  "ng-update": {
+    "migrations": "./schematics/migrations.json",
+    "packageGroup": [
+      "@avelune/tokens",
+      "@avelune/ui",
+      "@avelune/icons",
+      "@avelune/eslint-config",
+      "@avelune/stylelint-config"
+    ]
+  },
+  "ng-add": {
+    "save": "dependencies"
+  }
+}

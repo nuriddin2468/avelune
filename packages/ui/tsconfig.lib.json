@@ -1,0 +1,12 @@
+/* Library sources: every entry point, without specs, stories or schematics. */
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc/ui",
+    "declaration": true,
+    "declarationMap": true,
+    "types": []
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["**/*.spec.ts", "**/*.stories.ts", "schematics/**", "**/fixtures/**"]
+}

@@ -1,0 +1,42 @@
+{
+  "name": "ui",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/ui",
+  "tags": ["layer:patterns"],
+  "targets": {
+    "build-lib": {
+      "executor": "@angular/build:ng-packagr",
+      "outputs": ["{workspaceRoot}/dist/packages/ui"],
+      "options": {
+        "project": "packages/ui/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "packages/ui/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "packages/ui/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build-lib", "^build"],
+      "outputs": ["{workspaceRoot}/dist/packages/ui/schematics"],
+      "options": {
+        "cwd": "packages/ui",
+        "commands": ["tsc -p tsconfig.schematics.json", "node scripts/copy-schematics-assets.mjs"],
+        "parallel": false
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "commands": ["ngc -p tsconfig.lib.json --noEmit", "tsc -p tsconfig.schematics.json --noEmit"]
+      }
+    }
+  }
+}

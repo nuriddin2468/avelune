@@ -1,0 +1,23 @@
+# Git hooks (brief §3). Installed by `pnpm install` through the root `prepare` script.
+# Hooks are a fast local gate; CI runs the same checks on the whole affected graph.
+
+pre-commit:
+  parallel: true
+  jobs:
+    - name: lint
+      glob: '*.{ts,mts,cts,js,mjs,cjs}'
+      run: pnpm exec eslint --max-warnings=0 --no-warn-ignored {staged_files}
+
+    - name: typecheck
+      # Type-checking needs whole projects, so it runs on every project the staged files affect.
+      glob: '*.{ts,mts,cts,html,json}'
+      run: pnpm exec nx affected -t typecheck --files {staged_files} --output-style=static
+
+    - name: format
+      glob: '*.{ts,mts,cts,js,mjs,cjs,json,html,css,yml,yaml}'
+      run: pnpm exec prettier --check {staged_files}
+
+commit-msg:
+  jobs:
+    - name: commitlint
+      run: pnpm exec commitlint --edit {1}

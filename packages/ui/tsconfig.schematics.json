@@ -1,0 +1,16 @@
+/* Schematics run in Node through the Angular CLI, which loads factories with require(): emit CommonJS. */
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "bundler",
+    "rootDir": "schematics",
+    "outDir": "../../dist/packages/ui/schematics",
+    "importHelpers": false,
+    "declaration": false,
+    "sourceMap": false,
+    "types": []
+  },
+  "include": ["schematics/**/*.ts"],
+  "exclude": ["schematics/**/*.spec.ts", "schematics/**/fixtures/**"]
+}

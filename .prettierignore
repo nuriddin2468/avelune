@@ -1,0 +1,12 @@
+# Generated or managed by tools
+dist/
+coverage/
+out-tsc/
+.nx/
+.angular/
+node_modules/
+pnpm-lock.yaml
+**/__screenshots__/
+
+# Prose is formatted by hand; table padding would make every doc diff noisy.
+*.md
