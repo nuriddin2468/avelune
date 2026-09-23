@@ -37,6 +37,23 @@
         "cwd": "{projectRoot}",
         "commands": ["ngc -p tsconfig.lib.json --noEmit", "tsc -p tsconfig.schematics.json --noEmit"]
       }
+    },
+    "api-report": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "inputs": [
+        "{workspaceRoot}/dist/packages/ui/types/**/*",
+        "{projectRoot}/api/**/*",
+        "{projectRoot}/scripts/api-report.mjs",
+        {
+          "externalDependencies": ["@microsoft/api-extractor"]
+        }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node scripts/api-report.mjs"
+      }
     }
   }
 }

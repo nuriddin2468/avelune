@@ -1,6 +1,10 @@
 import { Directive, booleanAttribute, input } from '@angular/core';
 
-/** Tones supported by {@link AveSample}. */
+/**
+ * Tones supported by {@link AveSample}.
+ *
+ * @alpha
+ */
 export type AveSampleTone = 'neutral' | 'accent';
 
 /**
@@ -8,7 +12,7 @@ export type AveSampleTone = 'neutral' | 'accent';
  * layer manifest before any real component exists. It is removed when the first real entry point lands (ROADMAP,
  * Phase 4).
  *
- * @experimental
+ * @alpha
  */
 @Directive({
   selector: '[aveSample]',

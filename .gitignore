@@ -30,3 +30,6 @@ playwright-report/
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
+
+# Agent tooling: per-user settings stay local
+.claude/settings.local.json

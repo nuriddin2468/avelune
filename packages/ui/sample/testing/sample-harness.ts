@@ -3,18 +3,23 @@ import type { AveSampleTone } from '@avelune/ui/sample';
 
 const TONES: readonly AveSampleTone[] = ['neutral', 'accent'];
 
-/** Filters for {@link AveSampleHarness}. */
+/**
+ * Filters for {@link AveSampleHarness}.
+ *
+ * @alpha
+ */
 export interface AveSampleHarnessFilters extends BaseHarnessFilters {
   /** Only match samples with this tone. */
   tone?: AveSampleTone;
 }
 
 /**
- * Harness for {@link @avelune/ui/sample#AveSample}.
+ * Harness for the `aveSample` directive from `@avelune/ui/sample`.
  *
- * @experimental
+ * @alpha
  */
 export class AveSampleHarness extends ComponentHarness {
+  /** Selector that finds sample hosts. */
   static hostSelector = '[aveSample]';
 
   /** Gets a predicate that matches samples by the given filters. */
