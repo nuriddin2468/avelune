@@ -1,0 +1,29 @@
+{
+  "control": {
+    "$description": "Compact density ([data-density=\"compact\"]): every control size moves one step down.",
+    "height": {
+      "$type": "dimension",
+      "sm": {
+        "$value": "{size.control.xs}"
+      },
+      "md": {
+        "$value": "{size.control.sm}"
+      },
+      "lg": {
+        "$value": "{size.control.md}"
+      }
+    },
+    "padding-inline": {
+      "$type": "dimension",
+      "sm": {
+        "$value": "{space.2}"
+      },
+      "md": {
+        "$value": "{space.3}"
+      },
+      "lg": {
+        "$value": "{space.4}"
+      }
+    }
+  }
+}

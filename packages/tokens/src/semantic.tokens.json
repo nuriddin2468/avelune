@@ -1,0 +1,232 @@
+{
+  "space": {
+    "$type": "dimension",
+    "$description": "Spacing scale on the 4px base: space.N is N × 4px. The one semantic group whose names are numbers (brief §4.1). Rhythm: related elements 8 (space.2), form fields 16 (space.4), sections 32–48 (space.8–space.12).",
+    "1": { "$value": "{dimension.4}" },
+    "2": { "$value": "{dimension.8}" },
+    "3": { "$value": "{dimension.12}" },
+    "4": { "$value": "{dimension.16}" },
+    "5": { "$value": "{dimension.20}" },
+    "6": { "$value": "{dimension.24}" },
+    "8": { "$value": "{dimension.32}" },
+    "10": { "$value": "{dimension.40}" },
+    "12": { "$value": "{dimension.48}" },
+    "16": { "$value": "{dimension.64}" }
+  },
+  "size": {
+    "$type": "dimension",
+    "control": {
+      "$description": "Heights of buttons, inputs, selects and every other control. Components read them through the control.height component tokens, so density applies.",
+      "xs": { "$value": "{dimension.28}", "$description": "Reached only through compact density (compact sm)." },
+      "sm": { "$value": "{dimension.32}" },
+      "md": { "$value": "{dimension.36}", "$description": "The default control height for 14/20 text." },
+      "lg": { "$value": "{dimension.40}" }
+    },
+    "icon": {
+      "$description": "Icon boxes. Pair sm with 12px text, md with 14px, lg with 16px and above.",
+      "sm": { "$value": "{dimension.16}" },
+      "md": { "$value": "{dimension.20}" },
+      "lg": { "$value": "{dimension.24}" }
+    },
+    "target": {
+      "$description": "Minimum hit area of anything interactive.",
+      "min": { "$value": "{dimension.24}", "$description": "WCAG 2.5.8 Target Size (Minimum)." },
+      "coarse": { "$value": "{dimension.44}", "$description": "Under `(pointer: coarse)`." }
+    }
+  },
+  "radius": {
+    "$type": "dimension",
+    "$description": "Assigned by hierarchy, never one radius for everything. Concentric rule: an inner radius equals the outer radius minus the gap between them (a menu item of radius md inside a popover with a 4px inset gives a popover of radius lg).",
+    "sm": {
+      "$value": "{dimension.4}",
+      "$description": "Small parts: checkbox, tag, badge, items nested inside a control."
+    },
+    "md": { "$value": "{dimension.8}", "$description": "Controls and the items of menus and lists." },
+    "lg": { "$value": "{dimension.12}", "$description": "Containers: card, popover, menu, dialog, drawer." },
+    "full": { "$value": "{dimension.9999}", "$description": "Pills, avatars, switch tracks." }
+  },
+  "border-width": {
+    "$type": "dimension",
+    "default": { "$value": "{dimension.1}" },
+    "selected": { "$value": "{dimension.2}", "$description": "Selected cards and tabs." }
+  },
+  "focus-ring": {
+    "$type": "dimension",
+    "$description": "One focus ring for everything, :focus-visible only, in color.border.focus. Components that clip their content use an inset ring (offset equal to minus the width).",
+    "width": { "$value": "{dimension.2}" },
+    "offset": { "$value": "{dimension.2}" }
+  },
+  "font": {
+    "family": {
+      "$type": "fontFamily",
+      "sans": { "$value": "{font-family.ibm-plex-sans}" },
+      "mono": { "$value": "{font-family.system-mono}" }
+    },
+    "weight": {
+      "$type": "fontWeight",
+      "regular": { "$value": "{font-weight.400}", "$description": "Body text." },
+      "medium": { "$value": "{font-weight.500}", "$description": "Labels and controls." },
+      "semibold": { "$value": "{font-weight.600}", "$description": "Headings and strong emphasis." }
+    },
+    "display": {
+      "$type": "typography",
+      "$description": "32/40. One per screen at most.",
+      "$value": {
+        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontSize": "{dimension.32}",
+        "fontWeight": "{font-weight.600}",
+        "letterSpacing": "{dimension.0}",
+        "lineHeight": 1.25
+      }
+    },
+    "heading-xl": {
+      "$type": "typography",
+      "$description": "24/32. Page title.",
+      "$value": {
+        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontSize": "{dimension.24}",
+        "fontWeight": "{font-weight.600}",
+        "letterSpacing": "{dimension.0}",
+        "lineHeight": 1.3333
+      }
+    },
+    "heading-lg": {
+      "$type": "typography",
+      "$description": "20/28. Section title, dialog title.",
+      "$value": {
+        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontSize": "{dimension.20}",
+        "fontWeight": "{font-weight.600}",
+        "letterSpacing": "{dimension.0}",
+        "lineHeight": 1.4
+      }
+    },
+    "heading-md": {
+      "$type": "typography",
+      "$description": "16/24. Card and panel title.",
+      "$value": {
+        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontSize": "{dimension.16}",
+        "fontWeight": "{font-weight.600}",
+        "letterSpacing": "{dimension.0}",
+        "lineHeight": 1.5
+      }
+    },
+    "heading-sm": {
+      "$type": "typography",
+      "$description": "14/20. Group title inside a form or a list.",
+      "$value": {
+        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontSize": "{dimension.14}",
+        "fontWeight": "{font-weight.600}",
+        "letterSpacing": "{dimension.0}",
+        "lineHeight": 1.4286
+      }
+    },
+    "body-lg": {
+      "$type": "typography",
+      "$description": "16/24. Long-form reading.",
+      "$value": {
+        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontSize": "{dimension.16}",
+        "fontWeight": "{font-weight.400}",
+        "letterSpacing": "{dimension.0}",
+        "lineHeight": 1.5
+      }
+    },
+    "body-md": {
+      "$type": "typography",
+      "$description": "14/20. The base text of the kit (BASE_TEXT).",
+      "$value": {
+        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontSize": "{dimension.14}",
+        "fontWeight": "{font-weight.400}",
+        "letterSpacing": "{dimension.0}",
+        "lineHeight": 1.4286
+      }
+    },
+    "body-sm": {
+      "$type": "typography",
+      "$description": "12/16. Secondary text in dense tables and lists.",
+      "$value": {
+        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontSize": "{dimension.12}",
+        "fontWeight": "{font-weight.400}",
+        "letterSpacing": "{dimension.0}",
+        "lineHeight": 1.3333
+      }
+    },
+    "label-md": {
+      "$type": "typography",
+      "$description": "14/20. Labels of controls and form fields.",
+      "$value": {
+        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontSize": "{dimension.14}",
+        "fontWeight": "{font-weight.500}",
+        "letterSpacing": "{dimension.0}",
+        "lineHeight": 1.4286
+      }
+    },
+    "label-sm": {
+      "$type": "typography",
+      "$description": "12/16. Labels of small controls, badges, tags.",
+      "$value": {
+        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontSize": "{dimension.12}",
+        "fontWeight": "{font-weight.500}",
+        "letterSpacing": "{dimension.0}",
+        "lineHeight": 1.3333
+      }
+    },
+    "caption": {
+      "$type": "typography",
+      "$description": "12/16. Hints, helper and error text under a field, timestamps.",
+      "$value": {
+        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontSize": "{dimension.12}",
+        "fontWeight": "{font-weight.400}",
+        "letterSpacing": "{dimension.0}",
+        "lineHeight": 1.3333
+      }
+    },
+    "code": {
+      "$type": "typography",
+      "$description": "13/20 monospace. Inline code, identifiers, logs.",
+      "$value": {
+        "fontFamily": "{font-family.system-mono}",
+        "fontSize": "{dimension.13}",
+        "fontWeight": "{font-weight.400}",
+        "letterSpacing": "{dimension.0}",
+        "lineHeight": 1.5385
+      }
+    }
+  },
+  "z-index": {
+    "$type": "number",
+    "$description": "Stacking order for elements outside the top layer. Native <dialog> and [popover] render in the top layer and ignore z-index; these values order everything else in the same sequence.",
+    "base": { "$value": 0 },
+    "dropdown": { "$value": 1000 },
+    "sticky": { "$value": 1100 },
+    "backdrop": { "$value": 1200 },
+    "modal": { "$value": 1300 },
+    "popover": { "$value": 1400 },
+    "toast": { "$value": 1500 },
+    "tooltip": { "$value": 1600 }
+  },
+  "breakpoint": {
+    "$type": "dimension",
+    "$description": "Viewport widths where the page layout changes (min-width). CSS cannot read custom properties in media queries, so layouts use these values through the typed tokens and a lint check, never as ad-hoc numbers.",
+    "sm": { "$value": "{dimension.600}" },
+    "md": { "$value": "{dimension.840}" },
+    "lg": { "$value": "{dimension.1200}" },
+    "xl": { "$value": "{dimension.1600}" }
+  },
+  "container": {
+    "$type": "dimension",
+    "$description": "Container widths where a component changes its own layout (container queries, min-width).",
+    "xs": { "$value": "{dimension.320}" },
+    "sm": { "$value": "{dimension.480}" },
+    "md": { "$value": "{dimension.640}" },
+    "lg": { "$value": "{dimension.960}" }
+  }
+}

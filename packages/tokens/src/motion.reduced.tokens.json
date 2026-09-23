@@ -1,0 +1,50 @@
+{
+  "duration": {
+    "$type": "duration",
+    "$description": "Under prefers-reduced-motion: reduce and [data-motion=\"reduced\"] (brief §6.5). Fades are kept; long movements are shortened.",
+    "slow": {
+      "$value": {
+        "value": 150,
+        "unit": "ms"
+      }
+    },
+    "slower": {
+      "$value": {
+        "value": 150,
+        "unit": "ms"
+      }
+    }
+  },
+  "motion": {
+    "distance": {
+      "$type": "dimension",
+      "$description": "Nothing moves.",
+      "sm": {
+        "$value": "{dimension.0}"
+      },
+      "md": {
+        "$value": "{dimension.0}"
+      },
+      "lg": {
+        "$value": "{dimension.0}"
+      }
+    },
+    "scale": {
+      "$type": "number",
+      "enter": {
+        "$value": 1,
+        "$description": "Nothing scales."
+      }
+    }
+  },
+  "timing": {
+    "$type": "duration",
+    "stagger": {
+      "$value": {
+        "value": 0,
+        "unit": "ms"
+      },
+      "$description": "No stagger."
+    }
+  }
+}

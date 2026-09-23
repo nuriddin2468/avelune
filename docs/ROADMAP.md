@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 2 in progress (2026-09-23). Colour generation done; next: semantic tokens (second item).
+**Current position:** Phase 2 in progress (2026-09-23). Colour generation and token sources done; next: Style Dictionary build (third item).
 
 ## Parameters
 
@@ -53,7 +53,7 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 
 ### Phase 2: Tokens
 - [x] Colour generation script (OKLCH, colorjs.io) and primitive scales (ADR 0011, addendum; scripts in TS per ADR 0015)
-- [ ] Semantic light + dark, density compact, motion, component sources (DTCG 2025.10)
+- [x] Semantic light + dark, density compact, motion, component sources (DTCG 2025.10; files and tier rules in ADR 0016)
 - [ ] Style Dictionary 5 build → `tokens.css`, `tokens.ts` (`TokenName` union)
 - [ ] `tools/tokens-check`: schema, references, naming, tier direction, contrast pairs, dark parity, no primitives in output; with failing fixtures
 - [ ] Fonts: cmap check on the shipped woff2 subsets; self-hosted IBM Plex Sans; metric-tuned fallback `@font-face`
@@ -207,6 +207,8 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 - Registry and GitLab edition (Phase 3 CI, CODEOWNERS enforcement).
 - Icon set style: asked at the Foundations milestone (taste).
 - Accent-only primary action vs a Yaru-style separate "suggested" colour: asked at the Foundations milestone.
+- Token additions beyond brief §4.2/§6.2 (ADR 0016): state layers, `fg.on-{status}`, `size.control.xs`, the `timing` group. Asked at the Foundations milestone.
+- Code font: the platform monospace (current) or self-hosted IBM Plex Mono. Asked at the Foundations milestone.
 
 ## Out of scope
 

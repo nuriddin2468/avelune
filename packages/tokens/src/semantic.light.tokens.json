@@ -1,0 +1,305 @@
+{
+  "color": {
+    "$type": "color",
+    "bg": {
+      "canvas": {
+        "$value": "{color.neutral.50}",
+        "$description": "The app background behind every surface."
+      },
+      "surface": {
+        "$value": "{color.white}",
+        "$description": "Content surfaces on the canvas: panels, cards, tables, form areas."
+      },
+      "surface-raised": {
+        "$value": "{color.white}",
+        "$description": "Surfaces above the page: popovers, menus, dialogs, toasts. In dark, higher surfaces are lighter."
+      },
+      "surface-sunken": {
+        "$value": "{color.neutral.100}",
+        "$description": "Recessed areas inside a surface: wells, code blocks, table headers."
+      },
+      "backdrop": {
+        "$value": "{color.neutral-alpha.48}",
+        "$description": "The scrim behind modal dialogs and drawers."
+      },
+      "hover": {
+        "$value": "{color.neutral-alpha.8}",
+        "$description": "State layer over any surface for a hovered item without a fill of its own (ghost buttons, menu items, rows)."
+      },
+      "active": {
+        "$value": "{color.neutral-alpha.12}",
+        "$description": "State layer for the same items while pressed."
+      },
+      "disabled": {
+        "$value": "{color.neutral.100}",
+        "$description": "Fill of a disabled control that has a fill when enabled."
+      }
+    },
+    "fg": {
+      "default": {
+        "$value": "{color.neutral.900}",
+        "$description": "Primary text and icons."
+      },
+      "muted": {
+        "$value": "{color.neutral.700}",
+        "$description": "Secondary text: descriptions, metadata, inactive tabs."
+      },
+      "subtle": {
+        "$value": "{color.neutral.600}",
+        "$description": "Tertiary text: placeholders, hints. Still 4.5:1; it is text."
+      },
+      "disabled": {
+        "$value": "{color.neutral.400}",
+        "$description": "Text and icons of disabled controls. Exempt from contrast minimums (WCAG 1.4.3); never the only sign of the state."
+      },
+      "on-accent": {
+        "$value": "{color.white}",
+        "$description": "Text and icons on color.accent.bg and its hover and active states."
+      },
+      "on-info": {
+        "$value": "{color.white}",
+        "$description": "Text and icons on color.info.bg."
+      },
+      "on-success": {
+        "$value": "{color.white}",
+        "$description": "Text and icons on color.success.bg."
+      },
+      "on-warning": {
+        "$value": "{color.white}",
+        "$description": "Text and icons on color.warning.bg."
+      },
+      "on-danger": {
+        "$value": "{color.white}",
+        "$description": "Text and icons on color.danger.bg."
+      },
+      "link": {
+        "$value": "{color.orange.600}",
+        "$description": "Inline links."
+      }
+    },
+    "border": {
+      "subtle": {
+        "$value": "{color.neutral.200}",
+        "$description": "Dividers and the edges of surfaces; decorative, no contrast minimum."
+      },
+      "default": {
+        "$value": "{color.neutral.300}",
+        "$description": "Outlines of containers and secondary controls whose label identifies them."
+      },
+      "strong": {
+        "$value": "{color.neutral.500}",
+        "$description": "Boundaries a user needs to find a control (inputs, checkboxes): 3:1 against the surface (WCAG 1.4.11)."
+      },
+      "focus": {
+        "$value": "{color.orange.600}",
+        "$description": "The focus ring."
+      }
+    },
+    "brand": {
+      "mark": {
+        "$value": "{color.orange.500}",
+        "$description": "The exact brand colour, for logos, illustrations and data marks only. Never text, never a text background (ADR 0011)."
+      }
+    },
+    "accent": {
+      "bg": {
+        "$value": "{color.orange.600}",
+        "$description": "Solid fill. The accent: primary actions, selection, focus. Text on it uses color.fg.on-accent. The brand colour itself fails 4.5:1 with white text, so this is the nearest passing step (ADR 0011)."
+      },
+      "bg-hover": {
+        "$value": "{color.orange.700}"
+      },
+      "bg-active": {
+        "$value": "{color.orange.800}"
+      },
+      "bg-subtle": {
+        "$value": "{color.orange.100}",
+        "$description": "Tinted background: selected rows, inline alerts."
+      },
+      "fg": {
+        "$value": "{color.orange.600}",
+        "$description": "Text and icons in this colour on any surface or on bg-subtle."
+      },
+      "border": {
+        "$value": "{color.orange.500}",
+        "$description": "Boundary in this colour, 3:1 against the surface (an invalid input, a selected card)."
+      }
+    },
+    "info": {
+      "bg": {
+        "$value": "{color.blue.600}",
+        "$description": "Solid fill. Neutral information. Text on it uses color.fg.on-info."
+      },
+      "bg-hover": {
+        "$value": "{color.blue.700}"
+      },
+      "bg-active": {
+        "$value": "{color.blue.800}"
+      },
+      "bg-subtle": {
+        "$value": "{color.blue.100}",
+        "$description": "Tinted background: selected rows, inline alerts."
+      },
+      "fg": {
+        "$value": "{color.blue.600}",
+        "$description": "Text and icons in this colour on any surface or on bg-subtle."
+      },
+      "border": {
+        "$value": "{color.blue.500}",
+        "$description": "Boundary in this colour, 3:1 against the surface (an invalid input, a selected card)."
+      }
+    },
+    "success": {
+      "bg": {
+        "$value": "{color.green.600}",
+        "$description": "Solid fill. A completed or positive result. Text on it uses color.fg.on-success."
+      },
+      "bg-hover": {
+        "$value": "{color.green.700}"
+      },
+      "bg-active": {
+        "$value": "{color.green.800}"
+      },
+      "bg-subtle": {
+        "$value": "{color.green.100}",
+        "$description": "Tinted background: selected rows, inline alerts."
+      },
+      "fg": {
+        "$value": "{color.green.600}",
+        "$description": "Text and icons in this colour on any surface or on bg-subtle."
+      },
+      "border": {
+        "$value": "{color.green.500}",
+        "$description": "Boundary in this colour, 3:1 against the surface (an invalid input, a selected card)."
+      }
+    },
+    "warning": {
+      "bg": {
+        "$value": "{color.amber.600}",
+        "$description": "Solid fill. A risk the user should check before continuing. Text on it uses color.fg.on-warning."
+      },
+      "bg-hover": {
+        "$value": "{color.amber.700}"
+      },
+      "bg-active": {
+        "$value": "{color.amber.800}"
+      },
+      "bg-subtle": {
+        "$value": "{color.amber.100}",
+        "$description": "Tinted background: selected rows, inline alerts."
+      },
+      "fg": {
+        "$value": "{color.amber.600}",
+        "$description": "Text and icons in this colour on any surface or on bg-subtle."
+      },
+      "border": {
+        "$value": "{color.amber.500}",
+        "$description": "Boundary in this colour, 3:1 against the surface (an invalid input, a selected card)."
+      }
+    },
+    "danger": {
+      "bg": {
+        "$value": "{color.red.600}",
+        "$description": "Solid fill. Errors and destructive actions. Text on it uses color.fg.on-danger."
+      },
+      "bg-hover": {
+        "$value": "{color.red.700}"
+      },
+      "bg-active": {
+        "$value": "{color.red.800}"
+      },
+      "bg-subtle": {
+        "$value": "{color.red.100}",
+        "$description": "Tinted background: selected rows, inline alerts."
+      },
+      "fg": {
+        "$value": "{color.red.600}",
+        "$description": "Text and icons in this colour on any surface or on bg-subtle."
+      },
+      "border": {
+        "$value": "{color.red.500}",
+        "$description": "Boundary in this colour, 3:1 against the surface (an invalid input, a selected card)."
+      }
+    }
+  },
+  "elevation": {
+    "$type": "shadow",
+    "$description": "Two-layer shadows: a tight contact shadow and a soft ambient one. In dark, shadows are stronger and raised surfaces are lighter (color.bg.surface-raised); overlays add color.border.subtle.",
+    "flat": {
+      "$value": [
+        {
+          "color": "{color.neutral-alpha.4}",
+          "offsetX": "{dimension.0}",
+          "offsetY": "{dimension.0}",
+          "blur": "{dimension.0}",
+          "spread": "{dimension.0}"
+        },
+        {
+          "color": "{color.neutral-alpha.4}",
+          "offsetX": "{dimension.0}",
+          "offsetY": "{dimension.0}",
+          "blur": "{dimension.0}",
+          "spread": "{dimension.0}"
+        }
+      ],
+      "$description": "Level 0: on the surface, no shadow."
+    },
+    "raised": {
+      "$value": [
+        {
+          "color": "{color.neutral-alpha.8}",
+          "offsetX": "{dimension.0}",
+          "offsetY": "{dimension.1}",
+          "blur": "{dimension.2}",
+          "spread": "{dimension.0}"
+        },
+        {
+          "color": "{color.neutral-alpha.4}",
+          "offsetX": "{dimension.0}",
+          "offsetY": "{dimension.2}",
+          "blur": "{dimension.4}",
+          "spread": "{dimension.0}"
+        }
+      ],
+      "$description": "Level 1: cards and sticky headers that lift off the surface."
+    },
+    "popover": {
+      "$value": [
+        {
+          "color": "{color.neutral-alpha.8}",
+          "offsetX": "{dimension.0}",
+          "offsetY": "{dimension.2}",
+          "blur": "{dimension.4}",
+          "spread": "{dimension.0}"
+        },
+        {
+          "color": "{color.neutral-alpha.12}",
+          "offsetX": "{dimension.0}",
+          "offsetY": "{dimension.8}",
+          "blur": "{dimension.16}",
+          "spread": "{dimension.0}"
+        }
+      ],
+      "$description": "Level 2: menus, popovers, select popups, tooltips."
+    },
+    "dialog": {
+      "$value": [
+        {
+          "color": "{color.neutral-alpha.12}",
+          "offsetX": "{dimension.0}",
+          "offsetY": "{dimension.4}",
+          "blur": "{dimension.8}",
+          "spread": "{dimension.0}"
+        },
+        {
+          "color": "{color.neutral-alpha.16}",
+          "offsetX": "{dimension.0}",
+          "offsetY": "{dimension.16}",
+          "blur": "{dimension.32}",
+          "spread": "{dimension.0}"
+        }
+      ],
+      "$description": "Level 3: dialogs and drawers."
+    }
+  }
+}

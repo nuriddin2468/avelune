@@ -1,0 +1,29 @@
+{
+  "control": {
+    "$description": "Dimensions shared by every control of a size (button, icon button, input, select, combobox, date picker), so they line up (brief §8.2). Overridden by density.",
+    "height": {
+      "$type": "dimension",
+      "sm": {
+        "$value": "{size.control.sm}"
+      },
+      "md": {
+        "$value": "{size.control.md}"
+      },
+      "lg": {
+        "$value": "{size.control.lg}"
+      }
+    },
+    "padding-inline": {
+      "$type": "dimension",
+      "sm": {
+        "$value": "{space.3}"
+      },
+      "md": {
+        "$value": "{space.4}"
+      },
+      "lg": {
+        "$value": "{space.5}"
+      }
+    }
+  }
+}

@@ -33,4 +33,4 @@ Consistency across products requires one source of truth for every visual value.
 
 ## Addendum (Phase 2, 2026-09-23)
 
-Colour primitives are generated into `src/primitives.color.tokens.json` by the colour script (ADR 0011, addendum) and never edited by hand; `src/primitives.tokens.json` holds the hand-written primitives. The other source files are as listed above.
+Colour primitives are generated into `src/primitives.color.tokens.json` by the colour script (ADR 0011, addendum) and never edited by hand; `src/primitives.tokens.json` holds the hand-written primitives. ADR 0016 adds `semantic.tokens.json` (theme-independent semantic tokens) and `motion.reduced.tokens.json`, and states which values may be literals.

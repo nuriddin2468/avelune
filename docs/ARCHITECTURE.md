@@ -103,14 +103,24 @@ Conventions:
 
 ```
 packages/tokens/
-├── src/
-│   └── primitives.color.tokens.json   generated; never edited by hand
+├── src/                               DTCG 2025.10 sources; tier of each file in ADR 0016
+│   ├── primitives.color.tokens.json   generated; never edited by hand
+│   ├── primitives.tokens.json         dimension (px), font-family, font-weight
+│   ├── semantic.tokens.json           theme-independent: space, size, radius, font, z-index, breakpoints
+│   ├── semantic.light.tokens.json     colour roles and elevation, light
+│   ├── semantic.dark.tokens.json      the same names, dark
+│   ├── motion.tokens.json             duration, easing, motion distance/scale, timing
+│   ├── motion.reduced.tokens.json     reduced-motion overrides
+│   ├── component.tokens.json          control height and padding
+│   └── density.compact.tokens.json    compact overrides
 └── scripts/
     ├── palette.config.ts              inputs: lightness ladder, chroma curve, hues, brand, contracts
     ├── palette.ts                     generation and checks (pure functions)
     ├── generate-colors.ts             CLI: check (default) or --update
     └── palette.spec.ts
 ```
+
+**Tiers.** Primitives hold values and are never emitted. Semantic tokens name a purpose (`color.bg.surface`, `space.4`, `font.body-md`) and reference primitives; component tokens (`control.height.md`) exist only where a component must be themable, today for density, and reference semantic tokens. Durations, easings and plain numbers are literals in the semantic tier (ADR 0016).
 
 **Colour primitives.** Every scale (`neutral`, `orange`, `red`, `amber`, `green`, `blue`) has twelve steps, 50–950 plus 850, at the same OKLCH lightness per step, so a step plays the same contrast role in every hue. The brand colour is kept exact at `orange.500`. The ladder's contracts (which step carries text or boundaries on which surface) are checked on every generation; see ADR 0011, addendum. To change the palette: edit `palette.config.ts`, run `pnpm nx run tokens:colors --update`, review the diff of the generated file (each token's `$description` shows its OKLCH), commit both.
 

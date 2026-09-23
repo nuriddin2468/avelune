@@ -1,0 +1,57 @@
+{
+  "dimension": {
+    "$type": "dimension",
+    "$description": "Every length the kit uses, in px, named by value. Lengths sit on the 4px grid; 1 and 2 exist for hairlines, borders and focus rings.",
+    "0": { "$value": { "value": 0, "unit": "px" } },
+    "1": { "$value": { "value": 1, "unit": "px" } },
+    "2": { "$value": { "value": 2, "unit": "px" } },
+    "4": { "$value": { "value": 4, "unit": "px" } },
+    "8": { "$value": { "value": 8, "unit": "px" } },
+    "12": { "$value": { "value": 12, "unit": "px" } },
+    "13": {
+      "$value": { "value": 13, "unit": "px" },
+      "$description": "Font size of code only: monospace runs larger than sans at equal size."
+    },
+    "14": { "$value": { "value": 14, "unit": "px" } },
+    "16": { "$value": { "value": 16, "unit": "px" } },
+    "20": { "$value": { "value": 20, "unit": "px" } },
+    "24": { "$value": { "value": 24, "unit": "px" } },
+    "28": { "$value": { "value": 28, "unit": "px" } },
+    "32": { "$value": { "value": 32, "unit": "px" } },
+    "36": { "$value": { "value": 36, "unit": "px" } },
+    "40": { "$value": { "value": 40, "unit": "px" } },
+    "44": { "$value": { "value": 44, "unit": "px" } },
+    "48": { "$value": { "value": 48, "unit": "px" } },
+    "64": { "$value": { "value": 64, "unit": "px" } },
+    "320": { "$value": { "value": 320, "unit": "px" } },
+    "480": { "$value": { "value": 480, "unit": "px" } },
+    "600": { "$value": { "value": 600, "unit": "px" } },
+    "640": { "$value": { "value": 640, "unit": "px" } },
+    "840": { "$value": { "value": 840, "unit": "px" } },
+    "960": { "$value": { "value": 960, "unit": "px" } },
+    "1200": { "$value": { "value": 1200, "unit": "px" } },
+    "1600": { "$value": { "value": 1600, "unit": "px" } },
+    "9999": {
+      "$value": { "value": 9999, "unit": "px" },
+      "$description": "Radius large enough to make any element fully round."
+    }
+  },
+  "font-family": {
+    "$type": "fontFamily",
+    "ibm-plex-sans": {
+      "$value": ["IBM Plex Sans", "IBM Plex Sans Fallback", "sans-serif"],
+      "$description": "Self-hosted woff2 (latin, latin-ext, cyrillic). The fallback face is a local font with metrics tuned to Plex, so the swap does not shift layout."
+    },
+    "system-mono": {
+      "$value": ["ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "Liberation Mono", "monospace"],
+      "$description": "The platform's monospace font. Code is not shipped in a web font in 0.x."
+    }
+  },
+  "font-weight": {
+    "$type": "fontWeight",
+    "$description": "The three weights the kit uses (brief §4.2: at most three).",
+    "400": { "$value": 400 },
+    "500": { "$value": 500 },
+    "600": { "$value": 600 }
+  }
+}
