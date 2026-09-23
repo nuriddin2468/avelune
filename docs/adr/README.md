@@ -16,7 +16,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0008](0008-storybook-angular-vite.md) | Storybook on `@storybook/angular-vite` | Accepted |
 | [0009](0009-stylelint-logical-css-plugin.md) | Logical-properties lint: `stylelint-plugin-logical-css` | Accepted |
 | [0010](0010-visual-test-determinism.md) | Visual-test determinism: pinned image, amd64, fonts | Accepted |
-| [0011](0011-color-generation-and-contrast.md) | Colour generation in OKLCH and contrast maths | Accepted |
+| [0011](0011-color-generation-and-contrast.md) | Colour generation in OKLCH and contrast maths | Accepted; accent fill of its addendum superseded by 0019 |
 | [0012](0012-pnpm-11.md) | Package manager: pnpm 11 | Accepted |
 | [0013](0013-vitest-4-now-5-later.md) | Vitest 4 now, Vitest 5 after Angular 22.2 | Accepted |
 | [0014](0014-browser-floor-follows-angular.md) | Browser floor follows Angular's supported set | Accepted |
@@ -24,6 +24,8 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0016](0016-token-sources-and-tier-rules.md) | Token sources: files, tier rules, literal values | Accepted |
 | [0017](0017-token-build-output.md) | Token build output: px, one CSS file with mode blocks, typed TS | Accepted |
 | [0018](0018-fonts-subset-rename-fallback.md) | Fonts: IBM Plex Sans subsets, renamed "Avelune Sans", metric-matched fallback | Accepted |
+| [0019](0019-accent-exact-brand-dark-text.md) | Accent fill: the exact brand colour with dark text | Accepted |
+| [0020](0020-icons-lucide.md) | Icons: Lucide | Accepted |
 
 ## Template
 

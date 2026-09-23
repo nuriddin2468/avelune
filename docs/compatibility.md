@@ -88,4 +88,6 @@ Checked with `fontkit` against `google/fonts/ofl/ibmplexsans/IBMPlexSans[wdth,wg
 
 Other candidates checked: Inter, Noto Sans and Onest pass. Golos Text, Manrope, PT Sans, Rubik and Geologica fail (no U+02BB; Manrope and Rubik also miss Uzbek Cyrillic letters).
 
+IBM Plex Mono 2.3 (the code font, chosen at the Foundations milestone) covers the same Latin, Uzbek and Cyrillic characters; it lacks U+202F, which code does not need.
+
 Phase 2 (2026-09-23): `fonts:check` repeats the check on the shipped woff2 subsets on every run. Findings: Google's `cyrillic` range lacks Ғ Қ Ҳ, so the kit's cyrillic subset adds them; Plex's U+02BB/U+02BC glyphs are 0.6 em wide and are mapped to ‘ ’; the subsets are renamed "Avelune Sans" for the OFL Reserved Font Name (ADR 0018).

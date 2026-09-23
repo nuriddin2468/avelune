@@ -142,7 +142,7 @@ The **Foundations** pages live in `apps/storybook/src/foundations`: colour roles
 
 ## Fonts
 
-The kit's typeface is IBM Plex Sans, shipped as **"Avelune Sans"** (ADR 0018): `tools/fonts` subsets the pinned source (`tools/fonts/source`) into `packages/ui/styles/fonts/avelune-sans-{latin,latin-ext,cyrillic}.woff2` (variable, weights 400–600), renames it as the OFL requires, maps ʻ ʼ to Plex's ‘ ’ glyphs, and writes `fonts.css` with the `@font-face` rules and one metric-matched Arial fallback face per weight. The outputs are committed; `pnpm nx run fonts:check` rebuilds them in memory and fails on any difference, on a character a locale needs but the files lack, and on a leftover Reserved Font Name. `styles.css` imports `fonts.css` in Phase 4.
+The kit's typefaces are IBM Plex Sans, shipped as **"Avelune Sans"**, and IBM Plex Mono for code, shipped as **"Avelune Mono"** (ADR 0018 and its addendum): `tools/fonts` subsets the pinned sources (`tools/fonts/source`) into `packages/ui/styles/fonts/avelune-{sans,mono}-{latin,latin-ext,cyrillic}.woff2` (sans variable, weights 400–600; mono Regular), renames them as the OFL requires, maps ʻ ʼ to Plex Sans' ‘ ’ glyphs, and writes `fonts.css` with the `@font-face` rules and metric-matched fallback faces (Arial per weight, Courier New for mono). The outputs are committed; `pnpm nx run fonts:check` rebuilds them in memory and fails on any difference, on a character a locale needs but the files lack, and on a leftover Reserved Font Name. `styles.css` imports `fonts.css` in Phase 4.
 
 ## Enforcement map
 

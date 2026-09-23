@@ -39,8 +39,8 @@ const samples = [
   template: `
     <ave-docs-page heading="Typography">
       <span lead
-        >Twelve roles on IBM Plex Sans, shipped as Avelune Sans (ADR 0018). Body text is 14/20; every line height is a
-        multiple of 4; three weights: 400, 500, 600.</span
+        >Twelve roles on IBM Plex Sans, shipped as Avelune Sans, with IBM Plex Mono for code, shipped as Avelune Mono
+        (ADR 0018). Body text is 14/20; every line height is a multiple of 4; three weights: 400, 500, 600.</span
       >
       <ave-docs-section heading="Font" [note]="fontStatus()">
         <dl class="facts">
@@ -51,6 +51,10 @@ const samples = [
           <div>
             <dt>Weights</dt>
             <dd>400 regular, 500 medium, 600 semibold</dd>
+          </div>
+          <div>
+            <dt>Code</dt>
+            <dd>Avelune Mono (IBM Plex Mono 2.3), Regular</dd>
           </div>
           <div>
             <dt>Subsets</dt>
@@ -196,11 +200,12 @@ class Typography {
   constructor() {
     afterNextRender(async () => {
       await document.fonts.ready;
-      const loaded = [400, 500, 600].every((weight) => document.fonts.check(`${weight} 14px "Avelune Sans"`, 'Oʻ Ғ Ж'));
+      const sans = [400, 500, 600].every((weight) => document.fonts.check(`${weight} 14px "Avelune Sans"`, 'Oʻ Ғ Ж'));
+      const mono = document.fonts.check('400 13px "Avelune Mono"', 'Oʻ Ғ Ж');
       this.fontStatus.set(
-        loaded
-          ? 'Avelune Sans is loaded in all three weights for Latin and Cyrillic.'
-          : 'Avelune Sans did not load; the page shows the fallback.',
+        sans && mono
+          ? 'Avelune Sans (three weights) and Avelune Mono are loaded for Latin and Cyrillic.'
+          : 'A web font did not load; the page shows the fallback.',
       );
     });
   }

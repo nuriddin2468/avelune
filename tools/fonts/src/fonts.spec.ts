@@ -5,19 +5,13 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { after, before, describe, it } from 'node:test';
 import * as fontkit from 'fontkit';
-import { subsetFile, subsets } from './config.ts';
-import {
-  coverageProblems,
-  outputDir,
-  remapGlyphs,
-  renameFont,
-  reservedNameRecords,
-  sourceDir,
-  sourceFont,
-} from './fonts.ts';
+import { families, subsetFile, subsets } from './config.ts';
+import { coverageProblems, outputDir, remapGlyphs, renameFont, reservedNameRecords, sourceDir } from './fonts.ts';
 import { checksum, readCmap, readNames, readSfnt, writeCmap, writeNames, writeSfnt } from './sfnt.ts';
 
-const source = readFileSync(join(sourceDir, sourceFont));
+const [sans, mono] = families;
+if (sans === undefined || mono === undefined) throw new Error('expected the sans and mono families');
+const source = readFileSync(join(sourceDir, sans.source));
 
 describe('sfnt', () => {
   it('rebuilds a font whose whole-file checksum is the magic number', () => {
@@ -53,7 +47,7 @@ describe('the Reserved Font Name', () => {
   });
 
   it('is gone after renaming, except in copyright, trademark and licence records', () => {
-    const renamed = names(renameFont(source));
+    const renamed = names(renameFont(source, sans));
     assert.deepEqual(reservedNameRecords(renamed), []);
     assert.ok(renamed.some((record) => record.nameId === 1 && record.text === 'Avelune Sans'));
     assert.ok(renamed.some((record) => record.nameId === 7 && record.text.includes('IBM Plex')));
@@ -62,24 +56,25 @@ describe('the Reserved Font Name', () => {
 
 describe('remapGlyphs', () => {
   it('draws ʻ and ʼ with the glyphs of ‘ and ’', () => {
-    const cmap = readCmap(readSfnt(remapGlyphs(source)).tables.get('cmap') ?? new Uint8Array());
+    const cmap = readCmap(readSfnt(remapGlyphs(source, sans.glyphRemap)).tables.get('cmap') ?? new Uint8Array());
     assert.equal(cmap.get(0x02bb), cmap.get(0x2018));
     assert.equal(cmap.get(0x02bc), cmap.get(0x2019));
   });
 });
 
 describe('coverageProblems', () => {
-  const shippedCmaps = () =>
+  const shippedCmaps = (family = sans) =>
     new Map(
       subsets.map((subset) => {
-        const font = fontkit.create(readFileSync(join(outputDir, subsetFile(subset))));
+        const font = fontkit.create(readFileSync(join(outputDir, subsetFile(family, subset))));
         assert.ok('characterSet' in font);
         return [subset.name, new Set(font.characterSet)] as const;
       }),
     );
 
-  it('finds nothing missing in the shipped files', () => {
-    assert.deepEqual(coverageProblems(shippedCmaps()), []);
+  it('finds nothing missing in the shipped files of either family', () => {
+    assert.deepEqual(coverageProblems(sans, shippedCmaps(sans)), []);
+    assert.deepEqual(coverageProblems(mono, shippedCmaps(mono)), []);
   });
 
   it('reports a letter the font lacks (Uzbek Ғ removed from the cyrillic cmap)', () => {
@@ -88,7 +83,7 @@ describe('coverageProblems', () => {
     cyrillic.delete(0x0492);
     cmaps.set('cyrillic', cyrillic);
     assert.ok(
-      coverageProblems(cmaps).some(
+      coverageProblems(sans, cmaps).some(
         (p) => p.locale === 'uz-Cyrl' && p.character === 'Ғ' && /not in the font/.test(p.problem),
       ),
     );
@@ -109,7 +104,7 @@ describe('coverageProblems', () => {
           }
         : subset,
     );
-    const problems = coverageProblems(shippedCmaps(), googleCyrillic);
+    const problems = coverageProblems(sans, shippedCmaps(), googleCyrillic);
     assert.deepEqual(
       problems
         .filter((p) => p.locale === 'uz-Cyrl')
@@ -117,6 +112,16 @@ describe('coverageProblems', () => {
         .sort(),
       ['Ғ', 'Ҳ', 'Қ', 'ғ', 'ҳ', 'қ'].sort(),
     );
+  });
+});
+
+describe('Avelune Mono', () => {
+  it('is renamed and keeps Plex Mono out of its names', () => {
+    const renamed = readNames(
+      readSfnt(renameFont(readFileSync(join(sourceDir, mono.source)), mono)).tables.get('name') ?? new Uint8Array(),
+    );
+    assert.deepEqual(reservedNameRecords(renamed), []);
+    assert.ok(renamed.some((record) => record.nameId === 1 && record.text === 'Avelune Mono'));
   });
 });
 

@@ -60,7 +60,7 @@
     "family": {
       "$type": "fontFamily",
       "sans": { "$value": "{font-family.avelune-sans}" },
-      "mono": { "$value": "{font-family.system-mono}" }
+      "mono": { "$value": "{font-family.avelune-mono}" }
     },
     "weight": {
       "$type": "fontWeight",
@@ -193,7 +193,7 @@
       "$type": "typography",
       "$description": "13/20 monospace. Inline code, identifiers, logs.",
       "$value": {
-        "fontFamily": "{font-family.system-mono}",
+        "fontFamily": "{font-family.avelune-mono}",
         "fontSize": "{dimension.13}",
         "fontWeight": "{font-weight.400}",
         "letterSpacing": "{dimension.0}",

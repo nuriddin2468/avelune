@@ -35,3 +35,7 @@ The product owner chose IBM Plex Sans (Phase 0). Brief §4.4 asks for self-hoste
 
 - Upgrading Plex means replacing the source, updating the hashes, `fonts:check --update`, and reviewing the rendering; the RFN rename stays.
 - Visual tests (ADR 0010) assert that "Avelune Sans" loaded, not "IBM Plex Sans".
+
+## Addendum: IBM Plex Mono for code (product owner, 2026-09-23)
+
+The product owner chose IBM Plex Mono over the platform monospace. `tools/fonts` builds it as **"Avelune Mono"** the same way: `IBMPlexMono-Regular.ttf` 2.3 from the same pinned `google/fonts` commit, the same three subsets (latin 15 KB, latin-ext 13 KB, cyrillic 8 KB), renamed, Regular only (the `code` role uses 400). ʻ and ʼ keep their own glyphs, since every glyph of a monospace font is 0.6 em wide. The fallback face is local Courier New or Liberation Mono (also 0.6 em per glyph, reference `LiberationMono-Regular.ttf` 2.1.5) with Plex Mono's vertical metrics. U+202F is not in Plex Mono; code does not render Intl output, so the code font's coverage check leaves it out.

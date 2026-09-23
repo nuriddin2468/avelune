@@ -1,5 +1,5 @@
-// The font build (brief §4.4, ADR 0018): subsets IBM Plex Sans into latin, latin-ext and cyrillic woff2 files,
-// renames them per the OFL, writes fonts.css with metric-matched fallback faces, and checks what is shipped.
+// The font build (brief §4.4, ADR 0018): subsets IBM Plex Sans and IBM Plex Mono into latin, latin-ext and cyrillic
+// woff2 files, renames them per the OFL, writes fonts.css with metric-matched fallback faces, and checks what ships.
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { join } from 'node:path';
@@ -7,19 +7,14 @@ import * as fontkit from 'fontkit';
 import { format, resolveConfig } from 'prettier';
 import {
   corpus,
-  fallback,
-  family,
-  glyphRemap,
+  families,
   inRanges,
   keptNameIds,
-  postScriptFamily,
-  requiredCharacters,
   subsetFile,
   subsets,
   unicodeRange,
-  weight,
-  weights,
-  width,
+  type FallbackFace,
+  type Family,
   type Subset,
 } from './config.ts';
 import { readCmap, readNames, readSfnt, writeCmap, writeNames, writeSfnt, type NameRecord } from './sfnt.ts';
@@ -31,7 +26,7 @@ const subsetFont = require('subset-font') as (
   text: string,
   options: {
     readonly targetFormat: 'truetype';
-    readonly variationAxes: Readonly<Record<string, number | { min: number; max: number; default: number }>>;
+    readonly variationAxes?: Readonly<Record<string, number | { min: number; max: number; default: number }>>;
   },
 ) => Promise<Uint8Array>;
 const fontverter = require('fontverter') as {
@@ -40,24 +35,29 @@ const fontverter = require('fontverter') as {
 
 export const sourceDir = join(import.meta.dirname, '..', 'source');
 export const outputDir = join(import.meta.dirname, '..', '..', '..', 'packages', 'ui', 'styles', 'fonts');
-export const sourceFont = 'IBMPlexSans-Variable.ttf';
 
 /** Every file the build writes into packages/ui/styles/fonts, by name. */
 export async function buildFonts(): Promise<ReadonlyMap<string, Uint8Array>> {
-  const source = readFileSync(join(sourceDir, sourceFont));
-  const remapped = Buffer.from(remapGlyphs(source));
   const files = new Map<string, Uint8Array>();
-  for (const subset of subsets) {
-    const truetype = await subsetFont(remapped, charactersOf(subset), {
-      targetFormat: 'truetype',
-      variationAxes: { wght: weight, wdth: width },
-    });
-    // fontverter detects formats with Buffer methods, so it needs a Buffer, not a plain Uint8Array.
-    files.set(subsetFile(subset), await fontverter.convert(Buffer.from(renameFont(truetype)), 'woff2'));
+  const prepared = new Map<Family, Buffer>();
+  for (const family of families) {
+    const source = Buffer.from(remapGlyphs(readFileSync(join(sourceDir, family.source)), family.glyphRemap));
+    prepared.set(family, source);
+    for (const subset of subsets) {
+      const truetype = await subsetFont(source, charactersOf(subset), {
+        targetFormat: 'truetype',
+        ...(family.axes === undefined ? {} : { variationAxes: { wght: family.axes.wght, wdth: family.axes.wdth } }),
+      });
+      // fontverter detects formats with Buffer methods, so it needs a Buffer, not a plain Uint8Array.
+      files.set(
+        subsetFile(family, subset),
+        await fontverter.convert(Buffer.from(renameFont(truetype, family)), 'woff2'),
+      );
+    }
   }
   // Formatted with the repository's Prettier config, so the committed file passes `prettier --check` unchanged.
   const cssFile = join(outputDir, 'fonts.css');
-  const css = await format(fontsCss(remapped), { ...((await resolveConfig(cssFile)) ?? {}), filepath: cssFile });
+  const css = await format(fontsCss(prepared), { ...((await resolveConfig(cssFile)) ?? {}), filepath: cssFile });
   files.set('fonts.css', new TextEncoder().encode(css));
   files.set('OFL.txt', readFileSync(join(sourceDir, 'OFL-IBMPlexSans.txt')));
   files.set('FONTLOG.txt', new TextEncoder().encode(fontlog));
@@ -72,13 +72,14 @@ function charactersOf(subset: Subset): string {
     .join('');
 }
 
-/** Points each code point of `glyphRemap` at the glyph of its replacement, before subsetting. */
-export function remapGlyphs(truetype: Uint8Array): Uint8Array {
+/** Points each code point of `remap` at the glyph of its replacement, before subsetting. */
+export function remapGlyphs(truetype: Uint8Array, remap: ReadonlyMap<number, number>): Uint8Array {
+  if (remap.size === 0) return truetype;
   const sfnt = readSfnt(truetype);
   const cmap = sfnt.tables.get('cmap');
   if (cmap === undefined) throw new Error('font has no cmap table');
   const mapping = readCmap(cmap);
-  for (const [from, to] of glyphRemap) {
+  for (const [from, to] of remap) {
     const glyph = mapping.get(to);
     if (glyph === undefined || !mapping.has(from)) {
       throw new Error(`cannot remap U+${from.toString(16)}: the font lacks it or U+${to.toString(16)}`);
@@ -94,7 +95,7 @@ export function remapGlyphs(truetype: Uint8Array): Uint8Array {
  * Replaces the family name in every name record except copyright, trademark and licence (OFL-FAQ 2.6: a modified
  * version must not use the Reserved Font Name "Plex").
  */
-export function renameFont(truetype: Uint8Array): Uint8Array {
+export function renameFont(truetype: Uint8Array, family: Family): Uint8Array {
   const sfnt = readSfnt(truetype);
   const name = sfnt.tables.get('name');
   if (name === undefined) throw new Error('font has no name table');
@@ -103,7 +104,9 @@ export function renameFont(truetype: Uint8Array): Uint8Array {
       ? record
       : {
           ...record,
-          text: record.text.replaceAll('IBM Plex Sans', family).replaceAll('IBMPlexSans', postScriptFamily),
+          text: record.text
+            .replaceAll(family.original.family, family.family)
+            .replaceAll(family.original.postScriptFamily, family.postScriptFamily),
         },
   );
   const tables = new Map(sfnt.tables);
@@ -124,22 +127,23 @@ interface FallbackMetrics {
 }
 
 /**
- * Scales the local fallback so the corpus sets the same width as Plex at `weightValue`, and overrides its vertical
- * metrics with Plex's, so swapping fonts moves nothing. The overrides are divided by size-adjust because the browser
- * multiplies them by it (CSS Fonts 5).
+ * Scales the local fallback so the corpus sets the same width as the web font at the face's weight, and overrides its
+ * vertical metrics with the web font's, so swapping fonts moves nothing. The overrides are divided by size-adjust
+ * because the browser multiplies them by it (CSS Fonts 5).
  */
-export function fallbackMetrics(source: Uint8Array, weightValue: (typeof weights)[number]): FallbackMetrics {
-  const plex = openFont(source).getVariation({ wght: weightValue, wdth: width });
-  const reference = openFont(readFileSync(join(sourceDir, fallback.faces[weightValue].metrics)));
-  const widthPerEm = (font: fontkit.Font) =>
-    font.layout(corpus).positions.reduce((sum, position) => sum + position.xAdvance, 0) / font.unitsPerEm;
-  const sizeAdjust = widthPerEm(plex) / widthPerEm(reference);
-  const em = plex.unitsPerEm * sizeAdjust;
+export function fallbackMetrics(source: Uint8Array, family: Family, face: FallbackFace): FallbackMetrics {
+  const font = openFont(source);
+  const web = family.axes === undefined ? font : font.getVariation({ wght: face.weight, wdth: family.axes.wdth });
+  const reference = openFont(readFileSync(join(sourceDir, face.metrics)));
+  const widthPerEm = (subject: fontkit.Font) =>
+    subject.layout(corpus).positions.reduce((sum, position) => sum + position.xAdvance, 0) / subject.unitsPerEm;
+  const sizeAdjust = widthPerEm(web) / widthPerEm(reference);
+  const em = web.unitsPerEm * sizeAdjust;
   return {
     sizeAdjust,
-    ascent: plex.hhea.ascent / em,
-    descent: Math.abs(plex.hhea.descent) / em,
-    lineGap: plex.hhea.lineGap / em,
+    ascent: web.hhea.ascent / em,
+    descent: Math.abs(web.hhea.descent) / em,
+    lineGap: web.hhea.lineGap / em,
   };
 }
 
@@ -151,80 +155,95 @@ function openFont(data: Uint8Array): fontkit.Font {
 
 const percent = (value: number) => `${(value * 100).toFixed(2)}%`;
 
-export function fontsCss(source: Uint8Array): string {
-  const faces = subsets.map(
-    (subset) => `@font-face {
-  font-family: '${family}';
+export function fontsCss(sources: ReadonlyMap<Family, Uint8Array>): string {
+  const rules = [...sources].flatMap(([family, source]) => [
+    ...subsets.map(
+      (subset) => `@font-face {
+  font-family: '${family.family}';
   font-style: normal;
-  font-weight: ${weight.min} ${weight.max};
+  font-weight: ${family.weight};
   font-display: swap;
-  src: url('./${subsetFile(subset)}') format('woff2');
+  src: url('./${subsetFile(family, subset)}') format('woff2');
   unicode-range: ${unicodeRange(subset.ranges)};
 }`,
-  );
-  const fallbacks = weights.map((weightValue) => {
-    const metrics = fallbackMetrics(source, weightValue);
-    const local = fallback.faces[weightValue].local.map((name) => `local('${name}')`).join(', ');
-    return `@font-face {
-  font-family: '${fallback.family}';
+    ),
+    ...family.fallback.faces.map((face) => {
+      const metrics = fallbackMetrics(source, family, face);
+      return `@font-face {
+  font-family: '${family.fallback.family}';
   font-style: normal;
-  font-weight: ${weightValue};
-  src: ${local};
+  font-weight: ${face.weight};
+  src: ${face.local.map((name) => `local('${name}')`).join(', ')};
   size-adjust: ${percent(metrics.sizeAdjust)};
   ascent-override: ${percent(metrics.ascent)};
   descent-override: ${percent(metrics.descent)};
   line-gap-override: ${percent(metrics.lineGap)};
 }`;
-  });
+    }),
+  ]);
   return `/*
- * ${family}: IBM Plex Sans 3.201 by IBM Corp., SIL Open Font License 1.1 (OFL.txt). Subset for web delivery and
- * renamed, as the licence requires for a modified font with the Reserved Font Name "Plex" (FONTLOG.txt, ADR 0018).
- * '${fallback.family}' is a local Arial-compatible font scaled to Plex's metrics, so the swap does not shift layout.
- * Generated by tools/fonts; do not edit.
+ * ${families.map((family) => `${family.family}: ${family.original.family} ${family.original.version}`).join('; ')}.
+ * By IBM Corp., SIL Open Font License 1.1 (OFL.txt). Subset for web delivery and renamed, as the licence requires for a
+ * modified font with the Reserved Font Name "Plex" (FONTLOG.txt, ADR 0018). Each fallback family is a local font
+ * scaled to the web font's metrics, so the swap does not shift layout. Generated by tools/fonts; do not edit.
  */
-${[...faces, ...fallbacks].join('\n\n')}
+${rules.join('\n\n')}
 `;
 }
 
-const fontlog = `FONTLOG for ${family}
+const fontlog = `FONTLOG for ${families.map((family) => family.family).join(' and ')}
 
-${family} is a modified version of IBM Plex Sans 3.201 (Copyright 2017 IBM Corp., with Reserved Font Name "Plex"),
-licensed under the SIL Open Font License 1.1; see OFL.txt. Source: github.com/google/fonts, ofl/ibmplexsans,
-IBMPlexSans[wdth,wght].ttf (tools/fonts/source/README.md in the Avelune repository).
+${families
+  .map(
+    (family) =>
+      `${family.family} is a modified version of ${family.original.family} ${family.original.version} (Copyright 2017 IBM Corp., with Reserved Font Name "Plex").`,
+  )
+  .join('\n')}
+Both are licensed under the SIL Open Font License 1.1; see OFL.txt. Source: github.com/google/fonts, ofl/ibmplexsans
+and ofl/ibmplexmono (tools/fonts/source/README.md in the Avelune repository).
 
 Modifications, made by tools/fonts for web delivery in the Avelune UI kit:
-- split into three files by Unicode range (latin, latin-ext, cyrillic); glyphs outside them are removed;
-- the weight axis is limited to 400-600 and the width axis is pinned to 100;
-- U+02BB and U+02BC are mapped to the glyphs of U+2018 and U+2019, because the original modifier-letter glyphs are
-  0.6 em wide and break up Uzbek words such as "Oʻzbekiston";
-- the family is renamed from "IBM Plex Sans" to "${family}" in the name table, because a modified version may not
-  use the Reserved Font Name (OFL, condition 3; OFL-FAQ 2.6). Copyright, trademark and licence records are kept.
+- split into three files per family by Unicode range (latin, latin-ext, cyrillic); glyphs outside them are removed;
+- Avelune Sans: the weight axis is limited to 400-600 and the width axis is pinned to 100;
+- Avelune Sans: U+02BB and U+02BC are mapped to the glyphs of U+2018 and U+2019, because the original modifier-letter
+  glyphs are 0.6 em wide and break up Uzbek words such as "Oʻzbekiston";
+- Avelune Mono: only the Regular weight is shipped;
+- the families are renamed from "IBM Plex Sans" and "IBM Plex Mono" in the name table, because a modified version may
+  not use the Reserved Font Name (OFL, condition 3; OFL-FAQ 2.6). Copyright, trademark and licence records are kept.
 No glyph outline, metric or OpenType layout feature is changed.
 `;
 
 export interface CoverageProblem {
+  readonly family: string;
   readonly locale: string;
   readonly character: string;
   readonly problem: string;
 }
 
 /**
- * Every required character must be in the unicode-range of a shipped subset whose cmap has it; otherwise the browser
- * draws it with another font.
+ * Every required character of a family must be in the unicode-range of one of its shipped subsets whose cmap has it;
+ * otherwise the browser draws it with another font.
  */
 export function coverageProblems(
+  family: Family,
   cmaps: ReadonlyMap<Subset['name'], ReadonlySet<number>>,
   shipped: readonly Subset[] = subsets,
 ): readonly CoverageProblem[] {
   const problems: CoverageProblem[] = [];
-  for (const [locale, characters] of Object.entries(localeCharacters())) {
+  for (const [locale, characters] of Object.entries(localeCharacters(family))) {
     for (const character of new Set(characters)) {
       const codePoint = character.codePointAt(0) ?? 0;
       const owners = shipped.filter((subset) => inRanges(codePoint, subset.ranges));
       if (owners.length === 0) {
-        problems.push({ locale, character, problem: 'no subset declares it in its unicode-range' });
+        problems.push({
+          family: family.family,
+          locale,
+          character,
+          problem: 'no subset declares it in its unicode-range',
+        });
       } else if (!owners.some((subset) => cmaps.get(subset.name)?.has(codePoint))) {
         problems.push({
+          family: family.family,
           locale,
           character,
           problem: `in the range of ${owners.map((s) => s.name).join(', ')}, not in the font`,
@@ -235,11 +254,12 @@ export function coverageProblems(
   return problems;
 }
 
-/** The required characters plus whatever Intl emits in each locale for numbers, money, dates and lists. */
-export function localeCharacters(): Readonly<Record<string, string>> {
+/** The family's required characters, plus, for the text font, whatever Intl emits in each locale. */
+export function localeCharacters(family: Family): Readonly<Record<string, string>> {
   const date = new Date(Date.UTC(2026, 8, 23, 9, 5));
   return Object.fromEntries(
-    Object.entries(requiredCharacters).map(([locale, characters]) => {
+    Object.entries(family.required).map(([locale, characters]) => {
+      if (!family.intl) return [locale, characters];
       const samples = [
         new Intl.NumberFormat(locale).format(1234567.89),
         new Intl.NumberFormat(locale, { style: 'currency', currency: 'UZS' }).format(1234567),

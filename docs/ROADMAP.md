@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 2 at the **STOP** (2026-09-23): everything built; waiting for the product owner's approval of the Foundations screenshots (palette, accent, typography, motion) before Phase 3.
+**Current position:** Phase 2 complete; Foundations approved by the product owner (2026-09-23). Next: Phase 3, first item, in a new session (product owner's choice).
 
 ## Parameters
 
@@ -15,8 +15,9 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 | Selector prefix | `ave` (`button[aveButton]`, `<ave-form-field>`) |
 | CSS variable prefix | `--ave-` (ADR 0003) |
 | Consumers | internal work systems (product names not given yet) |
-| Brand accent | propose: Ubuntu-inspired, approved at the Foundations milestone |
-| Font | IBM Plex Sans (coverage verified, [compatibility.md](compatibility.md) §4); shipped as "Avelune Sans" for the OFL Reserved Font Name (ADR 0018) |
+| Brand accent | Ubuntu orange `#E95420`, exact, as the accent fill with dark text in both themes (ADR 0019; product owner, 2026-09-23); one accent, no separate "suggested action" colour |
+| Font | IBM Plex Sans (coverage verified, [compatibility.md](compatibility.md) §4); shipped as "Avelune Sans" for the OFL Reserved Font Name (ADR 0018). Code: IBM Plex Mono as "Avelune Mono" (product owner, 2026-09-23) |
+| Icons | Lucide, outline (ADR 0020; choice delegated to the agent by the product owner, 2026-09-23) |
 | Base text | 14/20 (dense work UI) |
 | Themes | light, dark |
 | Density | comfortable (default), compact |
@@ -58,9 +59,11 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 - [x] `tools/tokens-check`: schema, references, naming, tier direction, contrast pairs, dark parity, no primitives in output; with failing fixtures (25 fixtures, one per violation)
 - [x] Fonts: cmap check on the shipped woff2 subsets; self-hosted IBM Plex Sans; metric-tuned fallback `@font-face` (`tools/fonts`, ADR 0018: shipped as "Avelune Sans")
 - [x] Foundations stories: palette + contrast, type specimen (ru, uz-Latn with Oʻ/Gʻ, uz-Cyrl), spacing, radius, elevation, z-index, motion playground (Storybook set up early, ADR 0008 addendum; axe-clean in both themes, both motion modes, at 320, 390 and 1280 px)
-- [ ] **STOP:** Foundations screenshots (light, dark) → approve palette, accent, typography and motion values
+- [x] **STOP:** Foundations screenshots (light, dark) → approve palette, accent, typography and motion values. Approved 2026-09-23 ([review page](https://claude.ai/artifact/1LHWb4xFKZUsVCE3WwjJPN), private to the product owner): accent = exact `#E95420` with dark text (ADR 0019); one orange accent; typography approved; code font IBM Plex Mono; icons delegated → Lucide (ADR 0020). Presented without objection: dark fills lighter on hover and press, ʻ ʼ drawn with ‘ ’, motion values of brief §6.2 unchanged (now frozen, ADR 0005), the token additions of ADR 0016, radii 4/8/12/full and control heights 32/36/40 (compact 28/32/36).
 
 ### Phase 3: Guardrails (before any component)
+
+Carried over from Phase 2: wire `tokens:colors`, `tokens-check:check`, `fonts:check` and the `node:test` targets into CI; the Foundations pages bind `[style.*]` to token variables to draw swatches, so the template no-inline-styles rule needs a documented exception for `apps/storybook/src/foundations/**` only; a lint check that media and container query values equal breakpoint/container tokens (ADR 0017); invariants normalise the browser's `linear(0 0%, …)` easing strings before comparing with tokens; ESLint `no-restricted-imports` for `@angular/animations` now that it is installed (ADR 0008).
 
 Carried over from Phase 1: permanent fixtures for the three module-boundary violations (tokens → ui, icons → ui, relative cross-project import); a SchematicTestRunner test for `ng-add` and the empty migration collection; failing fixtures for `ui:api-report` (untagged export, stale report); an ESLint rule for JSDoc on public API (API Extractor's `ae-undocumented` is off, ADR 0007); a check that every Nx project carries a layer or type tag; a check of `.browserslistrc` against Angular's supported set (ADR 0014).
 
@@ -73,10 +76,10 @@ Carried over from Phase 1: permanent fixtures for the three module-boundary viol
 - [ ] Every guardrail proven to fail on a violation
 
 ### Phase 4: Foundations and motion
-- [ ] `@avelune/ui/styles.css`: layers, reset, base typography, focus ring, forced-colors, `tabular-nums` utility
+- [ ] `@avelune/ui/styles.css`: layers, reset, base typography, focus ring, forced-colors, `tabular-nums` utility; imports `styles/fonts/fonts.css` and `@avelune/tokens/tokens.css`; the showcase preloads `avelune-sans-latin.woff2`
 - [ ] `motion.css` with `ave-motion-*` classes; reduced-motion overrides via tokens
 - [ ] `provideAvelune()` (brief's `provideUi`), `AveTheme` service (theme, density, motion signals; persisted)
-- [ ] Icons package with a generated `IconName` union; `<ave-icon>`
+- [ ] Icons package with a generated `IconName` union; `<ave-icon>` (Lucide from `lucide-static`, stroke width tuned and frozen, ADR 0020)
 - [ ] Delete the `packages/ui/sample` scaffolding entry point and its API reports once the first real entry point exists
 
 ### Phase 5: Components
@@ -207,11 +210,6 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 
 - Consumer product names (for the adoption plan).
 - Registry and GitLab edition (Phase 3 CI, CODEOWNERS enforcement).
-- Icon set style: asked at the Foundations milestone (taste).
-- Accent-only primary action vs a Yaru-style separate "suggested" colour: asked at the Foundations milestone.
-- Token additions beyond brief §4.2/§6.2 (ADR 0016): state layers, `fg.on-{status}`, `size.control.xs`, the `timing` group. Asked at the Foundations milestone.
-- Code font: the platform monospace (current) or self-hosted IBM Plex Mono. Asked at the Foundations milestone.
-- Uzbek ʻ and ʼ: Plex's own modifier-letter glyphs are 0.6 em wide; they are drawn with Plex's ‘ ’ instead (ADR 0018). Shown in the type specimen at the Foundations milestone.
 
 ## Out of scope
 

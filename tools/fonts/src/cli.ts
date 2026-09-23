@@ -8,7 +8,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 
 import { createRequire } from 'node:module';
 import { join, relative, resolve } from 'node:path';
 import * as fontkit from 'fontkit';
-import { subsetFile, subsets, weight } from './config.ts';
+import { families, subsetFile, subsets } from './config.ts';
 import { buildFonts, coverageProblems, outputDir as defaultOutputDir, reservedNameRecords } from './fonts.ts';
 import { checksum, readNames, readSfnt } from './sfnt.ts';
 
@@ -39,35 +39,42 @@ if (update) {
 }
 
 // Checks on the files as shipped (read back from disk), not on the in-memory build.
-const cmaps = new Map<(typeof subsets)[number]['name'], ReadonlySet<number>>();
-for (const subset of subsets) {
-  const path = join(outputDir, subsetFile(subset));
-  if (!existsSync(path)) continue;
-  const woff2 = readFileSync(path);
-  if (woff2.subarray(0, 4).toString('latin1') !== 'wOF2') problems.push(`${subsetFile(subset)} is not woff2`);
-  const font = fontkit.create(woff2);
-  if (!('characterSet' in font)) {
-    problems.push(`${subsetFile(subset)} is a font collection`);
-    continue;
+for (const family of families) {
+  const cmaps = new Map<(typeof subsets)[number]['name'], ReadonlySet<number>>();
+  for (const subset of subsets) {
+    const file = subsetFile(family, subset);
+    const path = join(outputDir, file);
+    if (!existsSync(path)) continue;
+    const woff2 = readFileSync(path);
+    if (woff2.subarray(0, 4).toString('latin1') !== 'wOF2') problems.push(`${file} is not woff2`);
+    const font = fontkit.create(woff2);
+    if (!('characterSet' in font)) {
+      problems.push(`${file} is a font collection`);
+      continue;
+    }
+    cmaps.set(subset.name, new Set(font.characterSet));
+    const axes = font.variationAxes;
+    const expected = family.axes === undefined ? '' : 'wght';
+    const wght = axes['wght'];
+    if (
+      Object.keys(axes).join() !== expected ||
+      (family.axes !== undefined && (wght?.min !== family.axes.wght.min || wght.max !== family.axes.wght.max))
+    ) {
+      problems.push(
+        `${file} has axes ${JSON.stringify(axes)}; expected ${expected === '' ? 'none' : `wght ${family.weight}`}`,
+      );
+    }
+    const truetype = await fontverter.convert(woff2, 'truetype');
+    if (checksum(truetype) !== 0xb1b0afba) problems.push(`${file} has a wrong checkSumAdjustment`);
+    const name = readSfnt(truetype).tables.get('name');
+    for (const record of name === undefined ? [] : reservedNameRecords(readNames(name))) {
+      problems.push(`${file} name ID ${record.nameId} still says "${record.text}" (Reserved Font Name)`);
+    }
   }
-  cmaps.set(subset.name, new Set(font.characterSet));
-  const axes = font.variationAxes;
-  const wght = axes['wght'];
-  if (Object.keys(axes).join() !== 'wght' || wght?.min !== weight.min || wght.max !== weight.max) {
-    problems.push(
-      `${subsetFile(subset)} has axes ${JSON.stringify(axes)}; expected wght ${weight.min}–${weight.max} only`,
-    );
+  for (const problem of coverageProblems(family, cmaps)) {
+    const codePoint = `U+${(problem.character.codePointAt(0) ?? 0).toString(16).toUpperCase().padStart(4, '0')}`;
+    problems.push(`${problem.family}, ${problem.locale}: ${codePoint} "${problem.character}" ${problem.problem}`);
   }
-  const truetype = await fontverter.convert(woff2, 'truetype');
-  if (checksum(truetype) !== 0xb1b0afba) problems.push(`${subsetFile(subset)} has a wrong checkSumAdjustment`);
-  const name = readSfnt(truetype).tables.get('name');
-  for (const record of name === undefined ? [] : reservedNameRecords(readNames(name))) {
-    problems.push(`${subsetFile(subset)} name ID ${record.nameId} still says "${record.text}" (Reserved Font Name)`);
-  }
-}
-for (const problem of coverageProblems(cmaps)) {
-  const codePoint = `U+${(problem.character.codePointAt(0) ?? 0).toString(16).toUpperCase().padStart(4, '0')}`;
-  problems.push(`${problem.locale}: ${codePoint} "${problem.character}" ${problem.problem}`);
 }
 
 if (problems.length > 0) {
@@ -79,4 +86,4 @@ if (problems.length > 0) {
   );
   process.exit(1);
 }
-console.log(`fonts: ${shown} is up to date; every required character of ${subsets.length} subsets is covered`);
+console.log(`fonts: ${shown} is up to date; every required character of ${families.length} families is covered`);

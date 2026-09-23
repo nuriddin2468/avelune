@@ -1,14 +1,16 @@
-FONTLOG for Avelune Sans
+FONTLOG for Avelune Sans and Avelune Mono
 
-Avelune Sans is a modified version of IBM Plex Sans 3.201 (Copyright 2017 IBM Corp., with Reserved Font Name "Plex"),
-licensed under the SIL Open Font License 1.1; see OFL.txt. Source: github.com/google/fonts, ofl/ibmplexsans,
-IBMPlexSans[wdth,wght].ttf (tools/fonts/source/README.md in the Avelune repository).
+Avelune Sans is a modified version of IBM Plex Sans 3.201 (Copyright 2017 IBM Corp., with Reserved Font Name "Plex").
+Avelune Mono is a modified version of IBM Plex Mono 2.3 (Copyright 2017 IBM Corp., with Reserved Font Name "Plex").
+Both are licensed under the SIL Open Font License 1.1; see OFL.txt. Source: github.com/google/fonts, ofl/ibmplexsans
+and ofl/ibmplexmono (tools/fonts/source/README.md in the Avelune repository).
 
 Modifications, made by tools/fonts for web delivery in the Avelune UI kit:
-- split into three files by Unicode range (latin, latin-ext, cyrillic); glyphs outside them are removed;
-- the weight axis is limited to 400-600 and the width axis is pinned to 100;
-- U+02BB and U+02BC are mapped to the glyphs of U+2018 and U+2019, because the original modifier-letter glyphs are
-  0.6 em wide and break up Uzbek words such as "Oʻzbekiston";
-- the family is renamed from "IBM Plex Sans" to "Avelune Sans" in the name table, because a modified version may not
-  use the Reserved Font Name (OFL, condition 3; OFL-FAQ 2.6). Copyright, trademark and licence records are kept.
+- split into three files per family by Unicode range (latin, latin-ext, cyrillic); glyphs outside them are removed;
+- Avelune Sans: the weight axis is limited to 400-600 and the width axis is pinned to 100;
+- Avelune Sans: U+02BB and U+02BC are mapped to the glyphs of U+2018 and U+2019, because the original modifier-letter
+  glyphs are 0.6 em wide and break up Uzbek words such as "Oʻzbekiston";
+- Avelune Mono: only the Regular weight is shipped;
+- the families are renamed from "IBM Plex Sans" and "IBM Plex Mono" in the name table, because a modified version may
+  not use the Reserved Font Name (OFL, condition 3; OFL-FAQ 2.6). Copyright, trademark and licence records are kept.
 No glyph outline, metric or OpenType layout feature is changed.
