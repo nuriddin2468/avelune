@@ -47,6 +47,7 @@ Run from the repository root. `pnpm` switches itself to the pinned 11.27.1 (`pac
 | Lint, type-check everything | `pnpm nx run-many -t lint typecheck` |
 | Only what a change affects | `pnpm nx affected -t lint typecheck build` |
 | API reports: check / update | `pnpm nx run ui:api-report` / `pnpm nx run ui:api-report --update` |
+| Build the tokens (`dist/tokens.css`, `tokens.ts`) | `pnpm nx build tokens` |
 | Colour primitives: check / regenerate | `pnpm nx run tokens:colors` / `pnpm nx run tokens:colors --update` |
 | Node-side tests (scripts, tools) | `pnpm nx run-many -t test` (`node:test`, ADR 0015) |
 | Format | `pnpm format` (check: `pnpm format:check`) |

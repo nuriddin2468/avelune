@@ -1,0 +1,13 @@
+/* Compiles the generated dist/tokens.ts into the published dist/tokens.js and dist/tokens.d.ts. */
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "dist",
+    "outDir": "dist",
+    "declaration": true,
+    "importHelpers": false,
+    "sourceMap": false,
+    "types": []
+  },
+  "files": ["dist/tokens.ts"]
+}

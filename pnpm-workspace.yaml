@@ -60,5 +60,6 @@ catalog:
   '@microsoft/api-extractor': 7.59.1
   # Tokens (ADR 0003, 0011)
   colorjs.io: 0.7.1
+  style-dictionary: 5.5.5
   # Node types for repository scripts, matching engines.node (ADR 0015)
   '@types/node': 24.13.6

@@ -43,7 +43,7 @@ Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` an
 | | `stylelint-declaration-strict-value` | 1.12.1 | Peers `>=16 <=17` |
 | | `stylelint-value-no-unknown-custom-properties` | 6.1.1 | Peers `>=16` |
 | | `stylelint-plugin-logical-css` | 2.1.0 | Replaces `stylelint-use-logical-spec` (ADR 0009) |
-| Tokens | `style-dictionary` | 5.5.5 | DTCG colour objects since 5.3, dimension objects since 5.4; duration/gradient still WIP (issue #1590) |
+| Tokens | `style-dictionary` | 5.5.5 | DTCG colour objects since 5.3, dimension objects since 5.4; duration/gradient still WIP (issue #1590). Installed in Phase 2 (released 2026-09-20); used as the resolver, values converted by our own code (ADR 0017) |
 | | `colorjs.io` | 0.7.1 | ADR 0011; installed in Phase 2 (released 2026-07-24) |
 | API | `@microsoft/api-extractor` | 7.59.1 | Bundles TS 5.9.3; works on TS 6 output (ADR 0007, spike result). *Held back*: 7.59.2 published 2026-09-22 18:27 UTC |
 | Release | `@changesets/cli` | 3.0.3 | Node `^22.11 \|\| ^24`, pnpm `>=10` |

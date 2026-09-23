@@ -5,6 +5,23 @@
   "sourceRoot": "packages/tokens",
   "tags": ["layer:tokens"],
   "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build", "colors"],
+      "inputs": [
+        "production",
+        {
+          "externalDependencies": ["style-dictionary", "typescript"]
+        }
+      ],
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "commands": ["node scripts/build.ts", "tsc -p tsconfig.dist.json"],
+        "parallel": false
+      }
+    },
     "colors": {
       "executor": "nx:run-commands",
       "inputs": [
@@ -12,7 +29,9 @@
         "!{projectRoot}/scripts/**/*.spec.ts",
         "{projectRoot}/src/primitives.color.tokens.json",
         "{workspaceRoot}/.prettierrc.json",
-        { "externalDependencies": ["colorjs.io", "prettier"] }
+        {
+          "externalDependencies": ["colorjs.io", "prettier"]
+        }
       ],
       "cache": true,
       "options": {
@@ -22,7 +41,12 @@
     },
     "test": {
       "executor": "nx:run-commands",
-      "inputs": ["default", { "externalDependencies": ["colorjs.io"] }],
+      "inputs": [
+        "default",
+        {
+          "externalDependencies": ["colorjs.io", "style-dictionary"]
+        }
+      ],
       "cache": true,
       "options": {
         "cwd": "{projectRoot}",

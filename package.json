@@ -53,6 +53,7 @@
     "ng-packagr": "catalog:",
     "nx": "catalog:",
     "prettier": "catalog:",
+    "style-dictionary": "catalog:",
     "typescript": "catalog:",
     "typescript-eslint": "catalog:"
   }
