@@ -38,9 +38,9 @@
   },
   "font-family": {
     "$type": "fontFamily",
-    "ibm-plex-sans": {
-      "$value": ["IBM Plex Sans", "IBM Plex Sans Fallback", "sans-serif"],
-      "$description": "Self-hosted woff2 (latin, latin-ext, cyrillic). The fallback face is a local font with metrics tuned to Plex, so the swap does not shift layout."
+    "avelune-sans": {
+      "$value": ["Avelune Sans", "Avelune Sans Fallback", "sans-serif"],
+      "$description": "IBM Plex Sans, self-hosted as woff2 subsets (latin, latin-ext, cyrillic) and renamed as the OFL requires (ADR 0018). The fallback face is local Arial scaled to Plex's metrics, so the swap does not shift layout."
     },
     "system-mono": {
       "$value": ["ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "Liberation Mono", "monospace"],

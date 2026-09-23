@@ -1,0 +1,43 @@
+{
+  "name": "fonts",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "tools/fonts",
+  "tags": ["type:tool"],
+  "targets": {
+    "check": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "production",
+        "{workspaceRoot}/packages/ui/styles/fonts/**/*",
+        "{workspaceRoot}/.prettierrc.json",
+        { "externalDependencies": ["subset-font", "fontkit", "fontverter", "prettier"] }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node src/cli.ts"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "default",
+        "{workspaceRoot}/packages/ui/styles/fonts/**/*",
+        { "externalDependencies": ["subset-font", "fontkit", "fontverter", "prettier"] }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node --test \"src/**/*.spec.ts\""
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "tsc -p tsconfig.json"
+      }
+    }
+  }
+}

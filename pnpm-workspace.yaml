@@ -61,5 +61,10 @@ catalog:
   # Tokens (ADR 0003, 0011)
   colorjs.io: 0.7.1
   style-dictionary: 5.5.5
+  # Fonts (brief §4.4, ADR 0018)
+  fontkit: 2.0.4
+  '@types/fontkit': 2.0.9
+  fontverter: 2.0.0
+  subset-font: 2.9.0
   # Node types for repository scripts, matching engines.node (ADR 0015)
   '@types/node': 24.13.6

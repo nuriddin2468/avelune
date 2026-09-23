@@ -59,7 +59,7 @@
   "font": {
     "family": {
       "$type": "fontFamily",
-      "sans": { "$value": "{font-family.ibm-plex-sans}" },
+      "sans": { "$value": "{font-family.avelune-sans}" },
       "mono": { "$value": "{font-family.system-mono}" }
     },
     "weight": {
@@ -72,7 +72,7 @@
       "$type": "typography",
       "$description": "32/40. One per screen at most.",
       "$value": {
-        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontFamily": "{font-family.avelune-sans}",
         "fontSize": "{dimension.32}",
         "fontWeight": "{font-weight.600}",
         "letterSpacing": "{dimension.0}",
@@ -83,7 +83,7 @@
       "$type": "typography",
       "$description": "24/32. Page title.",
       "$value": {
-        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontFamily": "{font-family.avelune-sans}",
         "fontSize": "{dimension.24}",
         "fontWeight": "{font-weight.600}",
         "letterSpacing": "{dimension.0}",
@@ -94,7 +94,7 @@
       "$type": "typography",
       "$description": "20/28. Section title, dialog title.",
       "$value": {
-        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontFamily": "{font-family.avelune-sans}",
         "fontSize": "{dimension.20}",
         "fontWeight": "{font-weight.600}",
         "letterSpacing": "{dimension.0}",
@@ -105,7 +105,7 @@
       "$type": "typography",
       "$description": "16/24. Card and panel title.",
       "$value": {
-        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontFamily": "{font-family.avelune-sans}",
         "fontSize": "{dimension.16}",
         "fontWeight": "{font-weight.600}",
         "letterSpacing": "{dimension.0}",
@@ -116,7 +116,7 @@
       "$type": "typography",
       "$description": "14/20. Group title inside a form or a list.",
       "$value": {
-        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontFamily": "{font-family.avelune-sans}",
         "fontSize": "{dimension.14}",
         "fontWeight": "{font-weight.600}",
         "letterSpacing": "{dimension.0}",
@@ -127,7 +127,7 @@
       "$type": "typography",
       "$description": "16/24. Long-form reading.",
       "$value": {
-        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontFamily": "{font-family.avelune-sans}",
         "fontSize": "{dimension.16}",
         "fontWeight": "{font-weight.400}",
         "letterSpacing": "{dimension.0}",
@@ -138,7 +138,7 @@
       "$type": "typography",
       "$description": "14/20. The base text of the kit (BASE_TEXT).",
       "$value": {
-        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontFamily": "{font-family.avelune-sans}",
         "fontSize": "{dimension.14}",
         "fontWeight": "{font-weight.400}",
         "letterSpacing": "{dimension.0}",
@@ -149,7 +149,7 @@
       "$type": "typography",
       "$description": "12/16. Secondary text in dense tables and lists.",
       "$value": {
-        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontFamily": "{font-family.avelune-sans}",
         "fontSize": "{dimension.12}",
         "fontWeight": "{font-weight.400}",
         "letterSpacing": "{dimension.0}",
@@ -160,7 +160,7 @@
       "$type": "typography",
       "$description": "14/20. Labels of controls and form fields.",
       "$value": {
-        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontFamily": "{font-family.avelune-sans}",
         "fontSize": "{dimension.14}",
         "fontWeight": "{font-weight.500}",
         "letterSpacing": "{dimension.0}",
@@ -171,7 +171,7 @@
       "$type": "typography",
       "$description": "12/16. Labels of small controls, badges, tags.",
       "$value": {
-        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontFamily": "{font-family.avelune-sans}",
         "fontSize": "{dimension.12}",
         "fontWeight": "{font-weight.500}",
         "letterSpacing": "{dimension.0}",
@@ -182,7 +182,7 @@
       "$type": "typography",
       "$description": "12/16. Hints, helper and error text under a field, timestamps.",
       "$value": {
-        "fontFamily": "{font-family.ibm-plex-sans}",
+        "fontFamily": "{font-family.avelune-sans}",
         "fontSize": "{dimension.12}",
         "fontWeight": "{font-weight.400}",
         "letterSpacing": "{dimension.0}",

@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 2 in progress (2026-09-23). Colours, token sources, build and `tools/tokens-check` done; next: fonts (fifth item).
+**Current position:** Phase 2 in progress (2026-09-23). Colours, token sources, build, `tools/tokens-check` and fonts done; next: Foundations stories (sixth item).
 
 ## Parameters
 
@@ -16,7 +16,7 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 | CSS variable prefix | `--ave-` (ADR 0003) |
 | Consumers | internal work systems (product names not given yet) |
 | Brand accent | propose: Ubuntu-inspired, approved at the Foundations milestone |
-| Font | IBM Plex Sans (coverage verified, [compatibility.md](compatibility.md) §4) |
+| Font | IBM Plex Sans (coverage verified, [compatibility.md](compatibility.md) §4); shipped as "Avelune Sans" for the OFL Reserved Font Name (ADR 0018) |
 | Base text | 14/20 (dense work UI) |
 | Themes | light, dark |
 | Density | comfortable (default), compact |
@@ -56,7 +56,7 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 - [x] Semantic light + dark, density compact, motion, component sources (DTCG 2025.10; files and tier rules in ADR 0016)
 - [x] Style Dictionary 5 build → `tokens.css`, `tokens.ts` (`TokenName` union) (ADR 0017)
 - [x] `tools/tokens-check`: schema, references, naming, tier direction, contrast pairs, dark parity, no primitives in output; with failing fixtures (25 fixtures, one per violation)
-- [ ] Fonts: cmap check on the shipped woff2 subsets; self-hosted IBM Plex Sans; metric-tuned fallback `@font-face`
+- [x] Fonts: cmap check on the shipped woff2 subsets; self-hosted IBM Plex Sans; metric-tuned fallback `@font-face` (`tools/fonts`, ADR 0018: shipped as "Avelune Sans")
 - [ ] Foundations stories: palette + contrast, type specimen (ru, uz-Latn with Oʻ/Gʻ, uz-Cyrl), spacing, radius, elevation, z-index, motion playground
 - [ ] **STOP:** Foundations screenshots (light, dark) → approve palette, accent, typography and motion values
 
@@ -209,6 +209,7 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 - Accent-only primary action vs a Yaru-style separate "suggested" colour: asked at the Foundations milestone.
 - Token additions beyond brief §4.2/§6.2 (ADR 0016): state layers, `fg.on-{status}`, `size.control.xs`, the `timing` group. Asked at the Foundations milestone.
 - Code font: the platform monospace (current) or self-hosted IBM Plex Mono. Asked at the Foundations milestone.
+- Uzbek ʻ and ʼ: Plex's own modifier-letter glyphs are 0.6 em wide; they are drawn with Plex's ‘ ’ instead (ADR 0018). Shown in the type specimen at the Foundations milestone.
 
 ## Out of scope
 

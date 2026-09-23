@@ -49,6 +49,7 @@ Run from the repository root. `pnpm` switches itself to the pinned 11.27.1 (`pac
 | API reports: check / update | `pnpm nx run ui:api-report` / `pnpm nx run ui:api-report --update` |
 | Build the tokens (`dist/tokens.css`, `tokens.ts`) | `pnpm nx build tokens` |
 | Check the tokens (schema, tiers, contrast in both themes, output) | `pnpm nx run tokens-check:check` |
+| Fonts: check / rebuild (`packages/ui/styles/fonts`) | `pnpm nx run fonts:check` / `pnpm nx run fonts:check --update` |
 | Colour primitives: check / regenerate | `pnpm nx run tokens:colors` / `pnpm nx run tokens:colors --update` |
 | Node-side tests (scripts, tools) | `pnpm nx run-many -t test` (`node:test`, ADR 0015) |
 | Format | `pnpm format` (check: `pnpm format:check`) |

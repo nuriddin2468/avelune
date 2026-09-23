@@ -52,8 +52,9 @@ Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` an
 | Format | `prettier` | 3.9.8 | *Held back*: 3.9.9 published 2026-09-23 06:31 UTC |
 | Budgets | `size-limit`, `@size-limit/*` | 14.0.0 | Node `^24.5` |
 | Node types | `@types/node` | 24.13.6 | Follows `engines.node` (^24.15.0), not npm `latest` (26.x); ADR 0015 |
-| Fonts | `fontkit` | 2.0.4 | cmap coverage check |
-| | `subset-font` | 2.9.0 | woff2 subsetting (HarfBuzz wasm, no Python) |
+| Fonts | `fontkit` + `@types/fontkit` | 2.0.4, 2.0.9 | cmap coverage check, metrics (ADR 0018) |
+| | `subset-font` | 2.9.0 | woff2 subsetting and axis limits (HarfBuzz wasm via `harfbuzzjs` 1.6.2, no Python) |
+| | `fontverter` | 2.0.0 | TTF ↔ woff2 (a `subset-font` dependency, used directly) |
 
 ## 3. Known gaps and how they are handled
 
@@ -82,4 +83,6 @@ Checked with `fontkit` against `google/fonts/ofl/ibmplexsans/IBMPlexSans[wdth,wg
 | Figures | tabular by default |
 | Axes | `wght` 100–700, `wdth` 75–100 |
 
-Other candidates checked: Inter, Noto Sans and Onest pass. Golos Text, Manrope, PT Sans, Rubik and Geologica fail (no U+02BB; Manrope and Rubik also miss Uzbek Cyrillic letters). Phase 2 repeats the check on the subsetted woff2 files the kit actually ships.
+Other candidates checked: Inter, Noto Sans and Onest pass. Golos Text, Manrope, PT Sans, Rubik and Geologica fail (no U+02BB; Manrope and Rubik also miss Uzbek Cyrillic letters).
+
+Phase 2 (2026-09-23): `fonts:check` repeats the check on the shipped woff2 subsets on every run. Findings: Google's `cyrillic` range lacks Ғ Қ Ҳ, so the kit's cyrillic subset adds them; Plex's U+02BB/U+02BC glyphs are 0.6 em wide and are mapped to ‘ ’; the subsets are renamed "Avelune Sans" for the OFL Reserved Font Name (ADR 0018).

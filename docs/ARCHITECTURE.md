@@ -6,14 +6,15 @@ How Avelune is built. Decisions and their reasons live in the [ADRs](adr/README.
 
 | Path | Nx project | Tags | What it is |
 |---|---|---|---|
-| `packages/tokens` | `tokens` | `layer:tokens` | DTCG sources and the Style Dictionary build (Phase 2) |
+| `packages/tokens` | `tokens` | `layer:tokens` | DTCG sources and the Style Dictionary build |
 | `packages/icons` | `icons` | `layer:foundations` | Icon set and the generated `IconName` union (Phase 4) |
 | `packages/ui` | `ui` | `layer:patterns` | The Angular library, one secondary entry point per component |
 | `packages/eslint-config` | `eslint-config` | `type:config` | Shared ESLint config for consumers (Phase 3) |
 | `packages/stylelint-config` | `stylelint-config` | `type:config` | Shared Stylelint config for consumers (Phase 3) |
 | `apps/showcase` | `showcase` | `type:app` | Real Angular app composing the kit into screens |
 | `apps/storybook` | `storybook` | `type:app` | Docs, stories, interaction and a11y tests (Phase 3) |
-| `tools/tokens-check` | `tokens-check` | `type:tool` | Token validation (Phase 2) |
+| `tools/tokens-check` | `tokens-check` | `type:tool` | Token validation |
+| `tools/fonts` | `fonts` | `type:tool` | Builds and checks the web font in `packages/ui/styles/fonts` |
 | `tools/lint-rules` | `lint-rules` | `type:tool` | Custom ESLint rules (Phase 3) |
 | `tools/invariants` | `invariants` | `type:tool` | Cross-component Playwright invariants (Phase 3/5) |
 | `tools/adoption-metrics` | `adoption-metrics` | `type:tool` | Consumer-repo scanner (Phase 6) |
@@ -133,6 +134,10 @@ packages/tokens/
 
 **Colour primitives.** Every scale (`neutral`, `orange`, `red`, `amber`, `green`, `blue`) has twelve steps, 50–950 plus 850, at the same OKLCH lightness per step, so a step plays the same contrast role in every hue. The brand colour is kept exact at `orange.500`. The ladder's contracts (which step carries text or boundaries on which surface) are checked on every generation; see ADR 0011, addendum. To change the palette: edit `palette.config.ts`, run `pnpm nx run tokens:colors --update`, review the diff of the generated file (each token's `$description` shows its OKLCH), commit both.
 
+## Fonts
+
+The kit's typeface is IBM Plex Sans, shipped as **"Avelune Sans"** (ADR 0018): `tools/fonts` subsets the pinned source (`tools/fonts/source`) into `packages/ui/styles/fonts/avelune-sans-{latin,latin-ext,cyrillic}.woff2` (variable, weights 400–600), renames it as the OFL requires, maps ʻ ʼ to Plex's ‘ ’ glyphs, and writes `fonts.css` with the `@font-face` rules and one metric-matched Arial fallback face per weight. The outputs are committed; `pnpm nx run fonts:check` rebuilds them in memory and fails on any difference, on a character a locale needs but the files lack, and on a leftover Reserved Font Name. `styles.css` imports `fonts.css` in Phase 4.
+
 ## Enforcement map
 
 What is checked today, by which tool, at which stage. Phase 3 completes this table (brief §5).
@@ -146,6 +151,7 @@ What is checked today, by which tool, at which stage. Phase 3 completes this tab
 | Public API unchanged or report updated; release tags present | API Extractor (`ui:api-report`) | no | Phase 3 |
 | No dependency younger than 24 h; install scripts only where listed | pnpm (`minimumReleaseAge`, `allowBuilds`) | `pnpm install` | `pnpm install` |
 | Colour primitives are exactly what the config generates (no hand edits) | `tokens:colors` | no | Phase 3 |
+| Shipped fonts equal a fresh build; every character of uz-Latn, uz-Cyrl, ru and en (incl. Intl output) covered; no Reserved Font Name; axes and checksums | `fonts:check`, proven by `fonts:test` | no | Phase 3 |
 | DTCG schema, references, naming, tier direction and literals, line-height grid, theme parity, contrast pairs in both themes, no primitives in `dist/tokens.css` | `tokens-check:check`, proven by `tokens-check:test` (a fixture per rule) | no | Phase 3 |
 | Palette rules: ladder contracts, exact lightness and hue, brand lightness, neutral tint | `generatePalette` (`tokens:colors`), proven by `tokens:test` | no | Phase 3 |
 
