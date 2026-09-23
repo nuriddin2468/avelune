@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 1 done except the agent-tooling install, which waits for the product owner's permission (2026-09-23). ADR 0014 (browser floor) is Proposed and waits for the product owner. Next: Phase 2, first item.
+**Current position:** Phase 1 complete (2026-09-23). Next: Phase 2, first item.
 
 ## Parameters
 
@@ -23,7 +23,8 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 | Locales | uz-Latn, uz-Cyrl, ru, en |
 | Docs language | English |
 | Registry | none yet (publish job disabled) |
-| Browsers | `Chrome >= 117, Edge >= 117, Firefox >= 129, Safari >= 17.5, iOS >= 17.5` (ADR 0005) |
+| Licence | `UNLICENSED` (proprietary, internal), for now; revisit before the first publish (product owner, 2026-09-23) |
+| Browsers | `Chrome >= 119, Edge >= 119, Firefox >= 129, Safari >= 17.5, iOS >= 17.5` (ADR 0014; changed 2026-09-23 from Chrome/Edge 117, product owner) |
 | Design source | none; visual direction "inspired by Ubuntu" ([audit.md](audit.md)) |
 | Existing repos | none |
 | CI | local only for now; `.gitlab-ci.yml` prepared; GitLab edition unknown, so code-owner approval is a documented rule |
@@ -48,7 +49,7 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 - [x] lefthook pre-commit (lint + type-check on staged files, plus Prettier); commitlint (conventional, Nx-project scopes)
 - [x] API Extractor spike on TS 6 output; result appended to ADR 0007 (primary path holds; `ui:api-report` target)
 - [x] Full `AGENTS.md`, `CLAUDE.md`, README, CONTRIBUTING skeleton, `docs/ARCHITECTURE.md` (Phase 1 sections)
-- [ ] Angular agent skill (`angular-developer`) vendored in `.claude/skills/` + Angular CLI MCP in `.mcp.json`: prepared and described in AGENTS.md; the write was blocked by the agent's permission guard and needs the product owner's approval
+- [x] Angular agent skill (`angular-developer`) vendored in `.claude/skills/` + Angular CLI MCP in `.mcp.json` (product owner approved the write, 2026-09-23)
 
 ### Phase 2: Tokens
 - [ ] Colour generation script (OKLCH, colorjs.io) and primitive scales (ADR 0011)
@@ -61,7 +62,7 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 
 ### Phase 3: Guardrails (before any component)
 
-Carried over from Phase 1: permanent fixtures for the three module-boundary violations (tokens → ui, icons → ui, relative cross-project import); a SchematicTestRunner test for `ng-add` and the empty migration collection; failing fixtures for `ui:api-report` (untagged export, stale report); an ESLint rule for JSDoc on public API (API Extractor's `ae-undocumented` is off, ADR 0007); a check that every Nx project carries a layer or type tag; if ADR 0014 is accepted, a check of `.browserslistrc` against Angular's supported set.
+Carried over from Phase 1: permanent fixtures for the three module-boundary violations (tokens → ui, icons → ui, relative cross-project import); a SchematicTestRunner test for `ng-add` and the empty migration collection; failing fixtures for `ui:api-report` (untagged export, stale report); an ESLint rule for JSDoc on public API (API Extractor's `ae-undocumented` is off, ADR 0007); a check that every Nx project carries a layer or type tag; a check of `.browserslistrc` against Angular's supported set (ADR 0014).
 
 - [ ] TS + Angular compiler strictness (brief §5.1)
 - [ ] ESLint config + custom rules (`avelune/entry-point-layers`, raw-element template rule), with failing fixtures
@@ -202,9 +203,6 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 
 ## Open questions (for the product owner)
 
-- Browser floor: accept ADR 0014 (Chrome/Edge 117 → 119, following Angular 22's supported set)?
-- Agent tooling: allow writing `.claude/skills/angular-developer/` and `.mcp.json` (blocked by the agent's permission guard in Phase 1)?
-- Licence of the published packages: currently `UNLICENSED` (proprietary, internal).
 - Consumer product names (for the adoption plan).
 - Registry and GitLab edition (Phase 3 CI, CODEOWNERS enforcement).
 - Icon set style: asked at the Foundations milestone (taste).

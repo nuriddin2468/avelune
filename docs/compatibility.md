@@ -61,7 +61,7 @@ Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` an
 | `@storybook/angular` (official) is webpack-only; the Vite framework is in preview | ADR 0008 |
 | `@storybook/angular-vite` 10.6 requires `@angular/animations` as a peer | devDependency for Storybook only; import banned by ESLint (ADR 0005, 0008) |
 | API Extractor bundles TS 5.9.3 | spike passed in Phase 1; cross-entry-point imports need an analysis layout (ADR 0007, spike result) |
-| Angular 22 supports "Baseline widely available" browsers: Chrome/Edge/Firefox ≥ 119, Safari/iOS ≥ 17. Our floor lists Chrome/Edge 117–118, which Angular reports as unsupported | proposal to raise the floor: ADR 0014 (Proposed), product-owner decision |
+| Angular 22 supports "Baseline widely available" browsers: Chrome/Edge/Firefox ≥ 119, Safari/iOS ≥ 17; the original floor listed Chrome/Edge 117–118 | floor raised to Chrome/Edge 119 (ADR 0014, accepted 2026-09-23); re-checked on every Angular upgrade |
 | `stylelint-use-logical-spec` peers `stylelint <17`, unmaintained since 2024-10 | ADR 0009 |
 | Style Dictionary DTCG duration support unfinished | custom transform; `tools/tokens-check` validates the schema itself (ADR 0003) |
 | Vitest 5 needs Angular 22.2 and Storybook 11 | stay on 4.1.x (ADR 0013) |

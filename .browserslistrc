@@ -1,6 +1,7 @@
-# Browser floor (ADR 0005). Change only through a new ADR.
-Chrome >= 117
-Edge >= 117
+# Browser floor (ADR 0014: the higher of the CSS-feature floor and Angular's supported set).
+# Change only through a new ADR and the product owner.
+Chrome >= 119
+Edge >= 119
 Firefox >= 129
 Safari >= 17.5
 iOS >= 17.5

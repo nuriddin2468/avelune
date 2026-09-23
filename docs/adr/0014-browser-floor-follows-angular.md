@@ -1,8 +1,8 @@
 # 0014. Browser floor follows Angular's supported set
 
-- Status: Proposed (awaiting the product owner: the "Browsers" parameter changes only through them)
+- Status: Accepted (2026-09-23, product owner)
 - Date: 2026-09-23
-- Related: 0005 (would supersede its decision 1 only)
+- Related: 0005 (supersedes its decision 1 only)
 
 ## Context
 
@@ -14,7 +14,7 @@ Angular has its own floor. `@angular/build` 22.1.8 (`src/utils/supported-browser
 
 Angular still builds for those versions, but it neither tests nor supports them. Chrome and Edge 117–118 shipped in September–October 2023 and update automatically.
 
-## Decision (proposed)
+## Decision
 
 1. The floor is, per browser, the **higher** of two values: the CSS-feature floor from ADR 0005 and Angular's supported set. Today that gives:
    `Chrome >= 119, Edge >= 119, Firefox >= 129, Safari >= 17.5, iOS >= 17.5`
@@ -29,6 +29,6 @@ Angular still builds for those versions, but it neither tests nor supports them.
 
 ## Consequences
 
-- `.browserslistrc` and the "Browsers" row in ROADMAP.md change on acceptance, and ADR 0005 is marked "decision 1 superseded by 0014".
+- `.browserslistrc` and the "Browsers" row in ROADMAP.md were changed on acceptance, and ADR 0005 is marked "decision 1 superseded by 0014".
 - The build warning disappears, so any future appearance of it is a real signal.
 - Phase 3 can turn the rule into a check: compare `.browserslistrc` with Angular's supported set and fail on browsers outside it.

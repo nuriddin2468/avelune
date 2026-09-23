@@ -1,6 +1,6 @@
 # 0005. Motion: `animate.enter`/`leave` + CSS; browser floor
 
-- Status: Accepted (2026-09-23, product-owner go-ahead)
+- Status: Accepted (2026-09-23, product-owner go-ahead); decision 1 (browser floor) superseded by [0014](0014-browser-floor-follows-angular.md)
 - Date: 2026-09-23
 - Related: 0004, brief §6
 
