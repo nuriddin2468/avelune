@@ -97,6 +97,23 @@ Conventions:
 
 `packages/ui/schematics/collection.json` holds `ng-add`; `migrations.json` is the `ng update` collection and is empty until the first breaking change. `package.json` wires both (`schematics`, `ng-update.migrations`) and declares the fixed `packageGroup`, so `ng update @avelune/ui` moves every `@avelune/*` package together (ADR 0007). `ng-add` only logs a message until Phase 6.
 
+## Tokens
+
+`packages/tokens` holds the DTCG sources (`src/*.tokens.json`) and the scripts that produce or build them (ADR 0003, 0011). Scripts are TypeScript run directly by Node, tested with `node:test` (ADR 0015).
+
+```
+packages/tokens/
+├── src/
+│   └── primitives.color.tokens.json   generated; never edited by hand
+└── scripts/
+    ├── palette.config.ts              inputs: lightness ladder, chroma curve, hues, brand, contracts
+    ├── palette.ts                     generation and checks (pure functions)
+    ├── generate-colors.ts             CLI: check (default) or --update
+    └── palette.spec.ts
+```
+
+**Colour primitives.** Every scale (`neutral`, `orange`, `red`, `amber`, `green`, `blue`) has twelve steps, 50–950 plus 850, at the same OKLCH lightness per step, so a step plays the same contrast role in every hue. The brand colour is kept exact at `orange.500`. The ladder's contracts (which step carries text or boundaries on which surface) are checked on every generation; see ADR 0011, addendum. To change the palette: edit `palette.config.ts`, run `pnpm nx run tokens:colors --update`, review the diff of the generated file (each token's `$description` shows its OKLCH), commit both.
+
 ## Enforcement map
 
 What is checked today, by which tool, at which stage. Phase 3 completes this table (brief §5).
@@ -109,5 +126,7 @@ What is checked today, by which tool, at which stage. Phase 3 completes this tab
 | Conventional commits, scope = Nx project or `repo`, `deps`, `docs`, `ci`, `release` | commitlint | commit message | n/a |
 | Public API unchanged or report updated; release tags present | API Extractor (`ui:api-report`) | no | Phase 3 |
 | No dependency younger than 24 h; install scripts only where listed | pnpm (`minimumReleaseAge`, `allowBuilds`) | `pnpm install` | `pnpm install` |
+| Colour primitives are exactly what the config generates (no hand edits) | `tokens:colors` | no | Phase 3 |
+| Palette rules: ladder contracts, exact lightness and hue, brand lightness, neutral tint | `generatePalette` (`tokens:colors`), proven by `tokens:test` | no | Phase 3 |
 
 Hooks are a fast local gate and are never bypassed (`--no-verify` is not used). CI runs the same checks on the whole affected graph.

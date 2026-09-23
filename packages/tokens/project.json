@@ -4,5 +4,37 @@
   "projectType": "library",
   "sourceRoot": "packages/tokens",
   "tags": ["layer:tokens"],
-  "targets": {}
+  "targets": {
+    "colors": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/scripts/**/*",
+        "!{projectRoot}/scripts/**/*.spec.ts",
+        "{projectRoot}/src/primitives.color.tokens.json",
+        "{workspaceRoot}/.prettierrc.json",
+        { "externalDependencies": ["colorjs.io", "prettier"] }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node scripts/generate-colors.ts"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "inputs": ["default", { "externalDependencies": ["colorjs.io"] }],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node --test \"scripts/**/*.spec.ts\""
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "tsc -p tsconfig.json"
+      }
+    }
+  }
 }

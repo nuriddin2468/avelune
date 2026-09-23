@@ -47,10 +47,12 @@ Run from the repository root. `pnpm` switches itself to the pinned 11.27.1 (`pac
 | Lint, type-check everything | `pnpm nx run-many -t lint typecheck` |
 | Only what a change affects | `pnpm nx affected -t lint typecheck build` |
 | API reports: check / update | `pnpm nx run ui:api-report` / `pnpm nx run ui:api-report --update` |
+| Colour primitives: check / regenerate | `pnpm nx run tokens:colors` / `pnpm nx run tokens:colors --update` |
+| Node-side tests (scripts, tools) | `pnpm nx run-many -t test` (`node:test`, ADR 0015) |
 | Format | `pnpm format` (check: `pnpm format:check`) |
 | Project graph | `pnpm nx graph` |
 
-The pre-commit hook runs ESLint and Prettier on staged files and `typecheck` on affected projects; the commit-msg hook runs commitlint. Tests, Stylelint, Storybook, visual and a11y checks are added in Phase 3 and listed here then.
+The pre-commit hook runs ESLint and Prettier on staged files and `typecheck` on affected projects; the commit-msg hook runs commitlint. Component tests, Stylelint, Storybook, visual and a11y checks are added in Phase 3 and listed here then.
 
 ## Where things live
 

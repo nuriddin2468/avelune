@@ -1,0 +1,14 @@
+/* Token scripts run directly in Node 24 through type stripping (ADR 0015): only erasable syntax, explicit .ts imports. */
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "types": ["node"]
+  },
+  "include": ["scripts/**/*.ts"]
+}

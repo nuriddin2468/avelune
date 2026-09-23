@@ -30,3 +30,7 @@ Consistency across products requires one source of truth for every visual value.
 
 - Components can reference only semantic and component variables. Stylelint's unknown-custom-property check reads `dist/tokens.css`, so a primitive or a typo fails lint.
 - When SD completes 2025.10 duration support, the custom transform is removed. A test pins its output, so the swap is verified.
+
+## Addendum (Phase 2, 2026-09-23)
+
+Colour primitives are generated into `src/primitives.color.tokens.json` by the colour script (ADR 0011, addendum) and never edited by hand; `src/primitives.tokens.json` holds the hand-written primitives. The other source files are as listed above.

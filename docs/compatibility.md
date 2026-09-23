@@ -44,13 +44,14 @@ Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` an
 | | `stylelint-value-no-unknown-custom-properties` | 6.1.1 | Peers `>=16` |
 | | `stylelint-plugin-logical-css` | 2.1.0 | Replaces `stylelint-use-logical-spec` (ADR 0009) |
 | Tokens | `style-dictionary` | 5.5.5 | DTCG colour objects since 5.3, dimension objects since 5.4; duration/gradient still WIP (issue #1590) |
-| | `colorjs.io` | 0.7.1 | ADR 0011 |
+| | `colorjs.io` | 0.7.1 | ADR 0011; installed in Phase 2 (released 2026-07-24) |
 | API | `@microsoft/api-extractor` | 7.59.1 | Bundles TS 5.9.3; works on TS 6 output (ADR 0007, spike result). *Held back*: 7.59.2 published 2026-09-22 18:27 UTC |
 | Release | `@changesets/cli` | 3.0.3 | Node `^22.11 \|\| ^24`, pnpm `>=10` |
 | Hooks | `lefthook` | 2.1.14 | |
 | | `@commitlint/cli`, `@commitlint/config-conventional`, `@commitlint/config-nx-scopes` | 21.2.3 | Node `>=22.12`; scopes = Nx project names |
 | Format | `prettier` | 3.9.8 | *Held back*: 3.9.9 published 2026-09-23 06:31 UTC |
 | Budgets | `size-limit`, `@size-limit/*` | 14.0.0 | Node `^24.5` |
+| Node types | `@types/node` | 24.13.6 | Follows `engines.node` (^24.15.0), not npm `latest` (26.x); ADR 0015 |
 | Fonts | `fontkit` | 2.0.4 | cmap coverage check |
 | | `subset-font` | 2.9.0 | woff2 subsetting (HarfBuzz wasm, no Python) |
 

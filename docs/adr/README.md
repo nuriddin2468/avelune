@@ -20,6 +20,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0012](0012-pnpm-11.md) | Package manager: pnpm 11 | Accepted |
 | [0013](0013-vitest-4-now-5-later.md) | Vitest 4 now, Vitest 5 after Angular 22.2 | Accepted |
 | [0014](0014-browser-floor-follows-angular.md) | Browser floor follows Angular's supported set | Accepted |
+| [0015](0015-node-scripts-typescript-node-test.md) | Repository scripts in TypeScript, run by Node; `node:test` | Accepted |
 
 ## Template
 

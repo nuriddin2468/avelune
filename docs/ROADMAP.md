@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 1 complete (2026-09-23). Next: Phase 2, first item.
+**Current position:** Phase 2 in progress (2026-09-23). Colour generation done; next: semantic tokens (second item).
 
 ## Parameters
 
@@ -52,7 +52,7 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 - [x] Angular agent skill (`angular-developer`) vendored in `.claude/skills/` + Angular CLI MCP in `.mcp.json` (product owner approved the write, 2026-09-23)
 
 ### Phase 2: Tokens
-- [ ] Colour generation script (OKLCH, colorjs.io) and primitive scales (ADR 0011)
+- [x] Colour generation script (OKLCH, colorjs.io) and primitive scales (ADR 0011, addendum; scripts in TS per ADR 0015)
 - [ ] Semantic light + dark, density compact, motion, component sources (DTCG 2025.10)
 - [ ] Style Dictionary 5 build → `tokens.css`, `tokens.ts` (`TokenName` union)
 - [ ] `tools/tokens-check`: schema, references, naming, tier direction, contrast pairs, dark parity, no primitives in output; with failing fixtures

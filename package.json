@@ -45,6 +45,8 @@
     "@nx/eslint-plugin": "catalog:",
     "@nx/js": "catalog:",
     "@schematics/angular": "catalog:",
+    "@types/node": "catalog:",
+    "colorjs.io": "catalog:",
     "eslint": "catalog:",
     "globals": "catalog:",
     "lefthook": "catalog:",
