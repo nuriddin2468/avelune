@@ -104,7 +104,7 @@
     "accent": {
       "bg": {
         "$value": "{color.orange.400}",
-        "$description": "Solid fill. The accent: primary actions, selection, focus. Text on it uses color.fg.on-accent. In dark the fill is a lighter, less saturated step with dark text, so a filled control keeps 3:1 against the dark surface."
+        "$description": "Solid fill for primary actions, selection and focus. Text on it uses color.fg.on-accent. Light theme: the nearest step to the brand colour that carries white text at 4.5:1; dark theme: a lighter, calmer step with dark text (ADR 0011)."
       },
       "bg-hover": {
         "$value": "{color.orange.300}"
