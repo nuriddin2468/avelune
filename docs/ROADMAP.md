@@ -15,7 +15,7 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 | Selector prefix | `ave` (`button[aveButton]`, `<ave-form-field>`) |
 | CSS variable prefix | `--ave-` (ADR 0003) |
 | Consumers | internal work systems (product names not given yet) |
-| Brand accent | Ubuntu orange `#E95420`, exact, as the accent fill with dark text in both themes (ADR 0019; product owner, 2026-09-23); one accent, no separate "suggested action" colour |
+| Brand accent | Ubuntu orange `#E95420`, kept exact as `color.brand.mark`; the accent fill is orange 600 `#b53700` with white text in light and orange 400 with dark text in dark (ADR 0011, 0021; product owner, 2026-09-23); one accent, no separate "suggested action" colour |
 | Font | IBM Plex Sans (coverage verified, [compatibility.md](compatibility.md) §4); shipped as "Avelune Sans" for the OFL Reserved Font Name (ADR 0018). Code: IBM Plex Mono as "Avelune Mono" (product owner, 2026-09-23) |
 | Icons | Lucide, outline (ADR 0020; choice delegated to the agent by the product owner, 2026-09-23) |
 | Base text | 14/20 (dense work UI) |
@@ -59,7 +59,7 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 - [x] `tools/tokens-check`: schema, references, naming, tier direction, contrast pairs, dark parity, no primitives in output; with failing fixtures (25 fixtures, one per violation)
 - [x] Fonts: cmap check on the shipped woff2 subsets; self-hosted IBM Plex Sans; metric-tuned fallback `@font-face` (`tools/fonts`, ADR 0018: shipped as "Avelune Sans")
 - [x] Foundations stories: palette + contrast, type specimen (ru, uz-Latn with Oʻ/Gʻ, uz-Cyrl), spacing, radius, elevation, z-index, motion playground (Storybook set up early, ADR 0008 addendum; axe-clean in both themes, both motion modes, at 320, 390 and 1280 px)
-- [x] **STOP:** Foundations screenshots (light, dark) → approve palette, accent, typography and motion values. Approved 2026-09-23 ([review page](https://claude.ai/artifact/1LHWb4xFKZUsVCE3WwjJPN), private to the product owner): accent = exact `#E95420` with dark text (ADR 0019); one orange accent; typography approved; code font IBM Plex Mono; icons delegated → Lucide (ADR 0020). Presented without objection: dark fills lighter on hover and press, ʻ ʼ drawn with ‘ ’, motion values of brief §6.2 unchanged (now frozen, ADR 0005), the token additions of ADR 0016, radii 4/8/12/full and control heights 32/36/40 (compact 28/32/36).
+- [x] **STOP:** Foundations screenshots (light, dark) → approve palette, accent, typography and motion values. Approved 2026-09-23 ([review page](https://claude.ai/artifact/1LHWb4xFKZUsVCE3WwjJPN), private to the product owner): accent fill first set to the exact `#E95420` with dark text (ADR 0019), then returned by the product owner to orange 600 with white text (ADR 0021); one orange accent; typography approved; code font IBM Plex Mono; icons delegated → Lucide (ADR 0020). Presented without objection: dark fills lighter on hover and press, ʻ ʼ drawn with ‘ ’, motion values of brief §6.2 unchanged (now frozen, ADR 0005), the token additions of ADR 0016, radii 4/8/12/full and control heights 32/36/40 (compact 28/32/36).
 
 ### Phase 3: Guardrails (before any component)
 

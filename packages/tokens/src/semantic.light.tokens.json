@@ -53,7 +53,7 @@
         "$description": "Text and icons of disabled controls. Exempt from contrast minimums (WCAG 1.4.3); never the only sign of the state."
       },
       "on-accent": {
-        "$value": "{color.neutral.950}",
+        "$value": "{color.white}",
         "$description": "Text and icons on color.accent.bg and its hover and active states."
       },
       "on-info": {
@@ -98,19 +98,19 @@
     "brand": {
       "mark": {
         "$value": "{color.orange.500}",
-        "$description": "The exact brand colour for logos, illustrations and data marks. Not for text; fills behind text use color.accent.bg, the same colour paired with dark text (ADR 0011, 0019)."
+        "$description": "The exact brand colour, for logos, illustrations and data marks only. Never text, never a text background (ADR 0011)."
       }
     },
     "accent": {
       "bg": {
-        "$value": "{color.orange.500}",
-        "$description": "Solid fill for primary actions, selection and focus: the exact brand colour in both themes, with dark text (color.fg.on-accent, 4.69:1). Hover and pressed get lighter, because a darker step would drop the dark text below 4.5:1 (ADR 0019)."
+        "$value": "{color.orange.600}",
+        "$description": "Solid fill for primary actions, selection and focus. Text on it uses color.fg.on-accent. Light theme: the nearest step to the brand colour that carries white text at 4.5:1; dark theme: a lighter, calmer step with dark text (ADR 0011, 0021)."
       },
       "bg-hover": {
-        "$value": "{color.orange.400}"
+        "$value": "{color.orange.700}"
       },
       "bg-active": {
-        "$value": "{color.orange.300}"
+        "$value": "{color.orange.800}"
       },
       "bg-subtle": {
         "$value": "{color.orange.100}",

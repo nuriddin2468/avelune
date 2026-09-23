@@ -67,7 +67,7 @@ const groups: readonly Group[] = [
     title: role === 'accent' ? 'Accent' : `Status: ${role}`,
     note:
       role === 'accent'
-        ? 'Primary actions, selection and focus. The fill is the exact brand colour with dark text in both themes (ADR 0019).'
+        ? 'Primary actions, selection and focus. The fill is the nearest step to the brand colour that carries text at 4.5:1 (ADR 0011, 0021).'
         : '',
     swatches: [
       { name: `color.${role}.bg`, kind: 'fill', partner: `color.fg.on-${role}` },
@@ -80,7 +80,7 @@ const groups: readonly Group[] = [
   })),
   {
     title: 'Brand',
-    note: 'The exact brand colour as a mark: logos, illustrations, data. Buttons use it through color.accent.bg with dark text.',
+    note: 'The exact brand colour, for logos, illustrations and data marks. Never text and never behind text.',
     swatches: [{ name: 'color.brand.mark', kind: 'fill' }],
   },
 ];

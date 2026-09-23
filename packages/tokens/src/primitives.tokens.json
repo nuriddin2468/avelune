@@ -52,7 +52,7 @@
         "Consolas",
         "monospace"
       ],
-      "$description": "IBM Plex Mono Regular, self-hosted as woff2 subsets and renamed as the OFL requires (ADR 0018, 0019). The fallback face is local Courier New scaled to Plex Mono's metrics; both set every glyph 0.6 em wide."
+      "$description": "IBM Plex Mono Regular, self-hosted as woff2 subsets and renamed as the OFL requires (ADR 0018). The fallback face is local Courier New scaled to Plex Mono's metrics; both set every glyph 0.6 em wide."
     }
   },
   "font-weight": {

@@ -1,6 +1,6 @@
 # 0019. Accent fill: the exact brand colour with dark text
 
-- Status: Accepted (2026-09-23, product owner at the Foundations milestone)
+- Status: Superseded by [0021](0021-accent-nearest-passing-step.md) (2026-09-23, product owner); its "one accent" decision is carried over into 0021
 - Date: 2026-09-23
 - Related: 0011 (supersedes the accent-fill bullet of its generator addendum), 0016
 
