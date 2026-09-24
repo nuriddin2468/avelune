@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 3 in progress. Compiler strictness (ADR 0022), ESLint (ADR 0023), Stylelint (ADR 0024) and unit and story tests (ADR 0025, 0026) are done, all on 2026-09-24. Next: Playwright visual tests in Docker, the axe sweep, invariants and size-limit. The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
+**Current position:** Phase 3 in progress. Compiler strictness (ADR 0022), ESLint (ADR 0023), Stylelint (ADR 0024) and unit and story tests (ADR 0025, 0026) are done, all on 2026-09-24. Next, in a new session (product owner's choice): Playwright visual tests in Docker, the axe sweep, invariants and size-limit. The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
 
 ## Parameters
 
@@ -82,7 +82,7 @@ Carried over from Phase 1: a SchematicTestRunner test for `ng-add` and the empty
   - `storybook:test` runs every story with `play` and axe as errors.
   - `test-check:test` proves that a coverage gap, an orphan file, an axe violation and a failing `play` each fail.
   - Known limit: an exported function that no test calls is tree-shaken and not counted (ADR 0026).
-- [ ] Playwright visual in pinned amd64 Docker; axe sweep; invariants skeleton; size-limit
+- [ ] Playwright visual in pinned amd64 Docker; axe sweep; invariants skeleton; size-limit. The product owner consented on 2026-09-24 to pulling the pinned image of ADR 0010 (`mcr.microsoft.com/playwright:v1.63.0-noble`, linux/amd64, by digest) into the local Docker store; it is not present yet.
 - [ ] API reports; changesets; `.gitlab-ci.yml` stages (brief §5.6); CODEOWNERS + review rule in CONTRIBUTING
 - [ ] Every guardrail proven to fail on a violation
 
