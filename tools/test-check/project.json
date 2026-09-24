@@ -12,6 +12,9 @@
         "{workspaceRoot}/packages/ui/project.json",
         "{workspaceRoot}/packages/ui/tsconfig*.json",
         "{workspaceRoot}/packages/ui/scripts/size-limit.mts",
+        "{workspaceRoot}/tools/visual/playwright.config.ts",
+        "{workspaceRoot}/tools/invariants/playwright.config.ts",
+        "{workspaceRoot}/tools/visual/src/**/*",
         {
           "externalDependencies": [
             "vitest",
@@ -20,14 +23,44 @@
             "@angular/build",
             "size-limit",
             "@size-limit/file",
-            "@size-limit/esbuild"
+            "@size-limit/esbuild",
+            "@playwright/test"
           ]
         }
       ],
       "cache": true,
       "options": {
         "cwd": "{projectRoot}",
-        "command": "node --test \"src/**/*.spec.ts\""
+        "command": "node --test \"src/*.spec.ts\""
+      }
+    },
+    "e2e": {
+      "executor": "nx:run-commands",
+      "parallelism": false,
+      "dependsOn": [
+        {
+          "projects": ["tokens"],
+          "target": "build"
+        }
+      ],
+      "inputs": [
+        "default",
+        "{workspaceRoot}/apps/storybook/.storybook/**/*",
+        "{workspaceRoot}/apps/storybook/tsconfig.json",
+        "{workspaceRoot}/tools/visual/**/*",
+        "!{workspaceRoot}/tools/visual/baselines/**",
+        "{workspaceRoot}/tools/invariants/**/*",
+        {
+          "dependentTasksOutputFiles": "**/*"
+        },
+        {
+          "externalDependencies": ["@playwright/test", "@axe-core/playwright", "storybook", "@storybook/angular-vite"]
+        }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node --test --test-concurrency=1 \"src/e2e/*.spec.ts\""
       }
     },
     "typecheck": {

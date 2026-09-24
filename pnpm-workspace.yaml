@@ -86,6 +86,9 @@ catalog:
   '@vitest/coverage-v8': 4.1.11
   playwright: 1.63.0
   '@storybook/addon-vitest': 10.6.0
+  # Browser suites in the pinned container: visual, axe sweep, invariants (ADR 0006, 0010, 0027)
+  '@playwright/test': 1.63.0
+  '@axe-core/playwright': 4.13.0
   # Size budgets per entry point (ADR 0028)
   size-limit: 14.0.0
   '@size-limit/file': 14.0.0

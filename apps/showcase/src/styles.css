@@ -1,0 +1,8 @@
+/* Until @avelune/ui/styles.css exists (Phase 4): the page takes its colours and text from the tokens, as the Storybook
+   preview does. The build bundles tokens.css and fonts.css before this file (project.json, "styles"). */
+body {
+  margin: 0;
+  background: var(--ave-color-bg-canvas);
+  color: var(--ave-color-fg-default);
+  font: var(--ave-font-body-md);
+}

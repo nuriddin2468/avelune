@@ -1,0 +1,106 @@
+/* Shared by the fixture pages: the kit's tokens and fonts, and the animations the pages combine. Deliberately not
+   linted (fixtures are ignored by Stylelint): some rules below are the violations. */
+body {
+  margin: 0;
+  background: var(--ave-color-bg-canvas);
+  color: var(--ave-color-fg-default);
+  font: var(--ave-font-body-md);
+}
+
+main {
+  padding: var(--ave-space-4);
+}
+
+.box {
+  inline-size: var(--ave-space-8);
+  block-size: var(--ave-space-8);
+  background: var(--ave-color-accent-bg);
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes fade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+
+/* Token motion: reduced motion shortens it and keeps the fade. */
+.fade-enter {
+  animation-name: fade;
+  animation-duration: var(--ave-duration-normal);
+  animation-timing-function: var(--ave-easing-enter);
+}
+
+/* The spring easing is linear(), which the browser serialises with stop positions. */
+.fade-spring {
+  animation-name: fade;
+  animation-duration: var(--ave-duration-fast);
+  animation-timing-function: var(--ave-easing-spring);
+}
+
+/* A transition on first render. */
+.appear {
+  transition-property: opacity;
+  transition-duration: var(--ave-duration-slow);
+  transition-timing-function: var(--ave-easing-standard);
+}
+
+@starting-style {
+  .appear {
+    opacity: 0;
+  }
+}
+
+/* Violation: a duration that is no token. */
+.fade-raw-duration {
+  animation-name: fade;
+  animation-duration: 333ms;
+  animation-timing-function: var(--ave-easing-enter);
+}
+
+/* Violation: an easing that is no token. */
+.fade-raw-easing {
+  animation-name: fade;
+  animation-duration: var(--ave-duration-normal);
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes rise {
+  from {
+    translate: 0 16px;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+@keyframes grow {
+  from {
+    scale: 0.9;
+  }
+  to {
+    scale: 1;
+  }
+}
+
+/* Violations under reduced motion: raw distances and scales that no token override removes. */
+.rise {
+  animation-name: rise;
+  animation-duration: var(--ave-duration-normal);
+  animation-timing-function: var(--ave-easing-enter);
+}
+
+.grow {
+  animation-name: grow;
+  animation-duration: var(--ave-duration-normal);
+  animation-timing-function: var(--ave-easing-enter);
+}
+
+/* Violation at 320px: wider than the viewport. */
+.wide {
+  inline-size: 400px;
+}

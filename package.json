@@ -16,7 +16,9 @@
     "typecheck": "nx run-many -t typecheck",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "graph": "nx graph"
+    "graph": "nx graph",
+    "visual": "nx run visual:e2e",
+    "visual:update": "nx run visual:e2e --update"
   },
   "dependencies": {
     "@angular/common": "catalog:",
@@ -32,6 +34,7 @@
   },
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "catalog:",
+    "@axe-core/playwright": "catalog:",
     "@angular-devkit/architect": "catalog:",
     "@angular-devkit/core": "catalog:",
     "@angular-devkit/schematics": "catalog:",
@@ -48,6 +51,7 @@
     "@nx/eslint": "catalog:",
     "@nx/eslint-plugin": "catalog:",
     "@nx/js": "catalog:",
+    "@playwright/test": "catalog:",
     "@schematics/angular": "catalog:",
     "@size-limit/esbuild": "catalog:",
     "@size-limit/file": "catalog:",

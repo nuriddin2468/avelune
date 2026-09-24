@@ -57,11 +57,14 @@ Run from the repository root. `pnpm` switches itself to the pinned 11.27.1 (`pac
 | Colour primitives: check / regenerate | `pnpm nx run tokens:colors` / `pnpm nx run tokens:colors --update` |
 | All tests: library (Vitest in Chromium, coverage gate), stories (render, `play`, axe), Node-side (`node:test`) | `pnpm nx run-many -t test` (ADR 0015, 0026) |
 | Library unit tests / story tests | `pnpm nx run ui:test` / `pnpm nx run storybook:test` |
+| Visual regression + axe sweep of every story, in the pinned Docker image: check / update baselines (then inspect every changed image) | `pnpm visual` / `pnpm visual:update`; filter with `pnpm visual --grep=<story>` (ADR 0010, 0027) |
+| Showcase: axe and invariants on every screen, in the pinned Docker image | `pnpm nx run invariants:e2e` (ADR 0027) |
+| Prove the browser suites fail on violations (Docker) | `pnpm nx run test-check:e2e` |
 | Size budget of every entry point (`sizeLimit` in `entry.json`) | `pnpm nx run ui:size` (ADR 0028) |
 | Format | `pnpm format` (check: `pnpm format:check`) |
 | Project graph | `pnpm nx graph` |
 
-The pre-commit hook runs ESLint, Stylelint and Prettier on staged files, `typecheck` on affected projects and `compiler-check:check` when a tsconfig is staged; the commit-msg hook runs commitlint. Visual regression, the Playwright axe sweep, invariants and size budgets are added later in Phase 3 and listed here then.
+The pre-commit hook runs ESLint, Stylelint and Prettier on staged files, `typecheck` on affected projects and `compiler-check:check` when a tsconfig is staged; the commit-msg hook runs commitlint. The browser suites need Docker running and the pinned image pulled (`docker pull --platform linux/amd64 <image in tools/visual/src/image.ts>`); they never run on the host.
 
 ## Where things live
 

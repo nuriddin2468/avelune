@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fixture site</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/tokens/tokens.css" />
+    <link rel="stylesheet" href="/fonts/fonts.css" />
+    <link rel="stylesheet" href="/fixture.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Fixture site</h1>
+      <!-- Control: passes every invariant, with token motion of each kind, and links to one violation per page. -->
+      <p>Each linked page breaks exactly one invariant.</p>
+      <ul>
+        <li><a href="/axe.html">Axe violation</a></li>
+        <li><a href="/overflow.html">Horizontal overflow</a></li>
+        <li><a href="/raw-motion.html">Motion off the tokens</a></li>
+        <li><a href="/reduced-motion.html">Movement under reduced motion</a></li>
+      </ul>
+      <div class="box fade-enter" aria-hidden="true"></div>
+      <div class="box fade-spring" aria-hidden="true"></div>
+      <p class="appear">Fades in once, on a transition.</p>
+    </main>
+  </body>
+</html>

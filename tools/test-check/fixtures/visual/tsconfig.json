@@ -1,0 +1,5 @@
+/* The Storybook options, with this folder's fixture stories in the program (Analog compiles only those). */
+{
+  "extends": "../../../../apps/storybook/tsconfig.json",
+  "include": ["*.stories.ts", ".storybook/*.ts"]
+}

@@ -16,9 +16,10 @@ How Avelune is built. Decisions and their reasons live in the [ADRs](adr/README.
 | `tools/tokens-check` | `tokens-check` | `type:tool` | Token validation |
 | `tools/fonts` | `fonts` | `type:tool` | Builds and checks the web font in `packages/ui/styles/fonts` |
 | `tools/compiler-check` | `compiler-check` | `type:tool` | Checks every tsconfig for the required compiler strictness; fixtures prove each option |
-| `tools/test-check` | `test-check` | `type:tool` | Proves that the coverage gate, the story gates (`play`, axe) and the size budgets fail on violations |
+| `tools/test-check` | `test-check` | `type:tool` | Proves that the coverage gate, the story gates (`play`, axe), the size budgets and the browser suites fail on violations |
 | `tools/lint-rules` | `lint-rules` | `type:tool` | The `avelune` ESLint and Stylelint rules and the fixtures that prove both workspace configs (ADR 0023, 0024) |
-| `tools/invariants` | `invariants` | `type:tool` | Cross-component Playwright invariants (Phase 3/5) |
+| `tools/visual` | `visual` | `type:tool` | Visual regression and the axe sweep of every story, in the pinned container; the container runner and fixed environment every browser suite shares (ADR 0010, 0027) |
+| `tools/invariants` | `invariants` | `type:tool` | Axe and the cross-component invariants on every showcase screen, in the pinned container (ADR 0027); component invariants join in Phase 5 |
 | `tools/adoption-metrics` | `adoption-metrics` | `type:tool` | Consumer-repo scanner (Phase 6) |
 
 Only `packages/*` are pnpm workspace packages (they are published). Apps and tools are Nx projects with a `project.json` only. All tool versions live once, in the `catalog:` of `pnpm-workspace.yaml` (ADR 0012). Nx also adds `npm:public` / `npm:private` tags from each `package.json`; they carry no constraints.
@@ -88,7 +89,7 @@ Conventions:
 1. `build-lib`: `@angular/build:ng-packagr` with `tsconfig.lib.prod.json` (partial compilation) into `dist/packages/ui`, in Angular Package Format with an `exports` entry per entry point.
 2. `build`: compiles `schematics/` with `tsconfig.schematics.json` to CommonJS and copies their JSON manifests. The published package is `"type": "module"`, and the Angular CLI loads schematic factories with `require()`, so `dist/packages/ui/schematics/package.json` marks that folder `"type": "commonjs"`. The marker is written into `dist` only: a `package.json` inside the source tree would become a separate Nx project.
 
-`nx build showcase` uses `@angular/build:application`; it resolves `@avelune/ui/*` to the sources through the path mapping, so no library build is needed for the app.
+`nx build showcase` uses `@angular/build:application`; it resolves `@avelune/ui/*` to the sources through the path mapping, so no library build is needed for the app. Until `@avelune/ui/styles.css` exists (Phase 4) it bundles `tokens.css`, `fonts.css` and `apps/showcase/src/styles.css` (body colours and font) as global styles, after building the tokens.
 
 `nx run ui:size` measures every entry point against the budget in its `entry.json` (ADR 0028): the FESM bundle from `build-lib`, bundled and minified by esbuild with the peers and the other entry points left out, brotli-compressed. The checks come from `packages/ui/scripts/size-limit.mts`.
 
@@ -99,6 +100,7 @@ Conventions:
 - `tsconfig.base.json` holds the required strictness for every project (ADR 0022): brief §5.1 (`strict`, `noUncheckedIndexedAccess`, `noImplicitOverride`, `noPropertyAccessFromIndexSignature`, `strictTemplates`, extended diagnostics as errors), plus `noImplicitReturns`, `noFallthroughCasesInSwitch`, `exactOptionalPropertyTypes`, `allowUnreachableCode: false`, `strictInjectionParameters`, `strictInputAccessModifiers`, `strictStandalone` and `typeCheckHostBindings`. The list lives in `tools/compiler-check/src/requirements.ts`. A project tsconfig may add options, but it may never weaken these: `pnpm nx run compiler-check:check` resolves every `tsconfig*.json` the way ngc does and fails on any weaker value.
 - `pnpm nx run compiler-check:test` proves the options. Each fixture in `tools/compiler-check/fixtures/violations` breaks one option or one extended diagnostic and must produce exactly its declared error codes. The control fixture `valid.ts` must compile clean. Every required option, and every extended diagnostic the installed compiler knows, must have a fixture. When an upgrade adds a new `strict` flag or a new diagnostic, add a fixture for it: a header `// Proves: <option>` and `// Expect: <codes>`, and an entry in `requirements.ts` if it is a flag.
 - Consequences for code: leave optional properties out rather than setting them to `undefined` (`...(x === undefined ? {} : { x })`). In host listeners `$event` is `Event`; narrow it inside the handler.
+- `@avelune/visual` maps to `tools/visual/src/index.ts`, the browser suites' shared environment; Playwright resolves it through the mapping, Node-side tests never import it.
 - TypeScript 6 specifics: no `baseUrl` (paths are relative to the config file), `types: []` by default, and `rootDir` defaults to the config's folder. Apps that compile library sources through path mappings set `rootDir` to the workspace root.
 - `typecheck` targets run `ngc --noEmit`, which also type-checks templates; `ui:typecheck` checks the specs (`tsconfig.spec.json`) and the schematics too.
 - Every folder with TypeScript has a `tsconfig.json` that editors, the Angular language service and type-aware lint find by name. Where a build uses another file (`tsconfig.lib.json`, `tsconfig.app.json`, `tsconfig.schematics.json`), the `tsconfig.json` extends it and adds specs and stories.
@@ -182,8 +184,13 @@ The **Foundations** pages live in `apps/storybook/src/foundations`: colour roles
   - An exported function that no test calls is tree-shaken from the bundle and does not count, so review what each spec leaves out.
 - **Stories** (`pnpm nx run storybook:test`): every story is a Vitest test in Chromium through `@storybook/addon-vitest`. It fails on an error, a failing `play` function or any axe violation.
 - **Node-side code** (tools, token scripts) uses `node:test` (ADR 0015).
+- **Browser suites** (ADR 0010, 0027) run only in the pinned Playwright image, linux/amd64, which `tools/visual/src/image.ts` names by digest. `container.ts` starts it with Docker, mounts the workspace, cuts the network and runs Playwright; inside the image (CI) it runs Playwright directly. Both Playwright configs refuse to start anywhere else. The host builds the site first (Nx `dependsOn`); `serve.ts` serves it in the container. The fixed environment (`environment.ts`: scale 1, `en-US`, Asia/Tashkent, reduced motion, a fixed date, the kit-font assertion) is shared through `@avelune/visual`.
+  - **Visual** (`pnpm nx run visual:e2e`, or `pnpm visual`): every story in `index.json`, light and dark at 1280 and 390 px. The screenshot must equal `tools/visual/baselines/<story id>/<project>.png` to the pixel, and axe (the Storybook gate's rules) must find nothing. A story that errors, logs an error or renders in a fallback font fails; so do a missing baseline and a baseline without a story. `pnpm visual:update` rewrites changed and missing baselines: open every changed image and explain it in the merge request (non-negotiable 10). Arguments go to Playwright: `pnpm visual --grep=colour`. The HTML report is written to `dist/tools/visual/report`.
+  - **Showcase** (`pnpm nx run invariants:e2e`): every screen linked from `/`, in the same four projects: axe with every rule, no horizontal scroll at 320 px, every animation on a duration and an easing token, nothing translated or scaled under reduced motion. The invariants of brief §8.2 that need components (same-size controls, overlays, `animate.leave`) are added with those components.
 - **Size** (`pnpm nx run ui:size`): see "Build".
-- `tools/test-check` proves the gates with fixtures: a coverage gap and an orphan file (`ui:test:coverage-gap`); a fixture Storybook with an unnamed button and a failing `play` function; an entry point over its size budget and one without a budget.
+- `tools/test-check` proves the gates with fixtures:
+  - `test`: a coverage gap and an orphan file (`ui:test:coverage-gap`); a fixture Storybook with an unnamed button and a failing `play` function; an entry point over its size budget and one without a budget; both browser-suite configs refusing to start on the host.
+  - `e2e` (Docker): the visual suite on a fixture Storybook with one broken story per check, and the showcase suite on a static site with one violation per page. Clean controls must pass, and the control's motion must actually have been recorded.
 
 ## Fonts
 
@@ -203,6 +210,9 @@ What is checked today, by which tool, at which stage. Phase 3 completes this tab
 | Token-only CSS values, no unknown tokens, specificity cap, no `::ng-deep`/`!important`/ids, motion longhands, `@keyframes` only in `motion.css`, logical properties (exceptions derived from browser data), query widths equal tokens, `@layer components`, same-element nesting | Stylelint (ADR 0024), a fixture per rule in `lint-rules:test` | staged `.css` | Phase 3 |
 | Coverage ≥ 90% per file in `packages/ui`, tests in a real browser | `ui:test` (Vitest browser mode), proven by `test-check:test` | no | Phase 3 |
 | Every story renders, passes its `play` function and has no axe violation | `storybook:test` (addon-vitest, a11y `error`), proven by `test-check:test` | no | Phase 3 |
+| Every story × light/dark × 1280/390 equals its committed baseline, in the kit's fonts, without errors; no baseline without a story; axe clean (independent sweep) | `visual:e2e` in the pinned container (ADR 0010, 0027), proven by `test-check:e2e` | no | Phase 3 |
+| Every showcase screen: axe clean, no horizontal scroll at 320 px, motion on tokens only, no movement under reduced motion | `invariants:e2e` in the pinned container (ADR 0027), proven by `test-check:e2e` | no | Phase 3 |
+| Browser suites run only in the pinned image on amd64; the image's Playwright version equals the installed one | Playwright configs (`requireContainer`), proven by `test-check:test`; `visual:test` | no | Phase 3 |
 | Every entry point within the size budget its `entry.json` declares | `ui:size` (size-limit, ADR 0028), proven by `test-check:test` | no | Phase 3 |
 | Formatting | Prettier (`.md` excluded) | staged files | Phase 3 |
 | Conventional commits, scope = Nx project or `repo`, `deps`, `docs`, `ci`, `release` | commitlint | commit message | n/a |

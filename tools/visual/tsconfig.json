@@ -1,0 +1,14 @@
+/* Node-side code runs through type stripping (ADR 0015); Playwright loads the config and the *.e2e.ts suites itself. */
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "types": ["node"]
+  },
+  "include": ["playwright.config.ts", "src/**/*.ts"]
+}

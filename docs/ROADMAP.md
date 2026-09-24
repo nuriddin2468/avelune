@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 3 in progress. Compiler strictness (ADR 0022), ESLint (ADR 0023), Stylelint (ADR 0024) and unit and story tests (ADR 0025, 0026) are done, all on 2026-09-24. Next, in a new session (product owner's choice): Playwright visual tests in Docker, the axe sweep, invariants and size-limit. The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
+**Current position:** Phase 3 in progress. Compiler strictness (ADR 0022), ESLint (ADR 0023), Stylelint (ADR 0024), unit and story tests (ADR 0025, 0026), and the browser suites and size budgets (ADR 0027, 0028) are done, all on 2026-09-24. Next: API reports in CI, changesets, the `.gitlab-ci.yml` stages, CODEOWNERS. The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
 
 ## Parameters
 
@@ -63,7 +63,9 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 
 ### Phase 3: Guardrails (before any component)
 
-Carried over from Phase 2: wire `tokens:colors`, `tokens-check:check`, `fonts:check`, `compiler-check:check`, the `stylelint` targets and the `node:test` targets into CI; invariants normalise the browser's `linear(0 0%, …)` easing strings before comparing with tokens.
+Carried over from Phase 2: wire `tokens:colors`, `tokens-check:check`, `fonts:check`, `compiler-check:check`, the `stylelint` targets and the `node:test` targets into CI. (The `linear()` normalisation for the invariants is done: ADR 0027.)
+
+Carried over from the browser-suite item: the CI visual job runs in the digest of `tools/visual/src/image.ts`, sets `AVELUNE_PLAYWRIGHT_IMAGE` to it, takes the Storybook and showcase builds from earlier stages and runs `visual:e2e`, `invariants:e2e` and `test-check:e2e`; `ui:size` runs in the size-limit stage; a check fails when `.gitlab-ci.yml` names another image.
 
 Carried over from Phase 1: a SchematicTestRunner test for `ng-add` and the empty migration collection; failing fixtures for `ui:api-report` (untagged export, stale report); a check that every Nx project carries a layer or type tag; a check of `.browserslistrc` against Angular's supported set (ADR 0014).
 
@@ -82,7 +84,12 @@ Carried over from Phase 1: a SchematicTestRunner test for `ng-add` and the empty
   - `storybook:test` runs every story with `play` and axe as errors.
   - `test-check:test` proves that a coverage gap, an orphan file, an axe violation and a failing `play` each fail.
   - Known limit: an exported function that no test calls is tree-shaken and not counted (ADR 0026).
-- [ ] Playwright visual in pinned amd64 Docker; axe sweep; invariants skeleton; size-limit. The product owner consented on 2026-09-24 to pulling the pinned image of ADR 0010 (`mcr.microsoft.com/playwright:v1.63.0-noble`, linux/amd64, by digest) into the local Docker store; it is not present yet.
+- [x] Playwright visual in pinned amd64 Docker; axe sweep; invariants skeleton; size-limit. Done in ADR 0027 and 0028:
+  - The pinned image was pulled on 2026-09-24 with the product owner's consent. `container.ts` runs every browser suite in it (linux/amd64, no network, the workspace mounted); the configs refuse to start anywhere else.
+  - `visual:e2e` (`pnpm visual`): every story × light/dark × 1280/390 against committed baselines (24 Foundations images, inspected; a second run matched to the pixel), the kit-font assertion, no rendering or console errors, orphan baselines, and the axe sweep with the Storybook gate's rules.
+  - `invariants:e2e`: axe on every showcase screen, no horizontal scroll at 320 px, motion on tokens only (with `linear()` normalised), nothing moves under reduced motion. The showcase now bundles the tokens and fonts.
+  - `ui:size`: a budget in each `entry.json`; the sample is 758 B of 900 B.
+  - `test-check` proves each failure mode: host refusal and size in `test`; a fixture Storybook (6 stories, an orphan baseline) and a fixture site (4 violation pages, a control) in `e2e`.
 - [ ] API reports; changesets; `.gitlab-ci.yml` stages (brief §5.6); CODEOWNERS + review rule in CONTRIBUTING
 - [ ] Every guardrail proven to fail on a violation
 
@@ -201,7 +208,8 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 | API Extractor bundles TS 5.9 | Phase 1 spike; d.ts-golden fallback | 0007 |
 | Style Dictionary DTCG duration WIP | custom transform, pinned by test | 0003 |
 | `stylelint-plugin-logical-css` has one maintainer | the fixtures in `tools/lint-rules/fixtures/stylelint` and `logical.spec.ts` make a swap to `stylelint-use-logical` safe | 0009, 0024 |
-| amd64 emulation slows local visual runs | filtered and affected runs | 0010 |
+| amd64 emulation slows local visual runs (1.2 min for 49 story tests on 2026-09-24) | filtered (`pnpm visual --grep=…`) and cached runs; Docker targets never run in parallel | 0010, 0027 |
+| Baseline PNGs grow the git history (6.3 MB for the Foundations pages alone) | every update reviewed; move `tools/visual/baselines` to Git LFS before the history passes 200 MB (ADR needed) | 0027 |
 | Chromium's Intl formats `uz`/`uz-Latn` with root patterns (`UZS 1,234,567.80`, `2026 M09 23`); `uz-Cyrl` dates are right but currency is `UZS`, not `сўм` (observed in Chromium 153, 2026-09-23; Node's full ICU is right) | check Chrome, Edge, Firefox and Safari before Wave 2; if confirmed, the kit ships its own uz formatting data for dates and numbers (ADR in Wave 2, before DatePicker) | none yet |
 | Storybook's dev server exits when a story file fails to index | restart; CI builds Storybook statically | 0008 |
 

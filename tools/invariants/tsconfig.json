@@ -1,0 +1,15 @@
+/* Node-side code runs through type stripping (ADR 0015); Playwright loads the config and the *.e2e.ts suite itself and
+   resolves @avelune/visual and @avelune/tokens through the path mappings. */
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "types": ["node"]
+  },
+  "include": ["playwright.config.ts", "src/**/*.ts"]
+}

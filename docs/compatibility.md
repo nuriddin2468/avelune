@@ -1,6 +1,6 @@
 # Compatibility matrix
 
-Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` and the official docs; re-verified and installed in Phase 1 the same day; the lint and size packages re-verified and installed in Phase 3 (2026-09-24). Re-verify before every upgrade; update this file in the same merge request as the version change.
+Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` and the official docs; re-verified and installed in Phase 1 the same day; the lint, browser-suite and size packages re-verified and installed in Phase 3 (2026-09-24). Re-verify before every upgrade; update this file in the same merge request as the version change.
 
 **Maturity rule.** pnpm resolves no version younger than 24 hours (`minimumReleaseAge`, ADR 0012 addendum). Rows marked *held back* pin the previous release until the newer one matures; the upgrade is listed in ROADMAP.md, "Tracked upgrades".
 
@@ -12,7 +12,7 @@ Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` an
 | Node | 24.21.0 (nvm) | Angular 22: `^22.22.3 \|\| ^24.15.0 \|\| >=26`; size-limit `^24.5` → repo `engines.node` `^24.15.0`, `.nvmrc` 24.21.0 | ok |
 | pnpm | 10.26.1 (Homebrew) | repo pins 11.27.1 via `packageManager` (ADR 0012) | ok; pnpm switches per project |
 | git | 2.50.1 | none | ok |
-| Docker | Desktop 29.7.2, daemon running | needed for visual tests (ADR 0010) | ok |
+| Docker | Desktop 29.7.2, daemon running; amd64 emulated through Rosetta | needed for the browser suites (ADR 0010, 0027) | ok; pinned image pulled 2026-09-24 with the product owner's consent: Ubuntu 24.04.4, Node 24.20.0 (type stripping), chromium 1243, Liberation Sans |
 | Playwright browsers | cached builds present | repo installs its own pinned build | ok |
 | Python fontTools | missing | not needed (Node `fontkit` / `subset-font`) | n/a |
 
@@ -35,8 +35,8 @@ Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` an
 | | `@analogjs/vite-plugin-angular` | 2.7.2 | Required peer of `angular-vite` (≥ 2.0.0) |
 | | `@angular/animations` | 22.1.7 | Required peer of `angular-vite` 10.6; devDependency only, never imported (ADR 0005, 0008). npm marks it deprecated |
 | | `@angular-devkit/architect` | 0.2201.8 | Required peer of `angular-vite`; matches CLI 22.1.8 |
-| E2E / visual | `@playwright/test` | 1.63.0 | Docker `mcr.microsoft.com/playwright:v1.63.0-noble` (amd64 + arm64) |
-| | `axe-core`, `@axe-core/playwright` | 4.13.0 | |
+| E2E / visual | `@playwright/test` | 1.63.0 | Must equal the image tag `mcr.microsoft.com/playwright:v1.63.0-noble`, pinned by the amd64 digest in `tools/visual/src/image.ts` (`visual:test` checks it). Installed in Phase 3 (2026-09-24; released 2026-09-04) |
+| | `@axe-core/playwright` (brings `axe-core` ~4.13.0) | 4.13.0 | Peers `playwright-core >= 1.0.0`; resolves to 1.63.0. Installed in Phase 3 (2026-09-24; released 2026-08-11). Import the named `AxeBuilder`: under `nodenext` the default import types as the module |
 | Lint (TS/HTML) | `eslint` | 10.11.0 | |
 | | `@eslint/js`, `globals` | 10.0.1, 17.12.0 | Recommended rules; Node globals for scripts |
 | | `typescript-eslint` | 8.70.1 | Peers TS `<6.1.0`. `strictTypeChecked` through the project service (ADR 0023) |

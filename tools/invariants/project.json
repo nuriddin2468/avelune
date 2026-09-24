@@ -4,5 +4,53 @@
   "projectType": "library",
   "sourceRoot": "tools/invariants",
   "tags": ["type:tool"],
-  "targets": {}
+  "implicitDependencies": ["showcase"],
+  "targets": {
+    "e2e": {
+      "executor": "nx:run-commands",
+      "parallelism": false,
+      "dependsOn": [
+        {
+          "projects": ["showcase", "tokens"],
+          "target": "build"
+        }
+      ],
+      "options": {
+        "cwd": "{workspaceRoot}",
+        "command": "node tools/visual/src/container.ts tools/invariants/playwright.config.ts"
+      },
+      "inputs": [
+        "default",
+        "{workspaceRoot}/tools/visual/src/**/*",
+        {
+          "dependentTasksOutputFiles": "**/*"
+        },
+        {
+          "externalDependencies": ["@playwright/test", "@axe-core/playwright"]
+        }
+      ],
+      "cache": true
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node --test \"src/**/*.spec.ts\""
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        {
+          "projects": ["tokens"],
+          "target": "build"
+        }
+      ],
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "tsc -p tsconfig.json"
+      }
+    }
+  }
 }

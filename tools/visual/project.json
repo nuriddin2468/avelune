@@ -1,0 +1,56 @@
+{
+  "name": "visual",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "tools/visual",
+  "tags": ["type:tool"],
+  "implicitDependencies": ["storybook"],
+  "targets": {
+    "e2e": {
+      "executor": "nx:run-commands",
+      "parallelism": false,
+      "dependsOn": [
+        {
+          "projects": ["storybook"],
+          "target": "build"
+        }
+      ],
+      "options": {
+        "cwd": "{workspaceRoot}",
+        "command": "node tools/visual/src/container.ts tools/visual/playwright.config.ts"
+      },
+      "inputs": [
+        "default",
+        {
+          "dependentTasksOutputFiles": "**/*"
+        },
+        {
+          "externalDependencies": ["@playwright/test", "@axe-core/playwright"]
+        }
+      ],
+      "cache": true
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "default",
+        "{workspaceRoot}/pnpm-workspace.yaml",
+        {
+          "externalDependencies": ["@playwright/test", "playwright", "@axe-core/playwright"]
+        }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node --test \"src/**/*.spec.ts\""
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "tsc -p tsconfig.json"
+      }
+    }
+  }
+}

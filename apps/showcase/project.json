@@ -12,7 +12,12 @@
         "outputPath": "dist/apps/showcase",
         "browser": "apps/showcase/src/main.ts",
         "index": "apps/showcase/src/index.html",
-        "tsConfig": "apps/showcase/tsconfig.app.json"
+        "tsConfig": "apps/showcase/tsconfig.app.json",
+        "styles": [
+          "packages/tokens/dist/tokens.css",
+          "packages/ui/styles/fonts/fonts.css",
+          "apps/showcase/src/styles.css"
+        ]
       },
       "configurations": {
         "production": {
@@ -31,7 +36,13 @@
           "sourceMap": true
         }
       },
-      "defaultConfiguration": "production"
+      "defaultConfiguration": "production",
+      "dependsOn": [
+        {
+          "projects": ["tokens"],
+          "target": "build"
+        }
+      ]
     },
     "serve": {
       "executor": "@angular/build:dev-server",
