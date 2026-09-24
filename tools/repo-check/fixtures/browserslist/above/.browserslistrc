@@ -1,0 +1,6 @@
+# Chrome 125: higher than both floors, raised without an ADR.
+Chrome >= 125
+Edge >= 119
+Firefox >= 129
+Safari >= 17.5
+iOS >= 17.5

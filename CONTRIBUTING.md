@@ -1,6 +1,6 @@
 # Contributing
 
-Read [AGENTS.md](AGENTS.md) first: its rules apply to people and coding agents alike. This file covers how changes get in. It is a skeleton; the merge-request template, changesets and the code-owner rule are completed in Phase 3.
+Read [AGENTS.md](AGENTS.md) first: its rules apply to people and coding agents alike. This file covers how changes get in. It is a skeleton: the merge-request template, changesets and the code-owner rule wait for a GitLab remote (deferred by the product owner on 2026-09-24; see ROADMAP.md).
 
 ## Commits
 
@@ -15,7 +15,7 @@ Every merge request:
 
 - stays within one concern and passes every check locally (`pnpm nx affected -t lint typecheck build`);
 - updates the API reports when the public API changes, with the diff explained in the description;
-- adds a changeset when it touches `packages/` (from Phase 3);
+- adds a changeset when it touches `packages/` (once changesets are set up with the remote);
 - shows before and after screenshots, light and dark, for any visual change, and explains every changed visual baseline (non-negotiable 10);
 - for a component, ticks every item of the definition of done in [AGENTS.md](AGENTS.md);
 - records any decision of consequence as an ADR.
@@ -46,4 +46,4 @@ Which entry of the motion catalog (brief §6.3) it uses.
 
 ## Review
 
-Code owners for `packages/` and `docs/GUIDELINES.md` are defined in Phase 3. Until the GitLab edition is known, required code-owner approval is a documented rule: a change to those paths is merged only after a code owner approves it.
+Code owners for `packages/` and `docs/GUIDELINES.md` are defined when the GitLab remote exists. Until the GitLab edition is known, required code-owner approval is a documented rule: a change to those paths is merged only after a code owner approves it.

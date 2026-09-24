@@ -12,6 +12,7 @@
         "{workspaceRoot}/packages/ui/project.json",
         "{workspaceRoot}/packages/ui/tsconfig*.json",
         "{workspaceRoot}/packages/ui/scripts/size-limit.mts",
+        "{workspaceRoot}/packages/ui/scripts/api-report.mjs",
         "{workspaceRoot}/tools/visual/playwright.config.ts",
         "{workspaceRoot}/tools/invariants/playwright.config.ts",
         "{workspaceRoot}/tools/visual/src/**/*",
@@ -24,7 +25,8 @@
             "size-limit",
             "@size-limit/file",
             "@size-limit/esbuild",
-            "@playwright/test"
+            "@playwright/test",
+            "@microsoft/api-extractor"
           ]
         }
       ],

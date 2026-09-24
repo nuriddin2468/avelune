@@ -34,3 +34,7 @@ Component tests use Vitest in browser mode (ADR 0006), which Phase 3 installs. S
 ## Addendum: bundler resolution for tools that import the Angular compiler (Phase 3, 2026-09-24)
 
 `tools/compiler-check` imports `@angular/compiler-cli`, whose declarations use extensionless relative imports that `nodenext` cannot follow. Its tsconfig uses `module: preserve` with `moduleResolution: bundler` instead; everything else in this ADR applies unchanged (ADR 0022).
+
+## Addendum: the schematics of `@avelune/ui` (Phase 3, 2026-09-24)
+
+`packages/ui` uses Vitest for its Angular code (ADR 0026). Its schematics are not Angular code: the Angular CLI runs them in Node from the built package. They are tested with `node:test` (`ui:test-schematics`) against `dist/packages/ui/schematics`, from `packages/ui/schematics/tests/*.spec.mts`, which has its own `tsconfig.json`. The `.mts` extension makes them ES modules in a package without `"type": "module"`. This is the one place where a project uses both runners, each for the code it runs (ADR 0029).

@@ -16,7 +16,8 @@ How Avelune is built. Decisions and their reasons live in the [ADRs](adr/README.
 | `tools/tokens-check` | `tokens-check` | `type:tool` | Token validation |
 | `tools/fonts` | `fonts` | `type:tool` | Builds and checks the web font in `packages/ui/styles/fonts` |
 | `tools/compiler-check` | `compiler-check` | `type:tool` | Checks every tsconfig for the required compiler strictness; fixtures prove each option |
-| `tools/test-check` | `test-check` | `type:tool` | Proves that the coverage gate, the story gates (`play`, axe), the size budgets and the browser suites fail on violations |
+| `tools/test-check` | `test-check` | `type:tool` | Proves that the coverage gate, the story gates (`play`, axe), the size budgets, the API reports and the browser suites fail on violations |
+| `tools/repo-check` | `repo-check` | `type:tool` | Project tags and the browser floor; proves the commit, formatting and dependency rules (ADR 0029) |
 | `tools/lint-rules` | `lint-rules` | `type:tool` | The `avelune` ESLint and Stylelint rules and the fixtures that prove both workspace configs (ADR 0023, 0024) |
 | `tools/visual` | `visual` | `type:tool` | Visual regression and the axe sweep of every story, in the pinned container; the container runner and fixed environment every browser suite shares (ADR 0010, 0027) |
 | `tools/invariants` | `invariants` | `type:tool` | Axe and the cross-component invariants on every showcase screen, in the pinned container (ADR 0027); component invariants join in Phase 5 |
@@ -134,6 +135,8 @@ The `avelune` rules live in `tools/lint-rules` (see its README). `pnpm nx run li
 
 `packages/ui/schematics/collection.json` holds `ng-add`; `migrations.json` is the `ng update` collection and is empty until the first breaking change. `package.json` wires both (`schematics`, `ng-update.migrations`) and declares the fixed `packageGroup`, so `ng update @avelune/ui` moves every `@avelune/*` package together (ADR 0007). `ng-add` only logs a message until Phase 6.
 
+`pnpm nx run ui:test-schematics` loads the built collections with `SchematicTestRunner` (`schematics/tests/*.spec.mts`, `node:test`; ADR 0015, addendum). `ng add` must run, the migration collection must load, and the package group must list every `@avelune` package. Every migration added later ships with a test there, with before and after trees.
+
 ## Tokens
 
 `packages/tokens` holds the DTCG sources (`src/*.tokens.json`) and the scripts that produce or build them (ADR 0003, 0011). Scripts are TypeScript run directly by Node, tested with `node:test` (ADR 0015).
@@ -189,7 +192,7 @@ The **Foundations** pages live in `apps/storybook/src/foundations`: colour roles
   - **Showcase** (`pnpm nx run invariants:e2e`): every screen linked from `/`, in the same four projects: axe with every rule, no horizontal scroll at 320 px, every animation on a duration and an easing token, nothing translated or scaled under reduced motion. The invariants of brief §8.2 that need components (same-size controls, overlays, `animate.leave`) are added with those components.
 - **Size** (`pnpm nx run ui:size`): see "Build".
 - `tools/test-check` proves the gates with fixtures:
-  - `test`: a coverage gap and an orphan file (`ui:test:coverage-gap`); a fixture Storybook with an unnamed button and a failing `play` function; an entry point over its size budget and one without a budget; both browser-suite configs refusing to start on the host.
+  - `test`: a coverage gap and an orphan file (`ui:test:coverage-gap`); a fixture Storybook with an unnamed button and a failing `play` function; an entry point over its size budget and one without a budget; an API report that is stale and an export without a release tag (`api-report.mjs --package --build` on `fixtures/api-report`); both browser-suite configs refusing to start on the host.
   - `e2e` (Docker): the visual suite on a fixture Storybook with one broken story per check, and the showcase suite on a static site with one violation per page. Clean controls must pass, and the control's motion must actually have been recorded.
 
 ## Fonts
@@ -198,29 +201,31 @@ The kit's typefaces are IBM Plex Sans, shipped as **"Avelune Sans"**, and IBM Pl
 
 ## Enforcement map
 
-What is checked today, by which tool, at which stage. Phase 3 completes this table (brief §5).
+What is checked, by which tool, at which stage, and what proves that the check fails on a violation (brief §5). The CI column waits for a GitLab remote: the pipeline of brief §5.6 is deferred until one exists (product owner, 2026-09-24), so every gate runs locally through its Nx target.
 
 | Rule | Tool | Pre-commit | CI |
 |---|---|---|---|
-| Project layers, no relative cross-project imports | `@nx/enforce-module-boundaries` (ESLint), proven by `lint-rules:test` | staged files | Phase 3 |
-| Entry-point layers, public specifiers, harnesses out of runtime code; JSDoc on public API; no appearance inputs (`packages/ui`) | `avelune/*` rules (ESLint), proven by `lint-rules:test` | staged files | Phase 3 |
-| Type-aware TS rules (`strictTypeChecked`), angular-eslint TS, template and a11y rules, `ave` prefix, signal API, `host` object, emulated encapsulation, no inline styles, banned imports (`@angular/animations`, `@angular/material`, deep `@avelune/ui`), described disables; raw native elements in consumer templates | ESLint (ADR 0023), a fixture per rule group in `lint-rules:test`; every rule an error, `--max-warnings=0` | staged files | Phase 3 |
-| TS strictness, template types | `ngc --noEmit` (`typecheck` targets) | affected projects | Phase 3 |
-| No tsconfig weakens the required strictness (ADR 0022) | `compiler-check:check`, proven by `compiler-check:test` (a fixture per option and per extended diagnostic) | a staged tsconfig | Phase 3 |
-| Token-only CSS values, no unknown tokens, specificity cap, no `::ng-deep`/`!important`/ids, motion longhands, `@keyframes` only in `motion.css`, logical properties (exceptions derived from browser data), query widths equal tokens, `@layer components`, same-element nesting | Stylelint (ADR 0024), a fixture per rule in `lint-rules:test` | staged `.css` | Phase 3 |
-| Coverage ≥ 90% per file in `packages/ui`, tests in a real browser | `ui:test` (Vitest browser mode), proven by `test-check:test` | no | Phase 3 |
-| Every story renders, passes its `play` function and has no axe violation | `storybook:test` (addon-vitest, a11y `error`), proven by `test-check:test` | no | Phase 3 |
-| Every story × light/dark × 1280/390 equals its committed baseline, in the kit's fonts, without errors; no baseline without a story; axe clean (independent sweep) | `visual:e2e` in the pinned container (ADR 0010, 0027), proven by `test-check:e2e` | no | Phase 3 |
-| Every showcase screen: axe clean, no horizontal scroll at 320 px, motion on tokens only, no movement under reduced motion | `invariants:e2e` in the pinned container (ADR 0027), proven by `test-check:e2e` | no | Phase 3 |
-| Browser suites run only in the pinned image on amd64; the image's Playwright version equals the installed one | Playwright configs (`requireContainer`), proven by `test-check:test`; `visual:test` | no | Phase 3 |
-| Every entry point within the size budget its `entry.json` declares | `ui:size` (size-limit, ADR 0028), proven by `test-check:test` | no | Phase 3 |
-| Formatting | Prettier (`.md` excluded) | staged files | Phase 3 |
-| Conventional commits, scope = Nx project or `repo`, `deps`, `docs`, `ci`, `release` | commitlint | commit message | n/a |
-| Public API unchanged or report updated; release tags present | API Extractor (`ui:api-report`) | no | Phase 3 |
-| No dependency younger than 24 h; install scripts only where listed | pnpm (`minimumReleaseAge`, `allowBuilds`) | `pnpm install` | `pnpm install` |
-| Colour primitives are exactly what the config generates (no hand edits) | `tokens:colors` | no | Phase 3 |
-| Shipped fonts equal a fresh build; every character of uz-Latn, uz-Cyrl, ru and en (incl. Intl output) covered; no Reserved Font Name; axes and checksums | `fonts:check`, proven by `fonts:test` | no | Phase 3 |
-| DTCG schema, references, naming, tier direction and literals, line-height grid, theme parity, contrast pairs in both themes, no primitives in `dist/tokens.css` | `tokens-check:check`, proven by `tokens-check:test` (a fixture per rule) | no | Phase 3 |
-| Palette rules: ladder contracts, exact lightness and hue, brand lightness, neutral tint | `generatePalette` (`tokens:colors`), proven by `tokens:test` | no | Phase 3 |
+| Project layers, no relative cross-project imports | `@nx/enforce-module-boundaries` (ESLint), proven by `lint-rules:test` | staged files | deferred |
+| Entry-point layers, public specifiers, harnesses out of runtime code; JSDoc on public API; no appearance inputs (`packages/ui`) | `avelune/*` rules (ESLint), proven by `lint-rules:test` | staged files | deferred |
+| Type-aware TS rules (`strictTypeChecked`), angular-eslint TS, template and a11y rules, `ave` prefix, signal API, `host` object, emulated encapsulation, no inline styles, banned imports (`@angular/animations`, `@angular/material`, deep `@avelune/ui`), described disables; raw native elements in consumer templates | ESLint (ADR 0023), a fixture per rule group in `lint-rules:test`; every rule an error, `--max-warnings=0` | staged files | deferred |
+| TS strictness, template types | `ngc --noEmit` (`typecheck` targets) | affected projects | deferred |
+| No tsconfig weakens the required strictness (ADR 0022) | `compiler-check:check`, proven by `compiler-check:test` (a fixture per option and per extended diagnostic) | a staged tsconfig | deferred |
+| Token-only CSS values, no unknown tokens, specificity cap, no `::ng-deep`/`!important`/ids, motion longhands, `@keyframes` only in `motion.css`, logical properties (exceptions derived from browser data), query widths equal tokens, `@layer components`, same-element nesting | Stylelint (ADR 0024), a fixture per rule in `lint-rules:test` | staged `.css` | deferred |
+| Coverage ≥ 90% per file in `packages/ui`, tests in a real browser | `ui:test` (Vitest browser mode), proven by `test-check:test` | no | deferred |
+| Every story renders, passes its `play` function and has no axe violation | `storybook:test` (addon-vitest, a11y `error`), proven by `test-check:test` | no | deferred |
+| Every story × light/dark × 1280/390 equals its committed baseline, in the kit's fonts, without errors; no baseline without a story; axe clean (independent sweep) | `visual:e2e` in the pinned container (ADR 0010, 0027), proven by `test-check:e2e` | no | deferred |
+| Every showcase screen: axe clean, no horizontal scroll at 320 px, motion on tokens only, no movement under reduced motion | `invariants:e2e` in the pinned container (ADR 0027), proven by `test-check:e2e` | no | deferred |
+| Browser suites run only in the pinned image on amd64; the image's Playwright version equals the installed one | Playwright configs (`requireContainer`), proven by `test-check:test`; `visual:test` | no | deferred |
+| Every entry point within the size budget its `entry.json` declares | `ui:size` (size-limit, ADR 0028), proven by `test-check:test` | no | deferred |
+| Formatting | Prettier (`.md` excluded), proven by `repo-check:test` | staged files | deferred |
+| Conventional commits, scope = Nx project or `repo`, `deps`, `docs`, `ci`, `release` | commitlint, proven by `repo-check:test` | commit message | n/a |
+| Public API unchanged or report updated; release tags present | API Extractor (`ui:api-report`), proven by `test-check:test` | no | deferred |
+| No dependency younger than 24 h; install scripts only where listed | pnpm (`minimumReleaseAge`, `allowBuilds`), effective settings pinned by `repo-check:test` | `pnpm install` | `pnpm install` |
+| Every Nx project has exactly one constrained layer or type tag; `.browserslistrc` is the higher of the CSS-feature floor and Angular's supported set (ADR 0014) | `repo-check:check`, proven by `repo-check:test` | no | deferred |
+| `ng add` runs, `ng update` finds its migration collection, the package group lists every package | `ui:test-schematics` | no | deferred |
+| Colour primitives are exactly what the config generates (no hand edits) | `tokens:colors` | no | deferred |
+| Shipped fonts equal a fresh build; every character of uz-Latn, uz-Cyrl, ru and en (incl. Intl output) covered; no Reserved Font Name; axes and checksums | `fonts:check`, proven by `fonts:test` | no | deferred |
+| DTCG schema, references, naming, tier direction and literals, line-height grid, theme parity, contrast pairs in both themes, no primitives in `dist/tokens.css` | `tokens-check:check`, proven by `tokens-check:test` (a fixture per rule) | no | deferred |
+| Palette rules: ladder contracts, exact lightness and hue, brand lightness, neutral tint | `generatePalette` (`tokens:colors`), proven by `tokens:test` | no | deferred |
 
 Hooks are a fast local gate and are never bypassed (`--no-verify` is not used). CI runs the same checks on the whole affected graph.

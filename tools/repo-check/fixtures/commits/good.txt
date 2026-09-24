@@ -1,0 +1,4 @@
+feat(ui): add the button entry point
+
+Buttons render as native button and anchor elements with the aveButton
+attribute.

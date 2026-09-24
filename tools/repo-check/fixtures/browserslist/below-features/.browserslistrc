@@ -1,0 +1,6 @@
+# Firefox 125: Angular supports it, but it lacks @starting-style.
+Chrome >= 119
+Edge >= 119
+Firefox >= 125
+Safari >= 17.5
+iOS >= 17.5

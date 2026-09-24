@@ -39,7 +39,8 @@
           "ngc -p tsconfig.lib.json --noEmit",
           "ngc -p tsconfig.spec.json --noEmit",
           "tsc -p tsconfig.schematics.json --noEmit",
-          "tsc -p scripts/tsconfig.json"
+          "tsc -p scripts/tsconfig.json",
+          "tsc -p schematics/tests/tsconfig.json"
         ]
       }
     },
@@ -122,6 +123,24 @@
           "coverageInclude": ["tools/test-check/fixtures/coverage-gap/*.ts"],
           "coverageExclude": ["tools/test-check/fixtures/coverage-gap/*.spec.ts"]
         }
+      }
+    },
+    "test-schematics": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "inputs": [
+        "{workspaceRoot}/dist/packages/ui/schematics/**/*",
+        "{workspaceRoot}/dist/packages/ui/package.json",
+        "{projectRoot}/schematics/tests/**/*",
+        "{workspaceRoot}/packages/*/package.json",
+        {
+          "externalDependencies": ["@angular-devkit/schematics"]
+        }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node --test \"schematics/tests/*.spec.mts\""
       }
     }
   }

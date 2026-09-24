@@ -1,8 +1,8 @@
 # Avelune roadmap
 
-This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
+This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below that is not marked **Deferred**, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 3 in progress. Compiler strictness (ADR 0022), ESLint (ADR 0023), Stylelint (ADR 0024), unit and story tests (ADR 0025, 0026), and the browser suites and size budgets (ADR 0027, 0028) are done, all on 2026-09-24. Next: API reports in CI, changesets, the `.gitlab-ci.yml` stages, CODEOWNERS. The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
+**Current position:** Phase 3 done on 2026-09-24, except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Every guardrail has a proof (ADR 0022–0029). Next: Phase 4, Foundations and motion. The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
 
 ## Parameters
 
@@ -63,11 +63,7 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 
 ### Phase 3: Guardrails (before any component)
 
-Carried over from Phase 2: wire `tokens:colors`, `tokens-check:check`, `fonts:check`, `compiler-check:check`, the `stylelint` targets and the `node:test` targets into CI. (The `linear()` normalisation for the invariants is done: ADR 0027.)
-
-Carried over from the browser-suite item: the CI visual job runs in the digest of `tools/visual/src/image.ts`, sets `AVELUNE_PLAYWRIGHT_IMAGE` to it, takes the Storybook and showcase builds from earlier stages and runs `visual:e2e`, `invariants:e2e` and `test-check:e2e`; `ui:size` runs in the size-limit stage; a check fails when `.gitlab-ci.yml` names another image.
-
-Carried over from Phase 1: a SchematicTestRunner test for `ng-add` and the empty migration collection; failing fixtures for `ui:api-report` (untagged export, stale report); a check that every Nx project carries a layer or type tag; a check of `.browserslistrc` against Angular's supported set (ADR 0014).
+The carry-overs from Phases 1 and 2 are done, except wiring the targets into CI, which moved into the deferred item below. (Phase 1: the `ng-add` and migration-collection test, the `ui:api-report` fixtures, the project-tag check and the browser-floor check, ADR 0029. Phase 2: the `linear()` normalisation, ADR 0027.)
 
 - [x] TS + Angular compiler strictness (brief §5.1). ADR 0022 adds `exactOptionalPropertyTypes`, `allowUnreachableCode: false` and `strictStandalone`, and sets `typeCheckHostBindings` explicitly. `compiler-check:check` fails on any tsconfig that weakens an option. `compiler-check:test` proves every option and every one of the compiler's 18 extended diagnostics with a violation fixture (46 fixtures), plus a clean control fixture and 10 weakened-config fixtures.
 - [x] ESLint config + custom rules (`avelune/entry-point-layers`, raw-element template rule), with failing fixtures (ADR 0023). typescript-eslint `strictTypeChecked` plus angular-eslint TS, template and a11y rules; every rule an error; `--max-warnings=0`. The `avelune` plugin has four rules: `entry-point-layers`, `public-api-jsdoc` (the JSDoc rule carried over from Phase 1), `no-appearance-inputs` and `no-raw-elements`, the last for consumers; the showcase is linted as one. `lint-rules:test` covers each rule with RuleTester and runs 24 workspace fixtures through the real config, among them the three carried-over module-boundary violations, the `@angular/animations` ban and the Foundations `[style.*]` exception.
@@ -90,8 +86,16 @@ Carried over from Phase 1: a SchematicTestRunner test for `ng-add` and the empty
   - `invariants:e2e`: axe on every showcase screen, no horizontal scroll at 320 px, motion on tokens only (with `linear()` normalised), nothing moves under reduced motion. The showcase now bundles the tokens and fonts.
   - `ui:size`: a budget in each `entry.json`; the sample is 758 B of 900 B.
   - `test-check` proves each failure mode: host refusal and size in `test`; a fixture Storybook (6 stories, an orphan baseline) and a fixture site (4 violation pages, a control) in `e2e`.
-- [ ] API reports; changesets; `.gitlab-ci.yml` stages (brief §5.6); CODEOWNERS + review rule in CONTRIBUTING
-- [ ] Every guardrail proven to fail on a violation
+- [ ] **Deferred** until a GitLab remote exists (product owner, 2026-09-24): changesets and the per-merge-request changeset check; the `.gitlab-ci.yml` stages (brief §5.6); CODEOWNERS and the review rule in CONTRIBUTING. The API reports themselves run locally and are proven (next item). When this is picked up:
+  - wire every gate into CI: `lint`, `typecheck`, `stylelint`, `test`, `tokens:colors`, `tokens-check:check`, `fonts:check`, `compiler-check:check`, `repo-check:check`, `ui:api-report`, `ui:size`, `ui:test-schematics`;
+  - the visual job runs in the digest of `tools/visual/src/image.ts`, sets `AVELUNE_PLAYWRIGHT_IMAGE` to it, takes the Storybook and showcase builds from earlier stages, and runs `visual:e2e`, `invariants:e2e` and `test-check:e2e`;
+  - add a check that fails when `.gitlab-ci.yml` names another image or leaves a gate target out.
+  Blocked on the open questions below: the registry and the GitLab edition.
+- [x] Every guardrail proven to fail on a violation. Done in ADR 0029. The enforcement map in ARCHITECTURE.md names the proof of every row:
+  - `repo-check:check` covers the Phase 1 carry-overs: every project has exactly one constrained tag, and `.browserslistrc` equals the higher of the CSS-feature floor (browser-compat-data) and Angular's supported set.
+  - `repo-check:test` proves both with fixtures, and proves commitlint, the Prettier config and pnpm's effective dependency policy.
+  - `test-check:test` proves `ui:api-report` on a stale report and an untagged export.
+  - `ui:test-schematics` loads `ng add` and the empty migration collection from the built package.
 
 ### Phase 4: Foundations and motion
 - [ ] `@avelune/ui/styles.css`: layers, reset, base typography, focus ring, forced-colors, `tabular-nums` utility; imports `styles/fonts/fonts.css` and `@avelune/tokens/tokens.css`; the showcase preloads `avelune-sans-latin.woff2`
@@ -212,6 +216,7 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 | Baseline PNGs grow the git history (6.3 MB for the Foundations pages alone) | every update reviewed; move `tools/visual/baselines` to Git LFS before the history passes 200 MB (ADR needed) | 0027 |
 | Chromium's Intl formats `uz`/`uz-Latn` with root patterns (`UZS 1,234,567.80`, `2026 M09 23`); `uz-Cyrl` dates are right but currency is `UZS`, not `сўм` (observed in Chromium 153, 2026-09-23; Node's full ICU is right) | check Chrome, Edge, Firefox and Safari before Wave 2; if confirmed, the kit ships its own uz formatting data for dates and numbers (ADR in Wave 2, before DatePicker) | none yet |
 | Storybook's dev server exits when a story file fails to index | restart; CI builds Storybook statically | 0008 |
+| iOS Safari 17–18.2 implements `popover` without light dismiss (browser-compat-data 8.1.2; WebKit bug 267688), and the floor is iOS 17.5 | Wave 3: Popover and Menu close on an outside tap on iOS too, through CDK or Angular Aria behaviour where they provide it; otherwise raise the iOS floor to 18.3 (product owner, ADR 0014) | 0014, 0029 |
 
 ## Tracked upgrades
 

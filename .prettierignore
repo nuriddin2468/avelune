@@ -10,3 +10,6 @@ pnpm-lock.yaml
 
 # Prose is formatted by hand; table padding would make every doc diff noisy.
 *.md
+
+# Deliberately unformatted: tools/repo-check proves Prettier rejects it.
+tools/repo-check/fixtures/prettier/

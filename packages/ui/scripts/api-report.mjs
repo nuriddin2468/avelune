@@ -5,22 +5,30 @@
 //
 //   node scripts/api-report.mjs            fail when a report differs (CI)
 //   node scripts/api-report.mjs --update   rewrite the committed reports (local, then review the diff)
+//   --package <dir> --build <dir>          another library and its build output (tools/test-check's fixtures)
 import { Extractor, ExtractorConfig } from '@microsoft/api-extractor';
 import { cpSync, existsSync, globSync, mkdirSync, rmSync } from 'node:fs';
-import { dirname, join, sep } from 'node:path';
+import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const packageRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
-const workspaceRoot = join(packageRoot, '..', '..');
-const distRoot = join(workspaceRoot, 'dist', 'packages', 'ui');
-const update = process.argv.includes('--update');
+const args = process.argv.slice(2);
+const option = (name) => (args.includes(name) ? resolve(args[args.indexOf(name) + 1] ?? '') : undefined);
+const workspaceRoot = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
+const packageRoot = option('--package') ?? join(workspaceRoot, 'packages', 'ui');
+const distRoot = option('--build') ?? join(workspaceRoot, 'dist', 'packages', 'ui');
+const update = args.includes('--update');
 
 // API Extractor treats an import as external only when TypeScript resolves it as an external library. Entry points
 // import each other by their public specifier (@avelune/ui/sample). Analysed inside the package, that import resolves as
 // a self-reference and counts as local, so every shared type would be reported as a forgotten export. So the analysed
 // .d.ts sits outside the package (analysis/), and the package itself sits under node_modules/, which makes
 // cross-entry-point imports external, as they are for consumers.
-const tempRoot = join(workspaceRoot, 'dist', 'api-report-temp');
+const tempRoot = join(
+  workspaceRoot,
+  'dist',
+  'api-report-temp',
+  relative(workspaceRoot, packageRoot).split(sep).join('-'),
+);
 const packageCopy = join(tempRoot, 'node_modules', '@avelune', 'ui');
 const analysisRoot = join(tempRoot, 'analysis');
 rmSync(tempRoot, { recursive: true, force: true });

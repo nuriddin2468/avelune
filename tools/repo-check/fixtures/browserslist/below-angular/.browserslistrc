@@ -1,0 +1,6 @@
+# Chrome and Edge 117: the CSS features are there, but Angular does not support them.
+Chrome >= 117
+Edge >= 117
+Firefox >= 129
+Safari >= 17.5
+iOS >= 17.5

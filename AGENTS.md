@@ -4,7 +4,7 @@ Rules for any coding agent (and any human) working in this repository. `CLAUDE.m
 
 ## Resume
 
-1. Read [docs/ROADMAP.md](docs/ROADMAP.md): current position, parameters, first unchecked item.
+1. Read [docs/ROADMAP.md](docs/ROADMAP.md): current position, parameters, first unchecked item that is not marked **Deferred**.
 2. Read the sections of [docs/BRIEF.md](docs/BRIEF.md) (the product owner's original brief) that cover that item. "brief §N" anywhere in the repo refers to that file. Where the brief's placeholders differ from the resolved parameters in ROADMAP.md, ROADMAP.md wins.
 3. Read the ADRs in [docs/adr](docs/adr/README.md) that touch the area you will change, and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for where things live.
 4. Versions are pinned in [docs/compatibility.md](docs/compatibility.md). Before installing or upgrading anything, verify with `npm view <pkg> version peerDependencies time` and update that file in the same change. pnpm refuses versions younger than 24 hours (ADR 0012); pin the previous release and list the upgrade in ROADMAP.md.
@@ -51,12 +51,13 @@ Run from the repository root. `pnpm` switches itself to the pinned 11.27.1 (`pac
 | Build the tokens (`dist/tokens.css`, `tokens.ts`) | `pnpm nx build tokens` |
 | Check the tokens (schema, tiers, contrast in both themes, output) | `pnpm nx run tokens-check:check` |
 | Check that no tsconfig weakens the compiler strictness / prove each option with its fixture | `pnpm nx run compiler-check:check` / `pnpm nx run compiler-check:test` |
+| Check project tags and the browser floor / prove them and the commit, formatting and dependency rules | `pnpm nx run repo-check:check` / `pnpm nx run repo-check:test` (ADR 0029) |
 | Stylelint (all CSS; builds the tokens first) | `pnpm nx run-many -t stylelint` |
 | Prove the ESLint and Stylelint configs and the `avelune` rules (rule tests + workspace fixtures) | `pnpm nx run lint-rules:test` |
 | Fonts: check / rebuild (`packages/ui/styles/fonts`) | `pnpm nx run fonts:check` / `pnpm nx run fonts:check --update` |
 | Colour primitives: check / regenerate | `pnpm nx run tokens:colors` / `pnpm nx run tokens:colors --update` |
 | All tests: library (Vitest in Chromium, coverage gate), stories (render, `play`, axe), Node-side (`node:test`) | `pnpm nx run-many -t test` (ADR 0015, 0026) |
-| Library unit tests / story tests | `pnpm nx run ui:test` / `pnpm nx run storybook:test` |
+| Library unit tests / story tests / schematics tests | `pnpm nx run ui:test` / `pnpm nx run storybook:test` / `pnpm nx run ui:test-schematics` |
 | Visual regression + axe sweep of every story, in the pinned Docker image: check / update baselines (then inspect every changed image) | `pnpm visual` / `pnpm visual:update`; filter with `pnpm visual --grep=<story>` (ADR 0010, 0027) |
 | Showcase: axe and invariants on every screen, in the pinned Docker image | `pnpm nx run invariants:e2e` (ADR 0027) |
 | Prove the browser suites fail on violations (Docker) | `pnpm nx run test-check:e2e` |
