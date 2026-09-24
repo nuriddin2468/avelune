@@ -1,0 +1,15 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as VisualStories from './visual.stories';
+
+<Meta of={VisualStories} />
+
+# Visual fixtures
+
+A clean docs page: prose, a table, a clean story and its controls, a boolean among them, in the kit's docs theme. The docs sweep must pass it in both themes.
+
+| Story | Breaks  |
+| ----- | ------- |
+| Clean | nothing |
+
+<Canvas of={VisualStories.Clean} />
+<Controls of={VisualStories.Clean} />

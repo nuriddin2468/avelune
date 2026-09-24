@@ -22,8 +22,8 @@ class Note {
 const meta: Meta<Note> = { title: 'Fixtures/Visual', component: Note };
 export default meta;
 
-/** Matches its baselines, the forced-colors one too, and passes axe. */
-export const Clean: StoryObj<Note> = { args: { heading: 'Clean' }, tags: ['forced-colors'] };
+/** Matches its baselines, the forced-colors one too, and passes axe; its docs page lists a boolean control. */
+export const Clean: StoryObj<Note> = { args: { heading: 'Clean', unnamedButton: false }, tags: ['forced-colors'] };
 
 /** Its baseline shows "Draft 1": the screenshot differs. */
 export const Changed: StoryObj<Note> = { args: { heading: 'Draft 2' } };

@@ -19,7 +19,14 @@ const config: StorybookConfig = {
     name: '@storybook/angular-vite',
     // JIT, the framework default: with AOT the production build drops the compiler that Storybook's wrapper needs.
     // Templates are type-checked by `storybook:typecheck` (ngc, strictTemplates) instead (ADR 0025).
-    options: { jit: true, compodoc: false, tsconfig: join(import.meta.dirname, '..', 'tsconfig.json') },
+    // The props table lists inputs only (with the change events of models): with the default, it also listed the
+    // protected members a template reads, such as AveIcon's `icon` (ADR 0034, addendum).
+    options: {
+      jit: true,
+      compodoc: false,
+      propsTable: 'inputs',
+      tsconfig: join(import.meta.dirname, '..', 'tsconfig.json'),
+    },
   },
   // Storybook collects telemetry by default; nothing leaves the machine.
   core: { disableTelemetry: true },

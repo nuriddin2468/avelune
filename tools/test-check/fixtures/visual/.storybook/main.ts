@@ -9,4 +9,4 @@ const framework =
     ? { ...config.framework, options: { ...config.framework.options, tsconfig } }
     : config.framework;
 
-export default { ...config, stories: ['../*.stories.ts'], framework };
+export default { ...config, stories: ['../*.mdx', '../*.stories.ts'], framework };

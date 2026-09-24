@@ -12,7 +12,9 @@ function docsTheme(theme: Theme): ThemeVars {
     colorPrimary: cssValue('color.accent.bg', theme),
     colorSecondary: cssValue('color.fg.link', theme),
     appBg: cssValue('color.bg.canvas', theme),
-    appContentBg: cssValue('color.bg.canvas', theme),
+    // The page, and Storybook's code blocks on it, sit on the surface: Storybook's light syntax colours fall below
+    // 4.5:1 on the canvas (#eb0000 at 4.43) and pass on the surface in both themes (ADR 0034, addendum).
+    appContentBg: cssValue('color.bg.surface', theme),
     appHoverBg: cssValue('color.bg.hover', theme),
     appPreviewBg: cssValue('color.bg.canvas', theme),
     appBorderColor: cssValue('color.border.subtle', theme),

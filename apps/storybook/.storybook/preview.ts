@@ -24,8 +24,28 @@ const withModes: Decorator = (story, context) => {
   return story();
 };
 
+type ArgTypesEnhancer = NonNullable<Preview['argTypesEnhancers']>[number];
+
+/**
+ * Boolean arguments get a radio control. Storybook's boolean toggle draws its unselected option at half opacity,
+ * which cannot reach 4.5:1 in the light theme, and the docs sweep fails it (ADR 0034, addendum). The enhancer runs
+ * before Storybook infers types and controls from the args, so it reads the args itself; a control it sets is kept,
+ * as is one a story sets.
+ */
+const booleanAsRadio: ArgTypesEnhancer = ({ argTypes, initialArgs }) => {
+  const enhanced = { ...argTypes };
+  for (const name of Object.keys(initialArgs)) {
+    const value: unknown = initialArgs[name];
+    const argType = argTypes[name];
+    if (typeof value !== 'boolean' || argType?.control !== undefined) continue;
+    enhanced[name] = { name, ...argType, control: { type: 'inline-radio' }, options: [false, true] };
+  }
+  return enhanced;
+};
+
 const preview: Preview = {
   decorators: [withModes],
+  argTypesEnhancers: [booleanAsRadio],
   globalTypes: {
     theme: {
       description: 'Colour theme',

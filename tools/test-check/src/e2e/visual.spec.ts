@@ -1,6 +1,6 @@
 // Proves that the visual suite (tools/visual, ADR 0027) fails on each violation it guards against, and only on those.
-// fixtures/visual is a Storybook of fixture stories built with the real main config and preview, and a baselines
-// folder; each story breaks one check and Clean breaks none.
+// fixtures/visual is a Storybook of fixture stories and docs pages built with the real main config and preview, and a
+// baselines folder; each story or page breaks one check, and Clean and the Visual docs page break none.
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
@@ -86,16 +86,21 @@ describe('visual suite', () => {
     }
   });
 
+  it('sweeps every docs page with axe: passes a clean page and fails one with a violation outside its stories', () => {
+    passes('fixtures-visual--docs › renders cleanly and has no axe violations');
+    fails('fixtures-docs-violation--docs › renders cleanly and has no axe violations', /button-name/);
+  });
+
   it('fails a baseline that belongs to no story, and a forced-colors baseline of an untagged story', () => {
     fails('every baseline belongs to a story and a project', /fixtures-visual--removed\/light-1280\.png/);
     fails('every baseline belongs to a story and a project', /fixtures-visual--changed\/forced-colors\.png/);
   });
 
   it('runs exactly these tests', () => {
-    assert.equal(run.tests.length, 14, run.tests.map((test) => test.title).join('\n'));
+    assert.equal(run.tests.length, 16, run.tests.map((test) => test.title).join('\n'));
     assert.equal(
       run.tests.filter((test) => !test.passed).length,
-      7,
+      8,
       run.tests
         .filter((test) => !test.passed)
         .map((test) => test.title)
