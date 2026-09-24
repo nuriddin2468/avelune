@@ -28,7 +28,7 @@ describe('showcase suite', () => {
 
   it('fails the run', () => {
     assert.notEqual(run.status, 0, run.log);
-    assert.equal(run.tests.length, 4);
+    assert.equal(run.tests.length, 5);
   });
 
   it('fails axe on the screen with a violation only', () => {
@@ -40,6 +40,18 @@ describe('showcase suite', () => {
   it('fails horizontal overflow at 320px on the wide screen only', () => {
     const test = result('no screen scrolls horizontally at 320px');
     assert.deepEqual(failingScreens(test), ['/overflow.html']);
+  });
+
+  it('fails font preloads that the face does not reuse, and accepts one that it does', () => {
+    const test = result('every preloaded font is a face the screen uses, fetched once');
+    assert.deepEqual(failingScreens(test), ['/font-preload.html']);
+    const errors = test.errors.join('\n');
+    // Without crossorigin the face fetched the file again; the hashed URL is no face's. Diff lines start with "+".
+    assert.match(errors, /"declared": true,[\s+]+"fetches": 2,[\s+]+"href": "[^"]*\/fonts\/avelune-sans-latin\.woff2"/);
+    assert.match(
+      errors,
+      /"declared": false,[\s+]+"fetches": 1,[\s+]+"href": "[^"]*\/fonts\/avelune-sans-latin-4E4FHGAG\.woff2"/,
+    );
   });
 
   it('fails a raw duration and a raw easing, and accepts every kind of token motion', () => {

@@ -13,11 +13,7 @@
         "browser": "apps/showcase/src/main.ts",
         "index": "apps/showcase/src/index.html",
         "tsConfig": "apps/showcase/tsconfig.app.json",
-        "styles": [
-          "packages/tokens/dist/tokens.css",
-          "packages/ui/styles/fonts/fonts.css",
-          "apps/showcase/src/styles.css"
-        ]
+        "styles": ["packages/ui/styles/styles.css"]
       },
       "configurations": {
         "production": {
@@ -28,7 +24,15 @@
               "maximumError": "1MB"
             }
           ],
-          "outputHashing": "all"
+          "outputHashing": "bundles",
+          "optimization": {
+            "scripts": true,
+            "styles": {
+              "minify": true,
+              "inlineCritical": false
+            },
+            "fonts": true
+          }
         },
         "development": {
           "optimization": false,

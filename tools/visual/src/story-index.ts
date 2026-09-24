@@ -17,7 +17,11 @@ export interface Story {
   readonly id: string;
   readonly title: string;
   readonly name: string;
+  readonly tags: readonly string[];
 }
+
+/** A story with this tag is also compared in forced-colors mode (project `forced-colors`, ADR 0030). */
+export const forcedColorsTag = 'forced-colors';
 
 /** Every story (not docs page) in a Storybook `index.json` (format v5), sorted by id. */
 export function parseStoryIndex(json: string): Story[] {
@@ -33,10 +37,17 @@ export function parseStoryIndex(json: string): Story[] {
     const id: unknown = Reflect.get(entry, 'id');
     const title: unknown = Reflect.get(entry, 'title');
     const name: unknown = Reflect.get(entry, 'name');
-    if (typeof id !== 'string' || typeof title !== 'string' || typeof name !== 'string') {
+    const tags: unknown = Reflect.get(entry, 'tags') ?? [];
+    if (
+      typeof id !== 'string' ||
+      typeof title !== 'string' ||
+      typeof name !== 'string' ||
+      !Array.isArray(tags) ||
+      !tags.every((tag) => typeof tag === 'string')
+    ) {
       throw new Error(`Malformed story entry in index.json: ${JSON.stringify(entry)}`);
     }
-    stories.push({ id, title, name });
+    stories.push({ id, title, name, tags });
   }
   if (stories.length === 0) throw new Error('index.json lists no stories');
   return stories.sort((a, b) => a.id.localeCompare(b.id));

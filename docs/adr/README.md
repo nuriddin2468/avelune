@@ -35,6 +35,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0027](0027-browser-suites-in-the-pinned-container.md) | Browser suites: visual, axe sweep and invariants in the pinned container | Accepted |
 | [0028](0028-size-budget-per-entry-point.md) | Size budgets: one per entry point, declared in its manifest | Accepted |
 | [0029](0029-repository-guardrails-proven.md) | Repository guardrails: project tags, browser floor, commits, formatting, dependency policy | Accepted |
+| [0030](0030-global-stylesheet.md) | Global stylesheet: one entry, layered files, loaded through the consumer's bundler; one focus ring | Accepted |
 
 ## Template
 

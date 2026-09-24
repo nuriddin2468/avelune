@@ -1,5 +1,5 @@
 // The Storybook suite (ADR 0006, 0010, 0027): every story in both themes at 1280 and 390 px, compared with its
-// committed baseline and swept by axe. It runs only in the pinned container; start it with `pnpm nx run visual:e2e`.
+// committed baseline and swept by axe; stories tagged `forced-colors` also in forced colours (ADR 0030). It runs only in the pinned container; start it with `pnpm nx run visual:e2e`.
 import { defineConfig } from '@playwright/test';
 import { join, relative } from 'node:path';
 import { fixedEnvironment, requireContainer, staticServer, workspaceRoot } from './src/environment.ts';
@@ -49,6 +49,12 @@ export default defineConfig({
       testMatch: 'stories.e2e.ts',
       use: { colorScheme, viewport },
     })),
+    // Stories tagged `forced-colors` once more with forced colours active (ADR 0030).
+    {
+      name: 'forced-colors',
+      testMatch: 'forced-colors.e2e.ts',
+      use: { colorScheme: 'light', viewport: { width: 1280, height: 800 }, forcedColors: 'active' },
+    },
     { name: 'baselines', testMatch: 'baselines.e2e.ts' },
   ],
 });

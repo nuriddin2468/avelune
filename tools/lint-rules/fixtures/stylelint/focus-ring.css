@@ -1,0 +1,9 @@
+/* Lint as: packages/ui/styles/focus.css
+   Expect: none (the one focus-ring rule) */
+
+@layer base {
+  :focus-visible {
+    outline: var(--ave-focus-ring-width) solid var(--ave-color-border-focus);
+    outline-offset: var(--ave-focus-ring-offset);
+  }
+}

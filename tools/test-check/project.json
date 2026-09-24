@@ -7,6 +7,7 @@
   "targets": {
     "test": {
       "executor": "nx:run-commands",
+      "parallelism": false,
       "inputs": [
         "default",
         "{workspaceRoot}/packages/ui/project.json",
@@ -49,6 +50,7 @@
         "default",
         "{workspaceRoot}/apps/storybook/.storybook/**/*",
         "{workspaceRoot}/apps/storybook/tsconfig.json",
+        "{workspaceRoot}/packages/ui/styles/**/*",
         "{workspaceRoot}/tools/visual/**/*",
         "!{workspaceRoot}/tools/visual/baselines/**",
         "{workspaceRoot}/tools/invariants/**/*",

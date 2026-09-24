@@ -1,0 +1,8 @@
+/* Lint as: packages/ui/sample/sample.css
+   Expect: property-disallowed-list (a component never removes or redraws the ring) */
+
+@layer components {
+  :host(:focus-visible) {
+    outline: none;
+  }
+}

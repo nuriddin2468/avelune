@@ -1,0 +1,16 @@
+/*
+ * @avelune/ui/styles.css, the kit's one global stylesheet (brief §6.1, ADR 0004, 0030). An application loads it once,
+ * through its bundler (Angular: the `styles` option), which resolves the tokens from @avelune/tokens and the fonts
+ * next to this file.
+ *
+ * The layer order is declared first, so every later @layer block takes its declared place: the tokens and the kit
+ * below the application's own `app` layer, and unlayered CSS above all of them.
+ */
+@layer reset, tokens, base, components, patterns, utilities, app;
+
+@import url('@avelune/tokens/tokens.css');
+@import url('./fonts/fonts.css');
+@import url('./reset.css');
+@import url('./base.css');
+@import url('./focus.css');
+@import url('./utilities.css');

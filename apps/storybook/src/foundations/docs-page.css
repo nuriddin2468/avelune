@@ -1,8 +1,9 @@
+/* Content up to the lg breakpoint wide; the box (border-box, from the reset) adds the inline padding. */
 .page {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--ave-space-10);
-  max-inline-size: var(--ave-breakpoint-lg);
+  max-inline-size: calc(var(--ave-breakpoint-lg) + 2 * var(--ave-space-6));
   padding: var(--ave-space-10) var(--ave-space-6);
 }
 

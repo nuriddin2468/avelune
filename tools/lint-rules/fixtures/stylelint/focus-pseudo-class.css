@@ -1,0 +1,8 @@
+/* Lint as: packages/ui/sample/sample.css
+   Expect: selector-pseudo-class-disallowed-list (:focus-visible only; :focus also matches a mouse click) */
+
+@layer components {
+  :host(:focus) {
+    background-color: var(--ave-color-bg-hover);
+  }
+}

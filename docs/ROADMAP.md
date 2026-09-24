@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below that is not marked **Deferred**, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 3 done on 2026-09-24, except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Every guardrail has a proof (ADR 0022–0029). Next: Phase 4, Foundations and motion. The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
+**Current position:** Phase 4 in progress. The global stylesheet is done (2026-09-24, ADR 0030). Next: `motion.css`. Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
 
 ## Parameters
 
@@ -89,7 +89,8 @@ The carry-overs from Phases 1 and 2 are done, except wiring the targets into CI,
 - [ ] **Deferred** until a GitLab remote exists (product owner, 2026-09-24): changesets and the per-merge-request changeset check; the `.gitlab-ci.yml` stages (brief §5.6); CODEOWNERS and the review rule in CONTRIBUTING. The API reports themselves run locally and are proven (next item). When this is picked up:
   - wire every gate into CI: `lint`, `typecheck`, `stylelint`, `test`, `tokens:colors`, `tokens-check:check`, `fonts:check`, `compiler-check:check`, `repo-check:check`, `ui:api-report`, `ui:size`, `ui:test-schematics`;
   - the visual job runs in the digest of `tools/visual/src/image.ts`, sets `AVELUNE_PLAYWRIGHT_IMAGE` to it, takes the Storybook and showcase builds from earlier stages, and runs `visual:e2e`, `invariants:e2e` and `test-check:e2e`;
-  - add a check that fails when `.gitlab-ci.yml` names another image or leaves a gate target out.
+  - add a check that fails when `.gitlab-ci.yml` names another image or leaves a gate target out;
+  - before the first publish: make `@avelune/tokens` public and replace the `workspace:*` dependency of `@avelune/ui` with the fixed version (ADR 0030).
   Blocked on the open questions below: the registry and the GitLab edition.
 - [x] Every guardrail proven to fail on a violation. Done in ADR 0029. The enforcement map in ARCHITECTURE.md names the proof of every row:
   - `repo-check:check` covers the Phase 1 carry-overs: every project has exactly one constrained tag, and `.browserslistrc` equals the higher of the CSS-feature floor (browser-compat-data) and Angular's supported set.
@@ -98,7 +99,16 @@ The carry-overs from Phases 1 and 2 are done, except wiring the targets into CI,
   - `ui:test-schematics` loads `ng add` and the empty migration collection from the built package.
 
 ### Phase 4: Foundations and motion
-- [ ] `@avelune/ui/styles.css`: layers, reset, base typography, focus ring, forced-colors, `tabular-nums` utility; imports `styles/fonts/fonts.css` and `@avelune/tokens/tokens.css`; the showcase preloads `avelune-sans-latin.woff2`
+- [x] `@avelune/ui/styles.css`: layers, reset, base typography, focus ring, forced-colors, `tabular-nums` utility; imports `styles/fonts/fonts.css` and `@avelune/tokens/tokens.css`; the showcase preloads `avelune-sans-latin.woff2`. Done in ADR 0030:
+  - Files: `styles.css` declares the layer order, then imports the tokens, the fonts, `reset.css`, `base.css`, `focus.css` and `utilities.css`, each in its own layer.
+  - The package exports `@avelune/ui/styles.css` and `@avelune/ui/fonts/*` and depends on `@avelune/tokens`. The showcase and Storybook load the stylesheet through their bundlers, as a consumer does.
+  - The showcase preloads the Latin face: media names are unhashed and critical-CSS inlining is off. The inliner had dropped the dark theme from the first paint.
+  - Checks, each proven by fixtures:
+    - Stylelint: `avelune/layer-order`; `avelune/component-layer` for the global files; the focus ring's properties only in `focus.css`, never transitioned, and no `:focus`.
+    - The Foundations page "Global styles", whose `play` function asserts the computed styles.
+    - A `forced-colors` project in the visual suite for stories tagged `forced-colors`.
+    - An invariant that every font preload is used and fetched once.
+  - The Foundations baselines changed (border-box sizing, `text-wrap: pretty`); every diff was inspected (ADR 0030, "Consequences").
 - [ ] `motion.css` with `ave-motion-*` classes; reduced-motion overrides via tokens
 - [ ] `provideAvelune()` (brief's `provideUi`), `AveTheme` service (theme, density, motion signals; persisted)
 - [ ] Icons package with a generated `IconName` union; `<ave-icon>` (Lucide from `lucide-static`, stroke width tuned and frozen, ADR 0020)
@@ -213,7 +223,7 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 | Style Dictionary DTCG duration WIP | custom transform, pinned by test | 0003 |
 | `stylelint-plugin-logical-css` has one maintainer | the fixtures in `tools/lint-rules/fixtures/stylelint` and `logical.spec.ts` make a swap to `stylelint-use-logical` safe | 0009, 0024 |
 | amd64 emulation slows local visual runs (1.2 min for 49 story tests on 2026-09-24) | filtered (`pnpm visual --grep=…`) and cached runs; Docker targets never run in parallel | 0010, 0027 |
-| Baseline PNGs grow the git history (6.3 MB for the Foundations pages alone) | every update reviewed; move `tools/visual/baselines` to Git LFS before the history passes 200 MB (ADR needed) | 0027 |
+| Baseline PNGs grow the git history (6.9 MB for the Foundations pages alone, 2026-09-24) | every update reviewed; move `tools/visual/baselines` to Git LFS before the history passes 200 MB (ADR needed) | 0027 |
 | Chromium's Intl formats `uz`/`uz-Latn` with root patterns (`UZS 1,234,567.80`, `2026 M09 23`); `uz-Cyrl` dates are right but currency is `UZS`, not `сўм` (observed in Chromium 153, 2026-09-23; Node's full ICU is right) | check Chrome, Edge, Firefox and Safari before Wave 2; if confirmed, the kit ships its own uz formatting data for dates and numbers (ADR in Wave 2, before DatePicker) | none yet |
 | Storybook's dev server exits when a story file fails to index | restart; CI builds Storybook statically | 0008 |
 | iOS Safari 17–18.2 implements `popover` without light dismiss (browser-compat-data 8.1.2; WebKit bug 267688), and the floor is iOS 17.5 | Wave 3: Popover and Menu close on an outside tap on iOS too, through CDK or Angular Aria behaviour where they provide it; otherwise raise the iOS floor to 18.3 (product owner, ADR 0014) | 0014, 0029 |

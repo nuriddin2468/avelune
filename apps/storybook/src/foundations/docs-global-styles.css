@@ -1,0 +1,100 @@
+.layers {
+  display: grid;
+  gap: var(--ave-space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.layer {
+  display: grid;
+  grid-template-columns: calc(var(--ave-space-16) + var(--ave-space-12)) minmax(0, 1fr);
+  gap: var(--ave-space-4);
+}
+
+.layer-name {
+  color: var(--ave-color-accent-fg);
+}
+
+/* The specimen has no styles of its own: it shows what the base layer gives plain HTML. */
+.specimen {
+  display: grid;
+  gap: var(--ave-space-4);
+  max-inline-size: var(--ave-container-md);
+  padding: var(--ave-space-6);
+  border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  border-radius: var(--ave-radius-lg);
+  background: var(--ave-color-bg-surface);
+}
+
+.focus-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ave-space-6);
+}
+
+.sample-button {
+  block-size: var(--ave-control-height-md);
+  padding-inline: var(--ave-control-padding-inline-md);
+  border: var(--ave-border-width-default) solid var(--ave-color-border-default);
+  border-radius: var(--ave-radius-md);
+  background: var(--ave-color-bg-surface);
+  color: var(--ave-color-fg-default);
+}
+
+/* A list that clips its rows at its rounded edge: the rows draw the ring inset. */
+.clipped {
+  display: grid;
+  max-inline-size: var(--ave-container-xs);
+  overflow: hidden;
+  border: var(--ave-border-width-default) solid var(--ave-color-border-default);
+  border-radius: var(--ave-radius-lg);
+  background: var(--ave-color-bg-surface);
+}
+
+.row {
+  block-size: var(--ave-control-height-lg);
+  padding-inline: var(--ave-space-4);
+  border: 0;
+  background: transparent;
+  color: var(--ave-color-fg-default);
+  text-align: start;
+}
+
+.row + .row {
+  border-block-start: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+}
+
+.amounts {
+  inline-size: max-content;
+  border-collapse: collapse;
+}
+
+.amounts th,
+.amounts td {
+  padding: var(--ave-space-2) var(--ave-space-4);
+  border-block-end: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+}
+
+.amounts th {
+  text-align: start;
+  font: var(--ave-font-label-md);
+  color: var(--ave-color-fg-muted);
+}
+
+.amount {
+  text-align: end;
+}
+
+.caption {
+  padding-block-end: var(--ave-space-2);
+  text-align: start;
+  font: var(--ave-font-caption);
+  color: var(--ave-color-fg-muted);
+}
+
+.island {
+  max-inline-size: var(--ave-container-md);
+  padding: var(--ave-space-6);
+  border-radius: var(--ave-radius-lg);
+}

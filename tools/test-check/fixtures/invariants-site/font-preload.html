@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Font preloads the page does not use</title>
+    <link rel="icon" href="data:," />
+    <!-- Violation: no crossorigin, so the face's CORS request cannot reuse it and the font downloads twice. -->
+    <link rel="preload" href="/fonts/avelune-sans-latin.woff2" as="font" type="font/woff2" />
+    <!-- Violation: a URL no @font-face rule names (the hashed name of another build, say). -->
+    <link rel="preload" href="/fonts/avelune-sans-latin-4E4FHGAG.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/tokens/tokens.css" />
+    <link rel="stylesheet" href="/fonts/fonts.css" />
+    <link rel="stylesheet" href="/fixture.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Font preloads the page does not use</h1>
+      <p>Its text is in Avelune Sans; neither preload is the file the face loads.</p>
+    </main>
+  </body>
+</html>

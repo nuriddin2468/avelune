@@ -1,5 +1,6 @@
-// avelune/component-layer: a component stylesheet puts every rule inside one cascade layer, `components` for the kit
-// (ADR 0004), so that the layer order declared in styles.css decides every conflict and consumer CSS wins.
+// avelune/component-layer: a kit stylesheet puts every rule inside a cascade layer it may use: `components` for an
+// entry point (ADR 0004), the reset, base and utilities layers for the global stylesheets (ADR 0030). The layer order
+// declared in styles.css then decides every conflict, and consumer CSS wins.
 import stylelint, { type Rule } from 'stylelint';
 
 const {
@@ -10,19 +11,22 @@ const {
 export const ruleName = 'avelune/component-layer';
 
 const messages = ruleMessages(ruleName, {
-  rejected: (layer: string) => `Put this inside @layer ${layer} { … }; component styles are layered (ADR 0004).`,
+  rejected: (layers: string) => `Put this inside @layer ${layers} { … }; kit styles are layered (ADR 0004, 0030).`,
 });
 
-const rule: Rule<string> = (layer) => (root, result) => {
-  if (
-    !validateOptions(result, ruleName, { actual: layer, possible: [(value: unknown) => typeof value === 'string'] })
-  ) {
-    return;
-  }
+const isLayerName = (value: unknown) => typeof value === 'string' && value !== '';
+
+const rule: Rule<string | readonly string[]> = (primary) => (root, result) => {
+  if (!validateOptions(result, ruleName, { actual: primary, possible: [isLayerName] })) return;
+  const layers: readonly string[] = typeof primary === 'string' ? [primary] : primary;
   for (const node of root.nodes) {
-    const layered = node.type === 'atrule' && node.name.toLowerCase() === 'layer' && node.params.trim() === layer;
-    if (node.type !== 'comment' && !(layered && node.nodes !== undefined)) {
-      report({ result, ruleName, node, message: messages.rejected, messageArgs: [layer] });
+    const layered =
+      node.type === 'atrule' &&
+      node.name.toLowerCase() === 'layer' &&
+      node.nodes !== undefined &&
+      layers.includes(node.params.trim());
+    if (node.type !== 'comment' && !layered) {
+      report({ result, ruleName, node, message: messages.rejected, messageArgs: [layers.join(' | ')] });
     }
   }
 };

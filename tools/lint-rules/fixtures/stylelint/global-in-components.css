@@ -1,0 +1,8 @@
+/* Lint as: packages/ui/styles/base.css
+   Expect: avelune/component-layer (the global stylesheets stay below and above the components) */
+
+@layer components {
+  a {
+    color: var(--ave-color-fg-link);
+  }
+}

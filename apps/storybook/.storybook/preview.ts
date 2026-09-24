@@ -1,4 +1,7 @@
 import type { Decorator, Preview } from '@storybook/angular-vite';
+// The kit's global stylesheet, loaded as an application loads it: through the bundler, which resolves the tokens and
+// the fonts next to it (ADR 0030).
+import '@avelune/ui/styles.css';
 
 type Theme = 'light' | 'dark';
 type Density = 'comfortable' | 'compact';

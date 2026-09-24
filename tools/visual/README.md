@@ -8,6 +8,7 @@ Visual regression and the axe sweep of every story (brief §5.4, ADR 0006, 0010,
   - it must render without an error, including a logged one;
   - axe must find no violation.
   A baseline without a story fails too.
+- A story tagged `forced-colors` (`tags: ['forced-colors']`) is checked once more in the `forced-colors` project: light, 1280 px, forced colours active, against `baselines/<story id>/forced-colors.png`, with its play function; axe is skipped there, since forced colours replace the colours it measures (ADR 0030).
 - `pnpm visual:update` writes the baselines that changed or are missing. Open every changed image before committing it, and explain the change in the merge request. Playwright's HTML report, with diffs, is in `dist/tools/visual/report`.
 - Any other argument goes to Playwright: `pnpm visual --grep=typography`, `pnpm visual --project=dark-390`.
 - `pnpm nx run visual:test` checks the image pin against the installed Playwright, the container detection and the index parser.
@@ -21,6 +22,7 @@ Files in `src/`:
 | `environment.ts` | The fixed environment, the font assertion and the static server, shared with `tools/invariants` as `@avelune/visual` |
 | `serve.ts` | Static file server for built sites inside the container |
 | `story-index.ts` | Which Storybook build and baselines to use, and the `index.json` parser |
-| `stories.e2e.ts`, `baselines.e2e.ts` | The suite |
+| `story-page.ts` | Opens a story and fails on anything that went wrong while it rendered |
+| `stories.e2e.ts`, `forced-colors.e2e.ts`, `baselines.e2e.ts` | The suite |
 
 `tools/test-check` proves that the suite fails on each violation (`pnpm nx run test-check:e2e`).

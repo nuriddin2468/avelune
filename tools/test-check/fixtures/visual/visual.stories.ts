@@ -1,5 +1,6 @@
 // Fixture stories for the visual suite (tools/visual). Each breaks exactly one of its checks; Clean breaks none.
-// baselines/ holds light-1280 images for Clean, Changed and Axe violation, and one for a story that does not exist.
+// baselines/ holds light-1280 images for Clean, Changed and Axe violation, a forced-colors image for Clean (the one
+// tagged story), and two orphans: one for a story that does not exist, one forced-colors image of an untagged story.
 import { Component, input } from '@angular/core';
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 
@@ -21,8 +22,8 @@ class Note {
 const meta: Meta<Note> = { title: 'Fixtures/Visual', component: Note };
 export default meta;
 
-/** Matches its baseline and passes axe. */
-export const Clean: StoryObj<Note> = { args: { heading: 'Clean' } };
+/** Matches its baselines, the forced-colors one too, and passes axe. */
+export const Clean: StoryObj<Note> = { args: { heading: 'Clean' }, tags: ['forced-colors'] };
 
 /** Its baseline shows "Draft 1": the screenshot differs. */
 export const Changed: StoryObj<Note> = { args: { heading: 'Draft 2' } };
@@ -33,12 +34,18 @@ export const Unbaselined: StoryObj<Note> = { args: { heading: 'New story' } };
 /** A button without an accessible name: axe's button-name rule. */
 export const AxeViolation: StoryObj<Note> = { args: { heading: 'Axe violation', unnamedButton: true } };
 
-/** Loses fonts.css before it renders, so its text falls back to the local fallback face. */
+/** Loses the Avelune Sans faces of fonts.css before it renders, so its text falls back to the local fallback face. */
 export const FontFallback: StoryObj<Note> = {
   args: { heading: 'Font fallback' },
   loaders: [
     () => {
-      document.querySelector('link[href$="fonts/fonts.css"]')?.remove();
+      for (const sheet of document.styleSheets) {
+        for (let index = sheet.cssRules.length - 1; index >= 0; index--) {
+          const rule = sheet.cssRules[index];
+          const family = rule instanceof CSSFontFaceRule ? rule.style.getPropertyValue('font-family') : '';
+          if (family.replace(/["']/g, '') === 'Avelune Sans') sheet.deleteRule(index);
+        }
+      }
       return {};
     },
   ],

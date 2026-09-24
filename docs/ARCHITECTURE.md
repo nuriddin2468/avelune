@@ -57,6 +57,7 @@ packages/ui/
 ├── api/                    committed API reports, one per entry point
 ├── schematics/             ng-add and ng-update collections (CommonJS)
 ├── scripts/                build helpers (schematics assets, API reports)
+├── styles/                 the global stylesheet → @avelune/ui/styles.css, and the fonts → @avelune/ui/fonts/*
 └── button/                 one folder per entry point → @avelune/ui/button
     ├── index.ts            public API of the entry point
     ├── entry.json          { "layer": "components" }
@@ -90,7 +91,9 @@ Conventions:
 1. `build-lib`: `@angular/build:ng-packagr` with `tsconfig.lib.prod.json` (partial compilation) into `dist/packages/ui`, in Angular Package Format with an `exports` entry per entry point.
 2. `build`: compiles `schematics/` with `tsconfig.schematics.json` to CommonJS and copies their JSON manifests. The published package is `"type": "module"`, and the Angular CLI loads schematic factories with `require()`, so `dist/packages/ui/schematics/package.json` marks that folder `"type": "commonjs"`. The marker is written into `dist` only: a `package.json` inside the source tree would become a separate Nx project.
 
-`nx build showcase` uses `@angular/build:application`; it resolves `@avelune/ui/*` to the sources through the path mapping, so no library build is needed for the app. Until `@avelune/ui/styles.css` exists (Phase 4) it bundles `tokens.css`, `fonts.css` and `apps/showcase/src/styles.css` (body colours and font) as global styles, after building the tokens.
+`nx build showcase` uses `@angular/build:application`; it resolves `@avelune/ui/*` to the sources through the path mapping, so no library build is needed for the app. Its one global stylesheet is `packages/ui/styles/styles.css`, loaded as a consumer loads it (see "CSS"), after building the tokens.
+
+The library build copies `packages/ui/styles` into the package unchanged (`assets` in `ng-package.json`). `package.json` exports it as `@avelune/ui/styles.css` and `@avelune/ui/fonts/*`, marks CSS as a side effect, and depends on `@avelune/tokens`, whose `tokens.css` the stylesheet imports.
 
 `nx run ui:size` measures every entry point against the budget in its `entry.json` (ADR 0028): the FESM bundle from `build-lib`, bundled and minified by esbuild with the peers and the other entry points left out, brotli-compressed. The checks come from `packages/ui/scripts/size-limit.mts`.
 
@@ -105,6 +108,36 @@ Conventions:
 - TypeScript 6 specifics: no `baseUrl` (paths are relative to the config file), `types: []` by default, and `rootDir` defaults to the config's folder. Apps that compile library sources through path mappings set `rootDir` to the workspace root.
 - `typecheck` targets run `ngc --noEmit`, which also type-checks templates; `ui:typecheck` checks the specs (`tsconfig.spec.json`) and the schematics too.
 - Every folder with TypeScript has a `tsconfig.json` that editors, the Angular language service and type-aware lint find by name. Where a build uses another file (`tsconfig.lib.json`, `tsconfig.app.json`, `tsconfig.schematics.json`), the `tsconfig.json` extends it and adds specs and stories.
+
+## CSS
+
+Plain CSS with native nesting, custom properties and cascade layers; emulated encapsulation; values from `--ave-*` tokens only (ADR 0004, 0024).
+
+**The global stylesheet** is `packages/ui/styles/styles.css` (ADR 0030). It declares the layer order first, then imports the rest:
+
+| Layer | File | Holds |
+|---|---|---|
+| `reset` | `reset.css` | border-box sizing, margins, text inflation off, long words break, balanced headings, media capped at their container, form controls inherit the font |
+| `tokens` | `@avelune/tokens/tokens.css` | every `--ave-*` property, per theme, density and motion mode (ADR 0017) |
+| `base` | `base.css`, `focus.css` | canvas and text colours on `html` and every `[data-theme]` island; plain HTML typography (h1 heading-xl, h2 heading-lg, h3 heading-md, h4–h6 heading-sm, body-md, `pre` code); the focus ring |
+| `components` | `packages/ui/<entry>/*.css` | every component |
+| `patterns` | (Wave 6) | page patterns |
+| `utilities` | `utilities.css`, `motion.css` (Phase 4) | `.ave-tabular-nums`; the `ave-motion-*` classes |
+| `app` | the application | its own styles; unlayered CSS beats every layer |
+
+`fonts.css` (generated, ADR 0018) is imported unlayered: `@font-face` rules are not layered.
+
+**The focus ring** is one rule in `focus.css`: `:focus-visible` gets a `focus-ring.width` outline in `color.border.focus`, `focus-ring.offset` outside the element, and `Highlight` under forced colours. An element inside a container that clips its overflow sets `data-focus-ring="inset"`, and the same rule draws the ring inside its edge. Nothing else sets an outline, transitions one or styles `:focus`; Stylelint enforces all three.
+
+**Loading it.** An application loads `@avelune/ui/styles.css` once, through its bundler, which resolves the tokens and rebases the font URLs. With Angular's application builder, as in the showcase:
+
+- `styles: ["@avelune/ui/styles.css"]` (the showcase uses the source path);
+- `optimization.styles.inlineCritical: false`: the critical-CSS inliner drops the dark theme and loads the stylesheet late, so the first paint would be light;
+- `outputHashing: "bundles"` and `<link rel="preload" href="media/avelune-sans-latin.woff2" as="font" type="font/woff2" crossorigin>` in `index.html`: hashed media names cannot be preloaded. The invariants suite fails a preload that no face uses or that downloads twice.
+
+Storybook imports the same file in `.storybook/preview.ts` (`@avelune/ui/styles.css`, mapped in `tsconfig.base.json`).
+
+**Adding global CSS** means adding it to one of these files, in its layer: `avelune/component-layer` accepts only `reset`, `base` and `utilities` there, and `avelune/layer-order` keeps the entry's first statement. Show it on the Foundations "Global styles" page and assert it in that page's `play` function.
 
 ## Lint
 
@@ -123,9 +156,10 @@ Conventions:
 - Unknown `--ave-*` names are errors.
 - Selectors: no `!important`, no ids, specificity at most `0,4,0`, no `::ng-deep`.
 - Motion: `transition` and `animation` longhands only; `@keyframes` only in `packages/ui/styles/motion.css`.
+- The focus ring: `outline*` properties only in `packages/ui/styles/focus.css`, never in `transition-property`, and no `:focus` selectors (ADR 0030).
 - Logical properties throughout.
 - Media and container query widths equal the breakpoint and container tokens.
-- Kit stylesheets wrap everything in `@layer components`.
+- Kit stylesheets wrap everything in `@layer components`; the global stylesheets in `reset`, `base` or `utilities`, and `styles.css` starts with the layer order.
 
 Nesting may only refine the same element (`&:hover`, `&[aria-disabled='true']`, `&::before`). Angular's emulated shim leaves anything else unscoped. `pnpm nx run-many -t stylelint` runs it per project, after the tokens are built.
 
@@ -175,9 +209,9 @@ packages/tokens/
 
 ## Storybook
 
-`apps/storybook` runs `@storybook/angular-vite` with JIT compilation (ADR 0008, 0025); `storybook:typecheck` type-checks every story with ngc and the workspace strictness. `pnpm nx serve storybook` builds the tokens first and serves on `http://127.0.0.1:6006`; `pnpm nx build storybook` writes `dist/apps/storybook`. The toolbar switches theme, density and motion through the `data-*` attributes on `<html>`.
+`apps/storybook` runs `@storybook/angular-vite` with JIT compilation (ADR 0008, 0025); `storybook:typecheck` type-checks every story with ngc and the workspace strictness. `pnpm nx serve storybook` builds the tokens first and serves on `http://127.0.0.1:6006`; `pnpm nx build storybook` writes `dist/apps/storybook`. The preview imports `@avelune/ui/styles.css`, bundled by Vite as an application bundles it (ADR 0030). The toolbar switches theme, density and motion through the `data-*` attributes on `<html>`.
 
-The **Foundations** pages live in `apps/storybook/src/foundations`: colour roles and every declared contrast pair per theme (WCAG ratio, APCA Lc for information), the type specimen in uz-Latn, uz-Cyrl, ru and en, spacing and control sizes, radius, elevation and stacking order, and the motion playground. They read `tokens` from `@avelune/tokens` and style themselves with tokens only; primitives never appear. Component stories will live next to their components (`packages/ui/<name>/<name>.stories.ts`) from Phase 5.
+The **Foundations** pages live in `apps/storybook/src/foundations`: colour roles and every declared contrast pair per theme (WCAG ratio, APCA Lc for information), the type specimen in uz-Latn, uz-Cyrl, ru and en, spacing and control sizes, radius, elevation and stacking order, and the motion playground. The "Global styles" page shows the layers, plain HTML, the focus ring, the figures utility and a theme island, and its `play` function asserts their computed styles. They read `tokens` from `@avelune/tokens` and style themselves with tokens only; primitives never appear. A story tagged `forced-colors` is also compared in forced colours (see "Tests"). Component stories will live next to their components (`packages/ui/<name>/<name>.stories.ts`) from Phase 5.
 
 ## Tests
 
@@ -188,16 +222,16 @@ The **Foundations** pages live in `apps/storybook/src/foundations`: colour roles
 - **Stories** (`pnpm nx run storybook:test`): every story is a Vitest test in Chromium through `@storybook/addon-vitest`. It fails on an error, a failing `play` function or any axe violation.
 - **Node-side code** (tools, token scripts) uses `node:test` (ADR 0015).
 - **Browser suites** (ADR 0010, 0027) run only in the pinned Playwright image, linux/amd64, which `tools/visual/src/image.ts` names by digest. `container.ts` starts it with Docker, mounts the workspace, cuts the network and runs Playwright; inside the image (CI) it runs Playwright directly. Both Playwright configs refuse to start anywhere else. The host builds the site first (Nx `dependsOn`); `serve.ts` serves it in the container. The fixed environment (`environment.ts`: scale 1, `en-US`, Asia/Tashkent, reduced motion, a fixed date, the kit-font assertion) is shared through `@avelune/visual`.
-  - **Visual** (`pnpm nx run visual:e2e`, or `pnpm visual`): every story in `index.json`, light and dark at 1280 and 390 px. The screenshot must equal `tools/visual/baselines/<story id>/<project>.png` to the pixel, and axe (the Storybook gate's rules) must find nothing. A story that errors, logs an error or renders in a fallback font fails; so do a missing baseline and a baseline without a story. `pnpm visual:update` rewrites changed and missing baselines: open every changed image and explain it in the merge request (non-negotiable 10). Arguments go to Playwright: `pnpm visual --grep=colour`. The HTML report is written to `dist/tools/visual/report`.
-  - **Showcase** (`pnpm nx run invariants:e2e`): every screen linked from `/`, in the same four projects: axe with every rule, no horizontal scroll at 320 px, every animation on a duration and an easing token, nothing translated or scaled under reduced motion. The invariants of brief §8.2 that need components (same-size controls, overlays, `animate.leave`) are added with those components.
+  - **Visual** (`pnpm nx run visual:e2e`, or `pnpm visual`): every story in `index.json`, light and dark at 1280 and 390 px. Stories tagged `forced-colors` run once more in the `forced-colors` project (light, 1280 px, forced colours active) against `<story id>/forced-colors.png`, their play function included; axe is skipped there (ADR 0030). The screenshot must equal `tools/visual/baselines/<story id>/<project>.png` to the pixel, and axe (the Storybook gate's rules) must find nothing. A story that errors, logs an error or renders in a fallback font fails; so do a missing baseline and a baseline without a story. `pnpm visual:update` rewrites changed and missing baselines: open every changed image and explain it in the merge request (non-negotiable 10). Arguments go to Playwright: `pnpm visual --grep=colour`. The HTML report is written to `dist/tools/visual/report`.
+  - **Showcase** (`pnpm nx run invariants:e2e`): every screen linked from `/`, in the same four projects: axe with every rule, no horizontal scroll at 320 px, every font preload a face the screen uses and fetched once, every animation on a duration and an easing token, nothing translated or scaled under reduced motion. The invariants of brief §8.2 that need components (same-size controls, overlays, `animate.leave`) are added with those components.
 - **Size** (`pnpm nx run ui:size`): see "Build".
-- `tools/test-check` proves the gates with fixtures:
+- `tools/test-check` proves the gates with fixtures. Its `test` target runs alone (`parallelism: false`): it starts `ui:test:coverage-gap`, which shares `coverage/ui` with `ui:test`.
   - `test`: a coverage gap and an orphan file (`ui:test:coverage-gap`); a fixture Storybook with an unnamed button and a failing `play` function; an entry point over its size budget and one without a budget; an API report that is stale and an export without a release tag (`api-report.mjs --package --build` on `fixtures/api-report`); both browser-suite configs refusing to start on the host.
-  - `e2e` (Docker): the visual suite on a fixture Storybook with one broken story per check, and the showcase suite on a static site with one violation per page. Clean controls must pass, and the control's motion must actually have been recorded.
+  - `e2e` (Docker): the visual suite on a fixture Storybook with one broken story per check (and a tagged clean story in the `forced-colors` project), and the showcase suite on a static site with one violation per page. Clean controls must pass, and the control's motion must actually have been recorded.
 
 ## Fonts
 
-The kit's typefaces are IBM Plex Sans, shipped as **"Avelune Sans"**, and IBM Plex Mono for code, shipped as **"Avelune Mono"** (ADR 0018 and its addendum): `tools/fonts` subsets the pinned sources (`tools/fonts/source`) into `packages/ui/styles/fonts/avelune-{sans,mono}-{latin,latin-ext,cyrillic}.woff2` (sans variable, weights 400–600; mono Regular), renames them as the OFL requires, maps ʻ ʼ to Plex Sans' ‘ ’ glyphs, and writes `fonts.css` with the `@font-face` rules and metric-matched fallback faces (Arial per weight, Courier New for mono). The outputs are committed; `pnpm nx run fonts:check` rebuilds them in memory and fails on any difference, on a character a locale needs but the files lack, and on a leftover Reserved Font Name. `styles.css` imports `fonts.css` in Phase 4.
+The kit's typefaces are IBM Plex Sans, shipped as **"Avelune Sans"**, and IBM Plex Mono for code, shipped as **"Avelune Mono"** (ADR 0018 and its addendum): `tools/fonts` subsets the pinned sources (`tools/fonts/source`) into `packages/ui/styles/fonts/avelune-{sans,mono}-{latin,latin-ext,cyrillic}.woff2` (sans variable, weights 400–600; mono Regular), renames them as the OFL requires, maps ʻ ʼ to Plex Sans' ‘ ’ glyphs, and writes `fonts.css` with the `@font-face` rules and metric-matched fallback faces (Arial per weight, Courier New for mono). The outputs are committed; `pnpm nx run fonts:check` rebuilds them in memory and fails on any difference, on a character a locale needs but the files lack, and on a leftover Reserved Font Name. `styles.css` imports `fonts.css`, and the package exports the files as `@avelune/ui/fonts/*`.
 
 ## Enforcement map
 
@@ -211,10 +245,12 @@ What is checked, by which tool, at which stage, and what proves that the check f
 | TS strictness, template types | `ngc --noEmit` (`typecheck` targets) | affected projects | deferred |
 | No tsconfig weakens the required strictness (ADR 0022) | `compiler-check:check`, proven by `compiler-check:test` (a fixture per option and per extended diagnostic) | a staged tsconfig | deferred |
 | Token-only CSS values, no unknown tokens, specificity cap, no `::ng-deep`/`!important`/ids, motion longhands, `@keyframes` only in `motion.css`, logical properties (exceptions derived from browser data), query widths equal tokens, `@layer components`, same-element nesting | Stylelint (ADR 0024), a fixture per rule in `lint-rules:test` | staged `.css` | deferred |
+| One focus ring (`outline*` only in `focus.css`, never transitioned, no `:focus`); the global files in `reset`/`base`/`utilities`; `styles.css` starts with the layer order | Stylelint (ADR 0030), fixtures in `lint-rules:test` | staged `.css` | deferred |
+| The global stylesheet renders: typography roles, canvas and text colours, theme islands, the figures utility, the ring outside, inset and in forced colours | the "Global styles" story's `play` function, in `storybook:test` and in the visual suite's four projects plus `forced-colors` | no | deferred |
 | Coverage ≥ 90% per file in `packages/ui`, tests in a real browser | `ui:test` (Vitest browser mode), proven by `test-check:test` | no | deferred |
 | Every story renders, passes its `play` function and has no axe violation | `storybook:test` (addon-vitest, a11y `error`), proven by `test-check:test` | no | deferred |
-| Every story × light/dark × 1280/390 equals its committed baseline, in the kit's fonts, without errors; no baseline without a story; axe clean (independent sweep) | `visual:e2e` in the pinned container (ADR 0010, 0027), proven by `test-check:e2e` | no | deferred |
-| Every showcase screen: axe clean, no horizontal scroll at 320 px, motion on tokens only, no movement under reduced motion | `invariants:e2e` in the pinned container (ADR 0027), proven by `test-check:e2e` | no | deferred |
+| Every story × light/dark × 1280/390, and every story tagged `forced-colors` in forced colours, equals its committed baseline, in the kit's fonts, without errors; no baseline without a story; axe clean (independent sweep) | `visual:e2e` in the pinned container (ADR 0010, 0027, 0030), proven by `test-check:e2e` | no | deferred |
+| Every showcase screen: axe clean, no horizontal scroll at 320 px, font preloads used and fetched once, motion on tokens only, no movement under reduced motion | `invariants:e2e` in the pinned container (ADR 0027, 0030), proven by `test-check:e2e` | no | deferred |
 | Browser suites run only in the pinned image on amd64; the image's Playwright version equals the installed one | Playwright configs (`requireContainer`), proven by `test-check:test`; `visual:test` | no | deferred |
 | Every entry point within the size budget its `entry.json` declares | `ui:size` (size-limit, ADR 0028), proven by `test-check:test` | no | deferred |
 | Formatting | Prettier (`.md` excluded), proven by `repo-check:test` | staged files | deferred |

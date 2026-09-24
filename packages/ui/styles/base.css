@@ -1,0 +1,66 @@
+/* The base layer: the page, and the text of plain HTML, take their colours and type from the tokens, so content
+   outside any component already reads as the kit. A component restyles what it owns in `components`. */
+@layer base {
+  /* The root and every theme island (data-theme on any element, ADR 0017) paint their own canvas and text. */
+  html,
+  [data-theme] {
+    background-color: var(--ave-color-bg-canvas);
+    color: var(--ave-color-fg-default);
+    accent-color: var(--ave-color-accent-bg);
+  }
+
+  html {
+    font: var(--ave-font-body-md);
+    letter-spacing: var(--ave-font-body-md-letter-spacing);
+  }
+
+  /* Heading levels map to the heading roles: a page title is h1. */
+  h1 {
+    font: var(--ave-font-heading-xl);
+    letter-spacing: var(--ave-font-heading-xl-letter-spacing);
+  }
+
+  h2 {
+    font: var(--ave-font-heading-lg);
+    letter-spacing: var(--ave-font-heading-lg-letter-spacing);
+  }
+
+  h3 {
+    font: var(--ave-font-heading-md);
+    letter-spacing: var(--ave-font-heading-md-letter-spacing);
+  }
+
+  h4,
+  h5,
+  h6 {
+    font: var(--ave-font-heading-sm);
+    letter-spacing: var(--ave-font-heading-sm-letter-spacing);
+  }
+
+  /* Three weights only: bold text is semibold. */
+  b,
+  strong {
+    font-weight: var(--ave-font-weight-semibold);
+  }
+
+  /* The line height stays the surrounding one, so small text never breaks the 4px rhythm. */
+  small {
+    font-size: var(--ave-font-body-sm-size);
+  }
+
+  /* Inline code keeps the surrounding size: Plex Mono is drawn on Plex Sans' proportions. */
+  code,
+  kbd,
+  samp {
+    font-family: var(--ave-font-family-mono);
+  }
+
+  pre {
+    font: var(--ave-font-code);
+    letter-spacing: var(--ave-font-code-letter-spacing);
+  }
+
+  a {
+    color: var(--ave-color-fg-link);
+  }
+}

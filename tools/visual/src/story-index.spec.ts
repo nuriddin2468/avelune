@@ -20,6 +20,22 @@ describe('parseStoryIndex', () => {
     );
   });
 
+  it('keeps the tags of each story, and none when the entry has none', () => {
+    const index = {
+      v: 5,
+      entries: {
+        a: { ...entry('foundations-global-styles--base', 'story'), tags: ['dev', 'forced-colors'] },
+        b: entry('foundations-colour--roles', 'story'),
+      },
+    };
+    assert.deepEqual(
+      parseStoryIndex(JSON.stringify(index)).map((story) => story.tags),
+      [[], ['dev', 'forced-colors']],
+    );
+    const badTags = { v: 5, entries: { a: { ...entry('x--y', 'story'), tags: 'forced-colors' } } };
+    assert.throws(() => parseStoryIndex(JSON.stringify(badTags)), /Malformed/);
+  });
+
   it('rejects another index format and an index without stories', () => {
     assert.throws(() => parseStoryIndex(JSON.stringify({ v: 4, entries: {} })), /format v5/);
     assert.throws(() => parseStoryIndex(JSON.stringify({ v: 5, entries: {} })), /no stories/);

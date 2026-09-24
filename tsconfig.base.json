@@ -22,6 +22,7 @@
       "@avelune/tokens": ["./packages/tokens/dist/tokens.ts"],
       "@avelune/tokens/contrast-pairs.json": ["./packages/tokens/contrast-pairs.json"],
       "@avelune/ui": ["./packages/ui/index.ts"],
+      "@avelune/ui/styles.css": ["./packages/ui/styles/styles.css"],
       "@avelune/ui/*": ["./packages/ui/*/index.ts"],
       "@avelune/visual": ["./tools/visual/src/index.ts"]
     }

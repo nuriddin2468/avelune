@@ -446,6 +446,9 @@ importers:
       '@angular/core':
         specifier: ^22.1.0
         version: 22.1.7(@angular/compiler@22.1.7)(rxjs@7.8.2)
+      '@avelune/tokens':
+        specifier: workspace:*
+        version: link:../tokens
       tslib:
         specifier: ^2.8.1
         version: 2.8.1

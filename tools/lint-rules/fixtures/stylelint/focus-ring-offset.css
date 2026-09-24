@@ -1,0 +1,6 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: property-disallowed-list (an inset ring is data-focus-ring='inset', drawn by focus.css) */
+
+.row:focus-visible {
+  outline-offset: calc(-1 * var(--ave-focus-ring-width));
+}

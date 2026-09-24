@@ -44,6 +44,13 @@ const rawFunctions = [
   'steps',
 ];
 
+/** The cascade layers, lowest first; styles.css declares them in this order (brief §6.1, ADR 0004, 0030). */
+const layerOrder = ['reset', 'tokens', 'base', 'components', 'patterns', 'utilities', 'app'];
+
+/** Motion shorthands hide their parts from strict values; the focus ring's properties belong to focus.css alone. */
+const motionShorthands = ['transition', 'animation'];
+const focusRing = ['outline', 'outline-color', 'outline-style', 'outline-width', 'outline-offset'];
+
 /** Keywords allowed in place of a token, including the system colours that forced-colors styles need. */
 const keywords = [
   '0',
@@ -106,9 +113,11 @@ export default {
     // A host with variant, size and state attributes plus one pseudo-class: :host([a][b]:hover) is 0,4,0.
     'selector-max-specificity': '0,4,0',
     'selector-disallowed-list': ['/::ng-deep/', '/\\/deep\\//', '/>>>/'],
-    // Longhands only, so that strict values check each part; and never `all`.
-    'property-disallowed-list': ['transition', 'animation'],
-    'declaration-property-value-disallowed-list': { 'transition-property': ['all'] },
+    // Motion longhands only, so that strict values check each part; never `all`. The focus ring is one rule in
+    // packages/ui/styles/focus.css: nothing else sets an outline, animates one or styles :focus (ADR 0030).
+    'property-disallowed-list': [...motionShorthands, ...focusRing],
+    'declaration-property-value-disallowed-list': { 'transition-property': ['all', '/outline/'] },
+    'selector-pseudo-class-disallowed-list': ['focus'],
     'at-rule-disallowed-list': ['keyframes'],
     // Angular's emulated shim scopes only the outer selector of a nested rule, so a nested rule may refine the same
     // element (&:hover, &[aria-disabled='true'], &::before) but never reach another one (ADR 0024).
@@ -134,9 +143,19 @@ export default {
       rules: { 'avelune/component-layer': 'components' },
     },
     {
-      // Global stylesheets declare the layer order and wrap their own rules.
+      // The global stylesheets wrap their rules in the layers below and above the components (ADR 0030).
       files: ['packages/ui/styles/**/*.css'],
-      rules: { 'avelune/component-layer': null },
+      rules: { 'avelune/component-layer': [['reset', 'base', 'utilities']] },
+    },
+    {
+      // The entry point declares the layer order, then imports the tokens, the fonts and the layered files.
+      files: ['packages/ui/styles/styles.css'],
+      rules: { 'avelune/component-layer': null, 'avelune/layer-order': [layerOrder] },
+    },
+    {
+      // The one focus-ring rule (brief §6.1).
+      files: ['packages/ui/styles/focus.css'],
+      rules: { 'property-disallowed-list': motionShorthands },
     },
   ],
 };

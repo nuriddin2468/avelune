@@ -1,6 +1,6 @@
 // Proves that the visual suite (tools/visual, ADR 0027) fails on each violation it guards against, and only on those.
-// fixtures/visual is a Storybook of fixture stories built with the real main config, preview and head, and a
-// baselines folder; each story breaks one check and Clean breaks none.
+// fixtures/visual is a Storybook of fixture stories built with the real main config and preview, and a baselines
+// folder; each story breaks one check and Clean breaks none.
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
@@ -24,7 +24,7 @@ describe('visual suite', () => {
     run = runSuite(
       'tools/visual/playwright.config.ts',
       { AVELUNE_VISUAL_SITE: site, AVELUNE_VISUAL_BASELINES: join(fixtures, 'baselines') },
-      ['--project=light-1280', '--project=baselines'],
+      ['--project=light-1280', '--project=forced-colors', '--project=baselines'],
     );
   });
 
@@ -50,6 +50,12 @@ describe('visual suite', () => {
   it('passes a story that matches its baseline and has no violation', () => {
     passes('fixtures-visual--clean › matches its baseline');
     passes('fixtures-visual--clean › has no axe violations');
+  });
+
+  it('compares a story tagged forced-colors in forced colours, and only that one', () => {
+    passes('fixtures-visual--clean › matches its forced-colors baseline');
+    const forced = run.tests.filter((test) => test.project === 'forced-colors').map((test) => test.title);
+    assert.deepEqual(forced, ['fixtures-visual--clean › matches its forced-colors baseline']);
   });
 
   it('fails a story whose screenshot differs from its baseline', () => {
@@ -80,12 +86,13 @@ describe('visual suite', () => {
     }
   });
 
-  it('fails a baseline that belongs to no story', () => {
+  it('fails a baseline that belongs to no story, and a forced-colors baseline of an untagged story', () => {
     fails('every baseline belongs to a story and a project', /fixtures-visual--removed\/light-1280\.png/);
+    fails('every baseline belongs to a story and a project', /fixtures-visual--changed\/forced-colors\.png/);
   });
 
   it('runs exactly these tests', () => {
-    assert.equal(run.tests.length, 13, run.tests.map((test) => test.title).join('\n'));
+    assert.equal(run.tests.length, 14, run.tests.map((test) => test.title).join('\n'));
     assert.equal(
       run.tests.filter((test) => !test.passed).length,
       7,

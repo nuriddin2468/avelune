@@ -92,13 +92,6 @@ th {
   cursor: pointer;
 }
 
-.track:focus-visible,
-.action:focus-visible,
-.entry-button:focus-visible {
-  outline: var(--ave-focus-ring-width) solid var(--ave-color-border-focus);
-  outline-offset: var(--ave-focus-ring-offset);
-}
-
 .entry-label {
   font: var(--ave-font-label-md);
 }

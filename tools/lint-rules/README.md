@@ -15,7 +15,8 @@ When a component that enhances a native element lands, add its attribute to `kit
 |---|---|---|
 | `avelune/nesting-same-element` | all CSS | a nested rule, also under an at-rule, that selects anything but the parent element (`&` + pseudo-classes, pseudo-elements, attributes) |
 | `avelune/media-query-tokens` | all CSS | a width in `@media` that is not a breakpoint token, or in `@container` that is not a container token (read from `tokens.css`) |
-| `avelune/component-layer` | `packages/ui/<entry>/**/*.css` | a rule outside `@layer components` |
+| `avelune/component-layer` | `packages/ui/<entry>/**/*.css`; `packages/ui/styles/*.css` | a rule outside `@layer components`; in the global stylesheets, outside `@layer reset`, `base` or `utilities` |
+| `avelune/layer-order` | `packages/ui/styles/styles.css` | a first statement other than the kit's layer order, a second layer statement (ADR 0030) |
 
 ## Tests
 

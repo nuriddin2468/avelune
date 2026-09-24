@@ -1,0 +1,23 @@
+/* The focus ring (brief §6.1, ADR 0030): one rule for the whole kit, on :focus-visible only. It is never removed and
+   never animated. Stylelint rejects every outline declaration outside this file, outline in a transition, and the
+   :focus pseudo-class. */
+@layer base {
+  :focus-visible {
+    outline: var(--ave-focus-ring-width) solid var(--ave-color-border-focus);
+    outline-offset: var(--ave-focus-ring-offset);
+  }
+
+  /* An element inside a container that clips its overflow draws the ring inside its own edge, where the container
+     cannot cut it off. Components set the attribute on such elements. */
+  [data-focus-ring='inset']:focus-visible {
+    outline-offset: calc(-1 * var(--ave-focus-ring-width));
+  }
+
+  /* Forced colours replace every author colour; the ring takes the system highlight, so it stays distinct from the
+     borders (CanvasText). */
+  @media (forced-colors: active) {
+    :focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}

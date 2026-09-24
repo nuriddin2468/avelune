@@ -1,8 +1,10 @@
 /* Lint as: packages/ui/styles/motion.css
    Expect: none (the motion catalog is the one home of @keyframes) */
 
-@keyframes ave-motion-fade {
-  from {
-    opacity: 0;
+@layer utilities {
+  @keyframes ave-motion-fade {
+    from {
+      opacity: 0;
+    }
   }
 }

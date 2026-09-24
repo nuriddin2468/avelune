@@ -1,0 +1,8 @@
+/* Lint as: packages/ui/styles/reset.css
+   Expect: none (a global stylesheet in its own layer) */
+
+@layer reset {
+  * {
+    box-sizing: border-box;
+  }
+}

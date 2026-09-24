@@ -1,0 +1,72 @@
+/* The reset, the lowest layer: browser defaults that work against a token-driven layout, and nothing a component
+   would have to restore. */
+@layer reset {
+  *,
+  ::before,
+  ::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    /* Mobile browsers enlarge text in wide blocks; the type scale is already sized for small screens. */
+    text-size-adjust: none;
+  }
+
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  figure,
+  blockquote,
+  dl,
+  dd,
+  ol,
+  ul,
+  pre {
+    margin: 0;
+  }
+
+  body {
+    /* A long Uzbek or Russian word breaks instead of overflowing its container. */
+    overflow-wrap: break-word;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-inline-size: 100%;
+  }
+
+  img,
+  video {
+    block-size: auto;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    letter-spacing: inherit;
+  }
+}

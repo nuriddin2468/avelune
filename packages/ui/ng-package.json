@@ -4,5 +4,6 @@
   "lib": {
     "entryFile": "index.ts"
   },
-  "assets": ["README.md"]
+  "assets": ["README.md", "styles/**/*"],
+  "allowedNonPeerDependencies": ["@avelune/tokens"]
 }

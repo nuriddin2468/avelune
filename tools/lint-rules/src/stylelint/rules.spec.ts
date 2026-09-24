@@ -53,6 +53,37 @@ describe('avelune/component-layer', () => {
     const found = await lint(':host { display: block; }\n@layer app { a {} }\n@layer components;', rules);
     assert.equal(found.length, 3);
   });
+
+  it('accepts any of a list of layers, and names them all when it rejects', async () => {
+    const list = { 'avelune/component-layer': [['reset', 'base', 'utilities']] };
+    assert.deepEqual(await lint('@layer reset { * {} }\n@layer base { a {} }\n@layer utilities { .x {} }', list), []);
+    assert.deepEqual(await lint('@layer components { a {} }', list), [
+      'avelune/component-layer: Put this inside @layer reset | base | utilities { … }; kit styles are layered (ADR 0004, 0030). (avelune/component-layer)',
+    ]);
+  });
+});
+
+describe('avelune/layer-order', () => {
+  const rules = { 'avelune/layer-order': [['reset', 'tokens', 'app']] };
+
+  it('accepts the order as the first statement, after comments', async () => {
+    assert.deepEqual(await lint("/* Entry. */\n@layer reset, tokens, app;\n@import url('a.css');", rules), []);
+  });
+
+  it('rejects a missing statement, another order, and a second statement', async () => {
+    assert.deepEqual(await lint("@import url('a.css');", rules), [
+      'avelune/layer-order: Start the stylesheet with @layer reset, tokens, app; (ADR 0030). (avelune/layer-order)',
+    ]);
+    assert.deepEqual(await lint('@layer tokens, reset, app;', rules), [
+      'avelune/layer-order: The layer order is reset, tokens, app, not tokens, reset, app (ADR 0004, 0030). (avelune/layer-order)',
+    ]);
+    assert.deepEqual(await lint('@layer reset, tokens, app;\n@layer app;', rules), [
+      'avelune/layer-order: Declare the layer order once, at the top of the stylesheet (ADR 0030). (avelune/layer-order)',
+    ]);
+    assert.deepEqual(await lint('', rules), [
+      'avelune/layer-order: Start the stylesheet with @layer reset, tokens, app; (ADR 0030). (avelune/layer-order)',
+    ]);
+  });
 });
 
 describe('avelune/nesting-same-element', () => {

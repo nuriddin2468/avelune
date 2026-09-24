@@ -3,8 +3,6 @@
 import type { StorybookConfig } from '@storybook/angular-vite';
 import { join } from 'node:path';
 
-const workspaceRoot = join(import.meta.dirname, '..', '..', '..');
-
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.ts'],
   addons: ['@storybook/addon-docs', '@storybook/addon-a11y', '@storybook/addon-vitest'],
@@ -16,11 +14,6 @@ const config: StorybookConfig = {
   },
   // Storybook collects telemetry by default; nothing leaves the machine.
   core: { disableTelemetry: true },
-  // Tokens and fonts are served as a consumer loads them: built CSS files and self-hosted woff2.
-  staticDirs: [
-    { from: join(workspaceRoot, 'packages', 'tokens', 'dist'), to: '/tokens' },
-    { from: join(workspaceRoot, 'packages', 'ui', 'styles', 'fonts'), to: '/fonts' },
-  ],
 };
 
 export default config;

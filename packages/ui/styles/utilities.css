@@ -1,0 +1,7 @@
+/* Utilities, above components: single-purpose classes an application may put on any element. */
+@layer utilities {
+  /* Figures of one width, so numbers line up in tables and numeric columns (brief §6.1). */
+  .ave-tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}

@@ -7,6 +7,9 @@
     <!-- No icon until the icon set exists (Phase 4); the empty data URL stops the browser requesting /favicon.ico. -->
     <link rel="icon" href="data:," />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- The Latin face of Avelune Sans, before the stylesheet asks for it. The build keeps font names unhashed
+         (outputHashing: bundles), so this is the URL styles.css uses; tools/invariants fails an unused preload. -->
+    <link rel="preload" href="media/avelune-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
   </head>
   <body>
     <ave-showcase-root></ave-showcase-root>

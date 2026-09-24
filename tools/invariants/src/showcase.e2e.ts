@@ -67,6 +67,50 @@ test('no screen scrolls horizontally at 320px', async ({ page, screens }) => {
   }
 });
 
+/** A `<link rel="preload" as="font">` of a screen: its URL, and how the page used it. */
+interface FontPreload {
+  readonly href: string;
+  /** Some @font-face rule of the page's stylesheets names this URL. */
+  readonly declared: boolean;
+  /** Resource Timing entries for the URL: 1 when the face reused the preload, 2 when it fetched the file again. */
+  readonly fetches: number;
+}
+
+test('every preloaded font is a face the screen uses, fetched once', async ({ page, screens }) => {
+  for (const path of screens) {
+    await test.step(path, async () => {
+      await openScreen(page, path);
+      const preloads = await page.evaluate((): FontPreload[] => {
+        const faces = new Set<string>();
+        const walk = (sheet: CSSStyleSheet) => {
+          const base = sheet.href ?? document.baseURI;
+          for (const rule of sheet.cssRules) {
+            if (rule instanceof CSSImportRule && rule.styleSheet !== null) walk(rule.styleSheet);
+            if (!(rule instanceof CSSFontFaceRule)) continue;
+            for (const [, , url] of rule.style.getPropertyValue('src').matchAll(/url\(\s*(["']?)(.*?)\1\s*\)/g)) {
+              if (url !== undefined) faces.add(new URL(url, base).href);
+            }
+          }
+        };
+        for (const sheet of document.styleSheets) walk(sheet);
+        const fetched = performance.getEntriesByType('resource').map((entry) => entry.name);
+        return [...document.querySelectorAll<HTMLLinkElement>('link[rel="preload"][as="font"]')].map((link) => ({
+          href: link.href,
+          declared: faces.has(link.href),
+          fetches: fetched.filter((name) => name === link.href).length,
+        }));
+      });
+      // A preload whose URL or credentials mode differs from the face's request downloads the font twice.
+      expect
+        .soft(
+          preloads.filter((preload) => !preload.declared || preload.fetches !== 1),
+          `font preloads the screen does not use on ${path}`,
+        )
+        .toEqual([]);
+    });
+  }
+});
+
 test('every animation runs on duration and easing tokens', async ({ page, screens }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.addInitScript(recordMotion);
