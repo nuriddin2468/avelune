@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below that is not marked **Deferred**, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 4 in progress. The global stylesheet is done (2026-09-24, ADR 0030). Next: `motion.css`. Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
+**Current position:** Phase 4 in progress. The global stylesheet and the motion catalog are done (2026-09-24, ADR 0030, 0031). Next: `provideAvelune()` and `AveTheme`. Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
 
 ## Parameters
 
@@ -109,7 +109,12 @@ The carry-overs from Phases 1 and 2 are done, except wiring the targets into CI,
     - A `forced-colors` project in the visual suite for stories tagged `forced-colors`.
     - An invariant that every font preload is used and fetched once.
   - The Foundations baselines changed (border-box sizing, `text-wrap: pretty`); every diff was inspected (ADR 0030, "Consequences").
-- [ ] `motion.css` with `ave-motion-*` classes; reduced-motion overrides via tokens
+- [x] `motion.css` with `ave-motion-*` classes; reduced-motion overrides via tokens. Done in ADR 0031:
+  - Enter and exit classes for popovers, tooltips, dialogs, backdrops and toasts, for `animate.enter` and `animate.leave`; the shimmer and spin loops; the route cross-fade. All in the `utilities` layer, on tokens.
+  - Reduced motion gains one override: the shimmer period is 0, so the skeleton is static.
+  - `linear` is allowed only on loops: Stylelint allows it in `motion.css`, and the invariants accept it only on an animation that repeats forever.
+  - The Foundations page "Motion catalog" checks every class in both modes with its `play` function, and mutations of the CSS fail it.
+  - Deferred to their components: the drawer's slide under reduced motion, the list item's expand, shared-element view transitions, and top-layer overlays.
 - [ ] `provideAvelune()` (brief's `provideUi`), `AveTheme` service (theme, density, motion signals; persisted)
 - [ ] Icons package with a generated `IconName` union; `<ave-icon>` (Lucide from `lucide-static`, stroke width tuned and frozen, ADR 0020)
 - [ ] Delete the `packages/ui/sample` scaffolding entry point and its API reports once the first real entry point exists
@@ -157,9 +162,9 @@ Waves and status: see the tables below.
 | DateRangePicker | 2 | composites | planned | | |
 | FileUpload | 2 | composites | planned | | |
 | Slider | 2 | components | planned | | only if needed |
-| Dialog | 3 | composites | planned | | native `<dialog>` or CDK Dialog (ADR in wave) |
+| Dialog | 3 | composites | planned | | native `<dialog>` or CDK Dialog (ADR in wave); `ave-motion-dialog-*` and `-backdrop-*` or `@starting-style` (ADR 0031) |
 | ConfirmDialog | 3 | composites | planned | | names the action |
-| Drawer | 3 | composites | planned | | |
+| Drawer | 3 | composites | planned | | slide 100% from its edge; decide how it stops moving under reduced motion, maybe a token (product owner, ADR 0005, 0031) |
 | Popover | 3 | composites | planned | | |
 | Tooltip | 3 | components | planned | | 500ms show delay |
 | Menu | 3 | composites | planned | | Aria Menu |
@@ -168,7 +173,7 @@ Waves and status: see the tables below.
 | Banner | 3 | components | planned | | |
 | Progress | 3 | components | planned | | |
 | Spinner | 3 | components | planned | | 300ms show delay, ≥ 500ms visible |
-| Skeleton | 3 | components | planned | | static under reduced motion |
+| Skeleton | 3 | components | planned | | `ave-motion-shimmer`, static under reduced motion (ADR 0031); in dark, `bg.surface-sunken` equals the canvas, so the fill needs another role |
 | EmptyState | 3 | composites | planned | | |
 | Tabs | 4 | composites | planned | | Aria Tabs |
 | Breadcrumbs | 4 | components | planned | | |
@@ -184,7 +189,7 @@ Waves and status: see the tables below.
 | Card | 5 | components | planned | | |
 | Accordion | 5 | composites | planned | | Aria Accordion |
 | Tree | 5 | composites | planned | | Aria Tree |
-| List | 5 | composites | planned | | |
+| List | 5 | composites | planned | | item add and remove: fade and expand, stagger ≤ 5 × 30ms; the expand is not a transform (ADR 0031) |
 | DataTable | 5 | composites | planned | | ADR first |
 
 ## Status transitions

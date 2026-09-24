@@ -1,0 +1,123 @@
+.entries {
+  display: grid;
+  padding: 0;
+  list-style: none;
+}
+
+/* Meta and stage side by side when there is room, stacked on narrow screens. */
+.entry {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ave-space-4) var(--ave-space-6);
+  padding-block: var(--ave-space-4);
+  border-block-start: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+}
+
+.meta {
+  display: grid;
+  flex: 1 1 var(--ave-container-xs);
+  gap: var(--ave-space-1);
+  justify-items: start;
+}
+
+.label {
+  font: var(--ave-font-label-md);
+}
+
+.spec {
+  font: var(--ave-font-code);
+  color: var(--ave-color-fg-muted);
+}
+
+.toggle {
+  block-size: var(--ave-control-height-sm);
+  margin-block-start: var(--ave-space-2);
+  padding-inline: var(--ave-control-padding-inline-sm);
+  border: var(--ave-border-width-default) solid var(--ave-color-border-default);
+  border-radius: var(--ave-radius-md);
+  background: var(--ave-color-bg-surface);
+  color: var(--ave-color-fg-default);
+  font: var(--ave-font-label-sm);
+}
+
+/* A fixed stage, so showing and hiding never moves the page. A surface, not the sunken fill, which equals the
+   canvas in the dark theme. */
+.stage {
+  display: grid;
+  flex: 1 1 var(--ave-container-xs);
+  place-items: center;
+  block-size: calc(var(--ave-space-16) * 2);
+  border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  border-radius: var(--ave-radius-lg);
+  background: var(--ave-color-bg-surface);
+}
+
+.sample {
+  padding: var(--ave-space-2) var(--ave-space-3);
+  border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  border-radius: var(--ave-radius-md);
+  background: var(--ave-color-bg-surface-raised);
+  box-shadow: var(--ave-elevation-popover);
+
+  &[data-kind='tooltip'] {
+    border-radius: var(--ave-radius-sm);
+    font: var(--ave-font-caption);
+    box-shadow: var(--ave-elevation-raised);
+  }
+
+  &[data-kind='dialog'] {
+    padding: var(--ave-space-6);
+    border-radius: var(--ave-radius-lg);
+    font: var(--ave-font-heading-sm);
+    box-shadow: var(--ave-elevation-dialog);
+  }
+
+  &[data-kind='backdrop'] {
+    inline-size: calc(var(--ave-space-16) * 3);
+    block-size: var(--ave-space-16);
+    border: none;
+    background: var(--ave-color-bg-backdrop);
+    box-shadow: none;
+  }
+}
+
+.loops {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ave-space-8);
+}
+
+.loop {
+  display: grid;
+  gap: var(--ave-space-2);
+  justify-items: start;
+}
+
+.skeleton {
+  inline-size: calc(var(--ave-space-16) * 4);
+  block-size: var(--ave-space-4);
+  overflow: hidden;
+  border-radius: var(--ave-radius-sm);
+  background: var(--ave-color-bg-active);
+}
+
+.highlight {
+  block-size: 100%;
+  background-image: linear-gradient(90deg, transparent, var(--ave-color-bg-surface), transparent);
+  translate: -100% 0;
+}
+
+.spinner {
+  inline-size: var(--ave-size-icon-md);
+  block-size: var(--ave-size-icon-md);
+  border: var(--ave-border-width-selected) solid var(--ave-color-border-subtle);
+  border-block-start-color: var(--ave-color-accent-bg);
+  border-radius: var(--ave-radius-full);
+}
+
+.route {
+  display: flex;
+  align-items: center;
+  gap: var(--ave-space-4);
+}

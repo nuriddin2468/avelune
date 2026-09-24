@@ -45,6 +45,13 @@
         "unit": "ms"
       },
       "$description": "No stagger."
+    },
+    "shimmer-period": {
+      "$value": {
+        "value": 0,
+        "unit": "ms"
+      },
+      "$description": "No sweep: the skeleton is a static fill (brief §6.5)."
     }
   }
 }

@@ -1,5 +1,6 @@
 // Motion invariants of brief §8.2: every animation's duration and easing equals a motion token, and under reduced
-// motion no animation moves or scales anything. recordMotion runs in the page; the checks are pure functions.
+// motion no animation moves or scales anything. The one easing that is no token is `linear`, on a loop that runs at a
+// constant rate (skeleton, spinner; ADR 0031). recordMotion runs in the page; the checks are pure functions.
 
 /** One animation the page ran, as recordMotion saw it. */
 export interface MotionRecord {
@@ -12,6 +13,8 @@ export interface MotionRecord {
   readonly duration: number;
   /** The easings that shape it, as the browser serialises them. */
   readonly easings: readonly string[];
+  /** Whether it repeats forever (animation-iteration-count: infinite). */
+  readonly loops: boolean;
   /** Whether its keyframes translate the element. */
   readonly moves: boolean;
   /** Whether its keyframes scale the element. */
@@ -114,6 +117,7 @@ export function recordMotion(): void {
               : animation.id,
         target: describe(effect),
         duration: typeof timing.duration === 'number' ? timing.duration : Number.NaN,
+        loops: timing.iterations === Number.POSITIVE_INFINITY,
         // A transition's curve is its effect easing; a CSS animation's is the easing of each keyframe; a script
         // animation may use either.
         easings: [
@@ -162,9 +166,12 @@ export function motionTokens(tokens: Readonly<Record<string, TokenLike>>): Motio
 
 const label = (record: MotionRecord) => `${record.kind} ${record.name} on ${record.target}`;
 
+/** The constant rate of a loop (brief §6.3: skeleton shimmer, spinner), allowed only there. */
+const loopEasing = 'linear';
+
 /**
- * Animations whose duration or easing is not a token. `easings` must be in the browser's serialisation (see
- * canonicalEasings in showcase.e2e.ts), which rewrites linear() stops, for example.
+ * Animations whose duration or easing is not a token; `linear` passes on a loop only. `easings` must be in the
+ * browser's serialisation (see canonicalEasings in showcase.e2e.ts), which rewrites linear() stops, for example.
  */
 export function timingViolations(
   records: readonly MotionRecord[],
@@ -177,7 +184,12 @@ export function timingViolations(
       problems.push(`${label(record)}: duration ${String(record.duration)}ms is not a duration token`);
     }
     for (const easing of record.easings) {
-      if (!easings.has(easing)) problems.push(`${label(record)}: easing ${easing} is not an easing token`);
+      if (easings.has(easing) || (record.loops && easing === loopEasing)) continue;
+      problems.push(
+        easing === loopEasing
+          ? `${label(record)}: easing linear is for loops only, and this animation ends`
+          : `${label(record)}: easing ${easing} is not an easing token`,
+      );
     }
   }
   return problems;

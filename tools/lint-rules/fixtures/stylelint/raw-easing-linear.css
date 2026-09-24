@@ -1,0 +1,8 @@
+/* Lint as: packages/ui/sample/sample.css
+   Expect: scale-unlimited/declaration-strict-value (linear belongs to the loops of motion.css) */
+
+@layer components {
+  :host {
+    animation-timing-function: linear;
+  }
+}

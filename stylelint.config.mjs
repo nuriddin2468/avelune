@@ -65,6 +65,26 @@ const keywords = [
   '/^(Canvas|CanvasText|LinkText|VisitedText|ActiveText|ButtonFace|ButtonText|ButtonBorder|Field|FieldText|Highlight|HighlightText|SelectedItem|SelectedItemText|Mark|MarkText|GrayText|AccentColor|AccentColorText)$/',
 ];
 
+/** Properties that take only a token or one of `allowed` (brief §5.3). */
+function strictValues(allowed) {
+  return [
+    [
+      '/color$/',
+      'fill',
+      'stroke',
+      '/^font(-family|-size|-weight)?$/',
+      'line-height',
+      '/radius$/',
+      'box-shadow',
+      'z-index',
+      '/^(transition|animation)-(duration|timing-function|delay)$/',
+      '/^(margin|padding)(-|$)/',
+      '/gap$/',
+    ],
+    { ignoreValues: allowed, expandShorthand: true, disableFix: true },
+  ];
+}
+
 export default {
   extends: ['stylelint-config-standard'],
   plugins: [
@@ -91,22 +111,7 @@ export default {
     'color-named': 'never',
     'function-disallowed-list': rawFunctions,
     'unit-disallowed-list': [tokenUnits, { ignoreMediaFeatureNames: { px: ['width', 'min-width', 'max-width'] } }],
-    'scale-unlimited/declaration-strict-value': [
-      [
-        '/color$/',
-        'fill',
-        'stroke',
-        '/^font(-family|-size|-weight)?$/',
-        'line-height',
-        '/radius$/',
-        'box-shadow',
-        'z-index',
-        '/^(transition|animation)-(duration|timing-function|delay)$/',
-        '/^(margin|padding)(-|$)/',
-        '/gap$/',
-      ],
-      { ignoreValues: keywords, expandShorthand: true, disableFix: true },
-    ],
+    'scale-unlimited/declaration-strict-value': strictValues(keywords),
     'csstools/value-no-unknown-custom-properties': [true, { importFrom: [tokensCss] }],
     'declaration-no-important': true,
     'selector-max-id': 0,
@@ -134,9 +139,13 @@ export default {
   },
   overrides: [
     {
-      // The one home of @keyframes: the motion catalog (brief §6.3, ADR 0005).
+      // The one home of @keyframes: the motion catalog (brief §6.3, ADR 0005). Its loops (skeleton, spinner) run at
+      // a constant rate, `linear`, the one easing that is no token; tools/invariants accepts it only on a loop (ADR 0031).
       files: ['packages/ui/styles/motion.css'],
-      rules: { 'at-rule-disallowed-list': null },
+      rules: {
+        'at-rule-disallowed-list': null,
+        'scale-unlimited/declaration-strict-value': strictValues([...keywords, 'linear']),
+      },
     },
     {
       files: ['packages/ui/*/**/*.css'],

@@ -1,0 +1,188 @@
+/*
+ * The motion catalog (brief §6.3, ADR 0005, 0031): the one home of @keyframes, and the ave-motion-* classes that
+ * components put on elements with animate.enter and animate.leave. Every duration, easing, distance and scale is a
+ * token, so reduced motion is the tokens' own override (brief §6.5): distances 0, scale 1, slow and slower 150ms, no
+ * stagger, a static skeleton. The classes sit in `utilities`, above the components, so an entering or leaving element
+ * takes its motion from here whatever its component sets.
+ */
+@layer utilities {
+  @keyframes ave-motion-fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes ave-motion-fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes ave-motion-pop-in {
+    from {
+      opacity: 0;
+      scale: var(--ave-motion-scale-enter);
+    }
+  }
+
+  @keyframes ave-motion-pop-out {
+    to {
+      opacity: 0;
+      scale: var(--ave-motion-scale-enter);
+    }
+  }
+
+  /* The offset comes from the class: --ave-motion-from-x and --ave-motion-from-y, each a distance token or 0. */
+  @keyframes ave-motion-shift-in {
+    from {
+      opacity: 0;
+      translate: var(--ave-motion-from-x) var(--ave-motion-from-y);
+    }
+  }
+
+  @keyframes ave-motion-shift-out {
+    to {
+      opacity: 0;
+      translate: var(--ave-motion-from-x) var(--ave-motion-from-y);
+    }
+  }
+
+  @keyframes ave-motion-shimmer {
+    from {
+      translate: -100% 0;
+    }
+
+    to {
+      translate: 100% 0;
+    }
+  }
+
+  @keyframes ave-motion-spin {
+    to {
+      rotate: 1turn;
+    }
+  }
+
+  /* Menus, select popups and popovers: fade in from the entry scale, around the transform-origin the component sets
+     at its anchor; fade out. */
+  .ave-motion-popover-enter {
+    animation-name: ave-motion-pop-in;
+    animation-duration: var(--ave-duration-normal);
+    animation-timing-function: var(--ave-easing-enter);
+  }
+
+  .ave-motion-popover-exit {
+    animation-name: ave-motion-fade-out;
+    animation-duration: var(--ave-duration-fast);
+    animation-timing-function: var(--ave-easing-exit);
+    animation-fill-mode: forwards;
+  }
+
+  /* Tooltips: fade in while moving distance.sm away from the anchor, on the side in data-side (top unless set); fade
+     out without moving. */
+  .ave-motion-tooltip-enter {
+    --ave-motion-from-x: 0;
+    --ave-motion-from-y: var(--ave-motion-distance-sm);
+
+    animation-name: ave-motion-shift-in;
+    animation-duration: var(--ave-duration-fast);
+    animation-timing-function: var(--ave-easing-enter);
+
+    &[data-side='bottom'] {
+      --ave-motion-from-y: calc(-1 * var(--ave-motion-distance-sm));
+    }
+
+    &[data-side='start'] {
+      --ave-motion-from-x: var(--ave-motion-distance-sm);
+      --ave-motion-from-y: 0;
+    }
+
+    &[data-side='end'] {
+      --ave-motion-from-x: calc(-1 * var(--ave-motion-distance-sm));
+      --ave-motion-from-y: 0;
+    }
+  }
+
+  .ave-motion-tooltip-exit {
+    animation-name: ave-motion-fade-out;
+    animation-duration: var(--ave-duration-fast);
+    animation-timing-function: var(--ave-easing-exit);
+    animation-fill-mode: forwards;
+  }
+
+  /* Dialogs: the panel fades in from the entry scale and reverses; the backdrop fades. */
+  .ave-motion-dialog-enter {
+    animation-name: ave-motion-pop-in;
+    animation-duration: var(--ave-duration-slow);
+    animation-timing-function: var(--ave-easing-enter);
+  }
+
+  .ave-motion-dialog-exit {
+    animation-name: ave-motion-pop-out;
+    animation-duration: var(--ave-duration-normal);
+    animation-timing-function: var(--ave-easing-exit);
+    animation-fill-mode: forwards;
+  }
+
+  .ave-motion-backdrop-enter {
+    animation-name: ave-motion-fade-in;
+    animation-duration: var(--ave-duration-slow);
+    animation-timing-function: var(--ave-easing-enter);
+  }
+
+  .ave-motion-backdrop-exit {
+    animation-name: ave-motion-fade-out;
+    animation-duration: var(--ave-duration-normal);
+    animation-timing-function: var(--ave-easing-exit);
+    animation-fill-mode: forwards;
+  }
+
+  /* Toasts: slide distance.lg in from their edge, the bottom unless data-side is top, with a fade, on the spring; leave
+     the same way. */
+  .ave-motion-toast-enter,
+  .ave-motion-toast-exit {
+    --ave-motion-from-x: 0;
+    --ave-motion-from-y: var(--ave-motion-distance-lg);
+
+    &[data-side='top'] {
+      --ave-motion-from-y: calc(-1 * var(--ave-motion-distance-lg));
+    }
+  }
+
+  .ave-motion-toast-enter {
+    animation-name: ave-motion-shift-in;
+    animation-duration: var(--ave-duration-normal);
+    animation-timing-function: var(--ave-easing-spring);
+  }
+
+  .ave-motion-toast-exit {
+    animation-name: ave-motion-shift-out;
+    animation-duration: var(--ave-duration-fast);
+    animation-timing-function: var(--ave-easing-exit);
+    animation-fill-mode: forwards;
+  }
+
+  /* The skeleton's highlight sweeps across it. A loop runs at a constant rate, so its easing is linear, the one easing
+     that is no token (ADR 0031). Under reduced motion the period is 0 and the fill stays static. */
+  .ave-motion-shimmer {
+    animation-name: ave-motion-shimmer;
+    animation-duration: var(--ave-timing-shimmer-period);
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  /* A spinner turns at a constant rate; rotation is not movement, so it keeps turning under reduced motion. */
+  .ave-motion-spin {
+    animation-name: ave-motion-spin;
+    animation-duration: var(--ave-timing-spin-period);
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  /* Route changes (withViewTransitions()): the cross-fade of the whole page. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: var(--ave-duration-slow);
+    animation-timing-function: var(--ave-easing-standard);
+  }
+}

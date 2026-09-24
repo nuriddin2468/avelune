@@ -42,6 +42,19 @@ main {
   animation-timing-function: var(--ave-easing-spring);
 }
 
+/* A loop at a constant rate, like the spinner: linear is allowed on a loop, and rotation under reduced motion. */
+.spin-loop {
+  animation-name: turn;
+  animation-duration: var(--ave-timing-spin-period);
+  animation-timing-function: linear;
+}
+
+@keyframes turn {
+  to {
+    rotate: 1turn;
+  }
+}
+
 /* A transition on first render. */
 .appear {
   transition-property: opacity;
@@ -60,6 +73,15 @@ main {
   animation-name: fade;
   animation-duration: 333ms;
   animation-timing-function: var(--ave-easing-enter);
+}
+
+/* Violation: linear on an animation that ends. */
+.fade-linear-once {
+  animation-name: fade;
+  animation-duration: var(--ave-duration-normal);
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
 }
 
 /* Violation: an easing that is no token. */

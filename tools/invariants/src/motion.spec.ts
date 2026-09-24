@@ -8,6 +8,7 @@ const record = (overrides: Partial<MotionRecord>): MotionRecord => ({
   target: 'div.menu',
   duration: 200,
   easings: ['cubic-bezier(0, 0, 0, 1)'],
+  loops: false,
   moves: false,
   scales: false,
   ...overrides,
@@ -51,6 +52,26 @@ describe('timingViolations', () => {
         'animation fade on div.menu: easing ease-in-out is not an easing token',
       ],
     );
+  });
+});
+
+describe('timingViolations on loops', () => {
+  const durations = new Set([800]);
+  const easings = new Set(['cubic-bezier(0, 0, 0, 1)']);
+
+  it('accepts linear on a loop and rejects it on an animation that ends', () => {
+    const spin = record({ kind: 'animation', name: 'spin', duration: 800, easings: ['linear'] });
+    assert.deepEqual(timingViolations([{ ...spin, loops: true }], durations, easings), []);
+    assert.deepEqual(timingViolations([spin], durations, easings), [
+      'animation spin on div.menu: easing linear is for loops only, and this animation ends',
+    ]);
+  });
+
+  it('still rejects any other raw easing on a loop', () => {
+    const loop = record({ kind: 'animation', name: 'pulse', duration: 800, easings: ['ease'], loops: true });
+    assert.deepEqual(timingViolations([loop], durations, easings), [
+      'animation pulse on div.menu: easing ease is not an easing token',
+    ]);
   });
 });
 

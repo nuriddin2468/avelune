@@ -12,9 +12,10 @@
   <body>
     <main>
       <h1>Motion off the tokens</h1>
-      <!-- Violations: a 333ms duration and the ease-in-out easing; both only fade. -->
+      <!-- Violations: a 333ms duration, the ease-in-out easing, and linear on an animation that ends; all only fade. -->
       <div class="box fade-raw-duration" aria-hidden="true"></div>
       <div class="box fade-raw-easing" aria-hidden="true"></div>
+      <div class="box fade-linear-once" aria-hidden="true"></div>
     </main>
   </body>
 </html>

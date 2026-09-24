@@ -54,12 +54,13 @@ describe('showcase suite', () => {
     );
   });
 
-  it('fails a raw duration and a raw easing, and accepts every kind of token motion', () => {
+  it('fails a raw duration, a raw easing and linear that ends, and accepts token motion and a linear loop', () => {
     const test = result('every animation runs on duration and easing tokens');
     assert.deepEqual(failingScreens(test), ['/raw-motion.html']);
     const errors = test.errors.join('\n');
     assert.match(errors, /fade-raw-duration: duration 333ms is not a duration token/);
     assert.match(errors, /fade-raw-easing: easing ease-in-out is not an easing token/);
+    assert.match(errors, /fade-linear-once: easing linear is for loops only, and this animation ends/);
     // The control passed because its motion was measured and matched, not because nothing was recorded.
     const control: unknown = JSON.parse(test.attachments.get('motion /') ?? '[]');
     assert.ok(Array.isArray(control));
@@ -78,6 +79,10 @@ describe('showcase suite', () => {
     );
     assert.ok(
       seen.some((line) => /^transition p\.appear cubic-bezier\(0\.2, 0, 0, 1\)$/.test(line)),
+      seen.join('\n'),
+    );
+    assert.ok(
+      seen.some((line) => /^animation div\.box\.spin-loop linear$/.test(line)),
       seen.join('\n'),
     );
   });

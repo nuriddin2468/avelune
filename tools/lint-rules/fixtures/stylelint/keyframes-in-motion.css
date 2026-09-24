@@ -1,10 +1,17 @@
 /* Lint as: packages/ui/styles/motion.css
-   Expect: none (the motion catalog is the one home of @keyframes) */
+   Expect: none (the motion catalog is the one home of @keyframes, and its loops may run linear) */
 
 @layer utilities {
-  @keyframes ave-motion-fade {
-    from {
-      opacity: 0;
+  @keyframes ave-motion-spin {
+    to {
+      rotate: 1turn;
     }
+  }
+
+  .ave-motion-spin {
+    animation-name: ave-motion-spin;
+    animation-duration: var(--ave-timing-spin-period);
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
   }
 }

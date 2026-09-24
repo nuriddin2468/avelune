@@ -122,7 +122,7 @@ Plain CSS with native nesting, custom properties and cascade layers; emulated en
 | `base` | `base.css`, `focus.css` | canvas and text colours on `html` and every `[data-theme]` island; plain HTML typography (h1 heading-xl, h2 heading-lg, h3 heading-md, h4–h6 heading-sm, body-md, `pre` code); the focus ring |
 | `components` | `packages/ui/<entry>/*.css` | every component |
 | `patterns` | (Wave 6) | page patterns |
-| `utilities` | `utilities.css`, `motion.css` (Phase 4) | `.ave-tabular-nums`; the `ave-motion-*` classes |
+| `utilities` | `utilities.css`, `motion.css` | `.ave-tabular-nums`; the `ave-motion-*` classes and every `@keyframes` (see "Motion") |
 | `app` | the application | its own styles; unlayered CSS beats every layer |
 
 `fonts.css` (generated, ADR 0018) is imported unlayered: `@font-face` rules are not layered.
@@ -138,6 +138,23 @@ Plain CSS with native nesting, custom properties and cascade layers; emulated en
 Storybook imports the same file in `.storybook/preview.ts` (`@avelune/ui/styles.css`, mapped in `tsconfig.base.json`).
 
 **Adding global CSS** means adding it to one of these files, in its layer: `avelune/component-layer` accepts only `reset`, `base` and `utilities` there, and `avelune/layer-order` keeps the entry's first statement. Show it on the Foundations "Global styles" page and assert it in that page's `play` function.
+
+## Motion
+
+Motion is CSS only (ADR 0005). Two mechanisms, both on tokens:
+
+- **State changes** (hover, pressed, expanded, the switch thumb, the tabs indicator) are transitions in the component's own CSS. They use the motion longhands with duration and easing tokens.
+- **Entering and leaving** use the classes of `packages/ui/styles/motion.css` (ADR 0031), through `animate.enter` and `animate.leave`: `ave-motion-popover-*`, `-tooltip-*`, `-dialog-*`, `-backdrop-*` and `-toast-*`, each with `-enter` and `-exit`. The loops are `ave-motion-shimmer` and `ave-motion-spin`. `motion.css` also times the route cross-fade (`::view-transition-*(root)`). Tooltips and toasts take their direction from `data-side`.
+
+```html
+@if (open()) {
+  <div class="menu" animate.enter="ave-motion-popover-enter" animate.leave="ave-motion-popover-exit">…</div>
+}
+```
+
+**Reduced motion** (`prefers-reduced-motion: reduce` or `data-motion="reduced"`) is the tokens' override only: distances 0, scale 1, slow and slower 150ms, no stagger, and a shimmer period of 0 (a static skeleton). Fades stay, and so does rotation.
+
+Every easing is a token, except `linear` on a loop (Stylelint allows it in `motion.css` only; the invariants accept it only on an animation that repeats forever). The drawer, list items, shared-element transitions and top-layer overlays get their motion with their components (ADR 0031, point 5). The Foundations page "Motion catalog" plays every class, and its `play` function checks them in both modes.
 
 ## Lint
 
@@ -157,6 +174,7 @@ Storybook imports the same file in `.storybook/preview.ts` (`@avelune/ui/styles.
 - Selectors: no `!important`, no ids, specificity at most `0,4,0`, no `::ng-deep`.
 - Motion: `transition` and `animation` longhands only; `@keyframes` only in `packages/ui/styles/motion.css`.
 - The focus ring: `outline*` properties only in `packages/ui/styles/focus.css`, never in `transition-property`, and no `:focus` selectors (ADR 0030).
+- `linear` as an easing only in `motion.css`, for its loops (ADR 0031).
 - Logical properties throughout.
 - Media and container query widths equal the breakpoint and container tokens.
 - Kit stylesheets wrap everything in `@layer components`; the global stylesheets in `reset`, `base` or `utilities`, and `styles.css` starts with the layer order.
@@ -211,7 +229,7 @@ packages/tokens/
 
 `apps/storybook` runs `@storybook/angular-vite` with JIT compilation (ADR 0008, 0025); `storybook:typecheck` type-checks every story with ngc and the workspace strictness. `pnpm nx serve storybook` builds the tokens first and serves on `http://127.0.0.1:6006`; `pnpm nx build storybook` writes `dist/apps/storybook`. The preview imports `@avelune/ui/styles.css`, bundled by Vite as an application bundles it (ADR 0030). The toolbar switches theme, density and motion through the `data-*` attributes on `<html>`.
 
-The **Foundations** pages live in `apps/storybook/src/foundations`: colour roles and every declared contrast pair per theme (WCAG ratio, APCA Lc for information), the type specimen in uz-Latn, uz-Cyrl, ru and en, spacing and control sizes, radius, elevation and stacking order, and the motion playground. The "Global styles" page shows the layers, plain HTML, the focus ring, the figures utility and a theme island, and its `play` function asserts their computed styles. They read `tokens` from `@avelune/tokens` and style themselves with tokens only; primitives never appear. A story tagged `forced-colors` is also compared in forced colours (see "Tests"). Component stories will live next to their components (`packages/ui/<name>/<name>.stories.ts`) from Phase 5.
+The **Foundations** pages live in `apps/storybook/src/foundations`: colour roles and every declared contrast pair per theme (WCAG ratio, APCA Lc for information), the type specimen in uz-Latn, uz-Cyrl, ru and en, spacing and control sizes, radius, elevation and stacking order, and the motion playground. The "Motion catalog" page plays every `ave-motion-*` class; its `play` function checks their tokens, poses and removal in both motion modes. The "Global styles" page shows the layers, plain HTML, the focus ring, the figures utility and a theme island, and its `play` function asserts their computed styles. They read `tokens` from `@avelune/tokens` and style themselves with tokens only; primitives never appear. A story tagged `forced-colors` is also compared in forced colours (see "Tests"). Component stories will live next to their components (`packages/ui/<name>/<name>.stories.ts`) from Phase 5.
 
 ## Tests
 
@@ -223,7 +241,7 @@ The **Foundations** pages live in `apps/storybook/src/foundations`: colour roles
 - **Node-side code** (tools, token scripts) uses `node:test` (ADR 0015).
 - **Browser suites** (ADR 0010, 0027) run only in the pinned Playwright image, linux/amd64, which `tools/visual/src/image.ts` names by digest. `container.ts` starts it with Docker, mounts the workspace, cuts the network and runs Playwright; inside the image (CI) it runs Playwright directly. Both Playwright configs refuse to start anywhere else. The host builds the site first (Nx `dependsOn`); `serve.ts` serves it in the container. The fixed environment (`environment.ts`: scale 1, `en-US`, Asia/Tashkent, reduced motion, a fixed date, the kit-font assertion) is shared through `@avelune/visual`.
   - **Visual** (`pnpm nx run visual:e2e`, or `pnpm visual`): every story in `index.json`, light and dark at 1280 and 390 px. Stories tagged `forced-colors` run once more in the `forced-colors` project (light, 1280 px, forced colours active) against `<story id>/forced-colors.png`, their play function included; axe is skipped there (ADR 0030). The screenshot must equal `tools/visual/baselines/<story id>/<project>.png` to the pixel, and axe (the Storybook gate's rules) must find nothing. A story that errors, logs an error or renders in a fallback font fails; so do a missing baseline and a baseline without a story. `pnpm visual:update` rewrites changed and missing baselines: open every changed image and explain it in the merge request (non-negotiable 10). Arguments go to Playwright: `pnpm visual --grep=colour`. The HTML report is written to `dist/tools/visual/report`.
-  - **Showcase** (`pnpm nx run invariants:e2e`): every screen linked from `/`, in the same four projects: axe with every rule, no horizontal scroll at 320 px, every font preload a face the screen uses and fetched once, every animation on a duration and an easing token, nothing translated or scaled under reduced motion. The invariants of brief §8.2 that need components (same-size controls, overlays, `animate.leave`) are added with those components.
+  - **Showcase** (`pnpm nx run invariants:e2e`): every screen linked from `/`, in the same four projects: axe with every rule, no horizontal scroll at 320 px, every font preload a face the screen uses and fetched once, every animation on a duration and an easing token (`linear` only on a loop), nothing translated or scaled under reduced motion. The invariants of brief §8.2 that need components (same-size controls, overlays, `animate.leave`) are added with those components.
 - **Size** (`pnpm nx run ui:size`): see "Build".
 - `tools/test-check` proves the gates with fixtures. Its `test` target runs alone (`parallelism: false`): it starts `ui:test:coverage-gap`, which shares `coverage/ui` with `ui:test`.
   - `test`: a coverage gap and an orphan file (`ui:test:coverage-gap`); a fixture Storybook with an unnamed button and a failing `play` function; an entry point over its size budget and one without a budget; an API report that is stale and an export without a release tag (`api-report.mjs --package --build` on `fixtures/api-report`); both browser-suite configs refusing to start on the host.
@@ -247,10 +265,12 @@ What is checked, by which tool, at which stage, and what proves that the check f
 | Token-only CSS values, no unknown tokens, specificity cap, no `::ng-deep`/`!important`/ids, motion longhands, `@keyframes` only in `motion.css`, logical properties (exceptions derived from browser data), query widths equal tokens, `@layer components`, same-element nesting | Stylelint (ADR 0024), a fixture per rule in `lint-rules:test` | staged `.css` | deferred |
 | One focus ring (`outline*` only in `focus.css`, never transitioned, no `:focus`); the global files in `reset`/`base`/`utilities`; `styles.css` starts with the layer order | Stylelint (ADR 0030), fixtures in `lint-rules:test` | staged `.css` | deferred |
 | The global stylesheet renders: typography roles, canvas and text colours, theme islands, the figures utility, the ring outside, inset and in forced colours | the "Global styles" story's `play` function, in `storybook:test` and in the visual suite's four projects plus `forced-colors` | no | deferred |
+| Every motion class runs its keyframes on its tokens, reaches its pose, and leaves the DOM after `animate.leave`, in full and reduced motion; loops and the route cross-fade on tokens | the "Motion catalog" story's `play` function (ADR 0031), in `storybook:test` and the visual suite | no | deferred |
+| `linear` easing only in `motion.css` | Stylelint override (ADR 0031), fixtures in `lint-rules:test` | staged `.css` | deferred |
 | Coverage ≥ 90% per file in `packages/ui`, tests in a real browser | `ui:test` (Vitest browser mode), proven by `test-check:test` | no | deferred |
 | Every story renders, passes its `play` function and has no axe violation | `storybook:test` (addon-vitest, a11y `error`), proven by `test-check:test` | no | deferred |
 | Every story × light/dark × 1280/390, and every story tagged `forced-colors` in forced colours, equals its committed baseline, in the kit's fonts, without errors; no baseline without a story; axe clean (independent sweep) | `visual:e2e` in the pinned container (ADR 0010, 0027, 0030), proven by `test-check:e2e` | no | deferred |
-| Every showcase screen: axe clean, no horizontal scroll at 320 px, font preloads used and fetched once, motion on tokens only, no movement under reduced motion | `invariants:e2e` in the pinned container (ADR 0027, 0030), proven by `test-check:e2e` | no | deferred |
+| Every showcase screen: axe clean, no horizontal scroll at 320 px, font preloads used and fetched once, motion on tokens only (`linear` only on loops), no movement under reduced motion | `invariants:e2e` in the pinned container (ADR 0027, 0030), proven by `test-check:e2e` | no | deferred |
 | Browser suites run only in the pinned image on amd64; the image's Playwright version equals the installed one | Playwright configs (`requireContainer`), proven by `test-check:test`; `visual:test` | no | deferred |
 | Every entry point within the size budget its `entry.json` declares | `ui:size` (size-limit, ADR 0028), proven by `test-check:test` | no | deferred |
 | Formatting | Prettier (`.md` excluded), proven by `repo-check:test` | staged files | deferred |
