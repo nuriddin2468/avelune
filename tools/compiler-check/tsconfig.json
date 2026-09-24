@@ -1,0 +1,15 @@
+/* Runs directly in Node 24 through type stripping (ADR 0015). Bundler resolution instead of nodenext: the declarations
+   of @angular/compiler-cli use extensionless relative imports, which nodenext cannot follow (ADR 0022). */
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts"]
+}

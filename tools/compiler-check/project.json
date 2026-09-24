@@ -1,0 +1,51 @@
+{
+  "name": "compiler-check",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "tools/compiler-check",
+  "tags": ["type:tool"],
+  "targets": {
+    "check": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "production",
+        "{workspaceRoot}/**/tsconfig*.json",
+        { "externalDependencies": ["typescript", "@angular/compiler-cli"] }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node src/cli.ts"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "default",
+        "{workspaceRoot}/**/tsconfig*.json",
+        {
+          "externalDependencies": [
+            "typescript",
+            "@angular/compiler-cli",
+            "@angular/core",
+            "@angular/common",
+            "@angular/forms",
+            "@angular/aria"
+          ]
+        }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node --test \"src/**/*.spec.ts\""
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "tsc -p tsconfig.json"
+      }
+    }
+  }
+}

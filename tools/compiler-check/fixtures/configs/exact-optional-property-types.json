@@ -1,0 +1,6 @@
+/* Expect: exactOptionalPropertyTypes */
+{
+  "extends": "../../../../tsconfig.base.json",
+  "compilerOptions": { "exactOptionalPropertyTypes": false },
+  "include": []
+}

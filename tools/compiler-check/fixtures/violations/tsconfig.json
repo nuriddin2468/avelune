@@ -1,0 +1,5 @@
+/* The violation fixtures, compiled with the workspace options and nothing else (src/fixtures.spec.ts). */
+{
+  "extends": "../../../../tsconfig.base.json",
+  "include": ["*.ts"]
+}

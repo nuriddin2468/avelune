@@ -1,0 +1,6 @@
+/* Expect: strictTemplates */
+{
+  "extends": "../../../../tsconfig.base.json",
+  "angularCompilerOptions": { "strictTemplates": false },
+  "include": []
+}

@@ -30,3 +30,7 @@ Component tests use Vitest in browser mode (ADR 0006), which Phase 3 installs. S
 - No emitted JavaScript to keep in sync, and a script's types are checked by the same `typecheck` target that the pre-commit hook runs.
 - Syntax outside the erasable subset fails `typecheck` before it can fail at runtime.
 - Two test runners exist: Vitest for Angular code, `node:test` for Node code. A project uses one of them, never both.
+
+## Addendum: bundler resolution for tools that import the Angular compiler (Phase 3, 2026-09-24)
+
+`tools/compiler-check` imports `@angular/compiler-cli`, whose declarations use extensionless relative imports that `nodenext` cannot follow. Its tsconfig uses `module: preserve` with `moduleResolution: bundler` instead; everything else in this ADR applies unchanged (ADR 0022).

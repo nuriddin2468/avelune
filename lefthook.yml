@@ -13,6 +13,11 @@ pre-commit:
       glob: '*.{ts,mts,cts,html,json}'
       run: pnpm exec nx affected -t typecheck --files {staged_files} --output-style=static
 
+    - name: compiler-strictness
+      # A tsconfig change must not weaken the required compiler strictness (ADR 0022).
+      glob: '*tsconfig*.json'
+      run: pnpm exec nx run compiler-check:check --output-style=static
+
     - name: format
       glob: '*.{ts,mts,cts,js,mjs,cjs,json,html,css,yml,yaml}'
       run: pnpm exec prettier --check {staged_files}

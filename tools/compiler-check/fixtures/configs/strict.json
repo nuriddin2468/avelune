@@ -1,0 +1,6 @@
+/* Expect: strict */
+{
+  "extends": "../../../../tsconfig.base.json",
+  "compilerOptions": { "strict": false },
+  "include": []
+}

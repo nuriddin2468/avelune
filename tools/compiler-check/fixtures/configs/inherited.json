@@ -1,0 +1,5 @@
+/* Expect: strictStandalone (weakened by the config this one extends) */
+{
+  "extends": "./strict-standalone.json",
+  "include": []
+}

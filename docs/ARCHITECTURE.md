@@ -15,6 +15,7 @@ How Avelune is built. Decisions and their reasons live in the [ADRs](adr/README.
 | `apps/storybook` | `storybook` | `type:app` | Foundations pages (Phase 2); component docs, stories, interaction and a11y tests (Phase 3) |
 | `tools/tokens-check` | `tokens-check` | `type:tool` | Token validation |
 | `tools/fonts` | `fonts` | `type:tool` | Builds and checks the web font in `packages/ui/styles/fonts` |
+| `tools/compiler-check` | `compiler-check` | `type:tool` | Checks every tsconfig for the required compiler strictness; fixtures prove each option |
 | `tools/lint-rules` | `lint-rules` | `type:tool` | Custom ESLint rules (Phase 3) |
 | `tools/invariants` | `invariants` | `type:tool` | Cross-component Playwright invariants (Phase 3/5) |
 | `tools/adoption-metrics` | `adoption-metrics` | `type:tool` | Consumer-repo scanner (Phase 6) |
@@ -90,7 +91,9 @@ Conventions:
 
 ## TypeScript
 
-- `tsconfig.base.json` holds the strictness flags of brief §5.1 (`strict`, `noUncheckedIndexedAccess`, `noImplicitOverride`, `noPropertyAccessFromIndexSignature`, `strictTemplates`, extended diagnostics as errors) for every project.
+- `tsconfig.base.json` holds the required strictness for every project (ADR 0022): brief §5.1 (`strict`, `noUncheckedIndexedAccess`, `noImplicitOverride`, `noPropertyAccessFromIndexSignature`, `strictTemplates`, extended diagnostics as errors), plus `noImplicitReturns`, `noFallthroughCasesInSwitch`, `exactOptionalPropertyTypes`, `allowUnreachableCode: false`, `strictInjectionParameters`, `strictInputAccessModifiers`, `strictStandalone` and `typeCheckHostBindings`. The list lives in `tools/compiler-check/src/requirements.ts`. A project tsconfig may add options, but it may never weaken these: `pnpm nx run compiler-check:check` resolves every `tsconfig*.json` the way ngc does and fails on any weaker value.
+- `pnpm nx run compiler-check:test` proves the options. Each fixture in `tools/compiler-check/fixtures/violations` breaks one option or one extended diagnostic and must produce exactly its declared error codes. The control fixture `valid.ts` must compile clean. Every required option, and every extended diagnostic the installed compiler knows, must have a fixture. When an upgrade adds a new `strict` flag or a new diagnostic, add a fixture for it: a header `// Proves: <option>` and `// Expect: <codes>`, and an entry in `requirements.ts` if it is a flag.
+- Consequences for code: leave optional properties out rather than setting them to `undefined` (`...(x === undefined ? {} : { x })`). In host listeners `$event` is `Event`; narrow it inside the handler.
 - TypeScript 6 specifics: no `baseUrl` (paths are relative to the config file), `types: []` by default, and `rootDir` defaults to the config's folder. Apps that compile library sources through path mappings set `rootDir` to the workspace root.
 - `typecheck` targets run `ngc --noEmit`, which also type-checks templates; `ui:typecheck` checks the schematics too.
 
@@ -152,6 +155,7 @@ What is checked today, by which tool, at which stage. Phase 3 completes this tab
 |---|---|---|---|
 | Project layers, no relative cross-project imports | `@nx/enforce-module-boundaries` (ESLint) | staged files | Phase 3 |
 | TS strictness, template types | `ngc --noEmit` (`typecheck` targets) | affected projects | Phase 3 |
+| No tsconfig weakens the required strictness (ADR 0022) | `compiler-check:check`, proven by `compiler-check:test` (a fixture per option and per extended diagnostic) | a staged tsconfig | Phase 3 |
 | Formatting | Prettier (`.md` excluded) | staged files | Phase 3 |
 | Conventional commits, scope = Nx project or `repo`, `deps`, `docs`, `ci`, `release` | commitlint | commit message | n/a |
 | Public API unchanged or report updated; release tags present | API Extractor (`ui:api-report`) | no | Phase 3 |

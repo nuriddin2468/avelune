@@ -1,0 +1,6 @@
+/* Expect: extendedDiagnostics.defaultCategory */
+{
+  "extends": "../../../../tsconfig.base.json",
+  "angularCompilerOptions": { "extendedDiagnostics": { "defaultCategory": "warning" } },
+  "include": []
+}

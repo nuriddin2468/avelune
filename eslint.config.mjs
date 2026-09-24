@@ -15,6 +15,10 @@ export default defineConfig(
     ignores: ['**/dist/**', '**/out-tsc/**', '**/.nx/**', '**/.angular/**', '**/coverage/**', '**/node_modules/**'],
   },
   {
+    // Deliberate violations: each tool's own tests assert that its check rejects them (brief §5).
+    ignores: ['tools/*/fixtures/**'],
+  },
+  {
     linterOptions: { reportUnusedDisableDirectives: 'error' },
   },
   js.configs.recommended,

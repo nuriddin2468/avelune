@@ -1,0 +1,6 @@
+/* Expect: strictDomEventTypes (one flag of `strictTemplates`, switched off on its own) */
+{
+  "extends": "../../../../tsconfig.base.json",
+  "angularCompilerOptions": { "strictDomEventTypes": false },
+  "include": []
+}

@@ -50,13 +50,14 @@ Run from the repository root. `pnpm` switches itself to the pinned 11.27.1 (`pac
 | API reports: check / update | `pnpm nx run ui:api-report` / `pnpm nx run ui:api-report --update` |
 | Build the tokens (`dist/tokens.css`, `tokens.ts`) | `pnpm nx build tokens` |
 | Check the tokens (schema, tiers, contrast in both themes, output) | `pnpm nx run tokens-check:check` |
+| Check that no tsconfig weakens the compiler strictness / prove each option with its fixture | `pnpm nx run compiler-check:check` / `pnpm nx run compiler-check:test` |
 | Fonts: check / rebuild (`packages/ui/styles/fonts`) | `pnpm nx run fonts:check` / `pnpm nx run fonts:check --update` |
 | Colour primitives: check / regenerate | `pnpm nx run tokens:colors` / `pnpm nx run tokens:colors --update` |
 | Node-side tests (scripts, tools) | `pnpm nx run-many -t test` (`node:test`, ADR 0015) |
 | Format | `pnpm format` (check: `pnpm format:check`) |
 | Project graph | `pnpm nx graph` |
 
-The pre-commit hook runs ESLint and Prettier on staged files and `typecheck` on affected projects; the commit-msg hook runs commitlint. Component tests, Stylelint, Storybook, visual and a11y checks are added in Phase 3 and listed here then.
+The pre-commit hook runs ESLint and Prettier on staged files, `typecheck` on affected projects and `compiler-check:check` when a tsconfig is staged; the commit-msg hook runs commitlint. Component tests, Stylelint, Storybook, visual and a11y checks are added in Phase 3 and listed here then.
 
 ## Where things live
 

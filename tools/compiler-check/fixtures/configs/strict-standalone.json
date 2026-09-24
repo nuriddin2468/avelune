@@ -1,0 +1,6 @@
+/* Expect: strictStandalone */
+{
+  "extends": "../../../../tsconfig.base.json",
+  "angularCompilerOptions": { "strictStandalone": false },
+  "include": []
+}

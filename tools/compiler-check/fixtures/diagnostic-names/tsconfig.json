@@ -1,0 +1,8 @@
+/* Names an unknown extended diagnostic, so the compiler lists every check it knows (src/compile.ts). */
+{
+  "extends": "../../../../tsconfig.base.json",
+  "angularCompilerOptions": {
+    "extendedDiagnostics": { "defaultCategory": "error", "checks": { "compilerCheckProbe": "error" } }
+  },
+  "files": ["../violations/valid.ts"]
+}

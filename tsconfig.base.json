@@ -1,4 +1,5 @@
-/* Root compiler options for every project. Angular 22 defaults plus brief §5.1 strictness. */
+/* Root compiler options for every project: Angular 22 defaults plus the strictness of brief §5.1 and ADR 0022.
+   tools/compiler-check fails if any tsconfig weakens them and proves each one rejects its violation fixture. */
 {
   "compileOnSave": false,
   "compilerOptions": {
@@ -6,8 +7,10 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "allowUnreachableCode": false,
     "skipLibCheck": true,
     "isolatedModules": true,
     "experimentalDecorators": true,
@@ -27,6 +30,8 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
+    "strictStandalone": true,
+    "typeCheckHostBindings": true,
     "extendedDiagnostics": {
       "defaultCategory": "error"
     }

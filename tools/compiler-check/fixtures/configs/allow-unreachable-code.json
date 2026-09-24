@@ -1,0 +1,6 @@
+/* Expect: allowUnreachableCode (required false; true silences the error) */
+{
+  "extends": "../../../../tsconfig.base.json",
+  "compilerOptions": { "allowUnreachableCode": true },
+  "include": []
+}

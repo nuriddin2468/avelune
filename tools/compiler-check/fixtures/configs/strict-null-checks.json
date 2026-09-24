@@ -1,0 +1,6 @@
+/* Expect: strictNullChecks (one flag of `strict`, switched off on its own) */
+{
+  "extends": "../../../../tsconfig.base.json",
+  "compilerOptions": { "strictNullChecks": false },
+  "include": []
+}

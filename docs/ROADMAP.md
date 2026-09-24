@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 2 complete; Foundations approved by the product owner (2026-09-23). Next: Phase 3, first item, in a new session (product owner's choice).
+**Current position:** Phase 3 in progress. Compiler strictness is done (2026-09-24, ADR 0022). Next: the ESLint item. The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and must land before the Vitest item.
 
 ## Parameters
 
@@ -63,11 +63,11 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 
 ### Phase 3: Guardrails (before any component)
 
-Carried over from Phase 2: wire `tokens:colors`, `tokens-check:check`, `fonts:check` and the `node:test` targets into CI; the Foundations pages bind `[style.*]` to token variables to draw swatches, so the template no-inline-styles rule needs a documented exception for `apps/storybook/src/foundations/**` only; a lint check that media and container query values equal breakpoint/container tokens (ADR 0017); invariants normalise the browser's `linear(0 0%, …)` easing strings before comparing with tokens; ESLint `no-restricted-imports` for `@angular/animations` now that it is installed (ADR 0008).
+Carried over from Phase 2: wire `tokens:colors`, `tokens-check:check`, `fonts:check`, `compiler-check:check` and the `node:test` targets into CI; the Foundations pages bind `[style.*]` to token variables to draw swatches, so the template no-inline-styles rule needs a documented exception for `apps/storybook/src/foundations/**` only; a lint check that media and container query values equal breakpoint/container tokens (ADR 0017); invariants normalise the browser's `linear(0 0%, …)` easing strings before comparing with tokens; ESLint `no-restricted-imports` for `@angular/animations` now that it is installed (ADR 0008).
 
 Carried over from Phase 1: permanent fixtures for the three module-boundary violations (tokens → ui, icons → ui, relative cross-project import); a SchematicTestRunner test for `ng-add` and the empty migration collection; failing fixtures for `ui:api-report` (untagged export, stale report); an ESLint rule for JSDoc on public API (API Extractor's `ae-undocumented` is off, ADR 0007); a check that every Nx project carries a layer or type tag; a check of `.browserslistrc` against Angular's supported set (ADR 0014).
 
-- [ ] TS + Angular compiler strictness (brief §5.1)
+- [x] TS + Angular compiler strictness (brief §5.1). ADR 0022 adds `exactOptionalPropertyTypes`, `allowUnreachableCode: false` and `strictStandalone`, and sets `typeCheckHostBindings` explicitly. `compiler-check:check` fails on any tsconfig that weakens an option. `compiler-check:test` proves every option and every one of the compiler's 18 extended diagnostics with a violation fixture (46 fixtures), plus a clean control fixture and 10 weakened-config fixtures.
 - [ ] ESLint config + custom rules (`avelune/entry-point-layers`, raw-element template rule), with failing fixtures
 - [ ] Stylelint config (brief §5.3, ADR 0009), with failing fixtures; CSS nesting × emulated encapsulation fixture (ADR 0005)
 - [ ] Vitest browser mode + coverage thresholds; Storybook angular-vite (running since Phase 2) + addon-vitest + a11y `error`
@@ -198,8 +198,7 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 
 | Upgrade | Trigger |
 |---|---|
-| `@angular/cdk` + `@angular/aria` 22.2.0, `ng-packagr` 22.2.0, `prettier` 3.9.9, `@microsoft/api-extractor` 7.59.2 | held back by the 24-hour maturity rule on 2026-09-23 (ADR 0012 addendum); upgrade from 2026-09-24, one merge request, compatibility.md updated |
-| Angular 22.2 | stable release (currently rc.0) |
+| Angular 22.2.0 (framework, `@angular/build`, `@angular/cli`, devkit), `@angular/cdk` + `@angular/aria` 22.2.0, `ng-packagr` 22.2.x, `prettier` 3.9.9, `@microsoft/api-extractor` 7.59.2 | Angular 22.2.0 is stable (published 2026-09-23; `@angular/build`/`cli` at 21:37 UTC). Under the 24-hour rule (ADR 0012) the last of these is allowed from **2026-09-24 21:37 UTC**. Do all of them in one merge request, check the peer ranges, update compatibility.md, re-run `compiler-check:test` (new extended diagnostics need fixtures), then re-evaluate Vitest 5 (ADR 0013) before the Vitest item |
 | Vitest 5 | Angular 22.2 + Storybook addon-vitest + `@nx/vitest` all peer it (ADR 0013) |
 | Storybook 11 | `angular-vite` stable; drop the `@angular/animations` devDependency (ADR 0008) |
 | pnpm 12 | Nx lists support (ADR 0012) |
