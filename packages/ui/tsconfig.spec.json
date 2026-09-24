@@ -1,7 +1,9 @@
-/* Unit tests (Vitest browser mode through @angular/build:unit-test, ADR 0026): library sources plus specs. */
+/* Unit tests (Vitest browser mode through @angular/build:unit-test, ADR 0026): library sources plus specs. Specs read
+   the generated tokens through their path mapping, outside the library, so the root is the workspace. */
 {
   "extends": "./tsconfig.lib.json",
   "compilerOptions": {
+    "rootDir": "../..",
     "outDir": "../../dist/out-tsc/ui-spec",
     "declaration": false,
     "declarationMap": false

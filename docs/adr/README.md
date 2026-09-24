@@ -38,6 +38,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0030](0030-global-stylesheet.md) | Global stylesheet: one entry, layered files, loaded through the consumer's bundler; one focus ring | Accepted |
 | [0031](0031-motion-catalog.md) | Motion catalog: motion.css classes, reduced motion from tokens, linear only on loops | Accepted |
 | [0032](0032-runtime-theme-api.md) | Runtime API: provideAvelune() and AveTheme in @avelune/ui/theme | Accepted |
+| [0033](0033-icon-set-and-ave-icon.md) | Icon set and `<ave-icon>`: typed Lucide data, frozen strokes, a label or decorative | Accepted |
 
 ## Template
 

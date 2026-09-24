@@ -7,6 +7,7 @@ The `avelune` ESLint plugin (`src/index.ts`), the `avelune` Stylelint rules (`sr
 | `avelune/entry-point-layers` | `packages/ui` | imports up the layer order of `entry.json`; deep imports (`@avelune/ui/<name>/<file>`); relative imports that leave the entry point; a `testing` entry point in runtime code; a missing or unknown layer |
 | `avelune/public-api-jsdoc` | `packages/ui`, not specs or stories | an exported declaration, or a public member of one, without a JSDoc block (lifecycle and forms-interface methods excepted) |
 | `avelune/no-appearance-inputs` | `packages/ui` | inputs or models named `class`, `style`, `color`, `appearance`, `ngClass`, … (aliases too) |
+| `avelune/icon-label` | every template | an `<ave-icon>` with neither `label` nor `decorative`, or with both as plain attributes (ADR 0033) |
 | `avelune/no-raw-elements` | consumers (in this repo: the showcase) | `<button>`, `<input>`, `<select>`, `<textarea>`, `<dialog>` without a kit attribute from `src/kit-elements.ts` |
 
 When a component that enhances a native element lands, add its attribute to `kitElements` in `src/kit-elements.ts` in the same merge request.

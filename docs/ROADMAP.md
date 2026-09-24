@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below that is not marked **Deferred**, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 4 in progress. The global stylesheet, the motion catalog and the runtime API are done (2026-09-24, ADR 0030–0032). Next: delete the `sample` scaffolding, then the icons. Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
+**Current position:** Phase 4 in progress. The global stylesheet, the motion catalog, the runtime API and the icons are done (2026-09-24, ADR 0030–0033). Next: delete the `sample` scaffolding. Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
 
 ## Parameters
 
@@ -119,7 +119,11 @@ The carry-overs from Phases 1 and 2 are done, except wiring the targets into CI,
   - `@avelune/ui/theme` (foundations) holds both. Signals `theme`, `density` and `motion`; setters write the `data-*` attribute and `localStorage` at once, and another tab's choice is followed.
   - Every storage failure is caught; on the server the attributes are written and storage is left alone. Covered in Chromium, 1.33 kB of a 1.5 kB budget. The showcase calls `provideAvelune()`.
   - Open for Phase 6: the inline `index.html` script that applies a stored choice before the first paint (`ng add`).
-- [ ] Icons package with a generated `IconName` union; `<ave-icon>` (Lucide from `lucide-static`, stroke width tuned and frozen, ADR 0020)
+- [x] Icons package with a generated `IconName` union; `<ave-icon>` (Lucide from `lucide-static`, stroke width tuned and frozen, ADR 0020). Done in ADR 0033:
+  - `@avelune/icons`: 52 Lucide icons (`lucide-static` 1.47.0) generated into typed data with `IconName`; `icons:generate` checks, and rejects any shape `<ave-icon>` does not draw.
+  - `<ave-icon>`: sizes 16/20/24 (`sm` by default); strokes frozen at 1.5/1.5/1.75px after a comparison with Plex. It needs `label` or `decorative`: the new ESLint rule `avelune/icon-label` checks templates, and the component throws in development.
+  - Delivered with its harness, unit tests in Chromium, a docs page, six stories with `play` functions and baselines in both themes, both viewports and forced colours. 3.33 kB of a 3.7 kB budget.
+  - The kit resolves `@avelune/icons` and `@avelune/tokens` through `node_modules`, and Nx builds both first.
 - [ ] Delete the `packages/ui/sample` scaffolding entry point and its API reports once the first real entry point exists
 
 ### Phase 5: Components
@@ -149,7 +153,7 @@ Waves and status: see the tables below.
 
 | Component | Wave | Layer | Status | Owner | Notes |
 |---|---|---|---|---|---|
-| Icon | 1 | foundations | planned | | `IconName` union; label or `decorative` required |
+| Icon | 1 | foundations | experimental | | `@avelune/ui/icon` (ADR 0033); used in the showcase once the scaffolding is gone; beta at the Wave 1 gate |
 | Button | 1 | components | planned | | `button[aveButton]`, `a[aveButton]` |
 | IconButton | 1 | components | planned | | label required |
 | Input | 1 | components | planned | | `input[aveInput]`; Signal Forms + CVA |
@@ -241,6 +245,7 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 | Upgrade | Trigger |
 |---|---|
 | Angular 22.2.0 (framework, `@angular/build`, `@angular/cli`, devkit), `@angular/cdk` + `@angular/aria` 22.2.0, `ng-packagr` 22.2.x, `prettier` 3.9.9, `@microsoft/api-extractor` 7.59.2 | Angular 22.2.0 is stable (published 2026-09-23; `@angular/build`/`cli` at 21:37 UTC). Under the 24-hour rule (ADR 0012) the last of these is allowed from **2026-09-24 21:37 UTC**. Do all of them in one merge request, check the peer ranges, update compatibility.md, re-run `compiler-check:test` (new extended diagnostics need fixtures) and `lint-rules:test`, then re-evaluate Vitest 5 (ADR 0013) |
+| `lucide-static` 1.48.0 | Allowed from **2026-09-25 05:57 UTC** (ADR 0012). Run `pnpm nx run icons:generate --update`, review the diff of `src/icons.ts` and the icon baselines, update compatibility.md |
 | Vitest 5 | Angular 22.2 + Storybook addon-vitest + `@nx/vitest` all peer it (ADR 0013) |
 | Storybook 11 | `angular-vite` stable; drop the `@angular/animations` devDependency (ADR 0008); check whether AOT builds keep `@angular/compiler`, and return to `jit: false` if so (ADR 0025) |
 | pnpm 12 | Nx lists support (ADR 0012) |

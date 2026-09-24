@@ -33,6 +33,7 @@
     "tslib": "catalog:"
   },
   "devDependencies": {
+    "@avelune/icons": "workspace:*",
     "@analogjs/vite-plugin-angular": "catalog:",
     "@axe-core/playwright": "catalog:",
     "@angular-devkit/architect": "catalog:",
@@ -91,6 +92,7 @@
     "angular-eslint": "catalog:",
     "@eslint-community/eslint-plugin-eslint-comments": "catalog:",
     "vite": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "lucide-static": "catalog:"
   }
 }

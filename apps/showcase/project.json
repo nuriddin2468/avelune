@@ -43,7 +43,7 @@
       "defaultConfiguration": "production",
       "dependsOn": [
         {
-          "projects": ["tokens"],
+          "projects": ["tokens", "icons"],
           "target": "build"
         }
       ]
@@ -65,7 +65,13 @@
       "options": {
         "cwd": "{projectRoot}",
         "command": "ngc -p tsconfig.app.json --noEmit"
-      }
+      },
+      "dependsOn": [
+        {
+          "projects": ["tokens", "icons"],
+          "target": "build"
+        }
+      ]
     },
     "stylelint": {}
   }

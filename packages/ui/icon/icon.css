@@ -1,0 +1,27 @@
+@layer components {
+  /* A square of the icon size that never shrinks in a flex row; in running text it sits on the middle of the
+     lowercase letters. */
+  :host {
+    display: inline-block;
+    flex-shrink: 0;
+    inline-size: var(--ave-size-icon-sm);
+    block-size: var(--ave-size-icon-sm);
+    vertical-align: middle;
+  }
+
+  :host([data-size='md']) {
+    inline-size: var(--ave-size-icon-md);
+    block-size: var(--ave-size-icon-md);
+  }
+
+  :host([data-size='lg']) {
+    inline-size: var(--ave-size-icon-lg);
+    block-size: var(--ave-size-icon-lg);
+  }
+
+  svg {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+}

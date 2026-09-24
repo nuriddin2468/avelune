@@ -6,7 +6,8 @@ pre-commit:
   jobs:
     - name: lint
       glob: '*.{ts,mts,cts,js,mjs,cjs}'
-      run: pnpm exec eslint --max-warnings=0 --no-warn-ignored {staged_files}
+      # Type-aware rules read the generated tokens and icons, so both are built first (cached).
+      run: pnpm exec nx run-many -t build -p tokens icons --output-style=static && pnpm exec eslint --max-warnings=0 --no-warn-ignored {staged_files}
 
     - name: typecheck
       # Type-checking needs whole projects, so it runs on every project the staged files affect.

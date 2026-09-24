@@ -42,7 +42,7 @@
       "parallelism": false,
       "dependsOn": [
         {
-          "projects": ["tokens"],
+          "projects": ["tokens", "icons"],
           "target": "build"
         }
       ],

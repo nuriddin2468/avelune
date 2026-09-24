@@ -5,5 +5,5 @@
     "entryFile": "index.ts"
   },
   "assets": ["README.md", "styles/**/*"],
-  "allowedNonPeerDependencies": ["@avelune/tokens"]
+  "allowedNonPeerDependencies": ["@avelune/icons", "@avelune/tokens"]
 }

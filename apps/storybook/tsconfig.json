@@ -9,5 +9,5 @@
     "resolveJsonModule": true,
     "types": ["node", "vite/client"]
   },
-  "include": ["src/**/*.ts", ".storybook/*.ts", "vitest.config.ts"]
+  "include": ["src/**/*.ts", ".storybook/*.ts", "vitest.config.ts", "../../packages/ui/**/*.stories.ts"]
 }

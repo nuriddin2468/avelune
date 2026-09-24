@@ -39,7 +39,13 @@
       "options": {
         "args": ["--max-warnings=0"]
       },
-      "cache": true
+      "cache": true,
+      "dependsOn": [
+        {
+          "projects": ["tokens", "icons"],
+          "target": "build"
+        }
+      ]
     },
     "stylelint": {
       "dependsOn": [

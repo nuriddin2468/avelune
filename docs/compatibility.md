@@ -59,6 +59,7 @@ Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` an
 | Format | `prettier` | 3.9.8 | *Held back*: 3.9.9 published 2026-09-23 06:31 UTC |
 | Budgets | `size-limit`, `@size-limit/file`, `@size-limit/esbuild` | 14.0.0 | Node `^22.19 \|\| ^24.5 \|\| >=26`; plugins peer `size-limit` 14.0.0; `@size-limit/esbuild` uses esbuild `^0.28.2`, deduplicated with Angular's 0.28.2 (ADR 0028). Installed in Phase 3 (2026-09-24; released 2026-09-15) |
 | Node types | `@types/node` | 24.13.6 | Follows `engines.node` (^24.15.0), not npm `latest` (26.x); ADR 0015 |
+| Icons | `lucide-static` | 1.47.0 | ISC. `icon-nodes.json` and the licence are read only by `packages/icons/scripts` at generation time; nothing ships at run time (ADR 0020, 0033). Installed in Phase 4 (2026-09-24; released 2026-09-17). *Held back*: 1.48.0 published 2026-09-24 05:57 UTC |
 | Fonts | `fontkit` + `@types/fontkit` | 2.0.4, 2.0.9 | cmap coverage check, metrics (ADR 0018) |
 | | `subset-font` | 2.9.0 | woff2 subsetting and axis limits (HarfBuzz wasm via `harfbuzzjs` 1.6.2, no Python) |
 | | `fontverter` | 2.0.0 | TTF ↔ woff2 (a `subset-font` dependency, used directly) |

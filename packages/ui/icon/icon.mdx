@@ -1,0 +1,91 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as IconStories from './icon.stories';
+
+<Meta of={IconStories} />
+
+# Icon
+
+`<ave-icon>` draws one icon of the kit's set: Lucide outlines on a 24 × 24 grid, in the colour of the text around it (ADR 0020, 0033).
+
+```ts
+import { AveIcon } from '@avelune/ui/icon';
+```
+
+<Canvas of={IconStories.Default} />
+<Controls />
+
+## When to use
+
+- Next to a label, to help the eye find an action or a status: a download link, an error message, a sort order.
+- Alone, when the icon is the whole message and has a `label`: a close button, a status in a dense table.
+
+## When not to use
+
+- As decoration without meaning. An icon that says nothing adds noise; leave it out.
+- Instead of words for an unfamiliar action. If people must guess, write the label.
+- For images, illustrations or logos. Use `<img>` with its own alternative text.
+- As a button. A clickable icon is an IconButton (Wave 1), which carries the label and the target size.
+
+## Anatomy
+
+A square host of the icon size, holding one `<svg>` with the icon's strokes. The host carries `data-icon` and `data-size`, and the accessible name or `aria-hidden`.
+
+## Sizes
+
+<Canvas of={IconStories.Sizes} />
+
+| Size           | Pixels | With                          |
+| -------------- | ------ | ----------------------------- |
+| `sm` (default) | 16     | body and label text, controls |
+| `md`           | 20     | large text, spacious controls |
+| `lg`           | 24     | headings, empty states        |
+
+Strokes are 1.5px at 16 and 20px and 1.75px at 24px, so an icon is as heavy as the text next to it. The widths are frozen with the kit.
+
+## Meaning: label or decorative
+
+Every icon needs exactly one of the two. `avelune/icon-label` rejects a template with neither, and in development the component throws.
+
+<Canvas of={IconStories.Meaning} />
+
+- `label="…"`: the icon carries meaning of its own. It becomes an image with that name.
+- `decorative`: the text next to it says the same. It is hidden from assistive technology.
+
+## States
+
+An icon has no states of its own: it is never focusable and never interactive. It takes its colour from its text, so it follows the states of the component around it (hover, disabled, error).
+
+<Canvas of={IconStories.Colour} />
+
+## Content
+
+Icons keep their size in running text and never shrink in a flex row; long Russian and Uzbek text wraps around them.
+
+<Canvas of={IconStories.LongText} />
+
+## Keyboard
+
+None. An icon is not focusable; the control around it is.
+
+## Accessibility
+
+- A labelled icon has `role="img"` and `aria-label`; a decorative one has `aria-hidden="true"`. The `<svg>` inside is always hidden.
+- It uses `currentColor`, so it keeps the contrast of its text, and forced colours paint it with the system text colour.
+- Write labels for the meaning, not the drawing: "Error", not "Red circle".
+
+## Motion
+
+None. An icon inside an animated component moves with it.
+
+## Do and don't
+
+- Do pair icons and text in one direction: icon first, then the label.
+- Do use one icon for one meaning across the product: `trash` always deletes.
+- Don't label a decorative icon, or leave a meaningful one unlabelled.
+- Don't recolour an icon apart from its text; the colour comes from the text role.
+
+## The set
+
+<Canvas of={IconStories.Gallery} />
+
+To add an icon, add its Lucide name to `packages/icons/scripts/icons.config.ts` and run `pnpm nx run icons:generate --update`. Only Lucide's outline shapes are accepted; an icon Lucide lacks is drawn to its grid in the icons package, never taken from another set.

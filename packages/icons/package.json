@@ -2,6 +2,19 @@
   "name": "@avelune/icons",
   "version": "0.0.0",
   "private": true,
-  "description": "Avelune icon set with a generated, typed icon-name union.",
-  "license": "UNLICENSED"
+  "description": "Avelune icon set: Lucide outlines as typed data, and the IconName union.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/icons.d.ts",
+      "default": "./dist/icons.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "LICENSE-lucide.txt"
+  ],
+  "sideEffects": false
 }

@@ -13,6 +13,7 @@
     "./fonts/*": "./styles/fonts/*"
   },
   "dependencies": {
+    "@avelune/icons": "workspace:*",
     "@avelune/tokens": "workspace:*",
     "tslib": "^2.8.1"
   },

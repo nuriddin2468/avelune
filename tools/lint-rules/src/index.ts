@@ -1,6 +1,7 @@
 // The `avelune` ESLint plugin: rules for the kit itself and for applications that consume it (ADR 0023).
 import type { TSESLint } from '@typescript-eslint/utils';
 import { entryPointLayers } from './rules/entry-point-layers.ts';
+import { iconLabel } from './rules/icon-label.ts';
 import { noAppearanceInputs } from './rules/no-appearance-inputs.ts';
 import { noRawElements } from './rules/no-raw-elements.ts';
 import { publicApiJsdoc } from './rules/public-api-jsdoc.ts';
@@ -11,6 +12,7 @@ export const plugin = {
   meta: { name: 'avelune' },
   rules: {
     'entry-point-layers': entryPointLayers,
+    'icon-label': iconLabel,
     'no-appearance-inputs': noAppearanceInputs,
     'no-raw-elements': noRawElements,
     'public-api-jsdoc': publicApiJsdoc,

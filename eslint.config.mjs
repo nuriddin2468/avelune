@@ -154,7 +154,9 @@ export default defineConfig(
   {
     files: ['**/*.html'],
     extends: [angular.configs.templateRecommended, angular.configs.templateAccessibility],
-    rules: templateRules,
+    plugins: { avelune },
+    // Every template, the kit's own and the consumers': an icon is named or decorative (ADR 0033).
+    rules: { ...templateRules, 'avelune/icon-label': 'error' },
   },
   {
     files: ['**/*.js', '**/*.mjs', '**/*.cjs'],

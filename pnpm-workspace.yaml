@@ -98,6 +98,8 @@ catalog:
   # Tokens (ADR 0003, 0011)
   colorjs.io: 0.7.1
   style-dictionary: 5.5.5
+  # Icons (ADR 0020): plain SVG files, read by packages/icons/scripts at generation time only
+  lucide-static: 1.47.0
   # Fonts (brief §4.4, ADR 0018)
   fontkit: 2.0.4
   '@types/fontkit': 2.0.9

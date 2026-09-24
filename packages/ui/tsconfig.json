@@ -2,6 +2,9 @@
    have their own in schematics/ and scripts/). Builds use tsconfig.lib.json and tsconfig.lib.prod.json. */
 {
   "extends": "./tsconfig.lib.json",
+  "compilerOptions": {
+    "rootDir": "../.."
+  },
   "include": ["**/*.ts"],
   "exclude": ["schematics/**", "scripts/**", "**/fixtures/**"]
 }

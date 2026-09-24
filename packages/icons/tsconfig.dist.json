@@ -1,0 +1,13 @@
+/* Compiles the generated src/icons.ts into the published dist/icons.js and dist/icons.d.ts. */
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "declaration": true,
+    "importHelpers": false,
+    "sourceMap": false,
+    "types": []
+  },
+  "files": ["src/icons.ts"]
+}

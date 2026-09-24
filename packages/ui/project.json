@@ -19,7 +19,13 @@
           "tsConfig": "packages/ui/tsconfig.lib.json"
         }
       },
-      "defaultConfiguration": "production"
+      "defaultConfiguration": "production",
+      "dependsOn": [
+        {
+          "projects": ["icons"],
+          "target": "build"
+        }
+      ]
     },
     "build": {
       "executor": "nx:run-commands",
@@ -42,7 +48,13 @@
           "tsc -p scripts/tsconfig.json",
           "tsc -p schematics/tests/tsconfig.json"
         ]
-      }
+      },
+      "dependsOn": [
+        {
+          "projects": ["icons"],
+          "target": "build"
+        }
+      ]
     },
     "api-report": {
       "executor": "nx:run-commands",
@@ -123,7 +135,13 @@
           "coverageInclude": ["tools/test-check/fixtures/coverage-gap/*.ts"],
           "coverageExclude": ["tools/test-check/fixtures/coverage-gap/*.spec.ts"]
         }
-      }
+      },
+      "dependsOn": [
+        {
+          "projects": ["icons"],
+          "target": "build"
+        }
+      ]
     },
     "test-schematics": {
       "executor": "nx:run-commands",

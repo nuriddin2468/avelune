@@ -4,5 +4,51 @@
   "projectType": "library",
   "sourceRoot": "packages/icons",
   "tags": ["layer:foundations"],
-  "targets": {}
+  "targets": {
+    "generate": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/scripts/**/*",
+        "!{projectRoot}/scripts/**/*.spec.ts",
+        "{projectRoot}/src/icons.ts",
+        "{projectRoot}/LICENSE-lucide.txt",
+        "{workspaceRoot}/.prettierrc.json",
+        {
+          "externalDependencies": ["lucide-static", "prettier"]
+        }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node scripts/generate.ts"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["generate"],
+      "inputs": ["production", { "externalDependencies": ["typescript"] }],
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "tsc -p tsconfig.dist.json"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "inputs": ["default", { "externalDependencies": ["lucide-static"] }],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node --test \"scripts/**/*.spec.ts\""
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "tsc -p tsconfig.json"
+      }
+    }
+  }
 }

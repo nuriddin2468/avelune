@@ -7,7 +7,7 @@ How Avelune is built. Decisions and their reasons live in the [ADRs](adr/README.
 | Path | Nx project | Tags | What it is |
 |---|---|---|---|
 | `packages/tokens` | `tokens` | `layer:tokens` | DTCG sources and the Style Dictionary build |
-| `packages/icons` | `icons` | `layer:foundations` | Icon set and the generated `IconName` union (Phase 4) |
+| `packages/icons` | `icons` | `layer:foundations` | The icon set: Lucide outlines as typed data, and the generated `IconName` union (ADR 0033) |
 | `packages/ui` | `ui` | `layer:patterns` | The Angular library, one secondary entry point per component |
 | `packages/eslint-config` | `eslint-config` | `type:config` | Shared ESLint config for consumers; bundles `tools/lint-rules` when first published (Phase 6) |
 | `packages/stylelint-config` | `stylelint-config` | `type:config` | Shared Stylelint config for consumers; bundles the `avelune` Stylelint rules when first published (Phase 6) |
@@ -62,7 +62,9 @@ packages/ui/
     ├── index.ts            public API of the entry point
     ├── entry.json          { "layer": "components" }
     ├── ng-package.json     { "lib": { "entryFile": "index.ts" } }
-    ├── button.ts, button.css, button.spec.ts, button.stories.ts
+    ├── button.ts, button.css, button.spec.ts
+    ├── button.mdx          the docs page, written first as the spec (brief §9.2)
+    ├── button.stories.ts   stories, with their frame in button.stories.css
     └── testing/            → @avelune/ui/button/testing
         ├── index.ts
         ├── ng-package.json
@@ -92,6 +94,8 @@ A service without a component, such as `theme`, has no harness and no `testing` 
 
 1. `build-lib`: `@angular/build:ng-packagr` with `tsconfig.lib.prod.json` (partial compilation) into `dist/packages/ui`, in Angular Package Format with an `exports` entry per entry point.
 2. `build`: compiles `schematics/` with `tsconfig.schematics.json` to CommonJS and copies their JSON manifests. The published package is `"type": "module"`, and the Angular CLI loads schematic factories with `require()`, so `dist/packages/ui/schematics/package.json` marks that folder `"type": "commonjs"`. The marker is written into `dist` only: a `package.json` inside the source tree would become a separate Nx project.
+
+`@avelune/ui` depends on `@avelune/tokens` and `@avelune/icons` through `workspace:*`, and resolves both through `node_modules` to their built `dist/` files, as a consumer does (ADR 0033). Every target that compiles, lints or bundles the kit builds them first through Nx `dependsOn`; the lint hook does it too.
 
 `nx build showcase` uses `@angular/build:application`; it resolves `@avelune/ui/*` to the sources through the path mapping, so no library build is needed for the app. Its one global stylesheet is `packages/ui/styles/styles.css`, loaded as a consumer loads it (see "CSS"), after building the tokens.
 
@@ -158,6 +162,18 @@ Motion is CSS only (ADR 0005). Two mechanisms, both on tokens:
 
 Every easing is a token, except `linear` on a loop (Stylelint allows it in `motion.css` only; the invariants accept it only on an animation that repeats forever). The drawer, list items, shared-element transitions and top-layer overlays get their motion with their components (ADR 0031, point 5). The Foundations page "Motion catalog" plays every class, and its `play` function checks them in both modes.
 
+## Icons
+
+`packages/icons` (ADR 0020, 0033) turns Lucide's `icon-nodes.json` into typed data:
+
+- `scripts/icons.config.ts` lists the kit's icons by Lucide name.
+- `pnpm nx run icons:generate` checks that `src/icons.ts` and `LICENSE-lucide.txt` are what the config and the installed `lucide-static` generate; `--update` rewrites them. The generator accepts only the outline shapes `<ave-icon>` draws (path, circle, line, rect), with no fill.
+- `icons:build` compiles `src/icons.ts` to `dist/`: `icons`, `IconName`, `iconNames`, `IconElement`.
+
+`<ave-icon name="…">` (`@avelune/ui/icon`) draws one with attribute bindings, no `innerHTML`. Its sizes are 16, 20 and 24px (`sm` by default) and its strokes are frozen at 1.5, 1.5 and 1.75px. It needs `label` or `decorative`; `avelune/icon-label` checks templates, and the component throws in development.
+
+To add an icon: add its Lucide name to the config, run `icons:generate --update`, review the diff, update the Gallery baselines and the `icon` size budget.
+
 ## Runtime
 
 `@avelune/ui/theme` (ADR 0032) is the kit's runtime API:
@@ -177,6 +193,7 @@ The showcase calls `provideAvelune()`. Storybook sets the same attributes from i
 3. Per path:
    - `packages/ui`: `avelune/entry-point-layers`, `avelune/public-api-jsdoc`, `avelune/no-appearance-inputs`.
    - `apps/showcase`, linted as a consumer: `avelune/no-raw-elements`.
+   - Every template, inline or in a file: `avelune/icon-label` (ADR 0033).
    - `apps/storybook/src/foundations`: the one documented exception, `[style.*]` bindings for token swatches.
 
 `stylelint.config.mjs` lints every `.css` file (ADR 0024). Component styles always live in a `.css` file next to the component (`styleUrl`); ESLint bans `styles` in `@Component`, so nothing escapes. The rules:
@@ -241,7 +258,7 @@ packages/tokens/
 
 `apps/storybook` runs `@storybook/angular-vite` with JIT compilation (ADR 0008, 0025); `storybook:typecheck` type-checks every story with ngc and the workspace strictness. `pnpm nx serve storybook` builds the tokens first and serves on `http://127.0.0.1:6006`; `pnpm nx build storybook` writes `dist/apps/storybook`. The preview imports `@avelune/ui/styles.css`, bundled by Vite as an application bundles it (ADR 0030). The toolbar switches theme, density and motion through the `data-*` attributes on `<html>`.
 
-The **Foundations** pages live in `apps/storybook/src/foundations`: colour roles and every declared contrast pair per theme (WCAG ratio, APCA Lc for information), the type specimen in uz-Latn, uz-Cyrl, ru and en, spacing and control sizes, radius, elevation and stacking order, and the motion playground. The "Motion catalog" page plays every `ave-motion-*` class; its `play` function checks their tokens, poses and removal in both motion modes. The "Global styles" page shows the layers, plain HTML, the focus ring, the figures utility and a theme island, and its `play` function asserts their computed styles. They read `tokens` from `@avelune/tokens` and style themselves with tokens only; primitives never appear. A story tagged `forced-colors` is also compared in forced colours (see "Tests"). Component stories will live next to their components (`packages/ui/<name>/<name>.stories.ts`) from Phase 5.
+The **Foundations** pages live in `apps/storybook/src/foundations`: colour roles and every declared contrast pair per theme (WCAG ratio, APCA Lc for information), the type specimen in uz-Latn, uz-Cyrl, ru and en, spacing and control sizes, radius, elevation and stacking order, and the motion playground. The "Motion catalog" page plays every `ave-motion-*` class; its `play` function checks their tokens, poses and removal in both motion modes. The "Global styles" page shows the layers, plain HTML, the focus ring, the figures utility and a theme island, and its `play` function asserts their computed styles. They read `tokens` from `@avelune/tokens` and style themselves with tokens only; primitives never appear. A story tagged `forced-colors` is also compared in forced colours (see "Tests"). Each component's docs page (`<name>.mdx`, written first, as the spec) and its stories (`<name>.stories.ts`) live next to it in `packages/ui/<name>/`, and appear under "Components".
 
 ## Tests
 
@@ -271,6 +288,8 @@ What is checked, by which tool, at which stage, and what proves that the check f
 |---|---|---|---|
 | Project layers, no relative cross-project imports | `@nx/enforce-module-boundaries` (ESLint), proven by `lint-rules:test` | staged files | deferred |
 | Entry-point layers, public specifiers, harnesses out of runtime code; JSDoc on public API; no appearance inputs (`packages/ui`) | `avelune/*` rules (ESLint), proven by `lint-rules:test` | staged files | deferred |
+| Every `<ave-icon>` has a label or is decorative, not both | `avelune/icon-label` (ESLint, every template), proven by `lint-rules:test`; `AveIcon` throws in development, proven by `ui:test` | staged files | deferred |
+| The icon data is what the config and `lucide-static` generate; only outline shapes `<ave-icon>` draws | `icons:generate`, proven by `icons:test` | no | deferred |
 | Type-aware TS rules (`strictTypeChecked`), angular-eslint TS, template and a11y rules, `ave` prefix, signal API, `host` object, emulated encapsulation, no inline styles, banned imports (`@angular/animations`, `@angular/material`, deep `@avelune/ui`), described disables; raw native elements in consumer templates | ESLint (ADR 0023), a fixture per rule group in `lint-rules:test`; every rule an error, `--max-warnings=0` | staged files | deferred |
 | TS strictness, template types | `ngc --noEmit` (`typecheck` targets) | affected projects | deferred |
 | No tsconfig weakens the required strictness (ADR 0022) | `compiler-check:check`, proven by `compiler-check:test` (a fixture per option and per extended diagnostic) | a staged tsconfig | deferred |
