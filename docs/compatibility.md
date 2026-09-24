@@ -1,6 +1,6 @@
 # Compatibility matrix
 
-Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` and the official docs; re-verified and installed in Phase 1 the same day; the lint packages re-verified and installed in Phase 3 (2026-09-24). Re-verify before every upgrade; update this file in the same merge request as the version change.
+Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` and the official docs; re-verified and installed in Phase 1 the same day; the lint and size packages re-verified and installed in Phase 3 (2026-09-24). Re-verify before every upgrade; update this file in the same merge request as the version change.
 
 **Maturity rule.** pnpm resolves no version younger than 24 hours (`minimumReleaseAge`, ADR 0012 addendum). Rows marked *held back* pin the previous release until the newer one matures; the upgrade is listed in ROADMAP.md, "Tracked upgrades".
 
@@ -57,7 +57,7 @@ Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` an
 | Hooks | `lefthook` | 2.1.14 | |
 | | `@commitlint/cli`, `@commitlint/config-conventional`, `@commitlint/config-nx-scopes` | 21.2.3 | Node `>=22.12`; scopes = Nx project names |
 | Format | `prettier` | 3.9.8 | *Held back*: 3.9.9 published 2026-09-23 06:31 UTC |
-| Budgets | `size-limit`, `@size-limit/*` | 14.0.0 | Node `^24.5` |
+| Budgets | `size-limit`, `@size-limit/file`, `@size-limit/esbuild` | 14.0.0 | Node `^22.19 \|\| ^24.5 \|\| >=26`; plugins peer `size-limit` 14.0.0; `@size-limit/esbuild` uses esbuild `^0.28.2`, deduplicated with Angular's 0.28.2 (ADR 0028). Installed in Phase 3 (2026-09-24; released 2026-09-15) |
 | Node types | `@types/node` | 24.13.6 | Follows `engines.node` (^24.15.0), not npm `latest` (26.x); ADR 0015 |
 | Fonts | `fontkit` + `@types/fontkit` | 2.0.4, 2.0.9 | cmap coverage check, metrics (ADR 0018) |
 | | `subset-font` | 2.9.0 | woff2 subsetting and axis limits (HarfBuzz wasm via `harfbuzzjs` 1.6.2, no Python) |

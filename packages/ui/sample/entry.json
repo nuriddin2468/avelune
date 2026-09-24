@@ -1,4 +1,5 @@
 {
   "$schema": "../entry.schema.json",
-  "layer": "components"
+  "layer": "components",
+  "sizeLimit": "900 B"
 }

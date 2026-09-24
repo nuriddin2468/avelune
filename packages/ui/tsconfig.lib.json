@@ -1,4 +1,4 @@
-/* Library sources: every entry point, without specs, stories or schematics. */
+/* Library sources: every entry point, without specs, stories, schematics or build scripts. */
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
@@ -8,5 +8,5 @@
     "types": []
   },
   "include": ["**/*.ts"],
-  "exclude": ["**/*.spec.ts", "**/*.stories.ts", "schematics/**", "**/fixtures/**"]
+  "exclude": ["**/*.spec.ts", "**/*.stories.ts", "schematics/**", "scripts/**", "**/fixtures/**"]
 }

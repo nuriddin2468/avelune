@@ -1,1 +1,1 @@
-{ "layer": "widgets" }
+{ "layer": "widgets", "sizeLimit": "1 kB" }

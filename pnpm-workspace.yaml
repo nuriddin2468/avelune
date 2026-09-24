@@ -86,6 +86,10 @@ catalog:
   '@vitest/coverage-v8': 4.1.11
   playwright: 1.63.0
   '@storybook/addon-vitest': 10.6.0
+  # Size budgets per entry point (ADR 0028)
+  size-limit: 14.0.0
+  '@size-limit/file': 14.0.0
+  '@size-limit/esbuild': 14.0.0
   # API reports
   '@microsoft/api-extractor': 7.59.1
   # Tokens (ADR 0003, 0011)

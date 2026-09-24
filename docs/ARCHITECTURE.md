@@ -16,7 +16,7 @@ How Avelune is built. Decisions and their reasons live in the [ADRs](adr/README.
 | `tools/tokens-check` | `tokens-check` | `type:tool` | Token validation |
 | `tools/fonts` | `fonts` | `type:tool` | Builds and checks the web font in `packages/ui/styles/fonts` |
 | `tools/compiler-check` | `compiler-check` | `type:tool` | Checks every tsconfig for the required compiler strictness; fixtures prove each option |
-| `tools/test-check` | `test-check` | `type:tool` | Proves that the coverage gate and the story gates (`play`, axe) fail on violations |
+| `tools/test-check` | `test-check` | `type:tool` | Proves that the coverage gate, the story gates (`play`, axe) and the size budgets fail on violations |
 | `tools/lint-rules` | `lint-rules` | `type:tool` | The `avelune` ESLint and Stylelint rules and the fixtures that prove both workspace configs (ADR 0023, 0024) |
 | `tools/invariants` | `invariants` | `type:tool` | Cross-component Playwright invariants (Phase 3/5) |
 | `tools/adoption-metrics` | `adoption-metrics` | `type:tool` | Consumer-repo scanner (Phase 6) |
@@ -78,7 +78,8 @@ Conventions:
 1. Create the folder with `index.ts`, `entry.json` and `ng-package.json`, plus `testing/` with its own `index.ts` and `ng-package.json`.
 2. No path mapping is needed: `tsconfig.base.json` maps `@avelune/ui/*` to `packages/ui/*/index.ts`.
 3. If the entry point enhances a native element (`button[aveButton]`, `input[aveInput]`), add its attribute to `kitElements` in `tools/lint-rules/src/kit-elements.ts`, so consumers may use that element with it.
-4. `pnpm nx build ui`, then `pnpm nx run ui:api-report --update`; review and commit the new report.
+4. Declare its size budget in `entry.json` (`"sizeLimit"`): run `pnpm nx run ui:size` with a generous value, then set the measured size plus 10%, rounded up to the next 100 B (ADR 0028).
+5. `pnpm nx build ui`, then `pnpm nx run ui:api-report --update`; review and commit the new report.
 
 ## Build
 
@@ -88,6 +89,8 @@ Conventions:
 2. `build`: compiles `schematics/` with `tsconfig.schematics.json` to CommonJS and copies their JSON manifests. The published package is `"type": "module"`, and the Angular CLI loads schematic factories with `require()`, so `dist/packages/ui/schematics/package.json` marks that folder `"type": "commonjs"`. The marker is written into `dist` only: a `package.json` inside the source tree would become a separate Nx project.
 
 `nx build showcase` uses `@angular/build:application`; it resolves `@avelune/ui/*` to the sources through the path mapping, so no library build is needed for the app.
+
+`nx run ui:size` measures every entry point against the budget in its `entry.json` (ADR 0028): the FESM bundle from `build-lib`, bundled and minified by esbuild with the peers and the other entry points left out, brotli-compressed. The checks come from `packages/ui/scripts/size-limit.mts`.
 
 `nx run ui:api-report` compares every entry point's `.d.ts` with `packages/ui/api/*.api.md` and fails on a difference; `--update` rewrites the reports. See ADR 0007, "Phase 1 spike result", for how cross-entry-point imports are analysed.
 
@@ -179,7 +182,8 @@ The **Foundations** pages live in `apps/storybook/src/foundations`: colour roles
   - An exported function that no test calls is tree-shaken from the bundle and does not count, so review what each spec leaves out.
 - **Stories** (`pnpm nx run storybook:test`): every story is a Vitest test in Chromium through `@storybook/addon-vitest`. It fails on an error, a failing `play` function or any axe violation.
 - **Node-side code** (tools, token scripts) uses `node:test` (ADR 0015).
-- `tools/test-check` proves the first two gates with fixtures: a coverage gap and an orphan file (`ui:test:coverage-gap`), and a fixture Storybook with an unnamed button and a failing `play` function.
+- **Size** (`pnpm nx run ui:size`): see "Build".
+- `tools/test-check` proves the gates with fixtures: a coverage gap and an orphan file (`ui:test:coverage-gap`); a fixture Storybook with an unnamed button and a failing `play` function; an entry point over its size budget and one without a budget.
 
 ## Fonts
 
@@ -199,6 +203,7 @@ What is checked today, by which tool, at which stage. Phase 3 completes this tab
 | Token-only CSS values, no unknown tokens, specificity cap, no `::ng-deep`/`!important`/ids, motion longhands, `@keyframes` only in `motion.css`, logical properties (exceptions derived from browser data), query widths equal tokens, `@layer components`, same-element nesting | Stylelint (ADR 0024), a fixture per rule in `lint-rules:test` | staged `.css` | Phase 3 |
 | Coverage ≥ 90% per file in `packages/ui`, tests in a real browser | `ui:test` (Vitest browser mode), proven by `test-check:test` | no | Phase 3 |
 | Every story renders, passes its `play` function and has no axe violation | `storybook:test` (addon-vitest, a11y `error`), proven by `test-check:test` | no | Phase 3 |
+| Every entry point within the size budget its `entry.json` declares | `ui:size` (size-limit, ADR 0028), proven by `test-check:test` | no | Phase 3 |
 | Formatting | Prettier (`.md` excluded) | staged files | Phase 3 |
 | Conventional commits, scope = Nx project or `repo`, `deps`, `docs`, `ci`, `release` | commitlint | commit message | n/a |
 | Public API unchanged or report updated; release tags present | API Extractor (`ui:api-report`) | no | Phase 3 |

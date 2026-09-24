@@ -1,1 +1,1 @@
-{ "layer": "foundations" }
+{ "layer": "foundations", "sizeLimit": "1 kB" }

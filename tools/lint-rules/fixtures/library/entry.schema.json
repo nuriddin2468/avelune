@@ -1,15 +1,20 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Avelune entry-point manifest",
-  "description": "Declares the layer of one @avelune/ui secondary entry point. An entry point may import only entry points of its own or a lower layer (ADR 0001).",
+  "description": "Declares the layer and the size budget of one @avelune/ui secondary entry point. An entry point may import only entry points of its own or a lower layer (ADR 0001); ui:size fails when its bundle exceeds the budget (ADR 0028).",
   "type": "object",
   "additionalProperties": false,
-  "required": ["layer"],
+  "required": ["layer", "sizeLimit"],
   "properties": {
     "$schema": { "type": "string" },
     "layer": {
       "description": "Layers from lowest to highest: foundations, components, composites, patterns.",
       "enum": ["foundations", "components", "composites", "patterns"]
+    },
+    "sizeLimit": {
+      "description": "Budget for the entry point's bundle, minified and brotli-compressed, peers and other entry points excluded: the measured size plus 10%, rounded up to the next 100 B (ADR 0028).",
+      "type": "string",
+      "pattern": "^\\d+(\\.\\d+)? k?B$"
     }
   }
 }

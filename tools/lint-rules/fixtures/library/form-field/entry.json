@@ -1,1 +1,1 @@
-{ "layer": "composites" }
+{ "layer": "composites", "sizeLimit": "1 kB" }

@@ -1,0 +1,14 @@
+/* Build scripts run directly in Node through type stripping (ADR 0015); the .mjs ones predate it. */
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "types": ["node"]
+  },
+  "include": ["*.ts", "*.mts"]
+}

@@ -11,7 +11,18 @@
         "default",
         "{workspaceRoot}/packages/ui/project.json",
         "{workspaceRoot}/packages/ui/tsconfig*.json",
-        { "externalDependencies": ["vitest", "@vitest/coverage-v8", "@vitest/browser-playwright", "@angular/build"] }
+        "{workspaceRoot}/packages/ui/scripts/size-limit.mts",
+        {
+          "externalDependencies": [
+            "vitest",
+            "@vitest/coverage-v8",
+            "@vitest/browser-playwright",
+            "@angular/build",
+            "size-limit",
+            "@size-limit/file",
+            "@size-limit/esbuild"
+          ]
+        }
       ],
       "cache": true,
       "options": {

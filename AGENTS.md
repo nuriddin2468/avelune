@@ -57,6 +57,7 @@ Run from the repository root. `pnpm` switches itself to the pinned 11.27.1 (`pac
 | Colour primitives: check / regenerate | `pnpm nx run tokens:colors` / `pnpm nx run tokens:colors --update` |
 | All tests: library (Vitest in Chromium, coverage gate), stories (render, `play`, axe), Node-side (`node:test`) | `pnpm nx run-many -t test` (ADR 0015, 0026) |
 | Library unit tests / story tests | `pnpm nx run ui:test` / `pnpm nx run storybook:test` |
+| Size budget of every entry point (`sizeLimit` in `entry.json`) | `pnpm nx run ui:size` (ADR 0028) |
 | Format | `pnpm format` (check: `pnpm format:check`) |
 | Project graph | `pnpm nx graph` |
 

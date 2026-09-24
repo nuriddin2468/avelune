@@ -38,7 +38,8 @@
         "commands": [
           "ngc -p tsconfig.lib.json --noEmit",
           "ngc -p tsconfig.spec.json --noEmit",
-          "tsc -p tsconfig.schematics.json --noEmit"
+          "tsc -p tsconfig.schematics.json --noEmit",
+          "tsc -p scripts/tsconfig.json"
         ]
       }
     },
@@ -57,6 +58,24 @@
       "options": {
         "cwd": "{projectRoot}",
         "command": "node scripts/api-report.mjs"
+      }
+    },
+    "size": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build-lib"],
+      "inputs": [
+        "{workspaceRoot}/dist/packages/ui/fesm2022/**/*",
+        "{projectRoot}/*/entry.json",
+        "{projectRoot}/package.json",
+        "{projectRoot}/scripts/size-limit.mts",
+        {
+          "externalDependencies": ["size-limit", "@size-limit/file", "@size-limit/esbuild"]
+        }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "size-limit --config scripts/size-limit.mts"
       }
     },
     "stylelint": {},
