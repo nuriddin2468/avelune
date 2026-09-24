@@ -31,10 +31,12 @@ Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` an
 | Unit tests | `vitest`, `@vitest/browser`, `@vitest/browser-playwright`, `@vitest/coverage-v8` | 4.1.11 | `@angular/build` 22.1 peers `^4.0.8`; `@storybook/addon-vitest` and `@nx/vitest` peer `^3 \|\| ^4` (ADR 0013); installed in Phase 3 (2026-09-24) |
 | | `playwright` | 1.63.0 | Peer of `@vitest/browser-playwright`; its chromium 1243 was already in the user's Playwright cache, and its install script stays blocked (`allowBuilds`) |
 | | `vite` | 8.3.0 | Required by `@storybook/angular-vite` |
-| Storybook | `storybook`, `@storybook/angular-vite`, `@storybook/addon-{vitest,a11y,docs}` | 10.6.0 | ADR 0008. Installed in Phase 2; `addon-vitest` added in Phase 3 (2026-09-24). JIT since ADR 0025 |
+| Storybook | `storybook`, `@storybook/angular-vite`, `@storybook/addon-{vitest,a11y,docs}` | 10.6.0 | ADR 0008. Installed in Phase 2; `addon-vitest` added in Phase 3 (2026-09-24). JIT since ADR 0025. `angular-vite` carries a pnpm patch (ADR 0035): an upgrade must re-create or drop it |
 | | `@analogjs/vite-plugin-angular` | 2.7.2 | Required peer of `angular-vite` (≥ 2.0.0) |
 | | `@angular/animations` | 22.1.7 | Required peer of `angular-vite` 10.6; devDependency only, never imported (ADR 0005, 0008). npm marks it deprecated |
 | | `@angular-devkit/architect` | 0.2201.8 | Required peer of `angular-vite`; matches CLI 22.1.8 |
+| | `react`, `@types/react` | 19.3.0 | The React addon-docs 10.6 resolves (its dependency, peer range `^16.8 … ^19`), imported by the themed docs container; one copy in the lockfile. devDependencies only (ADR 0034). Installed 2026-09-24 (released 2026-09-09) |
+| | `remark-gfm` | 4.0.1 | GitHub-flavoured Markdown (tables) in the MDX docs pages; ESM, unified 11 like addon-docs' MDX 3. devDependency (ADR 0034). Installed 2026-09-24 (released 2025-02-10) |
 | E2E / visual | `@playwright/test` | 1.63.0 | Must equal the image tag `mcr.microsoft.com/playwright:v1.63.0-noble`, pinned by the amd64 digest in `tools/visual/src/image.ts` (`visual:test` checks it). Installed in Phase 3 (2026-09-24; released 2026-09-04) |
 | | `@axe-core/playwright` (brings `axe-core` ~4.13.0) | 4.13.0 | Peers `playwright-core >= 1.0.0`; resolves to 1.63.0. Installed in Phase 3 (2026-09-24; released 2026-08-11). Import the named `AxeBuilder`: under `nodenext` the default import types as the module |
 | Lint (TS/HTML) | `eslint` | 10.11.0 | |

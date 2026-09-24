@@ -2,6 +2,7 @@ import type { Decorator, Preview } from '@storybook/angular-vite';
 // The kit's global stylesheet, loaded as an application loads it: through the bundler, which resolves the tokens and
 // the fonts next to it (ADR 0030).
 import '@avelune/ui/styles.css';
+import { ThemedDocsContainer } from './docs-theme';
 
 type Theme = 'light' | 'dark';
 type Density = 'comfortable' | 'compact';
@@ -45,6 +46,7 @@ const preview: Preview = {
     // Any axe violation fails the story once addon-vitest runs them (Phase 3, ADR 0006).
     a11y: { test: 'error' },
     backgrounds: { disable: true },
+    docs: { container: ThemedDocsContainer },
   },
 };
 

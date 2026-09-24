@@ -78,6 +78,11 @@ catalog:
   '@storybook/addon-docs': 10.6.0
   '@storybook/addon-a11y': 10.6.0
   '@analogjs/vite-plugin-angular': 2.7.2
+  # The themed docs container: the React that addon-docs renders with, never in a published package (ADR 0034)
+  react: 19.3.0
+  '@types/react': 19.3.0
+  # GitHub-flavoured Markdown (tables) in the MDX docs pages
+  remark-gfm: 4.0.1
   vite: 8.3.0
   # Unit and story tests (ADR 0006, 0013)
   vitest: 4.1.11
@@ -107,3 +112,6 @@ catalog:
   subset-font: 2.9.0
   # Node types for repository scripts, matching engines.node (ADR 0015)
   '@types/node': 24.13.6
+
+patchedDependencies:
+  '@storybook/angular-vite@10.6.0': patches/@storybook__angular-vite@10.6.0.patch

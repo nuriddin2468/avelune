@@ -2,10 +2,19 @@
 // stories next to it in packages/ui (ADR 0033).
 import type { StorybookConfig } from '@storybook/angular-vite';
 import { join } from 'node:path';
+import remarkGfm from 'remark-gfm';
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.ts', '../../../packages/ui/**/*.mdx', '../../../packages/ui/**/*.stories.ts'],
-  addons: ['@storybook/addon-docs', '@storybook/addon-a11y', '@storybook/addon-vitest'],
+  addons: [
+    // GitHub-flavoured Markdown, for the tables of the docs pages; plain MDX renders them as text.
+    {
+      name: '@storybook/addon-docs',
+      options: { mdxPluginOptions: { mdxCompileOptions: { remarkPlugins: [remarkGfm] } } },
+    },
+    '@storybook/addon-a11y',
+    '@storybook/addon-vitest',
+  ],
   framework: {
     name: '@storybook/angular-vite',
     // JIT, the framework default: with AOT the production build drops the compiler that Storybook's wrapper needs.

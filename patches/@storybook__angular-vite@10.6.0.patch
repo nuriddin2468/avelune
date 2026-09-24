@@ -1,0 +1,22 @@
+diff --git a/dist/_browser-chunks/chunk-UJ3I56EP.js b/dist/_browser-chunks/chunk-UJ3I56EP.js
+index 4c6481ea0f8183ee4b47a8b5819c5ebd415f0e31..7a15b5043480c5ea924c00fbd1ddc29202c98fa4 100644
+--- a/dist/_browser-chunks/chunk-UJ3I56EP.js
++++ b/dist/_browser-chunks/chunk-UJ3I56EP.js
+@@ -547,11 +547,14 @@ var applicationRefs = /* @__PURE__ */ new Map(), STORY_UID_ATTRIBUTE = "data-sb-
+       ...storyFnAngular.applicationConfig?.providers ?? []
+     ];
+     STORYBOOK_ANGULAR_OPTIONS?.zoneless && providers.unshift(provideZonelessChangeDetection());
+-    let applicationRef = await queueBootstrapping(() => bootstrapApplication(application, {
++    // Avelune patch (ADR 0035): a docs page that remounts while this render waits in the queue detaches its host,
++    // and bootstrapping it then fails with NG05104. A newer render owns the new host, so a detached one is skipped.
++    let hostElement = targetDOMNode.querySelector(componentSelector);
++    let applicationRef = await queueBootstrapping(() => hostElement?.isConnected ? bootstrapApplication(application, {
+       ...storyFnAngular.applicationConfig,
+       providers
+-    }));
+-    applicationRefs.set(targetDOMNode, applicationRef);
++    }) : Promise.resolve(void 0));
++    applicationRef !== void 0 && applicationRefs.set(targetDOMNode, applicationRef);
+   }
+   /**
+    * Only ASCII alphanumerics can be used as HTML tag name. https://html.spec.whatwg.org/#elements-2

@@ -238,6 +238,8 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 | Baseline PNGs grow the git history (6.9 MB for the Foundations pages alone, 2026-09-24) | every update reviewed; move `tools/visual/baselines` to Git LFS before the history passes 200 MB (ADR needed) | 0027 |
 | Chromium's Intl formats `uz`/`uz-Latn` with root patterns (`UZS 1,234,567.80`, `2026 M09 23`); `uz-Cyrl` dates are right but currency is `UZS`, not `сўм` (observed in Chromium 153, 2026-09-23; Node's full ICU is right) | check Chrome, Edge, Firefox and Safari before Wave 2; if confirmed, the kit ships its own uz formatting data for dates and numbers (ADR in Wave 2, before DatePicker) | none yet |
 | Storybook's dev server exits when a story file fails to index | restart; CI builds Storybook statically | 0008 |
+| `@storybook/angular-vite` is patched (a docs-page bootstrap race) | pinned to 10.6.0; `pnpm install` fails if the patch stops applying; upstream issue to file | 0035 |
+| Docs pages are outside every automated check: the visual suite and the axe sweep iterate stories only, and the unreadable dark Icon page (2026-09-24) was found by eye | the docs theme follows the toolbar (ADR 0034); before Icon goes to beta, add every docs entry in both themes to the axe sweep | 0027, 0034 |
 | iOS Safari 17–18.2 implements `popover` without light dismiss (browser-compat-data 8.1.2; WebKit bug 267688), and the floor is iOS 17.5 | Wave 3: Popover and Menu close on an outside tap on iOS too, through CDK or Angular Aria behaviour where they provide it; otherwise raise the iOS floor to 18.3 (product owner, ADR 0014) | 0014, 0029 |
 
 ## Tracked upgrades
@@ -247,7 +249,7 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 | Angular 22.2.0 (framework, `@angular/build`, `@angular/cli`, devkit), `@angular/cdk` + `@angular/aria` 22.2.0, `ng-packagr` 22.2.x, `prettier` 3.9.9, `@microsoft/api-extractor` 7.59.2 | Angular 22.2.0 is stable (published 2026-09-23; `@angular/build`/`cli` at 21:37 UTC). Under the 24-hour rule (ADR 0012) the last of these is allowed from **2026-09-24 21:37 UTC**. Do all of them in one merge request, check the peer ranges, update compatibility.md, re-run `compiler-check:test` (new extended diagnostics need fixtures) and `lint-rules:test`, then re-evaluate Vitest 5 (ADR 0013) |
 | `lucide-static` 1.48.0 | Allowed from **2026-09-25 05:57 UTC** (ADR 0012). Run `pnpm nx run icons:generate --update`, review the diff of `src/icons.ts` and the icon baselines, update compatibility.md |
 | Vitest 5 | Angular 22.2 + Storybook addon-vitest + `@nx/vitest` all peer it (ADR 0013) |
-| Storybook 11 | `angular-vite` stable; drop the `@angular/animations` devDependency (ADR 0008); check whether AOT builds keep `@angular/compiler`, and return to `jit: false` if so (ADR 0025) |
+| Storybook 11 | `angular-vite` stable; drop the `@angular/animations` devDependency (ADR 0008); check whether AOT builds keep `@angular/compiler`, and return to `jit: false` if so (ADR 0025); re-check the themed docs container and its `react` version (ADR 0034); drop or re-create the `angular-vite` patch (ADR 0035) |
 | pnpm 12 | Nx lists support (ADR 0012) |
 | TypeScript 7 | Angular supports it |
 | API Extractor with TS 6 | rushstack PR #5841 released |
