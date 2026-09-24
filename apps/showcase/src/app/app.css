@@ -1,0 +1,30 @@
+/* The showcase shell: an application bar over the canvas, and the screen below it. Tokens only. */
+@layer app {
+  :host {
+    display: block;
+    min-block-size: 100dvb;
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ave-space-4);
+    padding: var(--ave-space-2) var(--ave-space-4);
+    border-block-end: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    background-color: var(--ave-color-bg-surface);
+  }
+
+  .product {
+    font: var(--ave-font-label-md);
+  }
+
+  .settings {
+    display: flex;
+    gap: var(--ave-space-2);
+  }
+
+  .main {
+    padding: var(--ave-space-6) var(--ave-space-4);
+  }
+}

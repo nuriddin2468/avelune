@@ -7,6 +7,7 @@ Axe and the cross-component invariants of brief §8.2 on every showcase screen, 
 - axe finds no violation (every default rule, `region` included);
 - no horizontal scroll at 320 px;
 - every animation's duration and easing equal a motion token (`src/motion.ts` records every animation on every frame; the easings compare in the browser's serialisation, so `linear()` stops match);
-- under reduced motion nothing translates or scales.
+- under reduced motion nothing translates or scales;
+- controls of one size share height, radius, border width and font size, and those with a text label the inline padding (`src/controls.ts`; icon buttons are squares).
 
-The invariants that need components (same-size controls, overlays, `animate.leave` removal) are added with those components in Phase 5. `pnpm nx run invariants:test` unit-tests the motion checks; `tools/test-check` proves that the suite fails on each violation (`pnpm nx run test-check:e2e`).
+The overlay invariants and `animate.leave` removal join with the overlays (Wave 3). `pnpm nx run invariants:test` unit-tests the motion and control checks; `tools/test-check` proves that the suite fails on each violation (`pnpm nx run test-check:e2e`).

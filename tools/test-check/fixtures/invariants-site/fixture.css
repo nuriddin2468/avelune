@@ -126,3 +126,30 @@ main {
 .wide {
   inline-size: 400px;
 }
+
+/* Same-size controls: the medium box of the kit. The control page's pair matches; on same-size.html the input is
+   4px taller, and the square has no padding, which the invariant ignores for squares. */
+.controls {
+  display: flex;
+  gap: 8px;
+}
+
+.control {
+  box-sizing: border-box;
+  block-size: 36px;
+  padding-inline: 16px;
+  border: 1px solid #8c8482;
+  border-radius: 8px;
+  background: #fff;
+  color: #221e1d;
+  font: 14px/20px sans-serif;
+}
+
+.square {
+  inline-size: 36px;
+  padding-inline: 0;
+}
+
+.taller {
+  block-size: 40px;
+}

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Same-size controls</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/tokens/tokens.css" />
+    <link rel="stylesheet" href="/fonts/fonts.css" />
+    <link rel="stylesheet" href="/fixture.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Same-size controls</h1>
+      <!-- Violation: a medium input 4px taller than the medium button next to it. The square icon button passes. -->
+      <div class="controls">
+        <button avebutton data-size="md" type="button" class="control">Search</button>
+        <button aveiconbutton data-size="md" type="button" class="control square" aria-label="Close"></button>
+        <input aveinput data-size="md" class="control taller" aria-label="Query" />
+      </div>
+    </main>
+  </body>
+</html>

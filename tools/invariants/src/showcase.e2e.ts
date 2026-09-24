@@ -1,10 +1,11 @@
 // Cross-component invariants of brief §8.2 and the axe gate of brief §5.4, on every showcase screen, once per project
-// of playwright.config.ts (light and dark, 1280 and 390 px). The component invariants (same-size controls, overlays,
-// animate.leave) join as the components arrive in Phase 5.
+// of playwright.config.ts (light and dark, 1280 and 390 px). Same-size controls joined with Wave 1; overlays and
+// animate.leave join with the overlays (Wave 3).
 import { AxeBuilder } from '@axe-core/playwright';
 import { test as base, expect, type Page } from '@playwright/test';
 import { tokens } from '@avelune/tokens';
 import { fixedEnvironment } from '@avelune/visual';
+import { controlSelector, sameSizeViolations, type ControlBox } from './controls.ts';
 import { motionGlobal, motionTokens, recordMotion, reducedMotionViolations, timingViolations } from './motion.ts';
 import type { MotionRecord } from './motion.ts';
 import { findScreens, openScreen } from './screens.ts';
@@ -137,6 +138,34 @@ test('nothing moves or scales under reduced motion', async ({ page, screens }) =
       expect
         .soft(reducedMotionViolations(await recordedMotion(page, path)), `movement under reduced motion on ${path}`)
         .toEqual([]);
+    });
+  }
+});
+
+test('controls of the same size share height, radius, border, font size and padding', async ({ page, screens }) => {
+  for (const path of screens) {
+    await test.step(path, async () => {
+      await openScreen(page, path);
+      const boxes = await page.evaluate(
+        (selector): ControlBox[] =>
+          [...document.querySelectorAll(selector)].map((control) => {
+            const style = getComputedStyle(control);
+            const kind = ['aveButton', 'aveIconButton', 'aveInput'].find((name) => control.hasAttribute(name)) ?? '';
+            const text = (control.getAttribute('aria-label') ?? control.textContent).replace(/\s+/g, ' ').trim();
+            return {
+              control: `${control.localName}[${kind}] "${text}"`,
+              size: control.getAttribute('data-size') ?? '',
+              square: kind === 'aveIconButton',
+              height: control.getBoundingClientRect().height,
+              radius: style.borderTopLeftRadius,
+              border: style.borderTopWidth,
+              fontSize: style.fontSize,
+              padding: style.paddingInlineStart,
+            };
+          }),
+        controlSelector,
+      );
+      expect.soft(sameSizeViolations(boxes), `controls of one size that differ on ${path}`).toEqual([]);
     });
   }
 });
