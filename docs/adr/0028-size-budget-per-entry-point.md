@@ -33,3 +33,7 @@ Brief §5.4 asks for a `size-limit` budget per entry point, and the definition o
 - Adding an entry point means measuring it and writing its budget (ARCHITECTURE.md, "Adding an entry point").
 - Partial-compiled code is slightly larger than what the Angular linker produces in a consumer build, so the budgets err on the safe side.
 - Testing entry points have no budget; they never ship in an application bundle.
+
+## Addendum: the size check hashes the build it measures (2026-09-24)
+
+`ui:size` and `ui:api-report` listed their inputs as paths into `dist/` (`{workspaceRoot}/dist/packages/ui/fesm2022/**/*`). Nx hashes such paths before the task's dependencies run, so a changed library was measured against the cached result of the previous build: IconButton brought the button entry point to 2.77 kB, over its 2.7 kB budget, and `ui:size` still reported 2.42 kB and passed. Both targets now take the build's outputs as `dependentTasksOutputFiles`, which Nx hashes after `build-lib` has run; the same change then failed at 2.77 kB, as it should.

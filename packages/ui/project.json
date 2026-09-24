@@ -60,7 +60,9 @@
       "executor": "nx:run-commands",
       "dependsOn": ["build"],
       "inputs": [
-        "{workspaceRoot}/dist/packages/ui/types/**/*",
+        {
+          "dependentTasksOutputFiles": "**/types/**/*.d.ts"
+        },
         "{projectRoot}/api/**/*",
         "{projectRoot}/scripts/api-report.mjs",
         {
@@ -77,7 +79,9 @@
       "executor": "nx:run-commands",
       "dependsOn": ["build-lib"],
       "inputs": [
-        "{workspaceRoot}/dist/packages/ui/fesm2022/**/*",
+        {
+          "dependentTasksOutputFiles": "**/fesm2022/*.mjs"
+        },
         "{projectRoot}/*/entry.json",
         "{projectRoot}/package.json",
         "{projectRoot}/scripts/size-limit.mts",
