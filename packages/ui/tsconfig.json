@@ -1,0 +1,7 @@
+/* Editor and type-aware lint config for the library sources, specs and stories (the schematics have their own in
+   schematics/). Builds use tsconfig.lib.json and tsconfig.lib.prod.json. */
+{
+  "extends": "./tsconfig.lib.json",
+  "include": ["**/*.ts"],
+  "exclude": ["schematics/**", "**/fixtures/**"]
+}

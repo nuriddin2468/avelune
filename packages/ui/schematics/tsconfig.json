@@ -1,0 +1,6 @@
+/* Editor and type-aware lint config for the schematics; the build uses ../tsconfig.schematics.json. */
+{
+  "extends": "../tsconfig.schematics.json",
+  "include": ["**/*.ts"],
+  "exclude": ["**/fixtures/**"]
+}

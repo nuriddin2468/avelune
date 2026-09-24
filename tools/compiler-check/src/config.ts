@@ -42,7 +42,12 @@ function mismatches(
     const actual: unknown = options[option];
     return actual === value
       ? []
-      : [{ option, message: `${option} is ${actual === undefined ? 'not set' : String(actual)}; required: ${value}` }];
+      : [
+          {
+            option,
+            message: `${option} is ${actual === undefined ? 'not set' : JSON.stringify(actual)}; required: ${value}`,
+          },
+        ];
   });
 }
 
@@ -52,20 +57,27 @@ function notFalse(options: AngularCompilerOptions, flags: readonly string[], par
     .map((option) => ({ option, message: `${option} is false; ${parent} requires it` }));
 }
 
+/** A property of an object read from JSON; Angular types these as enums, but a tsconfig can hold anything. */
+function property(value: unknown, key: string): unknown {
+  return typeof value === 'object' && value !== null ? Reflect.get(value, key) : undefined;
+}
+
 function diagnostics(options: AngularCompilerOptions): readonly Omit<Finding, 'file'>[] {
-  const { defaultCategory, checks = {} } = options.extendedDiagnostics ?? {};
+  const extended: unknown = options.extendedDiagnostics;
+  const defaultCategory = property(extended, 'defaultCategory');
+  const checks = property(extended, 'checks');
   const findings: Omit<Finding, 'file'>[] = [];
   if (defaultCategory !== requiredDiagnosticCategory) {
     findings.push({
       option: 'extendedDiagnostics.defaultCategory',
-      message: `extendedDiagnostics.defaultCategory is ${defaultCategory ?? 'not set'}; required: ${requiredDiagnosticCategory}`,
+      message: `extendedDiagnostics.defaultCategory is ${defaultCategory === undefined ? 'not set' : JSON.stringify(defaultCategory)}; required: ${requiredDiagnosticCategory}`,
     });
   }
-  for (const [check, category] of Object.entries(checks)) {
+  for (const [check, category] of Object.entries(typeof checks === 'object' && checks !== null ? checks : {})) {
     if (category !== requiredDiagnosticCategory) {
       findings.push({
         option: `extendedDiagnostics.checks.${check}`,
-        message: `extendedDiagnostics.checks.${check} is ${category}; every extended diagnostic must be an ${requiredDiagnosticCategory}`,
+        message: `extendedDiagnostics.checks.${check} is ${JSON.stringify(category)}; every extended diagnostic must be an ${requiredDiagnosticCategory}`,
       });
     }
   }

@@ -72,8 +72,7 @@ export interface PairGroup {
 /** Every declared pair of contrast-pairs.json, evaluated in one theme. */
 export function contrastPairs(theme: Theme): readonly PairGroup[] {
   return pairsFile.pairs.map((entry) => {
-    const over: readonly (TokenName | undefined)[] =
-      'over' in entry && entry.over ? entry.over.filter(isTokenName) : [undefined];
+    const over: readonly (TokenName | undefined)[] = 'over' in entry ? entry.over.filter(isTokenName) : [undefined];
     const results = entry.foreground.filter(isTokenName).flatMap((foreground) =>
       entry.background.filter(isTokenName).flatMap((background) =>
         over.map((surface) => {

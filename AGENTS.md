@@ -51,6 +51,7 @@ Run from the repository root. `pnpm` switches itself to the pinned 11.27.1 (`pac
 | Build the tokens (`dist/tokens.css`, `tokens.ts`) | `pnpm nx build tokens` |
 | Check the tokens (schema, tiers, contrast in both themes, output) | `pnpm nx run tokens-check:check` |
 | Check that no tsconfig weakens the compiler strictness / prove each option with its fixture | `pnpm nx run compiler-check:check` / `pnpm nx run compiler-check:test` |
+| Prove the ESLint config and the `avelune` rules (RuleTester + workspace fixtures) | `pnpm nx run lint-rules:test` |
 | Fonts: check / rebuild (`packages/ui/styles/fonts`) | `pnpm nx run fonts:check` / `pnpm nx run fonts:check --update` |
 | Colour primitives: check / regenerate | `pnpm nx run tokens:colors` / `pnpm nx run tokens:colors --update` |
 | Node-side tests (scripts, tools) | `pnpm nx run-many -t test` (`node:test`, ADR 0015) |

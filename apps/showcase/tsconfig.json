@@ -1,0 +1,6 @@
+/* Editor and type-aware lint config for the showcase, specs included; the build uses tsconfig.app.json. */
+{
+  "extends": "./tsconfig.app.json",
+  "include": ["src/**/*.ts"],
+  "exclude": []
+}

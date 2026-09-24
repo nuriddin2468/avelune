@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 3 in progress. Compiler strictness is done (2026-09-24, ADR 0022). Next: the ESLint item. The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and must land before the Vitest item.
+**Current position:** Phase 3 in progress. Compiler strictness (ADR 0022) and ESLint (ADR 0023) are done (2026-09-24). Next: the Stylelint item. The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and must land before the Vitest item.
 
 ## Parameters
 
@@ -63,14 +63,14 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 
 ### Phase 3: Guardrails (before any component)
 
-Carried over from Phase 2: wire `tokens:colors`, `tokens-check:check`, `fonts:check`, `compiler-check:check` and the `node:test` targets into CI; the Foundations pages bind `[style.*]` to token variables to draw swatches, so the template no-inline-styles rule needs a documented exception for `apps/storybook/src/foundations/**` only; a lint check that media and container query values equal breakpoint/container tokens (ADR 0017); invariants normalise the browser's `linear(0 0%, …)` easing strings before comparing with tokens; ESLint `no-restricted-imports` for `@angular/animations` now that it is installed (ADR 0008).
+Carried over from Phase 2: wire `tokens:colors`, `tokens-check:check`, `fonts:check`, `compiler-check:check` and the `node:test` targets into CI; a lint check that media and container query values equal breakpoint/container tokens (ADR 0017); invariants normalise the browser's `linear(0 0%, …)` easing strings before comparing with tokens.
 
-Carried over from Phase 1: permanent fixtures for the three module-boundary violations (tokens → ui, icons → ui, relative cross-project import); a SchematicTestRunner test for `ng-add` and the empty migration collection; failing fixtures for `ui:api-report` (untagged export, stale report); an ESLint rule for JSDoc on public API (API Extractor's `ae-undocumented` is off, ADR 0007); a check that every Nx project carries a layer or type tag; a check of `.browserslistrc` against Angular's supported set (ADR 0014).
+Carried over from Phase 1: a SchematicTestRunner test for `ng-add` and the empty migration collection; failing fixtures for `ui:api-report` (untagged export, stale report); a check that every Nx project carries a layer or type tag; a check of `.browserslistrc` against Angular's supported set (ADR 0014).
 
 - [x] TS + Angular compiler strictness (brief §5.1). ADR 0022 adds `exactOptionalPropertyTypes`, `allowUnreachableCode: false` and `strictStandalone`, and sets `typeCheckHostBindings` explicitly. `compiler-check:check` fails on any tsconfig that weakens an option. `compiler-check:test` proves every option and every one of the compiler's 18 extended diagnostics with a violation fixture (46 fixtures), plus a clean control fixture and 10 weakened-config fixtures.
-- [ ] ESLint config + custom rules (`avelune/entry-point-layers`, raw-element template rule), with failing fixtures
+- [x] ESLint config + custom rules (`avelune/entry-point-layers`, raw-element template rule), with failing fixtures (ADR 0023). typescript-eslint `strictTypeChecked` plus angular-eslint TS, template and a11y rules; every rule an error; `--max-warnings=0`. The `avelune` plugin has four rules: `entry-point-layers`, `public-api-jsdoc` (the JSDoc rule carried over from Phase 1), `no-appearance-inputs` and `no-raw-elements`, the last for consumers; the showcase is linted as one. `lint-rules:test` covers each rule with RuleTester and runs 24 workspace fixtures through the real config, among them the three carried-over module-boundary violations, the `@angular/animations` ban and the Foundations `[style.*]` exception.
 - [ ] Stylelint config (brief §5.3, ADR 0009), with failing fixtures; CSS nesting × emulated encapsulation fixture (ADR 0005)
-- [ ] Vitest browser mode + coverage thresholds; Storybook angular-vite (running since Phase 2) + addon-vitest + a11y `error`
+- [ ] Vitest browser mode + coverage thresholds; Storybook angular-vite (running since Phase 2) + addon-vitest + a11y `error`. Known defect, found 2026-09-24 and present since Phase 2: the static build (`nx build storybook`) renders no story. The console shows "JIT compiler unavailable" from Storybook's `StorybookWrapperComponent` under `jit: false`. The dev server works. Fix this first: the visual job iterates the static build.
 - [ ] Playwright visual in pinned amd64 Docker; axe sweep; invariants skeleton; size-limit
 - [ ] API reports; changesets; `.gitlab-ci.yml` stages (brief §5.6); CODEOWNERS + review rule in CONTRIBUTING
 - [ ] Every guardrail proven to fail on a violation
@@ -86,7 +86,7 @@ Carried over from Phase 1: permanent fixtures for the three module-boundary viol
 Waves and status: see the tables below.
 
 ### Phase 6: Consumer integration
-- [ ] `ng add @avelune/ui` (peers, styles, fonts, provider, lint configs, AGENTS snippet)
+- [ ] `ng add @avelune/ui` (peers, styles, fonts, provider, lint configs, AGENTS snippet); build and publish `@avelune/eslint-config` with `tools/lint-rules` bundled (ADR 0023)
 - [ ] `tools/adoption-metrics` (JSON + CI summary)
 - [ ] `docs/consumers/migration.md`, `docs/consumers/AGENTS.snippet.md`
 - [ ] Pilot in the showcase as a consumer; then one real consumer when access is given

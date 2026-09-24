@@ -57,8 +57,9 @@ describe('generatePalette with the repository configuration', () => {
 
   it('keeps the brand colour exact at its step', () => {
     const brand = palette.scales[paletteConfig.brand.scale]?.[paletteConfig.brand.step];
-    assert.equal(brand?.hex, paletteConfig.brand.hex);
-    assert.equal(brand?.exact, true);
+    assert.ok(brand !== undefined);
+    assert.equal(brand.hex, paletteConfig.brand.hex);
+    assert.equal(brand.exact, true);
   });
 
   it('lets no brand-coloured text onto white: the brand fails 4.5:1, so accent text needs another step', () => {

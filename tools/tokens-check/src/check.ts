@@ -476,13 +476,14 @@ function checkContrast(
             const fg = colorOf(foreground, theme.context);
             const bg = colorOf(background, theme.context);
             const under = surface === undefined ? undefined : colorOf(surface, theme.context);
-            const missing = [
+            const lookups: readonly (readonly [string | undefined, Rgba | undefined])[] = [
               [foreground, fg],
               [background, bg],
               [surface, under],
-            ].find(([name, color]) => name !== undefined && color === undefined);
+            ];
+            const missing = lookups.find(([name, color]) => name !== undefined && color === undefined)?.[0];
             if (missing !== undefined) {
-              report('contrast', file, String(missing[0]), `${label}: not a colour token in the ${theme.name} theme`);
+              report('contrast', file, missing, `${label}: not a colour token in the ${theme.name} theme`);
               continue;
             }
             if (fg === undefined || bg === undefined) continue;

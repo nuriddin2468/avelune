@@ -50,8 +50,8 @@ import { cssVar, description, namesUnder } from './token-data';
       </ave-docs-section>
       <ave-docs-section heading="Stacking order" note="z-index for elements outside the top layer, lowest first.">
         <ol class="layers">
-          @for (name of layers; track name; let index = $index) {
-            <li class="layer" [style.margin-inline-start]="'calc(' + index + ' * var(--ave-space-3))'">
+          @for (name of layers; track name) {
+            <li class="layer" [style.margin-inline-start]="'calc(' + $index + ' * var(--ave-space-3))'">
               <span class="name">{{ name }}</span>
               <span class="value">{{ css(name) }}</span>
             </li>

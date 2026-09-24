@@ -67,6 +67,10 @@
     "subset-font": "catalog:",
     "typescript": "catalog:",
     "typescript-eslint": "catalog:",
+    "@typescript-eslint/utils": "catalog:",
+    "@typescript-eslint/rule-tester": "catalog:",
+    "angular-eslint": "catalog:",
+    "@eslint-community/eslint-plugin-eslint-comments": "catalog:",
     "vite": "catalog:"
   }
 }

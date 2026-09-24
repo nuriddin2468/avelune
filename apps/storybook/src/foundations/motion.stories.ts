@@ -16,7 +16,7 @@ import { cssVar, description, namesUnder } from './token-data';
         distances become 0 and nothing scales.</span
       >
       <ave-docs-section heading="Duration × easing">
-        <ave-docs-scroll [label]="'Duration and easing playground'">
+        <ave-docs-scroll label="Duration and easing playground">
           <table class="grid">
             <thead>
               <tr>

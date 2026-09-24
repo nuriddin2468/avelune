@@ -19,7 +19,9 @@ describe('build', () => {
     ts = readFileSync(join(outDir, 'tokens.ts'), 'utf8');
   });
 
-  after(() => rmSync(outDir, { recursive: true, force: true }));
+  after(() => {
+    rmSync(outDir, { recursive: true, force: true });
+  });
 
   /** Custom properties declared in the block that starts at `selector`. */
   const block = (selector: string): readonly string[] => {

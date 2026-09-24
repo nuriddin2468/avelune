@@ -28,6 +28,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0020](0020-icons-lucide.md) | Icons: Lucide | Accepted |
 | [0021](0021-accent-nearest-passing-step.md) | Accent fill: back to the nearest passing step | Accepted |
 | [0022](0022-compiler-strictness.md) | Compiler strictness: required options, checked in every tsconfig, proven by fixtures | Accepted |
+| [0023](0023-eslint-configuration.md) | ESLint: strict type-aware presets, kit rules, fixtures that lint as real paths | Accepted |
 
 ## Template
 

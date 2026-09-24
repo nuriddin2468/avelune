@@ -41,20 +41,20 @@ describe('readManifest rejects', () => {
   const tiers = { primitive: ['p.json'], semantic: ['s.json', 'd.json'], component: [] };
 
   it('a file listed in two tiers', () => {
-    withManifest({ tiers: { ...tiers, component: ['p.json'] }, overrides: {} }, (root) =>
-      assert.throws(() => readManifest(root), /p\.json is listed twice/),
-    );
+    withManifest({ tiers: { ...tiers, component: ['p.json'] }, overrides: {} }, (root) => {
+      assert.throws(() => readManifest(root), /p\.json is listed twice/);
+    });
   });
 
   it('an override whose base is not listed', () => {
-    withManifest({ tiers, overrides: { 'd.json': { base: 'x.json', names: 'same' } } }, (root) =>
-      assert.throws(() => readManifest(root), /needs a "base" that is in a tier/),
-    );
+    withManifest({ tiers, overrides: { 'd.json': { base: 'x.json', names: 'same' } } }, (root) => {
+      assert.throws(() => readManifest(root), /needs a "base" that is in a tier/);
+    });
   });
 
   it('an override without a names rule', () => {
-    withManifest({ tiers, overrides: { 'd.json': { base: 's.json' } } }, (root) =>
-      assert.throws(() => readManifest(root), /"names": "same" or "subset"/),
-    );
+    withManifest({ tiers, overrides: { 'd.json': { base: 's.json' } } }, (root) => {
+      assert.throws(() => readManifest(root), /"names": "same" or "subset"/);
+    });
   });
 });

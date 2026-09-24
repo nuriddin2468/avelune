@@ -149,6 +149,7 @@ const groups: readonly Group[] = [
                   @case ('border') {
                     <span class="sample border" aria-hidden="true" [style.border-color]="variable(swatch.name)"></span>
                   }
+                  @default never;
                 }
                 <span class="name">{{ swatch.name }}</span>
                 <code class="value">{{ value(swatch.name) }}</code>

@@ -9,14 +9,14 @@ How Avelune is built. Decisions and their reasons live in the [ADRs](adr/README.
 | `packages/tokens` | `tokens` | `layer:tokens` | DTCG sources and the Style Dictionary build |
 | `packages/icons` | `icons` | `layer:foundations` | Icon set and the generated `IconName` union (Phase 4) |
 | `packages/ui` | `ui` | `layer:patterns` | The Angular library, one secondary entry point per component |
-| `packages/eslint-config` | `eslint-config` | `type:config` | Shared ESLint config for consumers (Phase 3) |
+| `packages/eslint-config` | `eslint-config` | `type:config` | Shared ESLint config for consumers; bundles `tools/lint-rules` when first published (Phase 6) |
 | `packages/stylelint-config` | `stylelint-config` | `type:config` | Shared Stylelint config for consumers (Phase 3) |
 | `apps/showcase` | `showcase` | `type:app` | Real Angular app composing the kit into screens |
 | `apps/storybook` | `storybook` | `type:app` | Foundations pages (Phase 2); component docs, stories, interaction and a11y tests (Phase 3) |
 | `tools/tokens-check` | `tokens-check` | `type:tool` | Token validation |
 | `tools/fonts` | `fonts` | `type:tool` | Builds and checks the web font in `packages/ui/styles/fonts` |
 | `tools/compiler-check` | `compiler-check` | `type:tool` | Checks every tsconfig for the required compiler strictness; fixtures prove each option |
-| `tools/lint-rules` | `lint-rules` | `type:tool` | Custom ESLint rules (Phase 3) |
+| `tools/lint-rules` | `lint-rules` | `type:tool` | The `avelune` ESLint plugin and the fixtures that prove the workspace ESLint config (ADR 0023) |
 | `tools/invariants` | `invariants` | `type:tool` | Cross-component Playwright invariants (Phase 3/5) |
 | `tools/adoption-metrics` | `adoption-metrics` | `type:tool` | Consumer-repo scanner (Phase 6) |
 
@@ -41,7 +41,7 @@ Dependencies flow one way: `tokens → foundations → components → composites
 
 A project's layer tag is the highest layer it contains. `ui` holds entry points from foundations to patterns, so it is tagged `layer:patterns`: only apps may depend on it. Relative imports across projects are rejected too.
 
-**Inside `@avelune/ui`**, Nx cannot see entry points, so each one declares its layer in `entry.json` (schema: `packages/ui/entry.schema.json`, values `foundations`, `components`, `composites`, `patterns`). An entry point may import only entry points of its own or a lower layer, and only through their public specifier (`@avelune/ui/button`, never `…/button/button`). A `testing` entry point belongs to its parent's layer. The ESLint rule `avelune/entry-point-layers` that enforces this is built in Phase 3; until then the manifests are written but not checked.
+**Inside `@avelune/ui`**, Nx cannot see entry points, so each one declares its layer in `entry.json` (schema: `packages/ui/entry.schema.json`, values `foundations`, `components`, `composites`, `patterns`). An entry point may import only entry points of its own or a lower layer, and only through their public specifier (`@avelune/ui/button`, never `…/button/button`). A `testing` entry point belongs to its parent's layer, and only specs, stories and other harnesses may import one. `avelune/entry-point-layers` enforces all of this (ADR 0023).
 
 ## Entry points
 
@@ -76,7 +76,8 @@ Conventions:
 
 1. Create the folder with `index.ts`, `entry.json` and `ng-package.json`, plus `testing/` with its own `index.ts` and `ng-package.json`.
 2. No path mapping is needed: `tsconfig.base.json` maps `@avelune/ui/*` to `packages/ui/*/index.ts`.
-3. `pnpm nx build ui`, then `pnpm nx run ui:api-report --update`; review and commit the new report.
+3. If the entry point enhances a native element (`button[aveButton]`, `input[aveInput]`), add its attribute to `kitElements` in `tools/lint-rules/src/kit-elements.ts`, so consumers may use that element with it.
+4. `pnpm nx build ui`, then `pnpm nx run ui:api-report --update`; review and commit the new report.
 
 ## Build
 
@@ -96,6 +97,20 @@ Conventions:
 - Consequences for code: leave optional properties out rather than setting them to `undefined` (`...(x === undefined ? {} : { x })`). In host listeners `$event` is `Event`; narrow it inside the handler.
 - TypeScript 6 specifics: no `baseUrl` (paths are relative to the config file), `types: []` by default, and `rootDir` defaults to the config's folder. Apps that compile library sources through path mappings set `rootDir` to the workspace root.
 - `typecheck` targets run `ngc --noEmit`, which also type-checks templates; `ui:typecheck` checks the schematics too.
+- Every folder with TypeScript has a `tsconfig.json` that editors, the Angular language service and type-aware lint find by name. Where a build uses another file (`tsconfig.lib.json`, `tsconfig.app.json`, `tsconfig.schematics.json`), the `tsconfig.json` extends it and adds specs and stories.
+
+## Lint
+
+`eslint.config.mjs` at the root lints every project (ADR 0023). Its layers:
+
+1. The presets: `@eslint/js`, typescript-eslint `strictTypeChecked` (type-aware, through the project service), angular-eslint TS, template and accessibility rules, and eslint-comments. Every rule is an error, and lint runs with `--max-warnings=0`.
+2. Kit-wide Angular rules from brief §9.1: the `ave` prefix, the signal API, the `host` object, emulated encapsulation. Also banned imports: `@angular/animations`, `@angular/material`, and deep `@avelune/ui` paths.
+3. Per path:
+   - `packages/ui`: `avelune/entry-point-layers`, `avelune/public-api-jsdoc`, `avelune/no-appearance-inputs`.
+   - `apps/showcase`, linted as a consumer: `avelune/no-raw-elements`.
+   - `apps/storybook/src/foundations`: the one documented exception, `[style.*]` bindings for token swatches.
+
+The `avelune` plugin lives in `tools/lint-rules` (see its README). `pnpm nx run lint-rules:test` proves the plugin rules with RuleTester. It also lints each file in `tools/lint-rules/fixtures/config` through the real config, as if it were the path on its `Lint as:` line. To add a rule or an exception, add a fixture that fails without it; the test also fails when a plugin rule has no fixture.
 
 ## Schematics
 
@@ -153,7 +168,9 @@ What is checked today, by which tool, at which stage. Phase 3 completes this tab
 
 | Rule | Tool | Pre-commit | CI |
 |---|---|---|---|
-| Project layers, no relative cross-project imports | `@nx/enforce-module-boundaries` (ESLint) | staged files | Phase 3 |
+| Project layers, no relative cross-project imports | `@nx/enforce-module-boundaries` (ESLint), proven by `lint-rules:test` | staged files | Phase 3 |
+| Entry-point layers, public specifiers, harnesses out of runtime code; JSDoc on public API; no appearance inputs (`packages/ui`) | `avelune/*` rules (ESLint), proven by `lint-rules:test` | staged files | Phase 3 |
+| Type-aware TS rules (`strictTypeChecked`), angular-eslint TS, template and a11y rules, `ave` prefix, signal API, `host` object, emulated encapsulation, no inline styles, banned imports (`@angular/animations`, `@angular/material`, deep `@avelune/ui`), described disables; raw native elements in consumer templates | ESLint (ADR 0023), a fixture per rule group in `lint-rules:test`; every rule an error, `--max-warnings=0` | staged files | Phase 3 |
 | TS strictness, template types | `ngc --noEmit` (`typecheck` targets) | affected projects | Phase 3 |
 | No tsconfig weakens the required strictness (ADR 0022) | `compiler-check:check`, proven by `compiler-check:test` (a fixture per option and per extended diagnostic) | a staged tsconfig | Phase 3 |
 | Formatting | Prettier (`.md` excluded) | staged files | Phase 3 |

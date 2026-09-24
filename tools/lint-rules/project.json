@@ -4,5 +4,29 @@
   "projectType": "library",
   "sourceRoot": "tools/lint-rules",
   "tags": ["type:tool"],
-  "targets": {}
+  "targets": {
+    "test": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "default",
+        "{workspaceRoot}/eslint.config.mjs",
+        "{workspaceRoot}/**/tsconfig*.json",
+        "{workspaceRoot}/**/entry.json",
+        "{workspaceRoot}/**/project.json",
+        { "externalDependencies": ["eslint", "typescript-eslint", "angular-eslint", "@nx/eslint-plugin"] }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node --test \"src/**/*.spec.ts\""
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "tsc -p tsconfig.json"
+      }
+    }
+  }
 }

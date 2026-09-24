@@ -105,11 +105,12 @@ describe('convertToken', () => {
 });
 
 describe('convertToken rejects', () => {
-  const rejects = (resolved: ResolvedToken, message: RegExp) =>
+  const rejects = (resolved: ResolvedToken, message: RegExp) => {
     assert.throws(
       () => convertToken(resolved),
       (error) => error instanceof TokenValueError && message.test(error.message),
     );
+  };
 
   it('a colour outside sRGB', () => {
     rejects(token('color', { colorSpace: 'oklch', components: [0.6, 0.2, 38] }), /sRGB colour object/);

@@ -154,7 +154,7 @@ function decode(platformId: number, bytes: Uint8Array): string {
 function encode(platformId: number, text: string): Uint8Array {
   if (platformId === 1) {
     // decode() maps each byte to one char, so unchanged records round-trip byte for byte.
-    if ([...text].some((char) => char.charCodeAt(0) > 0xff)) {
+    if (/[\u0100-\uffff]/.test(text)) {
       throw new Error(`name "${text}" does not fit a Macintosh single-byte record`);
     }
     return Uint8Array.from(text, (char) => char.charCodeAt(0));

@@ -88,7 +88,7 @@ const samples = [
         heading="Figures"
         note="Figures are tabular by default, so numbers align in columns. The values are what this browser's Intl produces: Chromium formats uz-Latn with root patterns (UZS 1,234,567.80), a tracked risk in ROADMAP.md."
       >
-        <ave-docs-scroll [label]="'Table of figures'">
+        <ave-docs-scroll label="Table of figures">
           <table class="figures">
             <caption class="caption">
               Money and dates as Intl formats them in each locale
@@ -198,16 +198,20 @@ class Typography {
   }));
 
   constructor() {
-    afterNextRender(async () => {
-      await document.fonts.ready;
-      const sans = [400, 500, 600].every((weight) => document.fonts.check(`${weight} 14px "Avelune Sans"`, 'Oʻ Ғ Ж'));
-      const mono = document.fonts.check('400 13px "Avelune Mono"', 'Oʻ Ғ Ж');
-      this.fontStatus.set(
-        sans && mono
-          ? 'Avelune Sans (three weights) and Avelune Mono are loaded for Latin and Cyrillic.'
-          : 'A web font did not load; the page shows the fallback.',
-      );
+    afterNextRender(() => {
+      void this.checkFonts();
     });
+  }
+
+  private async checkFonts(): Promise<void> {
+    await document.fonts.ready;
+    const sans = [400, 500, 600].every((weight) => document.fonts.check(`${weight} 14px "Avelune Sans"`, 'Oʻ Ғ Ж'));
+    const mono = document.fonts.check('400 13px "Avelune Mono"', 'Oʻ Ғ Ж');
+    this.fontStatus.set(
+      sans && mono
+        ? 'Avelune Sans (three weights) and Avelune Mono are loaded for Latin and Cyrillic.'
+        : 'A web font did not load; the page shows the fallback.',
+    );
   }
 
   protected variable(name: TokenName): string {
@@ -216,7 +220,7 @@ class Typography {
 
   protected spec(name: TokenName): string {
     const value = tokens[name].value;
-    if (typeof value !== 'object' || value === null || !('fontSize' in value)) return '';
+    if (typeof value !== 'object' || !('fontSize' in value)) return '';
     return `${value.fontSize}/${value.lineHeight} · ${value.fontWeight}`;
   }
 }

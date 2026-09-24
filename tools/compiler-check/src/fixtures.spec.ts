@@ -39,8 +39,11 @@ const diagnostics = compile(project);
 
 describe('violation fixtures', () => {
   it('are compiled with the workspace options and nothing else', () => {
-    const { config } = ts.readConfigFile(project, ts.sys.readFile);
-    assert.deepEqual(Object.keys(config ?? {}).sort(), ['extends', 'include']);
+    const config: unknown = ts.readConfigFile(project, (path) => ts.sys.readFile(path)).config;
+    assert.deepEqual(Object.keys(typeof config === 'object' && config !== null ? config : {}).sort(), [
+      'extends',
+      'include',
+    ]);
     assert.deepEqual(checkConfig(project, fixtures), []);
   });
 

@@ -209,9 +209,15 @@ function finiteNumber(path: readonly string[], value: unknown, type: TokenType):
   return value;
 }
 
+function isFamilyList(value: unknown): value is readonly string[] {
+  return (
+    Array.isArray(value) && value.length > 0 && value.every((family) => typeof family === 'string' && family !== '')
+  );
+}
+
 function fontFamilies(path: readonly string[], value: unknown): readonly string[] {
   const families = typeof value === 'string' ? [value] : value;
-  if (!Array.isArray(families) || families.length === 0 || !families.every((f) => typeof f === 'string' && f !== '')) {
+  if (!isFamilyList(families)) {
     throw new TokenValueError(path, 'expected a font family name or a list of them');
   }
   return families;

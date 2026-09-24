@@ -1,6 +1,6 @@
 # Compatibility matrix
 
-Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` and the official docs; re-verified and installed in Phase 1 the same day. Re-verify before every upgrade; update this file in the same merge request as the version change.
+Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` and the official docs; re-verified and installed in Phase 1 the same day; the lint packages re-verified and installed in Phase 3 (2026-09-24). Re-verify before every upgrade; update this file in the same merge request as the version change.
 
 **Maturity rule.** pnpm resolves no version younger than 24 hours (`minimumReleaseAge`, ADR 0012 addendum). Rows marked *held back* pin the previous release until the newer one matures; the upgrade is listed in ROADMAP.md, "Tracked upgrades".
 
@@ -38,9 +38,10 @@ Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` an
 | | `axe-core`, `@axe-core/playwright` | 4.13.0 | |
 | Lint (TS/HTML) | `eslint` | 10.11.0 | |
 | | `@eslint/js`, `globals` | 10.0.1, 17.12.0 | Recommended rules; Node globals for scripts |
-| | `typescript-eslint` | 8.70.1 | Peers TS `<6.1.0` |
-| | `angular-eslint` | 22.5.0 | Peers ESLint `^9 \|\| ^10` |
-| | `@eslint-community/eslint-plugin-eslint-comments` | 4.8.1 | `require-description` for disables |
+| | `typescript-eslint` | 8.70.1 | Peers TS `<6.1.0`. `strictTypeChecked` through the project service (ADR 0023) |
+| | `@typescript-eslint/utils`, `@typescript-eslint/rule-tester` | 8.70.1 | Authoring and testing the `avelune` rules (`tools/lint-rules`); peer ESLint `^10`, TS `<6.1.0`; installed in Phase 3 (2026-09-24) |
+| | `angular-eslint` | 22.5.0 | Peers ESLint `^9 \|\| ^10`, typescript-eslint `^8`; depends on `@angular-devkit/*` `>=22 <23`. Installed in Phase 3 (2026-09-24; released 2026-09-07) |
+| | `@eslint-community/eslint-plugin-eslint-comments` | 4.8.1 | `require-description` for disables; peers ESLint `^10`. Installed in Phase 3 (2026-09-24) |
 | Lint (CSS) | `stylelint` | 17.15.0 | |
 | | `stylelint-config-standard` | 40.0.0 | Peers `^17` |
 | | `stylelint-declaration-strict-value` | 1.12.1 | Peers `>=16 <=17` |

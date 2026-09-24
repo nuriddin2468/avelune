@@ -133,7 +133,9 @@ describe('the fonts CLI', () => {
   before(() => {
     directory = mkdtempSync(join(tmpdir(), 'avelune-fonts-'));
   });
-  after(() => rmSync(directory, { recursive: true, force: true }));
+  after(() => {
+    rmSync(directory, { recursive: true, force: true });
+  });
 
   it('accepts the committed files', () => {
     const result = run();

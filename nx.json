@@ -30,7 +30,13 @@
       "cache": true
     },
     "lint": {
-      "inputs": ["default", "{workspaceRoot}/eslint.config.mjs", "{workspaceRoot}/tools/lint-rules/**/*"],
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/eslint.config.mjs",
+        "{workspaceRoot}/tools/lint-rules/**/*"
+      ],
+      "options": { "args": ["--max-warnings=0"] },
       "cache": true
     }
   },
