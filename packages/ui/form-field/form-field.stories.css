@@ -1,0 +1,20 @@
+/* The frame of the FormField stories. Stories only; the component's own styles are form-field.css. */
+@layer components {
+  :host {
+    display: block;
+    padding: var(--ave-space-6);
+  }
+
+  .narrow {
+    display: grid;
+    gap: var(--ave-space-4);
+    max-inline-size: var(--ave-container-xs);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(calc(var(--ave-space-16) * 4), 1fr));
+    gap: var(--ave-space-4) var(--ave-space-6);
+    align-items: start;
+  }
+}

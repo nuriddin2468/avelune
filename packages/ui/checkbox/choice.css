@@ -1,0 +1,16 @@
+@layer components {
+  /* The control, then its text, 8px apart; a single line is 24px tall, the minimum target (WCAG 2.5.8). */
+  :host {
+    display: inline-flex;
+    align-items: start;
+    gap: var(--ave-space-2);
+    min-block-size: var(--ave-size-target-min);
+    padding-block: calc(var(--ave-space-1) / 2);
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-body-md);
+  }
+
+  :host(:has(:disabled)) {
+    color: var(--ave-color-fg-disabled);
+  }
+}

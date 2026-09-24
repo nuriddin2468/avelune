@@ -1,0 +1,74 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as IconButtonStories from './icon-button.stories';
+
+<Meta of={IconButtonStories} />
+
+# IconButton
+
+`aveIconButton` is a Button shown as an icon alone: a square with the same variants, sizes and states, whose `label` is its name for assistive technology (ADR 0038).
+
+```ts
+import { AveIconButton } from '@avelune/ui/button';
+```
+
+<Canvas of={IconButtonStories.Default} />
+<Controls />
+
+## When to use
+
+- For a frequent action whose icon everybody knows, where a label would crowd the place: close, delete a row, more actions, previous and next.
+- In toolbars and table rows, usually `ghost` and `sm`.
+
+## When not to use
+
+- When the action is not obvious from its icon: write a Button with a label. People should never have to guess.
+- For the main action of a region: that is a primary Button with a label.
+
+## Anatomy
+
+A square of the control height, with one decorative icon in its middle, 16px in `sm` and `md`, 20px in `lg`. `label` names the button; it is required, and an empty one throws in development.
+
+```html
+<!-- Registered with provideAveIcons([lucideX, lucideTrash]). -->
+<button aveIconButton type="button" icon="x" label="Close"></button>
+<button aveIconButton type="button" variant="ghost" size="sm" icon="trash" label="Delete row"></button>
+```
+
+## Variants and sizes
+
+The Button's variants, most often `ghost` or `secondary`. The square has the height of a Button or an input of the same size, so they line up in a row.
+
+<Canvas of={IconButtonStories.Variants} />
+
+<Canvas of={IconButtonStories.Sizes} />
+
+## States
+
+The Button's states: hover, press, focus, `disabled`, `disabled` with `disabledInteractive`, and `loading`, whose spinner takes the icon's place and size.
+
+<Canvas of={IconButtonStories.States} />
+
+## In context
+
+<Canvas of={IconButtonStories.InARow} />
+
+## Keyboard
+
+As a Button: Tab reaches it, Enter and Space activate it; a link follows on Enter. A disabled or loading icon button does nothing.
+
+## Accessibility
+
+- The label is the accessible name. Write what the button does, not what the icon shows: "Delete row", not "Trash can". In a list of rows, name the row: "Delete row 3" or "Delete Q3 report".
+- Until the Tooltip arrives (Wave 3), the label is not shown on hover; choose icons people recognise.
+- The icon is decorative and follows the text colour of the variant; forced colours draw the square's border.
+- The square is at least 28 × 28px (`sm` in compact density), and 44 × 44px to touch.
+
+## Motion
+
+As a Button: colour only on hover and press; the spinner turns.
+
+## Do and don't
+
+- Do use `ghost` icon buttons for repeated row actions, and one icon per meaning across the product.
+- Don't use an icon button for the primary action of a form.
+- Don't put a label next to an icon button that says the same; use a Button with an icon instead.

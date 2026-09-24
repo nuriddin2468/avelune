@@ -1,0 +1,31 @@
+@layer components {
+  /* Label, control, hint and error in one column: the label 8px above the control, the hint and the error 4px under
+     it (GUIDELINES.md, "Spacing rhythm"). The field fills its container. */
+  :host {
+    display: grid;
+    gap: var(--ave-space-1);
+    min-inline-size: 0;
+  }
+
+  .label {
+    margin-block-end: var(--ave-space-1);
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-label-md);
+  }
+
+  :host([data-disabled]) .label {
+    color: var(--ave-color-fg-disabled);
+  }
+
+  .required {
+    color: var(--ave-color-danger-fg);
+  }
+
+  /* The icon and the first line of the error are both 16px tall, so they line up. */
+  .error {
+    display: flex;
+    align-items: start;
+    gap: var(--ave-space-1);
+    color: var(--ave-color-danger-fg);
+  }
+}

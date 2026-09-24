@@ -1,0 +1,125 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as ButtonStories from './button.stories';
+
+<Meta of={ButtonStories} />
+
+# Button
+
+`aveButton` turns a native `<button>` into the kit's button, and an `<a>` into a link that looks like one. The element stays native: its role, its keyboard behaviour and its place in a form are the browser's (ADR 0037).
+
+```ts
+import { AveButton } from '@avelune/ui/button';
+```
+
+<Canvas of={ButtonStories.Default} />
+<Controls />
+
+## When to use
+
+- To start an action: save, send, export, open a dialog. Use `<button aveButton type="…">`.
+- To navigate somewhere that looks like an action in its context, such as "Create document" that opens a page. Use `<a aveButton href="…">`: it is a link, and screen readers announce it as one.
+
+## When not to use
+
+- For an action shown as an icon alone: use IconButton, which requires a label.
+- For navigation inside text: use a plain link.
+- For a choice between options: use a radio group, a segmented control or a select.
+- For turning a setting on or off: use a switch or a checkbox.
+
+## Anatomy
+
+A native element with, in order, an optional icon, the label and an optional trailing icon, 8px apart. While loading, a spinner takes the middle of the button and the content fades under it; the size never changes.
+
+## Variants
+
+One primary button per view region: the action most people came to do (`docs/GUIDELINES.md`, "Button variants").
+
+<Canvas of={ButtonStories.Variants} />
+
+| Variant               | Use for                                                          |
+| --------------------- | ---------------------------------------------------------------- |
+| `primary`             | The main action of a form, a dialog, a toolbar or a card         |
+| `secondary` (default) | Every other action                                               |
+| `ghost`               | Low-emphasis actions in dense places: toolbars, table rows       |
+| `danger`              | The confirming action of a destructive flow, in its confirmation |
+
+Every variant has the same box: the same height, border width, radius, padding and type. So does every other control of the same size, such as an input next to it.
+
+## Sizes
+
+<Canvas of={ButtonStories.Sizes} />
+
+| Size           | Height, comfortable | Height, compact | With                      |
+| -------------- | ------------------- | --------------- | ------------------------- |
+| `sm`           | 32                  | 28              | dense tables and toolbars |
+| `md` (default) | 36                  | 32              | forms and dialogs         |
+| `lg`           | 40                  | 36              | a single call to action   |
+
+The label is 14/20 at every size. Density moves every control one step down together.
+
+<Canvas of={ButtonStories.Compact} />
+
+## States
+
+<Canvas of={ButtonStories.States} />
+
+- **Hover and press** darken the fill, or add a light layer on `secondary` and `ghost`, in 70ms. Nothing moves.
+- **Focus** shows the kit's focus ring, outside the button, on keyboard focus only.
+- **Disabled** (`disabled`): dimmed and out of the tab order. A disabled link keeps its text but cannot be followed.
+- **Disabled, still focusable** (`disabled` and `disabledInteractive`): dimmed, but a keyboard can reach it, and assistive technology announces it as unavailable. Use it when people need to learn why: put the reason next to the button and link it with `aria-describedby`.
+- **Loading** (`loading`): the button is busy (`aria-busy`) and does nothing when pressed, but keeps its focus and its name. The spinner appears only after 300ms, so a quick action never flashes, and then stays at least 500ms.
+
+<Canvas of={ButtonStories.DisabledWithReason} />
+
+<Canvas of={ButtonStories.Loading} />
+
+## Content
+
+- Write a verb, and its object when it helps: "Save changes", "Send for approval". Never "OK" or "Yes".
+- An icon goes before the label, or after it when it shows where the action leads. Mark it `decorative`: the label says it.
+- Long labels wrap, and the button grows; a label never truncates. Russian runs up to 30% longer than English.
+- A button always has a label. For an icon alone, use IconButton.
+
+<Canvas of={ButtonStories.WithIcons} />
+
+<Canvas of={ButtonStories.LongText} />
+
+## Links
+
+`a[aveButton]` has the same variants, sizes and states. It must have an `href` (or a `routerLink`), otherwise it is not focusable. A disabled link is announced as unavailable and cannot be followed.
+
+<Canvas of={ButtonStories.Links} />
+
+## Keyboard
+
+Native, per the WAI-ARIA Authoring Practices button and link patterns:
+
+| Key   | `<button aveButton>`      | `<a aveButton>`                   |
+| ----- | ------------------------- | --------------------------------- |
+| Tab   | moves focus to the button | moves focus to the link           |
+| Enter | activates it              | follows it                        |
+| Space | activates it              | scrolls the page, as for any link |
+
+A disabled or loading button does nothing on Enter or Space, and a form does not submit through it.
+
+## Accessibility
+
+- The accessible name is the label. It stays while loading, because the content only fades.
+- `disabled` removes a button from the tab order. `disabledInteractive` keeps it there with `aria-disabled="true"`; the component owns that attribute, so set the input, not the attribute.
+- The kit's focus ring is drawn outside the button, and in forced colours it takes the system highlight.
+- The hit area is at least 24 × 24px, and 44 × 44px on touch screens, without changing the drawing.
+- Contrast: every label passes 4.5:1 on its fill in both themes, in every state but disabled (WCAG 1.4.3 exempts disabled controls).
+
+## Motion
+
+Only colour: hover and press change the fill in `duration.instant` with `easing.standard` (catalog: "Hover colour change"). The spinner turns with `ave-motion-spin` and keeps turning under reduced motion; rotation is not movement (ADR 0031). The content fades in `duration.fast`.
+
+## Do and don't
+
+- Do put the primary action last in a row, after "Cancel".
+- Do keep one primary button per region.
+- Do use `danger` only to confirm a destructive action; start the flow with `secondary`.
+- Do use `disabledInteractive` with a visible reason when people would otherwise wonder why nothing happens.
+- Don't use a button for navigation, or a link for an action.
+- Don't put two primary buttons side by side, or a primary in every row of a table.
+- Don't shorten a label to make it fit; let it wrap.

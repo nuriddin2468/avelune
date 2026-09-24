@@ -1,0 +1,78 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as CheckboxStories from './checkbox.stories';
+
+<Meta of={CheckboxStories} />
+
+# Checkbox
+
+`aveCheckbox` turns a native `<input type="checkbox">` into the kit's checkbox, and `aveChoice` a `<label>` into its label. The input stays native: both form APIs bind it, a click on the label toggles it, Space toggles it (ADR 0041).
+
+```ts
+import { AveCheckbox, AveChoice } from '@avelune/ui/checkbox';
+```
+
+<Canvas of={CheckboxStories.Default} />
+
+## When to use
+
+- For one choice that is on or off, and takes effect when the form is submitted: "Notify the counterparty by email".
+- For several independent choices in a list: each is its own checkbox.
+- For a confirmation that must be given before sending: "I confirm the data is correct", required.
+
+## When not to use
+
+- For a setting that takes effect at once: use a switch (Wave 2).
+- For one choice among several: use a radio group (up to 5 options) or a select.
+
+## Anatomy
+
+A 16px box with a 3:1 border, then the label, 8px apart. The box sits on the middle of the first line of the label; long labels wrap under the text, not under the box. Every line of the label is clickable, and a single line is 24px tall, the minimum target size.
+
+```html
+<label aveChoice>
+  <input type="checkbox" aveCheckbox [formField]="settings.notify" />
+  Notify the counterparty by email
+</label>
+```
+
+## States
+
+<Canvas of={CheckboxStories.States} />
+
+- **Checked:** the accent fill with a tick. **Mixed** (`indeterminate`): the accent fill with a bar, for a checkbox that stands for a group whose items are partly checked; a click clears it and checks the box.
+- **Invalid:** a red border, with a form binding once touched. Say why in words next to it.
+- **Disabled:** a flat fill without a border, a dimmed label.
+- **Focus:** the kit's focus ring around the box.
+
+## Forms
+
+<Canvas of={CheckboxStories.Forms} />
+
+- **Signal Forms:** `[formField]` on a boolean field; `required` in the schema means it must be checked.
+- **Reactive Forms:** `[formControl]` or `formControlName`; `Validators.requiredTrue` means it must be checked.
+
+## Content
+
+Write the label as what happens when it is checked: "Notify the counterparty by email", not "Notification". Labels wrap; they never truncate.
+
+<Canvas of={CheckboxStories.LongText} />
+
+## Keyboard
+
+Native, per the WAI-ARIA checkbox pattern: Tab moves to it, Space toggles it.
+
+## Accessibility
+
+- The label names the checkbox. A checkbox without a visible label, such as "select all rows" in a table header, needs `aria-label`.
+- The mixed state is exposed as `aria-checked="mixed"` by the browser.
+- In forced colours the box, the tick and the fill take system colours, so every state stays visible.
+
+## Motion
+
+Colour only: the fill changes in `duration.instant`. The tick appears at once.
+
+## Do and don't
+
+- Do phrase labels positively: "Notify the counterparty", not "Don't notify".
+- Do use a required checkbox only for a real confirmation, with the reason next to it.
+- Don't use a checkbox to trigger an action; use a button.

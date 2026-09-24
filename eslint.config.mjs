@@ -106,6 +106,9 @@ const templateRules = {
   '@angular-eslint/template/prefer-style-binding': 'error',
   '@angular-eslint/template/prefer-ngsrc': 'error',
   '@angular-eslint/template/require-switch-default': 'error',
+  // An icon button has no content by design: its required `label` input is its name (ADR 0038). Every other
+  // button, link and heading still needs content or one of the rule's default attributes.
+  '@angular-eslint/template/elements-content': ['error', { allowList: ['aveIconButton'] }],
 };
 
 export default defineConfig(

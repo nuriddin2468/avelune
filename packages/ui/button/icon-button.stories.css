@@ -1,0 +1,41 @@
+/* The frame of the IconButton stories. Stories only; the component's own styles are button.css and icon-button.css. */
+@layer components {
+  :host {
+    display: block;
+    padding: var(--ave-space-6);
+  }
+
+  /* Buttons in a row are related elements: 8px apart (GUIDELINES.md, "Spacing rhythm"). */
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ave-space-2);
+  }
+
+  .stack {
+    display: grid;
+    gap: var(--ave-space-4);
+    justify-items: start;
+  }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: var(--ave-space-2);
+    max-inline-size: var(--ave-container-sm);
+    padding: var(--ave-space-2);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface);
+  }
+
+  .position {
+    font: var(--ave-font-body-sm);
+    color: var(--ave-color-fg-muted);
+  }
+
+  .spacer {
+    flex: 1;
+  }
+}

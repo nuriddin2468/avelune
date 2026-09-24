@@ -1,0 +1,22 @@
+/* The frame of the Checkbox stories. Stories only; the component's own styles are checkbox.css and choice.css. */
+@layer components {
+  :host {
+    display: block;
+    padding: var(--ave-space-6);
+  }
+
+  .stack {
+    display: grid;
+    gap: var(--ave-space-2);
+    justify-items: start;
+  }
+
+  .narrow {
+    max-inline-size: var(--ave-container-xs);
+  }
+
+  .error {
+    color: var(--ave-color-danger-fg);
+    font: var(--ave-font-body-sm);
+  }
+}

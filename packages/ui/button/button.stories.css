@@ -1,0 +1,68 @@
+/* The frame of the Button stories. Stories only; the component's own styles are button.css. */
+@layer components {
+  :host {
+    display: block;
+    padding: var(--ave-space-6);
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ave-space-2);
+  }
+
+  .row + .row {
+    margin-block-start: var(--ave-space-6);
+  }
+
+  .end {
+    justify-content: end;
+  }
+
+  .stack {
+    display: grid;
+    gap: var(--ave-space-4);
+    justify-items: start;
+  }
+
+  .stack + .row {
+    margin-block-start: var(--ave-space-8);
+  }
+
+  .narrow {
+    max-inline-size: var(--ave-container-xs);
+  }
+
+  .hint {
+    font: var(--ave-font-body-sm);
+    color: var(--ave-color-fg-muted);
+  }
+
+  /* The states table is wider than a phone; it scrolls inside its frame, not the page. */
+  .scroll {
+    overflow: auto;
+  }
+
+  .states {
+    border-collapse: collapse;
+  }
+
+  .states caption {
+    padding-block-end: var(--ave-space-3);
+    font: var(--ave-font-label-md);
+    text-align: start;
+  }
+
+  .states th,
+  .states td {
+    padding: var(--ave-space-2) var(--ave-space-3);
+    border-block-end: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    font: var(--ave-font-body-sm);
+    text-align: start;
+  }
+
+  .states thead th {
+    color: var(--ave-color-fg-muted);
+  }
+}

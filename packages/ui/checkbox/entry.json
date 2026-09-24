@@ -1,0 +1,5 @@
+{
+  "$schema": "../entry.schema.json",
+  "layer": "components",
+  "sizeLimit": "1.6 kB"
+}

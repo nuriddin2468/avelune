@@ -1,0 +1,86 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as FormFieldStories from './form-field.stories';
+
+<Meta of={FormFieldStories} />
+
+# FormField
+
+`<ave-form-field>` gives a control its label, its hint and its error, and marks it when it needs a value. The control inside, such as `input[aveInput]`, takes the label's id and is described by the hint and the error (ADR 0040).
+
+```ts
+import { AveError, AveFormField, AveHint } from '@avelune/ui/form-field';
+```
+
+<Canvas of={FormFieldStories.Default} />
+
+## When to use
+
+- Around every Input in a form, and around every later control that takes one value (Select, Combobox, DatePicker, Textarea).
+
+## When not to use
+
+- Around a checkbox: a checkbox carries its own label (`label[aveChoice]`). A group of checkboxes gets a fieldset (Wave 2).
+- For a search box next to its button: an input with `aria-label` is enough there.
+
+## Anatomy
+
+In one column, the width of its container:
+
+1. **Label**, above the control, 8px from it. Required controls get an asterisk after the label. Explain it once above the form: "\* Required field".
+2. **Control**, projected.
+3. **Hint** (`[aveHint]`), 4px under the control: how to fill it in. Optional.
+4. **Error** (`[aveError]`), 4px under the control, after the hint: what is wrong and how to fix it, with an icon.
+
+```html
+<ave-form-field label="Contract number">
+  <input aveInput type="text" [formField]="contract.number" />
+  <p aveHint>As written on the signed copy.</p>
+  @if (contract.number().errors().length > 0) {
+  <p aveError>Enter the contract number, for example ДК-2026/114.</p>
+  }
+</ave-form-field>
+```
+
+## States
+
+<Canvas of={FormFieldStories.States} />
+
+- **Required:** from the form binding (Signal Forms' `required`, Reactive Forms' `Validators.required`) or the control's `required` attribute. The asterisk is hidden from assistive technology; the control itself says that it is required.
+- **Error:** with a form binding, the error shows once the control is invalid and touched: after the person left it, or after the form was submitted. Without a binding it shows whenever the template has it. The control is described by it, and it is `aria-invalid`.
+- **Disabled:** the label dims with the control.
+
+## Forms
+
+<Canvas of={FormFieldStories.SignalForms} />
+
+<Canvas of={FormFieldStories.ReactiveForms} />
+
+## Content
+
+- **Labels** are short nouns: "Contract number", not "Please enter the contract number". Sentence case, no colon.
+- **Hints** say what people need before they type: a format, a limit, where to find the value.
+- **Errors** say what happened and how to fix it: "Enter the contract number, for example ДК-2026/114". Never "Invalid value" alone, never an apology.
+- Long labels and errors wrap; they never truncate.
+
+<Canvas of={FormFieldStories.LongText} />
+
+## Keyboard
+
+The field adds none: Tab reaches the control. A click on the label focuses the control.
+
+## Accessibility
+
+- The label is a `<label for>` for the control: it names it, and a click on it focuses it.
+- The hint and the error are linked with `aria-describedby`, the hint first. Ids the control already describes itself with are kept, first.
+- The error is shown as text with an icon, never by colour alone; it is not announced as it appears, but read when the control is focused.
+
+## Motion
+
+None: the error appears at once.
+
+## Do and don't
+
+- Do mark required fields with the asterisk and explain it once, above the form.
+- Do write one error per field, the one that helps most right now.
+- Don't show an error before the person has left the field.
+- Don't put the hint in the placeholder.

@@ -1,0 +1,88 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as InputStories from './input.stories';
+
+<Meta of={InputStories} />
+
+# Input
+
+`aveInput` turns a native `<input>` into the kit's text field. The element stays native: Signal Forms and Reactive Forms bind it as they bind any input, and the kit shows the control's state (ADR 0039).
+
+```ts
+import { AveInput } from '@avelune/ui/input';
+```
+
+<Canvas of={InputStories.Default} />
+<Controls />
+
+## When to use
+
+- For one line of text: a name, a number, an email address, a search.
+- Inside an `<ave-form-field>`, which gives it its label, hint and error.
+
+## When not to use
+
+- For several lines: use Textarea (Wave 2).
+- For a choice from a known list: use a select or a combobox (Wave 2).
+- For a date: use DatePicker (Wave 2).
+- For yes or no: use a checkbox or a switch.
+
+## Anatomy
+
+A native input in the control box of its size: the height, radius, border width, padding and 14px text of a Button of the same size, so they line up in a row. Its border has 3:1 contrast, because the border is what shows where the field is.
+
+## Sizes
+
+<Canvas of={InputStories.Sizes} />
+
+## States
+
+<Canvas of={InputStories.States} />
+
+- **Focus:** the kit's focus ring, outside the field.
+- **Invalid:** a red border. On its own the colour is not enough: in a form field the error says what is wrong, in words and with an icon. With a form binding the kit sets `aria-invalid` once the field is touched; without one, set it yourself.
+- **Readonly:** a dashed border on a sunken fill. The value stays readable and can be copied.
+- **Disabled:** a flat fill without a border, dimmed text. It cannot be focused.
+
+No state changes the size of the field.
+
+## Forms
+
+Bind the input with either form API; nothing kit-specific is needed.
+
+<Canvas of={InputStories.SignalForms} />
+
+<Canvas of={InputStories.ReactiveForms} />
+
+- **Signal Forms:** `[formField]="form.email"`. `required`, `disabled` and `readonly` in the schema reach the input.
+- **Reactive Forms:** `[formControl]` or `formControlName`. `Validators.required` counts as required.
+- The field shows as invalid once it has been touched. Submitting a form should mark its fields touched: Signal Forms' `submit()` does, and with Reactive Forms call `markAllAsTouched()`.
+
+## Content
+
+- Long values scroll inside the field; the field keeps its size. Placeholders never replace a label.
+- Choose the `type` for the content: `email`, `tel` and `url` bring the right keyboard on phones, and `inputmode` refines it (`inputmode="numeric"` for codes).
+
+<Canvas of={InputStories.LongText} />
+
+<Canvas of={InputStories.Compact} />
+
+## Keyboard
+
+Native: Tab moves into the field, the text keys edit it, Enter submits its form.
+
+## Accessibility
+
+- Every input needs a label: an `<ave-form-field label="…">` around it, or `aria-label` when a visible label would repeat what is already there (a search next to its button).
+- Hints and errors are linked with `aria-describedby`, by the form field. Ids the application writes in the template are kept.
+- The border, the invalid border and the focus ring each reach 3:1 against the surface in both themes.
+
+## Motion
+
+None but colour: the border changes colour in `duration.instant` when the field becomes invalid.
+
+## Do and don't
+
+- Do give every field a visible label, above it.
+- Do size a field for its content where the layout allows: a postal code needs a short field.
+- Don't use the placeholder as the label, or for a hint people need while they type.
+- Don't show an error before the person has left the field.

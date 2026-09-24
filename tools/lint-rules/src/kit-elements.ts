@@ -4,8 +4,8 @@
 import type { RawElementMarkers } from './rules/no-raw-elements.ts';
 
 export const kitElements = {
-  button: [],
-  input: [],
+  button: ['aveButton', 'aveIconButton'],
+  input: ['aveInput', 'aveCheckbox'],
   select: [],
   textarea: [],
   dialog: [],

@@ -1,0 +1,154 @@
+@layer components {
+  /* One box for every variant and every control of a size (brief §8.2, ADR 0037): the control height as a minimum,
+     so a long label can wrap and grow the button, with a little block padding for a wrapped label; the control
+     padding; a border that is transparent where it is not drawn; the control radius; the label type at every size.
+     The content and the spinner share one grid cell. */
+  :host {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    min-block-size: var(--ave-control-height-md);
+    padding-block: var(--ave-space-1);
+    padding-inline: var(--ave-control-padding-inline-md);
+    border: var(--ave-border-width-default) solid transparent;
+    border-radius: var(--ave-radius-md);
+    background-color: transparent;
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-label-md);
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    transition-property: background-color, border-color, color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+  }
+
+  /* No block padding at sm: a line, two paddings and the border would pass the compact sm height (28px). */
+  :host([data-size='sm']) {
+    min-block-size: var(--ave-control-height-sm);
+    padding-block: 0;
+    padding-inline: var(--ave-control-padding-inline-sm);
+  }
+
+  :host([data-size='lg']) {
+    min-block-size: var(--ave-control-height-lg);
+    padding-inline: var(--ave-control-padding-inline-lg);
+  }
+
+  /* The state layer of secondary and ghost: hover and press tint whatever the button sits on. Its corners follow
+     the border's inner edge (concentric rule). The content is positioned after it, so it paints above. */
+  :host::before {
+    position: absolute;
+    inset: 0;
+    border-radius: calc(var(--ave-radius-md) - var(--ave-border-width-default));
+    background-color: transparent;
+    content: '';
+    pointer-events: none;
+    transition-property: background-color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+  }
+
+  /* A disabled or busy button shows no hover and no press. */
+  :host(:not([data-state='enabled']))::before {
+    display: none;
+  }
+
+  :host([data-variant='secondary']) {
+    border-color: var(--ave-color-border-default);
+    background-color: var(--ave-color-bg-surface);
+  }
+
+  :host([data-variant='primary']) {
+    background-color: var(--ave-color-accent-bg);
+    color: var(--ave-color-fg-on-accent);
+  }
+
+  :host([data-variant='danger']) {
+    background-color: var(--ave-color-danger-bg);
+    color: var(--ave-color-fg-on-danger);
+  }
+
+  :host([data-state='enabled'][data-variant='primary']:hover) {
+    background-color: var(--ave-color-accent-bg-hover);
+  }
+
+  :host([data-state='enabled'][data-variant='primary']:active) {
+    background-color: var(--ave-color-accent-bg-active);
+  }
+
+  :host([data-state='enabled'][data-variant='danger']:hover) {
+    background-color: var(--ave-color-danger-bg-hover);
+  }
+
+  :host([data-state='enabled'][data-variant='danger']:active) {
+    background-color: var(--ave-color-danger-bg-active);
+  }
+
+  :host([data-variant='secondary']:hover)::before,
+  :host([data-variant='ghost']:hover)::before {
+    background-color: var(--ave-color-bg-hover);
+  }
+
+  :host([data-variant='secondary']:active)::before,
+  :host([data-variant='ghost']:active)::before {
+    background-color: var(--ave-color-bg-active);
+  }
+
+  /* Disabled looks the same in every variant, without the variant's colour; ghost stays unfilled. */
+  :host([data-state='disabled']) {
+    border-color: transparent;
+    background-color: var(--ave-color-bg-disabled);
+    color: var(--ave-color-fg-disabled);
+    cursor: default;
+  }
+
+  :host([data-state='disabled'][data-variant='ghost']) {
+    background-color: transparent;
+  }
+
+  :host([data-state='busy']) {
+    cursor: progress;
+  }
+
+  .content {
+    position: relative;
+    display: inline-flex;
+    grid-area: 1 / 1;
+    align-items: center;
+    justify-content: center;
+    gap: var(--ave-space-2);
+    transition-property: opacity;
+    transition-duration: var(--ave-duration-fast);
+    transition-timing-function: var(--ave-easing-standard);
+  }
+
+  /* The content fades but stays: it keeps the button's size and its accessible name. */
+  :host([data-spinner]) .content {
+    opacity: 0;
+  }
+
+  .spinner {
+    position: relative;
+    grid-area: 1 / 1;
+  }
+
+  /* On a touch screen the hit area grows to the coarse target size around the drawing, which keeps its size. */
+  @media (pointer: coarse) {
+    :host::after {
+      position: absolute;
+      inset-block: min(0%, calc((100% - var(--ave-size-target-coarse)) / 2));
+      inset-inline: min(0%, calc((100% - var(--ave-size-target-coarse)) / 2));
+      content: '';
+    }
+  }
+
+  /* Forced colours paint every border, the transparent ones included, so each variant keeps its outline; disabled
+     takes the system's disabled colour. */
+  @media (forced-colors: active) {
+    :host([data-state='disabled']) {
+      border-color: GrayText;
+      color: GrayText;
+    }
+  }
+}

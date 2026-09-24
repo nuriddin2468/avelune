@@ -1,0 +1,18 @@
+@layer components {
+  /* Square: the inline size is the control height of the size, with no inline padding (ADR 0038). Everything else
+     is button.css. */
+  :host {
+    inline-size: var(--ave-control-height-md);
+    padding-inline: 0;
+  }
+
+  :host([data-size='sm']) {
+    inline-size: var(--ave-control-height-sm);
+    padding-inline: 0;
+  }
+
+  :host([data-size='lg']) {
+    inline-size: var(--ave-control-height-lg);
+    padding-inline: 0;
+  }
+}

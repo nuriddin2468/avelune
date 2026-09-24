@@ -1,0 +1,94 @@
+@layer components {
+  /* A 16px box (the small icon size) with a 3:1 border, drawn by the kit: the native one cannot be themed. The mark
+     is the ::before, shaped by clip-path. The box sits on the middle of a 20px line: 2px above and below. */
+  :host {
+    display: inline-grid;
+    flex-shrink: 0;
+    place-content: center;
+    inline-size: var(--ave-size-icon-sm);
+    block-size: var(--ave-size-icon-sm);
+    margin-block: calc(var(--ave-space-1) / 2);
+    margin-inline: 0;
+    border: var(--ave-border-width-default) solid var(--ave-color-border-strong);
+    border-radius: var(--ave-radius-sm);
+    appearance: none;
+    background-color: var(--ave-color-bg-surface);
+    transition-property: background-color, border-color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+  }
+
+  /* The check: a 10px tick. */
+  :host::before {
+    inline-size: calc(var(--ave-size-icon-sm) * 0.625);
+    block-size: calc(var(--ave-size-icon-sm) * 0.625);
+    background-color: var(--ave-color-fg-on-accent);
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0, 43% 62%);
+    content: '';
+    opacity: 0;
+  }
+
+  :host(:checked),
+  :host(:indeterminate) {
+    border-color: transparent;
+    background-color: var(--ave-color-accent-bg);
+  }
+
+  :host(:checked)::before {
+    opacity: 1;
+  }
+
+  /* The mixed state: a 10 × 2px bar. */
+  :host(:indeterminate)::before {
+    block-size: var(--ave-border-width-selected);
+    clip-path: none;
+    opacity: 1;
+  }
+
+  :host(:enabled:checked:hover),
+  :host(:enabled:indeterminate:hover) {
+    background-color: var(--ave-color-accent-bg-hover);
+  }
+
+  :host([aria-invalid='true']) {
+    border-color: var(--ave-color-danger-border);
+  }
+
+  :host(:disabled) {
+    border-color: transparent;
+    background-color: var(--ave-color-bg-disabled);
+  }
+
+  :host(:disabled)::before {
+    background-color: var(--ave-color-fg-disabled);
+  }
+
+  /* Forced colours would paint the box and the mark in the canvas colour; they get system colours of their own. */
+  @media (forced-colors: active) {
+    :host {
+      border-color: CanvasText;
+      background-color: Canvas;
+      forced-color-adjust: none;
+    }
+
+    :host(:checked),
+    :host(:indeterminate) {
+      border-color: Highlight;
+      background-color: Highlight;
+    }
+
+    :host::before {
+      background-color: HighlightText;
+    }
+
+    :host(:disabled) {
+      border-color: GrayText;
+      background-color: Canvas;
+    }
+
+    :host(:disabled:checked),
+    :host(:disabled:indeterminate) {
+      background-color: GrayText;
+    }
+  }
+}

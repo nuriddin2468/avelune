@@ -1,0 +1,13 @@
+@layer components {
+  /* A hint in muted small text; an error in the danger colour, which the field's error row also sets. */
+  :host {
+    display: block;
+    margin: 0;
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+
+  :host([data-part='error']) {
+    color: var(--ave-color-danger-fg);
+  }
+}
