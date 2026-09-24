@@ -10,7 +10,9 @@
       "inputs": [
         "{projectRoot}/scripts/**/*",
         "!{projectRoot}/scripts/**/*.spec.ts",
-        "{projectRoot}/src/icons.ts",
+        "{projectRoot}/src/index.ts",
+        "{projectRoot}/src/lucide.ts",
+        "{projectRoot}/src/lucide-all.ts",
         "{projectRoot}/LICENSE-lucide.txt",
         "{workspaceRoot}/.prettierrc.json",
         {
@@ -26,7 +28,12 @@
     "build": {
       "executor": "nx:run-commands",
       "dependsOn": ["generate"],
-      "inputs": ["production", { "externalDependencies": ["typescript"] }],
+      "inputs": [
+        "production",
+        {
+          "externalDependencies": ["typescript"]
+        }
+      ],
       "outputs": ["{projectRoot}/dist"],
       "cache": true,
       "options": {
@@ -36,7 +43,12 @@
     },
     "test": {
       "executor": "nx:run-commands",
-      "inputs": ["default", { "externalDependencies": ["lucide-static"] }],
+      "inputs": [
+        "default",
+        {
+          "externalDependencies": ["lucide-static"]
+        }
+      ],
       "cache": true,
       "options": {
         "cwd": "{projectRoot}",
@@ -48,6 +60,22 @@
       "options": {
         "cwd": "{projectRoot}",
         "command": "tsc -p tsconfig.json"
+      }
+    },
+    "size": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "inputs": [
+        "{projectRoot}/dist/**/*",
+        "{projectRoot}/scripts/size-limit.mts",
+        {
+          "externalDependencies": ["size-limit", "@size-limit/file", "@size-limit/esbuild"]
+        }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "size-limit --config scripts/size-limit.mts"
       }
     }
   }

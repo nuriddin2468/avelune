@@ -1,4 +1,4 @@
-/* Compiles the generated src/icons.ts into the published dist/icons.js and dist/icons.d.ts. */
+/* Compiles the generated src/index.ts and src/lucide.ts, and src/lucide-all.ts, into the published dist/. */
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
@@ -9,5 +9,5 @@
     "sourceMap": false,
     "types": []
   },
-  "files": ["src/icons.ts"]
+  "files": ["src/index.ts", "src/lucide.ts", "src/lucide-all.ts"]
 }

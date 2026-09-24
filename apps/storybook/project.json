@@ -33,7 +33,20 @@
       "options": {
         "cwd": "{projectRoot}",
         "command": "storybook build --config-dir .storybook --output-dir ../../dist/apps/storybook --quiet"
-      }
+      },
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/packages/ui/**/*.stories.ts",
+        {
+          "externalDependencies": [
+            "storybook",
+            "@storybook/angular-vite",
+            "@storybook/addon-docs",
+            "@storybook/addon-a11y"
+          ]
+        }
+      ]
     },
     "typecheck": {
       "executor": "nx:run-commands",
@@ -60,6 +73,7 @@
       "inputs": [
         "default",
         "^production",
+        "{workspaceRoot}/packages/ui/**/*.stories.ts",
         {
           "externalDependencies": [
             "storybook",

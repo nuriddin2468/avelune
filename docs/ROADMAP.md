@@ -153,7 +153,7 @@ Waves and status: see the tables below.
 
 | Component | Wave | Layer | Status | Owner | Notes |
 |---|---|---|---|---|---|
-| Icon | 1 | foundations | experimental | | `@avelune/ui/icon` (ADR 0033); in the showcase shell; beta at the Wave 1 gate, with a realistic composition |
+| Icon | 1 | foundations | experimental | | `@avelune/ui/icon` (ADR 0033, 0036): every Lucide icon through `provideAveIcons`, custom SVG through `defineAveIcon`, the "Check your icon" guide; in the showcase shell; beta at the Wave 1 gate, with a realistic composition |
 | Button | 1 | components | planned | | `button[aveButton]`, `a[aveButton]` |
 | IconButton | 1 | components | planned | | label required |
 | Input | 1 | components | planned | | `input[aveInput]`; Signal Forms + CVA |
@@ -247,7 +247,7 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 | Upgrade | Trigger |
 |---|---|
 | Angular 22.2.0 (framework, `@angular/build`, `@angular/cli`, devkit), `@angular/cdk` + `@angular/aria` 22.2.0, `ng-packagr` 22.2.x, `prettier` 3.9.9, `@microsoft/api-extractor` 7.59.2 | Angular 22.2.0 is stable (published 2026-09-23; `@angular/build`/`cli` at 21:37 UTC). Under the 24-hour rule (ADR 0012) the last of these is allowed from **2026-09-24 21:37 UTC**. Do all of them in one merge request, check the peer ranges, update compatibility.md, re-run `compiler-check:test` (new extended diagnostics need fixtures) and `lint-rules:test`, then re-evaluate Vitest 5 (ADR 0013) |
-| `lucide-static` 1.48.0 | Allowed from **2026-09-25 05:57 UTC** (ADR 0012). Run `pnpm nx run icons:generate --update`, review the diff of `src/icons.ts` and the icon baselines, update compatibility.md |
+| `lucide-static` 1.48.0 | Allowed from **2026-09-25 05:57 UTC** (ADR 0012). Run `pnpm nx run icons:generate --update`, review the diff of `src/*.ts`, the Gallery baselines and `icons:size`, update compatibility.md |
 | Vitest 5 | Angular 22.2 + Storybook addon-vitest + `@nx/vitest` all peer it (ADR 0013) |
 | Storybook 11 | `angular-vite` stable; drop the `@angular/animations` devDependency (ADR 0008); check whether AOT builds keep `@angular/compiler`, and return to `jit: false` if so (ADR 0025); re-check the themed docs container and its `react` version (ADR 0034); drop or re-create the `angular-vite` patch (ADR 0035) |
 | pnpm 12 | Nx lists support (ADR 0012) |

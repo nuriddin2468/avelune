@@ -1,9 +1,33 @@
-import { Component, input } from '@angular/core';
-import type { Meta, StoryObj } from '@storybook/angular-vite';
-import { expect, within } from 'storybook/test';
-import { iconNames } from '@avelune/icons';
+import { Component, computed, input, signal } from '@angular/core';
+import {
+  applicationConfig,
+  componentWrapperDecorator,
+  moduleMetadata,
+  type Meta,
+  type StoryObj,
+} from '@storybook/angular-vite';
+import { expect, userEvent, within } from 'storybook/test';
+import {
+  lucideCalendar,
+  lucideCircleAlert,
+  lucideCircleCheck,
+  lucideDownload,
+  lucideExternalLink,
+  lucideFileText,
+  lucidePaperclip,
+} from '@avelune/icons/lucide';
+import { lucideIcons } from '@avelune/icons/lucide/all';
 import { tokens } from '@avelune/tokens';
-import { AveIcon, type AveIconSize } from '@avelune/ui/icon';
+import { AveIcon, defineAveIcon, provideAveIcons, type AveIconSize } from '@avelune/ui/icon';
+import lucideTags from 'lucide-static/tags.json';
+
+declare module '@avelune/icons' {
+  interface IconNames {
+    'story-certificate': true;
+    'story-verified': true;
+    'story-signature': true;
+  }
+}
 
 const sizes = [
   { size: 'sm', token: 'size.icon.sm', text: 'body', note: 'body text, controls' },
@@ -20,10 +44,48 @@ const colours = [
   { role: 'on-accent', label: 'On the accent fill' },
 ] as const;
 
-/** The frame the stories draw icons in; styled with tokens only. */
+/** A certificate drawn on Lucide's grid and exported from a design tool in its own black. */
+const certificateSvg = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3" stroke="#1E1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M13 3v4a1 1 0 0 0 1 1h4v2" stroke="#1E1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="16" cy="15" r="3" stroke="#1E1E1E" stroke-width="2"/>
+  <path d="m14.5 17.6-.5 4.4 2-1 2 1-.5-4.4" stroke="#1E1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+
+/** A two-colour badge that keeps its own colours (here the light theme's accent), whatever the theme. */
+const verifiedSvg = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <rect x="2" y="2" width="20" height="20" rx="6" fill="${tokens['color.accent.bg'].value}"/>
+  <path d="m7.5 12 3 3 6-6" fill="none" stroke="${tokens['color.fg.on-accent'].value}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+
+/** A fine-line signature, drawn at 1 unit on purpose. */
+const signatureSvg = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#000" stroke-width="1" stroke-linecap="round">
+  <path d="M3 16c2-6 4-9 5-8s-2 9 0 9 3-6 4-6 0 5 2 5 3-3 4-3"/>
+  <path d="M3 20h18"/>
+</svg>`;
+
+const certificate = defineAveIcon('story-certificate', certificateSvg);
+const verified = defineAveIcon('story-verified', verifiedSvg, { colors: 'original' });
+const signature = defineAveIcon('story-signature', signatureSvg, { strokes: 'original' });
+
+/** The frame the stories draw icons in; it registers the icons it draws. Styled with tokens only. */
 @Component({
   selector: 'ave-icon-stories',
   imports: [AveIcon],
+  providers: [
+    provideAveIcons([
+      lucideCalendar,
+      lucideCircleAlert,
+      lucideCircleCheck,
+      lucideDownload,
+      lucideExternalLink,
+      lucideFileText,
+      lucidePaperclip,
+      certificate,
+      verified,
+      signature,
+    ]),
+  ],
   template: `
     @switch (view()) {
       @case ('sizes') {
@@ -58,15 +120,46 @@ const colours = [
           }
         </ul>
       }
-      @case ('gallery') {
-        <ul class="gallery">
-          @for (name of names; track name) {
-            <li class="cell">
-              <ave-icon [name]="name" decorative size="md" />
-              <code class="name">{{ name }}</code>
-            </li>
-          }
-        </ul>
+      @case ('custom') {
+        <table class="custom">
+          <caption>
+            Your own icons next to Lucide's, in each size
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Icon</th>
+              @for (row of sizes; track row.size) {
+                <th scope="col">{{ row.size }}</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Lucide <code>file-text</code></th>
+              @for (row of sizes; track row.size) {
+                <td><ave-icon name="file-text" decorative [size]="row.size" /></td>
+              }
+            </tr>
+            <tr>
+              <th scope="row">Certificate, fitted: text colour, kit strokes</th>
+              @for (row of sizes; track row.size) {
+                <td><ave-icon name="story-certificate" label="Certificate" [size]="row.size" /></td>
+              }
+            </tr>
+            <tr>
+              <th scope="row">Verified, <code>colors: 'original'</code></th>
+              @for (row of sizes; track row.size) {
+                <td><ave-icon name="story-verified" label="Verified" [size]="row.size" /></td>
+              }
+            </tr>
+            <tr>
+              <th scope="row">Signature, <code>strokes: 'original'</code></th>
+              @for (row of sizes; track row.size) {
+                <td><ave-icon name="story-signature" label="Signature" [size]="row.size" /></td>
+              }
+            </tr>
+          </tbody>
+        </table>
       }
       @default {
         <p class="narrow" lang="ru">
@@ -82,14 +175,115 @@ const colours = [
   styleUrl: './icon.stories.css',
 })
 class IconStories {
-  readonly view = input<'sizes' | 'meaning' | 'colour' | 'gallery' | 'long'>('sizes');
+  readonly view = input<'sizes' | 'meaning' | 'colour' | 'custom' | 'long'>('sizes');
   protected readonly sizes = sizes;
   protected readonly colours = colours;
-  protected readonly names = iconNames;
 
   protected px(token: (typeof sizes)[number]['token']): string {
     return tokens[token].css;
   }
+}
+
+const tagsOf: Readonly<Record<string, readonly string[] | undefined>> = lucideTags;
+
+/** How many icons the gallery shows before "Show all", so the page stays light. */
+const galleryPage = 60;
+
+/** Every Lucide icon, searchable by name and by Lucide's tags. Registers the whole set. */
+@Component({
+  selector: 'ave-icon-gallery',
+  imports: [AveIcon],
+  providers: [provideAveIcons(lucideIcons)],
+  template: `
+    <div class="search">
+      <label class="field">
+        <span class="field-label">Search {{ icons.length }} icons by name or tag</span>
+        <input #search class="input" type="search" [value]="query()" (input)="query.set(search.value)" />
+      </label>
+      <p class="count" aria-live="polite">
+        @if (matches().length === 0) {
+          No icon matches “{{ query() }}”.
+        } @else {
+          {{ shown().length }} of {{ matches().length }}
+        }
+      </p>
+    </div>
+    <ul class="gallery">
+      @for (icon of shown(); track icon.name) {
+        <li class="cell">
+          <ave-icon [name]="icon.name" decorative size="md" />
+          <code class="name">{{ icon.name }}</code>
+        </li>
+      }
+    </ul>
+    @if (shown().length < matches().length) {
+      <button class="more" type="button" (click)="limit.set(matches().length)">Show all {{ matches().length }}</button>
+    }
+  `,
+  styleUrl: './icon.stories.css',
+})
+class IconGallery {
+  protected readonly icons = lucideIcons;
+  protected readonly query = signal('');
+  protected readonly limit = signal(galleryPage);
+  protected readonly matches = computed(() => {
+    const query = this.query().trim().toLowerCase();
+    if (query === '') return this.icons;
+    return this.icons.filter(
+      ({ name }) => name.includes(query) || (tagsOf[name] ?? []).some((tag) => tag.includes(query)),
+    );
+  });
+  protected readonly shown = computed(() => this.matches().slice(0, this.limit()));
+}
+
+/** Pads the Default story as the frame above pads the others; styled with tokens only. */
+@Component({
+  selector: 'ave-icon-story-frame',
+  template: '<ng-content />',
+  styleUrl: './icon.stories.css',
+})
+class IconStoryFrame {}
+
+/** `arrow-down` → `lucideArrowDown`: the export an application imports from `@avelune/icons/lucide`. */
+const lucideExport = (name: string) =>
+  `lucide${name
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('')}`;
+
+/**
+ * The snippet under a story: the markup an application writes for what the story shows, after a line naming the
+ * icons it must register first, so a copied snippet draws.
+ */
+function source(icons: readonly string[], ...lines: readonly string[]): NonNullable<Story['parameters']> {
+  const registered = `<!-- Registered with provideAveIcons([${icons.map(lucideExport).join(', ')}]), see "Registering icons". -->`;
+  return { docs: { source: { code: [registered, ...lines].join('\n'), language: 'html' } } };
+}
+
+/**
+ * The Default snippet, from the story's current args: a whole component that registers the icon it draws. Storybook's
+ * own snippet leaves the provider out, and a copy of it would throw.
+ */
+function registeredComponent(_code: string, { args }: { readonly args: Readonly<Record<string, unknown>> }): string {
+  const name = typeof args['name'] === 'string' ? args['name'] : 'circle-alert';
+  const label = typeof args['label'] === 'string' ? args['label'].trim() : '';
+  const size = typeof args['size'] === 'string' ? args['size'] : 'sm';
+  const meaning = args['decorative'] === true || label === '' ? 'decorative' : `label="${label}"`;
+  const attributes = [`name="${name}"`, meaning, ...(size === 'sm' ? [] : [`size="${size}"`])].join(' ');
+  return [
+    "import { Component } from '@angular/core';",
+    `import { ${lucideExport(name)} } from '@avelune/icons/lucide';`,
+    "import { AveIcon, provideAveIcons } from '@avelune/ui/icon';",
+    '',
+    '@Component({',
+    "  selector: 'app-demo',",
+    '  imports: [AveIcon],',
+    '  // Registers the icon this component draws; icons used across the app go in app.config.ts.',
+    `  providers: [provideAveIcons([${lucideExport(name)}])],`,
+    `  template: \`<ave-icon ${attributes} />\`,`,
+    '})',
+    'export class DemoComponent {}',
+  ].join('\n');
 }
 
 const meta: Meta<AveIcon> = {
@@ -97,7 +291,7 @@ const meta: Meta<AveIcon> = {
   component: AveIcon,
   args: { name: 'circle-alert', label: 'Error', size: 'sm' },
   argTypes: {
-    name: { control: 'select', options: iconNames },
+    name: { control: 'select', options: lucideIcons.map((icon) => icon.name) },
     size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
   },
 };
@@ -105,14 +299,20 @@ export default meta;
 
 type Story = StoryObj<AveIcon>;
 
-/** One icon, with controls. */
+/** One icon, with controls; every Lucide icon is registered, so any name works. */
 export const Default: Story = {
+  parameters: { docs: { source: { transform: registeredComponent, language: 'typescript' } } },
+  decorators: [
+    applicationConfig({ providers: [provideAveIcons(lucideIcons)] }),
+    moduleMetadata({ imports: [IconStoryFrame] }),
+    componentWrapperDecorator(IconStoryFrame),
+  ],
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('img', { name: 'Error' })).toBeVisible();
   },
 };
 
-function frame(view: 'sizes' | 'meaning' | 'colour' | 'gallery' | 'long'): NonNullable<Story['render']> {
+function frame(view: 'sizes' | 'meaning' | 'colour' | 'custom' | 'long'): NonNullable<Story['render']> {
   return () => ({
     props: { view },
     template: `<ave-icon-stories [view]="view" />`,
@@ -123,6 +323,12 @@ function frame(view: 'sizes' | 'meaning' | 'colour' | 'gallery' | 'long'): NonNu
 /** The three sizes, next to the text each belongs with. */
 export const Sizes: Story = {
   render: frame('sizes'),
+  parameters: source(
+    ['calendar'],
+    '<ave-icon name="calendar" decorative />',
+    '<ave-icon name="calendar" decorative size="md" />',
+    '<ave-icon name="calendar" decorative size="lg" />',
+  ),
   play: async ({ canvasElement }) => {
     const icons = [...canvasElement.querySelectorAll('ave-icon')];
     for (const [index, icon] of icons.entries()) {
@@ -137,6 +343,16 @@ export const Sizes: Story = {
 /** An icon that carries meaning has a label; one that repeats its text is decorative. */
 export const Meaning: Story = {
   render: frame('meaning'),
+  parameters: source(
+    ['circle-alert', 'download'],
+    '<!-- The icon says what the text does not: it has a label. -->',
+    '<ave-icon name="circle-alert" label="Xato" />',
+    'Hujjat saqlanmadi: fayl hajmi 20 MB dan oshmasligi kerak.',
+    '',
+    '<!-- The text says it: the icon is decorative. -->',
+    '<ave-icon name="download" decorative />',
+    'Скачать отчёт',
+  ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getAllByRole('img')).toHaveLength(1);
@@ -148,6 +364,14 @@ export const Meaning: Story = {
 export const Colour: Story = {
   tags: ['forced-colors'],
   render: frame('colour'),
+  parameters: source(
+    ['circle-check'],
+    '<!-- The icon draws in its text colour: colour the text, never the icon. -->',
+    '<span class="status-danger">',
+    '  <ave-icon name="circle-check" decorative />',
+    '  Danger',
+    '</span>',
+  ),
   play: async ({ canvasElement }) => {
     for (const row of canvasElement.querySelectorAll('.swatch')) {
       const svg = row.querySelector('svg');
@@ -157,12 +381,79 @@ export const Colour: Story = {
   },
 };
 
-/** Every icon of the set, by name. */
-export const Gallery: Story = {
-  render: frame('gallery'),
+/**
+ * An application's own icons: fitted to the kit by default (text colour, kit strokes), or keeping their colours or
+ * strokes when they ask to.
+ */
+export const Custom: Story = {
+  name: 'Your own icons',
+  render: frame('custom'),
+  parameters: {
+    docs: {
+      source: {
+        language: 'typescript',
+        code: [
+          "import { defineAveIcon, provideAveIcons } from '@avelune/ui/icon';",
+          "import certificateSvg from './icons/certificate.svg';",
+          "import signatureSvg from './icons/signature.svg';",
+          "import verifiedSvg from './icons/verified.svg';",
+          '',
+          '// Declare the names, so templates accept them.',
+          "declare module '@avelune/icons' {",
+          '  interface IconNames {',
+          '    certificate: true;',
+          '    signature: true;',
+          '    verified: true;',
+          '  }',
+          '}',
+          '',
+          "export const certificate = defineAveIcon('certificate', certificateSvg);",
+          "export const verified = defineAveIcon('verified', verifiedSvg, { colors: 'original' });",
+          "export const signature = defineAveIcon('signature', signatureSvg, { strokes: 'original' });",
+          '',
+          '// app.config.ts, or the providers of the route or component that draws them',
+          'providers: [provideAveIcons([certificate, verified, signature])];',
+          '',
+          '// In a template: <ave-icon name="certificate" label="Certificate" />',
+        ].join('\n'),
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
-    await expect(canvasElement.querySelectorAll('ave-icon')).toHaveLength(iconNames.length);
-    await expect(within(canvasElement).queryAllByRole('img')).toHaveLength(0);
+    const canvas = within(canvasElement);
+    const [fitted] = canvas.getAllByRole('img', { name: 'Certificate' });
+    const fittedPath = fitted?.querySelector('path');
+    if (fitted === undefined || fittedPath === null || fittedPath === undefined) throw new Error('No certificate');
+    // Fitted: the design tool's black became the text colour, and the strokes the kit's.
+    await expect(getComputedStyle(fittedPath).stroke).toBe(getComputedStyle(fitted).color);
+    await expect(fitted.querySelector('svg')?.getAttribute('stroke-width')).toBe('2.25');
+    const [badge] = canvas.getAllByRole('img', { name: 'Verified' });
+    await expect(badge?.querySelector('rect')?.getAttribute('fill')).toBe(tokens['color.accent.bg'].value);
+    const [line] = canvas.getAllByRole('img', { name: 'Signature' });
+    await expect(line?.querySelector('svg')?.getAttribute('stroke-width')).toBe('1');
+  },
+};
+
+/** Every Lucide icon, searchable by name and tag; the first 60 until "Show all". */
+export const Gallery: Story = {
+  render: () => ({ template: `<ave-icon-gallery />`, moduleMetadata: { imports: [IconGallery] } }),
+  parameters: source(['arrow-down'], '<ave-icon name="arrow-down" decorative size="md" />'),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvasElement.querySelectorAll('ave-icon')).toHaveLength(galleryPage);
+    await expect(canvas.queryAllByRole('img')).toHaveLength(0);
+    const search = canvas.getByRole('searchbox', { name: /Search \d+ icons by name or tag/ });
+    // "birthday" is a tag of calendar icons, not a name.
+    await userEvent.type(search, 'birthday');
+    await expect(canvasElement.querySelector('ave-icon[data-icon="calendar"]')).not.toBeNull();
+    await userEvent.clear(search);
+    await userEvent.type(search, 'no-such-icon');
+    await expect(canvas.getByText('No icon matches “no-such-icon”.')).toBeVisible();
+    // Cleared, the gallery is back to its first page; the visual baseline is taken in this state.
+    await userEvent.clear(search);
+    await expect(canvas.getByRole('button', { name: `Show all ${String(lucideIcons.length)}` })).toBeVisible();
+    await expect(canvasElement.querySelectorAll('ave-icon')).toHaveLength(galleryPage);
+    search.blur();
   },
 };
 
@@ -170,6 +461,14 @@ export const Gallery: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: source(
+    ['paperclip', 'external-link'],
+    '<p>',
+    '  <ave-icon name="paperclip" decorative />',
+    '  Приложение к распоряжению о переводе сотрудников в отдел документационного обеспечения управления',
+    '  <ave-icon name="external-link" label="Открыть в новой вкладке" />',
+    '</p>',
+  ),
   play: async ({ canvasElement }) => {
     const paragraph = canvasElement.querySelector('.narrow');
     if (paragraph === null) throw new Error('No paragraph');

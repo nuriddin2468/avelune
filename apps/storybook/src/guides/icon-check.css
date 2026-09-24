@@ -1,0 +1,141 @@
+/* The "Check your icon" guide page. Styled with tokens only. */
+@layer components {
+  :host {
+    display: block;
+  }
+
+  .page {
+    display: grid;
+    gap: var(--ave-space-4);
+    max-inline-size: var(--ave-container-lg);
+    padding: var(--ave-space-8) var(--ave-space-6);
+  }
+
+  .title {
+    font: var(--ave-font-heading-xl);
+  }
+
+  .lead {
+    max-inline-size: var(--ave-container-md);
+    color: var(--ave-color-fg-muted);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--ave-container-xs)), 1fr));
+    gap: var(--ave-space-8);
+    align-items: start;
+  }
+
+  .form,
+  .result {
+    display: grid;
+    gap: var(--ave-space-4);
+  }
+
+  .field-label,
+  .options legend {
+    font: var(--ave-font-label-md);
+  }
+
+  .source {
+    inline-size: 100%;
+    padding: var(--ave-space-3);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-default);
+    border-radius: var(--ave-radius-md);
+    background-color: var(--ave-color-bg-surface);
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-code);
+    resize: block;
+  }
+
+  .options {
+    display: grid;
+    gap: var(--ave-space-2);
+    margin: 0;
+    padding: var(--ave-space-3);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-md);
+  }
+
+  .option {
+    display: flex;
+    align-items: center;
+    gap: var(--ave-space-2);
+  }
+
+  .problems {
+    padding: var(--ave-space-4);
+    border: var(--ave-border-width-default) solid var(--ave-color-danger-border);
+    border-radius: var(--ave-radius-md);
+    background-color: var(--ave-color-danger-bg-subtle);
+  }
+
+  .problems-title {
+    font: var(--ave-font-label-md);
+    color: var(--ave-color-danger-fg);
+  }
+
+  .problems ul,
+  .findings,
+  .by-eye {
+    display: grid;
+    gap: var(--ave-space-2);
+    margin: 0;
+    padding-inline-start: var(--ave-space-5);
+  }
+
+  .findings {
+    padding: 0;
+    list-style: none;
+  }
+
+  .finding {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--ave-space-2);
+  }
+
+  .finding[data-passed='true'] ave-icon {
+    color: var(--ave-color-success-fg);
+  }
+
+  .finding[data-passed='false'] ave-icon {
+    color: var(--ave-color-warning-fg);
+  }
+
+  .subtitle {
+    font: var(--ave-font-heading-sm);
+  }
+
+  .islands {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--ave-space-16) * 3)), 1fr));
+    gap: var(--ave-space-3);
+  }
+
+  .island {
+    display: grid;
+    gap: var(--ave-space-3);
+    padding: var(--ave-space-4);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+  }
+
+  .island-title,
+  .size-name {
+    font: var(--ave-font-caption);
+    color: var(--ave-color-fg-muted);
+  }
+
+  .sample {
+    display: flex;
+    align-items: center;
+    gap: var(--ave-space-4);
+  }
+
+  .padding {
+    margin-block-start: var(--ave-space-3);
+    font: var(--ave-font-body-sm);
+  }
+}

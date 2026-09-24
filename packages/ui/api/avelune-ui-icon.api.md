@@ -5,18 +5,26 @@
 ```ts
 
 import * as _angular_core from '@angular/core';
-import { IconElement } from '@avelune/icons';
+import * as _avelune_icons from '@avelune/icons';
+import { IconDefinition } from '@avelune/icons';
 import { IconName } from '@avelune/icons';
+import { Provider } from '@angular/core';
+
+// @alpha
+export interface AveCustomIconOptions {
+    readonly colors?: 'current' | 'original';
+    readonly strokes?: 'kit' | 'original';
+}
 
 // @alpha
 export class AveIcon {
+    constructor();
     protected readonly accessibleName: _angular_core.Signal<string | null>;
     readonly decorative: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    protected readonly elements: _angular_core.Signal<readonly IconElement[]>;
+    protected readonly icon: _angular_core.Signal<AveIconDefinition | null>;
     readonly label: _angular_core.InputSignal<string | undefined>;
-    readonly name: _angular_core.InputSignal<"arrow-down" | "arrow-left" | "arrow-right" | "arrow-up" | "bell" | "calendar" | "check" | "chevron-down" | "chevron-left" | "chevron-right" | "chevron-up" | "chevrons-left" | "chevrons-right" | "circle-alert" | "circle-check" | "circle-x" | "clock" | "copy" | "download" | "ellipsis" | "ellipsis-vertical" | "external-link" | "eye" | "eye-off" | "file" | "file-text" | "folder" | "funnel" | "grip-vertical" | "house" | "info" | "lock" | "log-out" | "mail" | "menu" | "minus" | "monitor" | "moon" | "panel-left" | "paperclip" | "pencil" | "phone" | "plus" | "refresh-cw" | "search" | "settings" | "sun" | "trash" | "triangle-alert" | "upload" | "user" | "x">;
+    readonly name: _angular_core.InputSignal<keyof _avelune_icons.IconNames>;
     readonly size: _angular_core.InputSignal<AveIconSize>;
-    protected readonly strokeWidth: _angular_core.Signal<2.25 | 1.8 | 1.75>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveIcon, "ave-icon", never, { "name": { "alias": "name"; "required": true; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; "decorative": { "alias": "decorative"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
@@ -24,10 +32,19 @@ export class AveIcon {
 }
 
 // @alpha
+export type AveIconDefinition<TName extends AveIconName = AveIconName> = IconDefinition<TName>;
+
+// @alpha
 export type AveIconName = IconName;
 
 // @alpha
 export type AveIconSize = 'sm' | 'md' | 'lg';
+
+// @alpha
+export function defineAveIcon<const TName extends AveIconName>(name: TName, svg: string, options?: AveCustomIconOptions): AveIconDefinition<TName>;
+
+// @alpha
+export function provideAveIcons(icons: readonly AveIconDefinition[]): Provider;
 
 // (No @packageDocumentation comment for this package)
 

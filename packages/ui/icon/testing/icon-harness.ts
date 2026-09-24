@@ -56,11 +56,22 @@ export class AveIconHarness extends ComponentHarness {
     return (await (await this.host()).getAttribute('aria-hidden')) === 'true';
   }
 
-  /** Gets the rendered size of the icon and the width of its strokes, in CSS pixels. */
+  /**
+   * Gets the rendered size of the icon and the kit's stroke width on it, in CSS pixels; the stroke is 0 for an icon
+   * that keeps the strokes it was drawn with.
+   */
   async getRenderedSize(): Promise<{ readonly size: number; readonly stroke: number }> {
     const host = await this.host();
     const { width } = await host.getDimensions();
-    const stroke = Number(await (await this.locatorFor('svg')()).getAttribute('stroke-width'));
-    return { size: width, stroke: (stroke * width) / 24 };
+    const svg = await this.locatorFor('svg')();
+    const stroke = Number(await svg.getAttribute('stroke-width'));
+    // The drawing scales its largest side, the width or height of its viewBox, to the icon box.
+    const side = Math.max(
+      ...String(await svg.getAttribute('viewBox'))
+        .split(' ')
+        .slice(2)
+        .map(Number),
+    );
+    return { size: width, stroke: (stroke * width) / side };
   }
 }

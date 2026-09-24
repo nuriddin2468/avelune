@@ -61,7 +61,8 @@ Run from the repository root. `pnpm` switches itself to the pinned 11.27.1 (`pac
 | Visual regression + axe sweep of every story, in the pinned Docker image: check / update baselines (then inspect every changed image) | `pnpm visual` / `pnpm visual:update`; filter with `pnpm visual --grep=<story>` (ADR 0010, 0027) |
 | Showcase: axe and invariants on every screen, in the pinned Docker image | `pnpm nx run invariants:e2e` (ADR 0027) |
 | Prove the browser suites fail on violations (Docker) | `pnpm nx run test-check:e2e` |
-| Size budget of every entry point (`sizeLimit` in `entry.json`) | `pnpm nx run ui:size` (ADR 0028) |
+| Size budget of every entry point (`sizeLimit` in `entry.json`) / of the icon data | `pnpm nx run ui:size` (ADR 0028) / `pnpm nx run icons:size` (ADR 0036) |
+| Icons: check / regenerate every Lucide icon (`packages/icons`) | `pnpm nx run icons:generate` / `pnpm nx run icons:generate --update` |
 | Format | `pnpm format` (check: `pnpm format:check`) |
 | Project graph | `pnpm nx graph` |
 

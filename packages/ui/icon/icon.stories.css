@@ -77,4 +77,73 @@
   .narrow {
     max-inline-size: var(--ave-container-xs);
   }
+
+  .custom {
+    border-collapse: collapse;
+  }
+
+  .custom caption {
+    padding-block-end: var(--ave-space-2);
+    font: var(--ave-font-label-md);
+    text-align: start;
+  }
+
+  .custom th,
+  .custom td {
+    padding: var(--ave-space-2) var(--ave-space-3);
+    border-block-end: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    text-align: start;
+  }
+
+  .custom th[scope='row'] {
+    font: var(--ave-font-body-md);
+  }
+
+  .search {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--ave-space-3);
+    margin-block-end: var(--ave-space-4);
+  }
+
+  .field {
+    display: grid;
+    gap: var(--ave-space-1);
+  }
+
+  .field-label {
+    font: var(--ave-font-label-md);
+  }
+
+  .input,
+  .more {
+    block-size: var(--ave-size-control-md);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-default);
+    border-radius: var(--ave-radius-md);
+    background-color: var(--ave-color-bg-surface);
+    color: var(--ave-color-fg-default);
+  }
+
+  .input {
+    inline-size: min(100%, var(--ave-container-xs));
+    padding-inline: var(--ave-space-3);
+    font: var(--ave-font-body-md);
+  }
+
+  .count {
+    font: var(--ave-font-body-sm);
+    color: var(--ave-color-fg-muted);
+  }
+
+  .more {
+    margin-block-start: var(--ave-space-4);
+    padding-inline: var(--ave-space-4);
+    font: var(--ave-font-label-md);
+
+    &:hover {
+      background-color: var(--ave-color-bg-hover);
+    }
+  }
 }

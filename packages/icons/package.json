@@ -2,13 +2,21 @@
   "name": "@avelune/icons",
   "version": "0.0.0",
   "private": true,
-  "description": "Avelune icon set: Lucide outlines as typed data, and the IconName union.",
+  "description": "Avelune icons: every Lucide icon as typed, tree-shakable data, and the icon types <ave-icon> draws.",
   "license": "UNLICENSED",
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/icons.d.ts",
-      "default": "./dist/icons.js"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./lucide": {
+      "types": "./dist/lucide.d.ts",
+      "default": "./dist/lucide.js"
+    },
+    "./lucide/all": {
+      "types": "./dist/lucide-all.d.ts",
+      "default": "./dist/lucide-all.js"
     },
     "./package.json": "./package.json"
   },

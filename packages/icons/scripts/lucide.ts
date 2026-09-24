@@ -1,0 +1,308 @@
+// Turns Lucide's icon nodes into the kit's icon data (ADR 0020, 0036). Pure functions; the CLI is generate.ts.
+
+/**
+ * The shapes Lucide draws, with the attributes each may carry. `fill` appears only as `currentColor`, on the dots of a
+ * few icons (palette, chart-scatter); every other part of Lucide is an outline.
+ */
+export const lucideShapes = {
+  circle: { required: ['cx', 'cy', 'r'], optional: ['fill'] },
+  ellipse: { required: ['cx', 'cy', 'rx', 'ry'], optional: [] },
+  line: { required: ['x1', 'x2', 'y1', 'y2'], optional: [] },
+  path: { required: ['d'], optional: [] },
+  polygon: { required: ['points'], optional: [] },
+  polyline: { required: ['points'], optional: [] },
+  rect: { required: ['height', 'width', 'x', 'y'], optional: ['rx', 'ry'] },
+} as const satisfies Readonly<
+  Record<string, { readonly required: readonly string[]; readonly optional: readonly string[] }>
+>;
+
+export type Shape = keyof typeof lucideShapes;
+
+/** One element of a Lucide icon: the shape, then its attributes in name order. */
+export interface Element {
+  readonly tag: Shape;
+  readonly attributes: Readonly<Record<string, string>>;
+}
+
+export class IconError extends Error {
+  readonly problems: readonly string[];
+
+  constructor(problems: readonly string[]) {
+    super(problems.join('\n'));
+    this.problems = problems;
+  }
+}
+
+const isShape = (tag: string): tag is Shape => Object.hasOwn(lucideShapes, tag);
+const namePattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+/** Checks one Lucide node list and returns it as elements; every problem is collected, not just the first. */
+function toElements(name: string, nodes: unknown, problems: string[]): Element[] {
+  if (!Array.isArray(nodes) || nodes.length === 0) {
+    problems.push(`${name}: no elements`);
+    return [];
+  }
+  const elements: Element[] = [];
+  for (const [index, node] of nodes.entries()) {
+    const where = `${name}, element ${String(index + 1)}`;
+    const [tag, attributes] = Array.isArray(node) ? (node as unknown[]) : [];
+    if (typeof tag !== 'string' || typeof attributes !== 'object' || attributes === null) {
+      problems.push(`${where}: not a [tag, attributes] pair`);
+      continue;
+    }
+    if (!isShape(tag)) {
+      problems.push(`${where}: <${tag}> is not a shape Lucide draws`);
+      continue;
+    }
+    const { required, optional } = lucideShapes[tag];
+    const allowed: readonly string[] = [...required, ...optional];
+    // Lucide keys every element for React; the key is not drawn.
+    const entries = Object.entries(attributes as Record<string, unknown>).filter(([key]) => key !== 'key');
+    for (const [key, value] of entries) {
+      if (!allowed.includes(key)) problems.push(`${where}: <${tag}> attribute "${key}" is not allowed`);
+      else if (typeof value !== 'string' || value === '') problems.push(`${where}: "${key}" is empty`);
+      else if (key === 'fill' && value !== 'currentColor') {
+        problems.push(`${where}: fill "${value}"; Lucide fills only dots, in currentColor`);
+      }
+    }
+    for (const key of required) {
+      if (!entries.some(([present]) => present === key)) problems.push(`${where}: <${tag}> lacks "${key}"`);
+    }
+    elements.push({
+      tag,
+      attributes: Object.fromEntries(
+        entries.filter(([key]) => allowed.includes(key)).sort(([a], [b]) => a.localeCompare(b)),
+      ) as Record<string, string>,
+    });
+  }
+  return elements;
+}
+
+/** Every icon of Lucide's icon nodes, sorted by name. Fails on a malformed name and on any shape outside Lucide's rules. */
+export function readLucide(lucide: unknown): ReadonlyMap<string, readonly Element[]> {
+  const problems: string[] = [];
+  if (typeof lucide !== 'object' || lucide === null || Array.isArray(lucide)) {
+    throw new IconError(['icon-nodes.json: not an object of icons']);
+  }
+  const icons = new Map<string, readonly Element[]>();
+  const exports = new Map<string, string>();
+  for (const [name, nodes] of Object.entries(lucide as Record<string, unknown>).sort(([a], [b]) =>
+    a.localeCompare(b),
+  )) {
+    if (!namePattern.test(name)) {
+      problems.push(`${name}: not a kebab-case name`);
+      continue;
+    }
+    const exported = exportName(name);
+    const clash = exports.get(exported);
+    if (clash !== undefined) problems.push(`${name}: exports as ${exported}, like ${clash}`);
+    exports.set(exported, name);
+    icons.set(name, toElements(name, nodes, problems));
+  }
+  if (icons.size === 0 && problems.length === 0) problems.push('icon-nodes.json: no icons');
+  if (problems.length > 0) throw new IconError(problems);
+  return icons;
+}
+
+/** The export of an icon in `@avelune/icons/lucide`: `arrow-down` is `lucideArrowDown`. */
+export function exportName(name: string): string {
+  return `lucide${name
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('')}`;
+}
+
+const header = (source: string) => [
+  `// Generated by packages/icons/scripts/generate.ts from ${source} (ISC, LICENSE-lucide.txt).`,
+  '// Do not edit: run `pnpm nx run icons:generate --update` and review the diff (ADR 0036).',
+  '',
+];
+
+/** The tags an icon may contain, in name order. */
+export const iconTags = [
+  'circle',
+  'clipPath',
+  'defs',
+  'ellipse',
+  'g',
+  'line',
+  'linearGradient',
+  'mask',
+  'path',
+  'polygon',
+  'polyline',
+  'radialGradient',
+  'rect',
+  'stop',
+  'use',
+] as const;
+
+/** The attributes an icon element may carry, in name order: geometry, paint, ids and references inside the icon. */
+export const iconAttributes = [
+  'clip-path',
+  'clip-rule',
+  'clipPathUnits',
+  'cx',
+  'cy',
+  'd',
+  'fill',
+  'fill-opacity',
+  'fill-rule',
+  'fr',
+  'fx',
+  'fy',
+  'gradientTransform',
+  'gradientUnits',
+  'height',
+  'href',
+  'id',
+  'mask',
+  'maskContentUnits',
+  'maskUnits',
+  'offset',
+  'opacity',
+  'paint-order',
+  'pathLength',
+  'points',
+  'r',
+  'rx',
+  'ry',
+  'spreadMethod',
+  'stop-color',
+  'stop-opacity',
+  'stroke',
+  'stroke-dasharray',
+  'stroke-dashoffset',
+  'stroke-linecap',
+  'stroke-linejoin',
+  'stroke-miterlimit',
+  'stroke-opacity',
+  'stroke-width',
+  'transform',
+  'width',
+  'x',
+  'x1',
+  'x2',
+  'y',
+  'y1',
+  'y2',
+] as const;
+
+const union = (values: readonly string[]) => values.map((value) => `  | '${value}'`);
+
+/** The package's main module: the icon types, and every name `<ave-icon>` accepts, open to declaration merging. */
+export function indexModule(names: readonly string[], source: string): string {
+  return [
+    ...header(source),
+    '/** An element an icon may contain: shapes, groups, gradients, clip paths, masks and references inside the icon. */',
+    'export type IconTag =',
+    ...union(iconTags),
+    ';',
+    '',
+    '/** An attribute an icon element may carry: geometry, paint, ids and references inside the icon; never script or style. */',
+    'export type IconAttribute =',
+    ...union(iconAttributes),
+    ';',
+    '',
+    '/** The attributes of one element, as SVG writes them. */',
+    'export type IconAttributes = Readonly<Partial<Record<IconAttribute, string>>>;',
+    '',
+    '/** One element of an icon, with its children for groups, gradients, clip paths and masks. */',
+    'export interface IconNode {',
+    '  readonly tag: IconTag;',
+    '  readonly attrs: IconAttributes;',
+    '  readonly children?: readonly IconNode[];',
+    '}',
+    '',
+    '/**',
+    " * An icon as `<ave-icon>` draws it: Lucide's, from `@avelune/icons/lucide`, or an application's own, from",
+    ' * `defineAveIcon` in `@avelune/ui/icon`.',
+    ' */',
+    'export interface IconDefinition<TName extends IconName = IconName> {',
+    '  /** The name `<ave-icon name="…">` uses. */',
+    '  readonly name: TName;',
+    "  /** The drawing's coordinate system, as the SVG `viewBox` writes it. */",
+    '  readonly viewBox: string;',
+    '  /** Paint attributes of the root `<svg>`, inherited by every element. */',
+    '  readonly paint: IconAttributes;',
+    "  /** `kit`: strokes take the kit's width for each size; `original`: strokes keep the width they were drawn with. */",
+    "  readonly strokes: 'kit' | 'original';",
+    '  /** The elements of the drawing. */',
+    '  readonly nodes: readonly IconNode[];',
+    '}',
+    '',
+    '/**',
+    " * Every icon name `<ave-icon>` accepts: Lucide's, and an application's own, added by declaration merging:",
+    ' *',
+    ' * ```ts',
+    " * declare module '@avelune/icons' {",
+    ' *   interface IconNames {',
+    " *     'company-mark': true;",
+    ' *   }',
+    ' * }',
+    ' * ```',
+    ' */',
+    'export interface IconNames {',
+    ...names.map((name) => `  '${name}': true;`),
+    '}',
+    '',
+    "/** The name of an icon: Lucide's, or one an application declared in {@link IconNames}. */",
+    'export type IconName = keyof IconNames;',
+    '',
+  ].join('\n');
+}
+
+/**
+ * The whole set in one list, for `provideAveIcons(lucideIcons)`. Named imports rather than the module namespace, so a
+ * bundler renames every icon instead of keeping 1848 export names as keys (75 kB instead of 83 kB brotli).
+ */
+export function allModule(icons: ReadonlyMap<string, readonly Element[]>, source: string): string {
+  const names = [...icons.keys()].map(exportName);
+  return [
+    ...header(source),
+    '// Every Lucide icon in one list, for an application that registers the whole set at once. Importing it puts all',
+    '// of `@avelune/icons/lucide` in the bundle; importing single icons from there keeps only those.',
+    "import type { IconDefinition } from './index.js';",
+    `import { ${names.join(', ')} } from './lucide.js';`,
+    '',
+    '/** Lists icons one argument at a time, so TypeScript never joins 1848 icon types into one union (TS2590). */',
+    'const list = (...icons: readonly IconDefinition[]): readonly IconDefinition[] => icons;',
+    '',
+    '/** Every icon of `@avelune/icons/lucide`, for `provideAveIcons(lucideIcons)`. */',
+    `export const lucideIcons: readonly IconDefinition[] = list(${names.join(', ')});`,
+    '',
+  ].join('\n');
+}
+
+/** The per-icon module: one export per Lucide icon, so an application's bundle holds only the icons it imports. */
+export function lucideModule(icons: ReadonlyMap<string, readonly Element[]>, source: string): string {
+  const exports = [...icons].map(([name, elements]) => {
+    const nodes = elements.map(
+      ({ tag, attributes }) =>
+        `{ tag: '${tag}', attrs: { ${Object.entries(attributes)
+          .map(([key, value]) => `${/^[a-z]+$/.test(key) ? key : `'${key}'`}: ${JSON.stringify(value)}`)
+          .join(', ')} } }`,
+    );
+    return [
+      `export const ${exportName(name)}: IconDefinition<'${name}'> = {`,
+      `  name: '${name}',`,
+      '  viewBox,',
+      '  paint,',
+      "  strokes: 'kit',",
+      `  nodes: [${nodes.join(', ')}],`,
+      '};',
+      '',
+    ].join('\n');
+  });
+  return [
+    ...header(source),
+    "import type { IconAttributes, IconDefinition } from './index.js';",
+    '',
+    'const viewBox = "0 0 24 24";',
+    '',
+    "/** Lucide's paint: outlines in the current colour, with round caps and joins; the kit sets the stroke width. */",
+    "const paint: IconAttributes = { fill: 'none', stroke: 'currentColor', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' };",
+    '',
+    ...exports,
+  ].join('\n');
+}

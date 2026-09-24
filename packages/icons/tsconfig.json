@@ -1,5 +1,5 @@
 /* Icon scripts run directly in Node 24 through type stripping (ADR 0015): only erasable syntax, explicit .ts imports.
-   The generated src/icons.ts is compiled by tsconfig.dist.json. */
+   The generated sources in src/ are compiled by tsconfig.dist.json. */
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
@@ -11,5 +11,5 @@
     "verbatimModuleSyntax": true,
     "types": ["node"]
   },
-  "include": ["scripts/**/*.ts", "src/**/*.ts"]
+  "include": ["scripts/**/*.ts", "scripts/**/*.mts", "src/**/*.ts"]
 }

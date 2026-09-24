@@ -5,14 +5,36 @@ import * as IconStories from './icon.stories';
 
 # Icon
 
-`<ave-icon>` draws one icon of the kit's set: Lucide outlines on a 24 × 24 grid, in the colour of the text around it (ADR 0020, 0033).
+`<ave-icon>` draws one registered icon: any of Lucide's 1848 outlines, or an application's own SVG. It draws in the colour of the text around it, on the kit's sizes and stroke widths (ADR 0020, 0033, 0036).
 
 ```ts
-import { AveIcon } from '@avelune/ui/icon';
+import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
+import { lucideCalendar, lucideDownload } from '@avelune/icons/lucide';
 ```
 
 <Canvas of={IconStories.Default} />
 <Controls />
+
+## Registering icons
+
+An icon is drawn only once a provider registers it, and only registered icons reach the bundle: one Lucide icon costs about 0.2 kB.
+
+```ts
+// app.config.ts: the icons the whole application uses
+providers: [provideAveIcons([lucideCalendar, lucideDownload])];
+
+// a lazy route or a component: its own icons, added to its ancestors'
+providers: [provideAveIcons([lucideSettings])];
+```
+
+```html
+<ave-icon name="calendar" decorative />
+```
+
+- Every `<ave-icon>` sees the icons of its own injector and of every ancestor: the application's, the route's and the component's.
+- To register every Lucide icon at once, for an admin tool or a prototype: `provideAveIcons(lucideIcons)` with `lucideIcons` from `@avelune/icons/lucide/all`. That puts the whole set in the bundle, about 75 kB brotli.
+- In development, a name nobody registered throws and names the export to add (`lucideCalendarDays` for `calendar-days`). So does one name registered with two different drawings.
+- Kit components register the icons they draw themselves; an application only registers its own.
 
 ## When to use
 
@@ -23,12 +45,12 @@ import { AveIcon } from '@avelune/ui/icon';
 
 - As decoration without meaning. An icon that says nothing adds noise; leave it out.
 - Instead of words for an unfamiliar action. If people must guess, write the label.
-- For images, illustrations or logos. Use `<img>` with its own alternative text.
+- For images, illustrations or logos in full colour. Use `<img>` with its own alternative text.
 - As a button. A clickable icon is an IconButton (Wave 1), which carries the label and the target size.
 
 ## Anatomy
 
-A square host of the icon size, holding one `<svg>` with the icon's strokes. The host carries `data-icon` and `data-size`, and the accessible name or `aria-hidden`.
+A square host of the icon size, holding one `<svg>` drawn from the registered icon. The host carries `data-icon` and `data-size`, and the accessible name or `aria-hidden`.
 
 ## Sizes
 
@@ -40,7 +62,7 @@ A square host of the icon size, holding one `<svg>` with the icon's strokes. The
 | `md`           | 20     | large text, spacious controls |
 | `lg`           | 24     | headings, empty states        |
 
-Strokes are 1.5px at 16 and 20px and 1.75px at 24px, so an icon is as heavy as the text next to it. The widths are frozen with the kit.
+Strokes are 1.5px at 16 and 20px and 1.75px at 24px, so an icon is as heavy as the text next to it. The widths are frozen with the kit, and apply to an application's own icons too.
 
 ## Meaning: label or decorative
 
@@ -63,6 +85,47 @@ Icons keep their size in running text and never shrink in a flex row; long Russi
 
 <Canvas of={IconStories.LongText} />
 
+## Your own icons
+
+Any static SVG can become an icon. `defineAveIcon` reads it once, and the icon is registered like Lucide's:
+
+```ts
+import { defineAveIcon, provideAveIcons } from '@avelune/ui/icon';
+import certificateSvg from './icons/certificate.svg';
+
+// Declare the name, so templates accept it.
+declare module '@avelune/icons' {
+  interface IconNames {
+    certificate: true;
+  }
+}
+
+export const certificate = defineAveIcon('certificate', certificateSvg);
+
+providers: [provideAveIcons([certificate])];
+```
+
+To import `.svg` files as text, add `"loader": { ".svg": "text" }` to the application's build options and declare the module once: `declare module '*.svg' { const svg: string; export default svg; }`.
+
+<Canvas of={IconStories.Custom} />
+
+**The kit fits the icon by default.** Whatever the file says, the icon takes the square of its size, and:
+
+- **Colour:** every colour becomes the colour of the text, so it follows the theme and the states of its component. A design tool's black `#1E1E1E` included. For a multicolour icon, `{ colors: 'original' }` keeps its colours; check it in both themes, since they do not follow the theme.
+- **Strokes:** every stroke takes the kit's width for the size, as Lucide's do. For fine lines drawn on purpose, `{ strokes: 'original' }` keeps them as drawn, scaled with the icon.
+
+**What an icon may contain.** Shapes, groups, gradients, clip paths, masks and `use` of an id inside the icon; presentation attributes or `style`. Inkscape's and Figma's exports work as they are; editor metadata, `<title>` and `<desc>` are dropped. Refused, with every problem listed: scripts, `<style>` sheets and `class`, event handlers, embedded HTML or images, text (convert it to outlines), filters, animation, and links or references outside the icon. Ids are made unique to each icon, so two gradients on one page never meet.
+
+**Draw it as Lucide draws.** Any SVG works, but one drawn by [Lucide's design guide](https://lucide.dev/contribute/icon-design-guide) sits among Lucide's icons as one of them. The rules that matter most:
+
+1. A 24 × 24 canvas, with at least 1px between the strokes and the edge.
+2. Strokes 2px wide, centred on their paths, with round caps and joins.
+3. Outlines only; fill nothing but small dots.
+4. Corners with a 2px radius on shapes 8px or larger, 1px on smaller ones; at least 2px between separate parts.
+5. One colour. The kit paints it in the text colour anyway.
+
+Lucide's guide explains how to set this up in Figma, Illustrator, Inkscape and Affinity Designer. Before registering a new icon, paste it into [Guides / Custom icons / Check your icon](?path=/story/guides-custom-icons--check): it shows the icon next to Lucide's in every size and both themes, and which of these rules it follows.
+
 ## Keyboard
 
 None. An icon is not focusable; the control around it is.
@@ -70,7 +133,7 @@ None. An icon is not focusable; the control around it is.
 ## Accessibility
 
 - A labelled icon has `role="img"` and `aria-label`; a decorative one has `aria-hidden="true"`. The `<svg>` inside is always hidden.
-- It uses `currentColor`, so it keeps the contrast of its text, and forced colours paint it with the system text colour.
+- It uses `currentColor`, so it keeps the contrast of its text, and forced colours paint it with the system text colour. An icon with `colors: 'original'` keeps its own colours there too; do not let it carry meaning alone.
 - Write labels for the meaning, not the drawing: "Error", not "Red circle".
 
 ## Motion
@@ -81,11 +144,13 @@ None. An icon inside an animated component moves with it.
 
 - Do pair icons and text in one direction: icon first, then the label.
 - Do use one icon for one meaning across the product: `trash` always deletes.
+- Do register icons where they are used: the application for the shell, a lazy route for its screens.
+- Don't register the whole set in a library or a feature module; that puts every icon in every bundle that loads it.
 - Don't label a decorative icon, or leave a meaningful one unlabelled.
 - Don't recolour an icon apart from its text; the colour comes from the text role.
 
 ## The set
 
-<Canvas of={IconStories.Gallery} />
+Every Lucide icon, searchable by name and by Lucide's tags. The set is generated from `lucide-static` 1.47.0; an upgrade regenerates it, and the diff is reviewed.
 
-To add an icon, add its Lucide name to `packages/icons/scripts/icons.config.ts` and run `pnpm nx run icons:generate --update`. Only Lucide's outline shapes are accepted; an icon Lucide lacks is drawn to its grid in the icons package, never taken from another set.
+<Canvas of={IconStories.Gallery} />

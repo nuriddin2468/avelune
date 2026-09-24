@@ -1,6 +1,6 @@
 # 0033. Icon set and `<ave-icon>`: typed Lucide data, frozen strokes, a label or decorative
 
-- Status: Accepted (2026-09-24, technical decision within Phase 4, delegated to the agent by ADR 0020)
+- Status: Accepted (2026-09-24, technical decision within Phase 4, delegated to the agent by ADR 0020); decisions 1, 3 and 6 superseded by 0036
 - Date: 2026-09-24
 - Related: 0001, 0012, 0020, 0026, 0028; brief §4.2, §9.1
 
