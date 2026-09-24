@@ -1,0 +1,11 @@
+/* Unit tests (Vitest browser mode through @angular/build:unit-test, ADR 0026): library sources plus specs. */
+{
+  "extends": "./tsconfig.lib.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc/ui-spec",
+    "declaration": false,
+    "declarationMap": false
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["schematics/**", "scripts/**", "**/fixtures/**", "**/*.stories.ts"]
+}

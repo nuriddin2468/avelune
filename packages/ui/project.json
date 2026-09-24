@@ -35,7 +35,11 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": "{projectRoot}",
-        "commands": ["ngc -p tsconfig.lib.json --noEmit", "tsc -p tsconfig.schematics.json --noEmit"]
+        "commands": [
+          "ngc -p tsconfig.lib.json --noEmit",
+          "ngc -p tsconfig.spec.json --noEmit",
+          "tsc -p tsconfig.schematics.json --noEmit"
+        ]
       }
     },
     "api-report": {
@@ -55,6 +59,51 @@
         "command": "node scripts/api-report.mjs"
       }
     },
-    "stylelint": {}
+    "stylelint": {},
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "buildTarget": "ui:build-lib:development",
+        "tsConfig": "packages/ui/tsconfig.spec.json",
+        "runner": "vitest",
+        "browsers": ["chromium"],
+        "headless": true,
+        "watch": false,
+        "coverage": true,
+        "coverageInclude": ["packages/ui/**/*.ts"],
+        "coverageExclude": [
+          "packages/ui/**/*.spec.ts",
+          "packages/ui/**/*.stories.ts",
+          "packages/ui/**/index.ts",
+          "packages/ui/schematics/**",
+          "packages/ui/scripts/**",
+          "packages/ui/**/fixtures/**"
+        ],
+        "coverageReporters": [
+          "text-summary",
+          [
+            "text",
+            {
+              "skipFull": true
+            }
+          ]
+        ],
+        "coverageThresholds": {
+          "perFile": true,
+          "statements": 90,
+          "branches": 90,
+          "functions": 90,
+          "lines": 90
+        }
+      },
+      "configurations": {
+        "coverage-gap": {
+          "tsConfig": "tools/test-check/fixtures/coverage-gap/tsconfig.spec.json",
+          "include": ["../../tools/test-check/fixtures/coverage-gap/*.spec.ts"],
+          "coverageInclude": ["tools/test-check/fixtures/coverage-gap/*.ts"],
+          "coverageExclude": ["tools/test-check/fixtures/coverage-gap/*.spec.ts"]
+        }
+      }
+    }
   }
 }

@@ -28,9 +28,10 @@ Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` an
 | | `rxjs`, `tslib` | 7.8.2, 2.8.1 | Angular peers |
 | Workspace | `nx`, `@nx/{js,eslint,eslint-plugin}` | 23.2.1 | Nx matrix: Angular ~22.1 needs Nx ≥ 23.2.0. `@nx/angular` is not used: Nx runs the Angular builders directly |
 | | `pnpm` | 11.27.1 | ADR 0012 |
-| Unit tests | `vitest`, `@vitest/browser-playwright`, `@vitest/coverage-v8` | 4.1.11 | `@angular/build` 22.1 peers `^4.0.8`; `@storybook/addon-vitest` and `@nx/vitest` peer `^3 \|\| ^4` (ADR 0013) |
+| Unit tests | `vitest`, `@vitest/browser`, `@vitest/browser-playwright`, `@vitest/coverage-v8` | 4.1.11 | `@angular/build` 22.1 peers `^4.0.8`; `@storybook/addon-vitest` and `@nx/vitest` peer `^3 \|\| ^4` (ADR 0013); installed in Phase 3 (2026-09-24) |
+| | `playwright` | 1.63.0 | Peer of `@vitest/browser-playwright`; its chromium 1243 was already in the user's Playwright cache, and its install script stays blocked (`allowBuilds`) |
 | | `vite` | 8.3.0 | Required by `@storybook/angular-vite` |
-| Storybook | `storybook`, `@storybook/angular-vite`, `@storybook/addon-{vitest,a11y,docs}` | 10.6.0 | ADR 0008. Installed in Phase 2 without `addon-vitest` (Phase 3) |
+| Storybook | `storybook`, `@storybook/angular-vite`, `@storybook/addon-{vitest,a11y,docs}` | 10.6.0 | ADR 0008. Installed in Phase 2; `addon-vitest` added in Phase 3 (2026-09-24). JIT since ADR 0025 |
 | | `@analogjs/vite-plugin-angular` | 2.7.2 | Required peer of `angular-vite` (≥ 2.0.0) |
 | | `@angular/animations` | 22.1.7 | Required peer of `angular-vite` 10.6; devDependency only, never imported (ADR 0005, 0008). npm marks it deprecated |
 | | `@angular-devkit/architect` | 0.2201.8 | Required peer of `angular-vite`; matches CLI 22.1.8 |

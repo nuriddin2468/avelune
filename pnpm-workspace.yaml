@@ -79,6 +79,13 @@ catalog:
   '@storybook/addon-a11y': 10.6.0
   '@analogjs/vite-plugin-angular': 2.7.2
   vite: 8.3.0
+  # Unit and story tests (ADR 0006, 0013)
+  vitest: 4.1.11
+  '@vitest/browser': 4.1.11
+  '@vitest/browser-playwright': 4.1.11
+  '@vitest/coverage-v8': 4.1.11
+  playwright: 1.63.0
+  '@storybook/addon-vitest': 10.6.0
   # API reports
   '@microsoft/api-extractor': 7.59.1
   # Tokens (ADR 0003, 0011)

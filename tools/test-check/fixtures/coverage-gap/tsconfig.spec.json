@@ -1,0 +1,6 @@
+/* The ui:test configuration "coverage-gap" compiles this fixture with the library's spec options. */
+{
+  "extends": "../../../../packages/ui/tsconfig.spec.json",
+  "include": ["*.ts"],
+  "exclude": []
+}

@@ -31,6 +31,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0023](0023-eslint-configuration.md) | ESLint: strict type-aware presets, kit rules, fixtures that lint as real paths | Accepted |
 | [0024](0024-stylelint-configuration.md) | Stylelint: token-only values, same-element nesting, logical exceptions derived from browser data | Accepted |
 | [0025](0025-storybook-jit.md) | Storybook compiles stories JIT; ngc type-checks them | Accepted |
+| [0026](0026-unit-and-story-tests.md) | Unit and story tests: Angular's unit-test builder in Chromium, per-file thresholds, failing fixtures | Accepted |
 
 ## Template
 

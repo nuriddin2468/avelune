@@ -7,7 +7,7 @@ const workspaceRoot = join(import.meta.dirname, '..', '..', '..');
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.ts'],
-  addons: ['@storybook/addon-docs', '@storybook/addon-a11y'],
+  addons: ['@storybook/addon-docs', '@storybook/addon-a11y', '@storybook/addon-vitest'],
   framework: {
     name: '@storybook/angular-vite',
     // JIT, the framework default: with AOT the production build drops the compiler that Storybook's wrapper needs.

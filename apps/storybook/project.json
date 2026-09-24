@@ -48,6 +48,34 @@
         "command": "ngc -p tsconfig.json --noEmit"
       }
     },
-    "stylelint": {}
+    "stylelint": {},
+    "test": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        {
+          "projects": ["tokens"],
+          "target": "build"
+        }
+      ],
+      "inputs": [
+        "default",
+        "^production",
+        {
+          "externalDependencies": [
+            "storybook",
+            "@storybook/angular-vite",
+            "@storybook/addon-vitest",
+            "@storybook/addon-a11y",
+            "vitest",
+            "@vitest/browser-playwright"
+          ]
+        }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "vitest run --config vitest.config.ts"
+      }
+    }
   }
 }

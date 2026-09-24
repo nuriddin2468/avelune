@@ -1,0 +1,30 @@
+{
+  "name": "test-check",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "tools/test-check",
+  "tags": ["type:tool"],
+  "targets": {
+    "test": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "default",
+        "{workspaceRoot}/packages/ui/project.json",
+        "{workspaceRoot}/packages/ui/tsconfig*.json",
+        { "externalDependencies": ["vitest", "@vitest/coverage-v8", "@vitest/browser-playwright", "@angular/build"] }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node --test \"src/**/*.spec.ts\""
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "tsc -p tsconfig.json"
+      }
+    }
+  }
+}

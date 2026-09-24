@@ -55,11 +55,12 @@ Run from the repository root. `pnpm` switches itself to the pinned 11.27.1 (`pac
 | Prove the ESLint and Stylelint configs and the `avelune` rules (rule tests + workspace fixtures) | `pnpm nx run lint-rules:test` |
 | Fonts: check / rebuild (`packages/ui/styles/fonts`) | `pnpm nx run fonts:check` / `pnpm nx run fonts:check --update` |
 | Colour primitives: check / regenerate | `pnpm nx run tokens:colors` / `pnpm nx run tokens:colors --update` |
-| Node-side tests (scripts, tools) | `pnpm nx run-many -t test` (`node:test`, ADR 0015) |
+| All tests: library (Vitest in Chromium, coverage gate), stories (render, `play`, axe), Node-side (`node:test`) | `pnpm nx run-many -t test` (ADR 0015, 0026) |
+| Library unit tests / story tests | `pnpm nx run ui:test` / `pnpm nx run storybook:test` |
 | Format | `pnpm format` (check: `pnpm format:check`) |
 | Project graph | `pnpm nx graph` |
 
-The pre-commit hook runs ESLint, Stylelint and Prettier on staged files, `typecheck` on affected projects and `compiler-check:check` when a tsconfig is staged; the commit-msg hook runs commitlint. Component tests, Storybook, visual and a11y checks are added in Phase 3 and listed here then.
+The pre-commit hook runs ESLint, Stylelint and Prettier on staged files, `typecheck` on affected projects and `compiler-check:check` when a tsconfig is staged; the commit-msg hook runs commitlint. Visual regression, the Playwright axe sweep, invariants and size budgets are added later in Phase 3 and listed here then.
 
 ## Where things live
 

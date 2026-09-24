@@ -16,6 +16,7 @@ How Avelune is built. Decisions and their reasons live in the [ADRs](adr/README.
 | `tools/tokens-check` | `tokens-check` | `type:tool` | Token validation |
 | `tools/fonts` | `fonts` | `type:tool` | Builds and checks the web font in `packages/ui/styles/fonts` |
 | `tools/compiler-check` | `compiler-check` | `type:tool` | Checks every tsconfig for the required compiler strictness; fixtures prove each option |
+| `tools/test-check` | `test-check` | `type:tool` | Proves that the coverage gate and the story gates (`play`, axe) fail on violations |
 | `tools/lint-rules` | `lint-rules` | `type:tool` | The `avelune` ESLint and Stylelint rules and the fixtures that prove both workspace configs (ADR 0023, 0024) |
 | `tools/invariants` | `invariants` | `type:tool` | Cross-component Playwright invariants (Phase 3/5) |
 | `tools/adoption-metrics` | `adoption-metrics` | `type:tool` | Consumer-repo scanner (Phase 6) |
@@ -96,7 +97,7 @@ Conventions:
 - `pnpm nx run compiler-check:test` proves the options. Each fixture in `tools/compiler-check/fixtures/violations` breaks one option or one extended diagnostic and must produce exactly its declared error codes. The control fixture `valid.ts` must compile clean. Every required option, and every extended diagnostic the installed compiler knows, must have a fixture. When an upgrade adds a new `strict` flag or a new diagnostic, add a fixture for it: a header `// Proves: <option>` and `// Expect: <codes>`, and an entry in `requirements.ts` if it is a flag.
 - Consequences for code: leave optional properties out rather than setting them to `undefined` (`...(x === undefined ? {} : { x })`). In host listeners `$event` is `Event`; narrow it inside the handler.
 - TypeScript 6 specifics: no `baseUrl` (paths are relative to the config file), `types: []` by default, and `rootDir` defaults to the config's folder. Apps that compile library sources through path mappings set `rootDir` to the workspace root.
-- `typecheck` targets run `ngc --noEmit`, which also type-checks templates; `ui:typecheck` checks the schematics too.
+- `typecheck` targets run `ngc --noEmit`, which also type-checks templates; `ui:typecheck` checks the specs (`tsconfig.spec.json`) and the schematics too.
 - Every folder with TypeScript has a `tsconfig.json` that editors, the Angular language service and type-aware lint find by name. Where a build uses another file (`tsconfig.lib.json`, `tsconfig.app.json`, `tsconfig.schematics.json`), the `tsconfig.json` extends it and adds specs and stories.
 
 ## Lint
@@ -170,6 +171,16 @@ packages/tokens/
 
 The **Foundations** pages live in `apps/storybook/src/foundations`: colour roles and every declared contrast pair per theme (WCAG ratio, APCA Lc for information), the type specimen in uz-Latn, uz-Cyrl, ru and en, spacing and control sizes, radius, elevation and stacking order, and the motion playground. They read `tokens` from `@avelune/tokens` and style themselves with tokens only; primitives never appear. Component stories will live next to their components (`packages/ui/<name>/<name>.stories.ts`) from Phase 5.
 
+## Tests
+
+- **Library** (`pnpm nx run ui:test`, ADR 0026): `@angular/build:unit-test` runs every `packages/ui/**/*.spec.ts` with Vitest 4 in headless Chromium. Every file needs 90% statements, branches, functions and lines.
+  - Specs test through the entry point's harness and import from `vitest` explicitly.
+  - At least one assertion per component needs a real browser (layout, focus, computed style).
+  - An exported function that no test calls is tree-shaken from the bundle and does not count, so review what each spec leaves out.
+- **Stories** (`pnpm nx run storybook:test`): every story is a Vitest test in Chromium through `@storybook/addon-vitest`. It fails on an error, a failing `play` function or any axe violation.
+- **Node-side code** (tools, token scripts) uses `node:test` (ADR 0015).
+- `tools/test-check` proves the first two gates with fixtures: a coverage gap and an orphan file (`ui:test:coverage-gap`), and a fixture Storybook with an unnamed button and a failing `play` function.
+
 ## Fonts
 
 The kit's typefaces are IBM Plex Sans, shipped as **"Avelune Sans"**, and IBM Plex Mono for code, shipped as **"Avelune Mono"** (ADR 0018 and its addendum): `tools/fonts` subsets the pinned sources (`tools/fonts/source`) into `packages/ui/styles/fonts/avelune-{sans,mono}-{latin,latin-ext,cyrillic}.woff2` (sans variable, weights 400–600; mono Regular), renames them as the OFL requires, maps ʻ ʼ to Plex Sans' ‘ ’ glyphs, and writes `fonts.css` with the `@font-face` rules and metric-matched fallback faces (Arial per weight, Courier New for mono). The outputs are committed; `pnpm nx run fonts:check` rebuilds them in memory and fails on any difference, on a character a locale needs but the files lack, and on a leftover Reserved Font Name. `styles.css` imports `fonts.css` in Phase 4.
@@ -186,6 +197,8 @@ What is checked today, by which tool, at which stage. Phase 3 completes this tab
 | TS strictness, template types | `ngc --noEmit` (`typecheck` targets) | affected projects | Phase 3 |
 | No tsconfig weakens the required strictness (ADR 0022) | `compiler-check:check`, proven by `compiler-check:test` (a fixture per option and per extended diagnostic) | a staged tsconfig | Phase 3 |
 | Token-only CSS values, no unknown tokens, specificity cap, no `::ng-deep`/`!important`/ids, motion longhands, `@keyframes` only in `motion.css`, logical properties (exceptions derived from browser data), query widths equal tokens, `@layer components`, same-element nesting | Stylelint (ADR 0024), a fixture per rule in `lint-rules:test` | staged `.css` | Phase 3 |
+| Coverage ≥ 90% per file in `packages/ui`, tests in a real browser | `ui:test` (Vitest browser mode), proven by `test-check:test` | no | Phase 3 |
+| Every story renders, passes its `play` function and has no axe violation | `storybook:test` (addon-vitest, a11y `error`), proven by `test-check:test` | no | Phase 3 |
 | Formatting | Prettier (`.md` excluded) | staged files | Phase 3 |
 | Conventional commits, scope = Nx project or `repo`, `deps`, `docs`, `ci`, `release` | commitlint | commit message | n/a |
 | Public API unchanged or report updated; release tags present | API Extractor (`ui:api-report`) | no | Phase 3 |

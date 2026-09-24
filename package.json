@@ -51,9 +51,13 @@
     "@schematics/angular": "catalog:",
     "@storybook/addon-a11y": "catalog:",
     "@storybook/addon-docs": "catalog:",
+    "@storybook/addon-vitest": "catalog:",
     "@storybook/angular-vite": "catalog:",
     "@types/fontkit": "catalog:",
     "@types/node": "catalog:",
+    "@vitest/browser": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
     "browserslist": "catalog:",
     "colorjs.io": "catalog:",
     "eslint": "catalog:",
@@ -63,6 +67,7 @@
     "lefthook": "catalog:",
     "ng-packagr": "catalog:",
     "nx": "catalog:",
+    "playwright": "catalog:",
     "prettier": "catalog:",
     "storybook": "catalog:",
     "style-dictionary": "catalog:",
@@ -78,6 +83,7 @@
     "@typescript-eslint/rule-tester": "catalog:",
     "angular-eslint": "catalog:",
     "@eslint-community/eslint-plugin-eslint-comments": "catalog:",
-    "vite": "catalog:"
+    "vite": "catalog:",
+    "vitest": "catalog:"
   }
 }

@@ -12,6 +12,14 @@ import { kitElements, plugin as avelune } from './tools/lint-rules/src/index.ts'
 /** Layers from lowest to highest. A project may depend only on its own layer or a lower one (ADR 0001). */
 const layers = ['layer:tokens', 'layer:foundations', 'layer:components', 'layer:composites', 'layer:patterns'];
 
+/** Which project tags may depend on which (ADR 0001). */
+const depConstraints = [
+  ...layers.map((layer, index) => ({ sourceTag: layer, onlyDependOnLibsWithTags: layers.slice(0, index + 1) })),
+  { sourceTag: 'type:app', onlyDependOnLibsWithTags: layers },
+  { sourceTag: 'type:tool', onlyDependOnLibsWithTags: ['layer:tokens', 'type:tool'] },
+  { sourceTag: 'type:config', onlyDependOnLibsWithTags: ['layer:tokens', 'type:tool', 'type:config'] },
+];
+
 const animations = '@angular/animations is deprecated and banned; motion is CSS plus animate.enter/leave (ADR 0005).';
 const material = 'Angular Material is not used; behaviour comes from native HTML, Angular Aria and the CDK (ADR 0002).';
 
@@ -162,15 +170,23 @@ export default defineConfig(
         {
           enforceBuildableLibDependency: true,
           allow: [],
-          depConstraints: [
-            ...layers.map((layer, index) => ({
-              sourceTag: layer,
-              onlyDependOnLibsWithTags: layers.slice(0, index + 1),
-            })),
-            { sourceTag: 'type:app', onlyDependOnLibsWithTags: layers },
-            { sourceTag: 'type:tool', onlyDependOnLibsWithTags: ['layer:tokens', 'type:tool'] },
-            { sourceTag: 'type:config', onlyDependOnLibsWithTags: ['layer:tokens', 'type:tool', 'type:config'] },
-          ],
+          depConstraints,
+        },
+      ],
+    },
+  },
+  {
+    // Entry points of @avelune/ui import each other, and their own testing entry points, through their public
+    // specifiers, as ng-packagr requires; avelune/entry-point-layers governs those imports (ADR 0023, 0026).
+    files: ['packages/ui/**/*.ts'],
+    rules: {
+      '@nx/enforce-module-boundaries': [
+        'error',
+        {
+          enforceBuildableLibDependency: true,
+          allowCircularSelfDependency: true,
+          allow: [],
+          depConstraints,
         },
       ],
     },

@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 3 in progress. Compiler strictness (ADR 0022), ESLint (ADR 0023) and Stylelint (ADR 0024) are done, and the static Storybook build is fixed (ADR 0025), all on 2026-09-24. Next: the Vitest and Storybook item. The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
+**Current position:** Phase 3 in progress. Compiler strictness (ADR 0022), ESLint (ADR 0023), Stylelint (ADR 0024) and unit and story tests (ADR 0025, 0026) are done, all on 2026-09-24. Next: Playwright visual tests in Docker, the axe sweep, invariants and size-limit. The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
 
 ## Parameters
 
@@ -76,7 +76,12 @@ Carried over from Phase 1: a SchematicTestRunner test for `ng-add` and the empty
   - Three `avelune` rules: query widths equal tokens (the Phase 2 carry-over), `@layer components` in kit CSS, and same-element nesting only. The shim fixture showed that the emulated shim leaves nested selectors unscoped.
   - Component styles live in `.css` files (ESLint bans `styles:`); the Foundations pages moved theirs.
   - `lint-rules:test` covers it: 34 Stylelint fixtures through the real config, rule unit tests, the derived exceptions and the shim characterisation.
-- [ ] Vitest browser mode + coverage thresholds; Storybook angular-vite (running since Phase 2) + addon-vitest + a11y `error`. The static-build defect found on 2026-09-24 is fixed by ADR 0025: the build rendered no story because Analog's optimizer dropped `@angular/compiler` under `jit: false`; Storybook now runs JIT and ngc type-checks the stories.
+- [x] Vitest browser mode + coverage thresholds; Storybook angular-vite (running since Phase 2) + addon-vitest + a11y `error`. Done in ADR 0025 and 0026:
+  - The static-build defect is fixed: Analog's optimizer dropped `@angular/compiler` under `jit: false`, so Storybook now runs JIT and ngc type-checks the stories.
+  - `ui:test` runs `@angular/build:unit-test` in headless Chromium with 90% per-file thresholds, and the first harness spec covers the sample 100%.
+  - `storybook:test` runs every story with `play` and axe as errors.
+  - `test-check:test` proves that a coverage gap, an orphan file, an axe violation and a failing `play` each fail.
+  - Known limit: an exported function that no test calls is tree-shaken and not counted (ADR 0026).
 - [ ] Playwright visual in pinned amd64 Docker; axe sweep; invariants skeleton; size-limit
 - [ ] API reports; changesets; `.gitlab-ci.yml` stages (brief §5.6); CODEOWNERS + review rule in CONTRIBUTING
 - [ ] Every guardrail proven to fail on a violation

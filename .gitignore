@@ -22,6 +22,10 @@ test-results/
 playwright-report/
 **/__screenshots__/*-actual.png
 **/__screenshots__/*-diff.png
+# Vitest browser mode's screenshots of failed tests and stories, in a folder named after the test file (debugging
+# output, never baselines)
+**/__screenshots__/*.ts/
+.vitest-attachments/
 
 # Environment and OS
 .env

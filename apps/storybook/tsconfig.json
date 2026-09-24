@@ -8,5 +8,5 @@
     "resolveJsonModule": true,
     "types": ["node"]
   },
-  "include": ["src/**/*.ts", ".storybook/*.ts"]
+  "include": ["src/**/*.ts", ".storybook/*.ts", "vitest.config.ts"]
 }
