@@ -1,4 +1,4 @@
-// Lint as: packages/ui/sample/sample.ts
+// Lint as: packages/ui/icon/icon.ts
 // Expect: no-restricted-syntax
 
 import { Component } from '@angular/core';

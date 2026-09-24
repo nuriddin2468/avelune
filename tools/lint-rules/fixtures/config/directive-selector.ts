@@ -1,4 +1,4 @@
-// Lint as: packages/ui/sample/sample.ts
+// Lint as: packages/ui/icon/icon.ts
 // Expect: @angular-eslint/directive-selector
 
 import { Directive } from '@angular/core';

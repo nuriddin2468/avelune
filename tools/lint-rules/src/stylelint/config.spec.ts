@@ -56,7 +56,7 @@ describe('workspace Stylelint config', () => {
   });
 
   it('makes every rule an error', async () => {
-    const config = await stylelint.resolveConfig(join(workspaceRoot, 'packages', 'ui', 'sample', 'sample.css'));
+    const config = await stylelint.resolveConfig(join(workspaceRoot, 'packages', 'ui', 'icon', 'icon.css'));
     assert.ok(config !== undefined);
     assert.equal(config.defaultSeverity, 'error');
     const warnings = Object.entries(config.rules ?? {}).filter(([, setting]) => {

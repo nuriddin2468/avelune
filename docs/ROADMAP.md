@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below that is not marked **Deferred**, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 4 in progress. The global stylesheet, the motion catalog, the runtime API and the icons are done (2026-09-24, ADR 0030–0033). Next: delete the `sample` scaffolding. Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
+**Current position:** Phase 4 done on 2026-09-24 (ADR 0030–0033). Next: Phase 5, Wave 1 (Icon to beta, then Button, IconButton, Input, FormField, Checkbox), ending at the Wave 1 STOP. Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
 
 ## Parameters
 
@@ -124,7 +124,7 @@ The carry-overs from Phases 1 and 2 are done, except wiring the targets into CI,
   - `<ave-icon>`: sizes 16/20/24 (`sm` by default); strokes frozen at 1.5/1.5/1.75px after a comparison with Plex. It needs `label` or `decorative`: the new ESLint rule `avelune/icon-label` checks templates, and the component throws in development.
   - Delivered with its harness, unit tests in Chromium, a docs page, six stories with `play` functions and baselines in both themes, both viewports and forced colours. 3.33 kB of a 3.7 kB budget.
   - The kit resolves `@avelune/icons` and `@avelune/tokens` through `node_modules`, and Nx builds both first.
-- [ ] Delete the `packages/ui/sample` scaffolding entry point and its API reports once the first real entry point exists
+- [x] Delete the `packages/ui/sample` scaffolding entry point and its API reports once the first real entry point exists. Done on 2026-09-24: the lint fixtures that linted as the sample now lint as `packages/ui/icon`, and the showcase shows an icon instead.
 
 ### Phase 5: Components
 Waves and status: see the tables below.
@@ -153,7 +153,7 @@ Waves and status: see the tables below.
 
 | Component | Wave | Layer | Status | Owner | Notes |
 |---|---|---|---|---|---|
-| Icon | 1 | foundations | experimental | | `@avelune/ui/icon` (ADR 0033); used in the showcase once the scaffolding is gone; beta at the Wave 1 gate |
+| Icon | 1 | foundations | experimental | | `@avelune/ui/icon` (ADR 0033); in the showcase shell; beta at the Wave 1 gate, with a realistic composition |
 | Button | 1 | components | planned | | `button[aveButton]`, `a[aveButton]` |
 | IconButton | 1 | components | planned | | label required |
 | Input | 1 | components | planned | | `input[aveInput]`; Signal Forms + CVA |

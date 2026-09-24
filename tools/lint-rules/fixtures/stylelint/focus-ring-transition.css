@@ -1,4 +1,4 @@
-/* Lint as: packages/ui/sample/sample.css
+/* Lint as: packages/ui/icon/icon.css
    Expect: declaration-property-value-disallowed-list (the ring appears at once, never animated) */
 
 @layer components {

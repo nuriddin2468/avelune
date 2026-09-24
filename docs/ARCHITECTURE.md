@@ -76,7 +76,6 @@ Conventions:
 - Files have no type suffix (`button.ts`, not `button.component.ts`), per the Angular v20+ style guide.
 - Exported symbols start with `Ave` (`AveButton`, `AveButtonHarness`, `AveButtonVariant`) so they never collide with consumer or Angular Aria names. Selectors use the `ave` prefix (`button[aveButton]`, `<ave-form-field>`).
 - Every exported symbol carries an API Extractor release tag that mirrors its ROADMAP status: experimental → `@alpha`, beta → `@beta`, stable → `@public` (ADR 0007).
-- `packages/ui/sample` is scaffolding that proves this layout. It is deleted when the first real entry point lands (Phase 4).
 
 A service without a component, such as `theme`, has no harness and no `testing` entry point.
 

@@ -1,4 +1,4 @@
-// Lint as: packages/ui/sample/sample.ts
+// Lint as: packages/ui/icon/icon.ts
 // Expect: none (the kit implements native elements; the raw-element rule is for consumers)
 
 import { Component } from '@angular/core';

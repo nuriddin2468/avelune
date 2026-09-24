@@ -86,7 +86,7 @@ describe('workspace ESLint config', () => {
 
   it('turns every rule it enables into an error, never a warning', async () => {
     for (const path of [
-      'packages/ui/sample/sample.ts',
+      'packages/ui/icon/icon.ts',
       'apps/showcase/src/app/app.ts',
       'apps/showcase/src/app/app.html',
       'tools/fonts/src/cli.ts',

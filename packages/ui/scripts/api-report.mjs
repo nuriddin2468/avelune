@@ -19,7 +19,7 @@ const distRoot = option('--build') ?? join(workspaceRoot, 'dist', 'packages', 'u
 const update = args.includes('--update');
 
 // API Extractor treats an import as external only when TypeScript resolves it as an external library. Entry points
-// import each other by their public specifier (@avelune/ui/sample). Analysed inside the package, that import resolves as
+// import each other by their public specifier (@avelune/ui/icon). Analysed inside the package, that import resolves as
 // a self-reference and counts as local, so every shared type would be reported as a forgotten export. So the analysed
 // .d.ts sits outside the package (analysis/), and the package itself sits under node_modules/, which makes
 // cross-entry-point imports external, as they are for consumers.
@@ -37,7 +37,7 @@ cpSync(join(distRoot, 'package.json'), join(packageCopy, 'package.json'));
 cpSync(join(distRoot, 'types'), join(packageCopy, 'types'), { recursive: true });
 cpSync(join(distRoot, 'types'), analysisRoot, { recursive: true });
 
-/** Entry points are the folders that contain an ng-package.json: '' (primary), 'sample', 'sample/testing'. */
+/** Entry points are the folders that contain an ng-package.json: '' (primary), 'icon', 'icon/testing'. */
 const entryPoints = globSync('**/ng-package.json', {
   cwd: packageRoot,
   exclude: (path) => path === 'node_modules' || path.includes('fixtures'),
@@ -50,7 +50,7 @@ let failed = false;
 
 for (const entryPoint of entryPoints) {
   const specifier = entryPoint === '' ? '@avelune/ui' : `@avelune/ui/${entryPoint}`;
-  // ng-packagr names each entry point's types after its specifier: @avelune/ui/sample -> avelune-ui-sample.d.ts.
+  // ng-packagr names each entry point's types after its specifier: @avelune/ui/icon -> avelune-ui-icon.d.ts.
   const typesFile = join(analysisRoot, `${specifier.slice(1).replaceAll('/', '-')}.d.ts`);
   if (!existsSync(typesFile)) {
     console.error(`api-report: types for ${specifier} are missing. Run \`nx build ui\` first.`);

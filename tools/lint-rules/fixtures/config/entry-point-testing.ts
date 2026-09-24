@@ -1,4 +1,4 @@
-// Lint as: packages/ui/sample/sample.ts
+// Lint as: packages/ui/icon/icon.ts
 // Expect: avelune/entry-point-layers
 
-export { AveSampleHarness } from '@avelune/ui/sample/testing';
+export { AveIconHarness } from '@avelune/ui/icon/testing';

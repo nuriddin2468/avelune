@@ -1,4 +1,4 @@
-// Lint as: packages/ui/sample/sample.ts
+// Lint as: packages/ui/icon/icon.ts
 // Expect: @angular-eslint/use-component-view-encapsulation, no-restricted-syntax
 
 import { Component, ViewEncapsulation } from '@angular/core';

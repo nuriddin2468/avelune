@@ -1,4 +1,4 @@
-/* Lint as: packages/ui/sample/sample.css
+/* Lint as: packages/ui/icon/icon.css
    Expect: property-disallowed-list (a component never removes or redraws the ring) */
 
 @layer components {

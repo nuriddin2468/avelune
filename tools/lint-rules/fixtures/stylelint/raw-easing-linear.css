@@ -1,4 +1,4 @@
-/* Lint as: packages/ui/sample/sample.css
+/* Lint as: packages/ui/icon/icon.css
    Expect: scale-unlimited/declaration-strict-value (linear belongs to the loops of motion.css) */
 
 @layer components {

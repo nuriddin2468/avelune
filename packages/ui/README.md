@@ -3,8 +3,16 @@
 Angular UI kit for internal work systems. Every component is a secondary entry point:
 
 ```ts
-import { AveSample } from '@avelune/ui/sample';
-import { AveSampleHarness } from '@avelune/ui/sample/testing';
+import { AveIcon } from '@avelune/ui/icon';
+import { AveIconHarness } from '@avelune/ui/icon/testing';
+```
+
+Bootstrap the kit once, in the application's providers:
+
+```ts
+import { provideAvelune } from '@avelune/ui/theme';
+
+bootstrapApplication(App, { providers: [provideAvelune()] });
 ```
 
 Load the global stylesheet once, through the application's bundler. It declares the cascade layers and brings the tokens, the fonts, the reset, the base typography and the focus ring; put the application's own styles in `@layer app`. With Angular's application builder (`angular.json`, the build options and the production configuration):
