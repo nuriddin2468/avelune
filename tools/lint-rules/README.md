@@ -1,6 +1,6 @@
 # lint-rules
 
-The `avelune` ESLint plugin (`src/index.ts`) and the tests that prove the workspace ESLint config (ADR 0023). The root `eslint.config.mjs` loads the plugin from source; `@avelune/eslint-config` will bundle it for consumers (Phase 6).
+The `avelune` ESLint plugin (`src/index.ts`), the `avelune` Stylelint rules (`src/stylelint/`), and the tests that prove the workspace ESLint and Stylelint configs (ADR 0023, 0024). The root configs load them from source; `@avelune/eslint-config` and `@avelune/stylelint-config` will bundle them for consumers (Phase 6).
 
 | Rule | Applies to | Rejects |
 |---|---|---|
@@ -10,6 +10,12 @@ The `avelune` ESLint plugin (`src/index.ts`) and the tests that prove the worksp
 | `avelune/no-raw-elements` | consumers (in this repo: the showcase) | `<button>`, `<input>`, `<select>`, `<textarea>`, `<dialog>` without a kit attribute from `src/kit-elements.ts` |
 
 When a component that enhances a native element lands, add its attribute to `kitElements` in `src/kit-elements.ts` in the same merge request.
+
+| Stylelint rule | Applies to | Rejects |
+|---|---|---|
+| `avelune/nesting-same-element` | all CSS | a nested rule, also under an at-rule, that selects anything but the parent element (`&` + pseudo-classes, pseudo-elements, attributes) |
+| `avelune/media-query-tokens` | all CSS | a width in `@media` that is not a breakpoint token, or in `@container` that is not a container token (read from `tokens.css`) |
+| `avelune/component-layer` | `packages/ui/<entry>/**/*.css` | a rule outside `@layer components` |
 
 ## Tests
 
@@ -21,3 +27,8 @@ When a component that enhances a native element lands, add its attribute to `kit
   - A path that does not exist is linted without type information.
 
   The spec also checks that every plugin rule has a fixture and that the config enables no rule as a warning.
+- `src/stylelint/*.spec.ts` covers the Stylelint side:
+  - unit tests for each `avelune` Stylelint rule;
+  - `config.spec.ts`, which lints every file in `fixtures/stylelint` through the real `stylelint.config.mjs` in the same `Lint as:` / `Expect:` form;
+  - `logical.spec.ts`, which derives the allowed physical properties and keywords from the plugin, MDN browser-compat-data and `.browserslistrc`, and compares them with the config;
+  - `encapsulation.spec.ts`, which pins how Angular's emulated shim treats nested CSS.

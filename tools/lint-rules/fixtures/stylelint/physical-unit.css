@@ -1,0 +1,6 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: logical-css/require-logical-units */
+
+.page {
+  min-block-size: 100vh;
+}

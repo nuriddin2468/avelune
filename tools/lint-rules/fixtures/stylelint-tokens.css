@@ -1,0 +1,11 @@
+/* The breakpoint and container tokens of packages/tokens, as the avelune/media-query-tokens tests read them. */
+:root {
+  --ave-breakpoint-sm: 600px;
+  --ave-breakpoint-md: 840px;
+  --ave-breakpoint-lg: 1200px;
+  --ave-breakpoint-xl: 1600px;
+  --ave-container-xs: 320px;
+  --ave-container-sm: 480px;
+  --ave-container-md: 640px;
+  --ave-container-lg: 960px;
+}

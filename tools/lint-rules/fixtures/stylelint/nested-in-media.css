@@ -1,0 +1,10 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: avelune/nesting-same-element */
+
+.card {
+  @media (width >= 600px) {
+    .title {
+      margin: 0;
+    }
+  }
+}

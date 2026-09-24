@@ -1,0 +1,7 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: --report-descriptionless-disables */
+
+.note {
+  /* stylelint-disable-next-line declaration-no-important */
+  display: none !important;
+}

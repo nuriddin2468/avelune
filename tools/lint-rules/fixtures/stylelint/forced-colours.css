@@ -1,0 +1,8 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: none (system colours are allowed for forced-colors styles) */
+
+@media (forced-colors: active) {
+  .note {
+    border-color: CanvasText;
+  }
+}

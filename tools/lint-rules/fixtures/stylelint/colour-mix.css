@@ -1,0 +1,6 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: function-disallowed-list (a mixed colour escapes the contrast checks) */
+
+.note {
+  background-color: color-mix(in oklch, var(--ave-color-bg-surface), var(--ave-color-accent-bg));
+}

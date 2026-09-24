@@ -1,0 +1,16 @@
+.section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ave-space-4);
+}
+
+.title {
+  margin: 0;
+  font: var(--ave-font-heading-lg);
+}
+
+.note {
+  margin: 0;
+  max-inline-size: var(--ave-container-md);
+  color: var(--ave-color-fg-muted);
+}

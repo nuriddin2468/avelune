@@ -1,0 +1,6 @@
+/* Lint as: packages/ui/sample/sample.css
+   Expect: avelune/component-layer */
+
+:host {
+  display: inline-flex;
+}

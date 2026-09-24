@@ -51,6 +51,7 @@
         "cwd": "{projectRoot}",
         "command": "ngc -p tsconfig.app.json --noEmit"
       }
-    }
+    },
+    "stylelint": {}
   }
 }

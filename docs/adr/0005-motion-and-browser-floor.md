@@ -43,3 +43,7 @@
 
 - `tools/invariants` asserts that every running animation's duration and easing equals a token (brief §8.2). That check is only meaningful because motion is pure CSS.
 - CSS nesting inside component styles must survive Angular's emulated-encapsulation shim. A fixture in Phase 3 proves it; if it fails, nesting is banned by Stylelint instead.
+
+## Addendum: the nesting fixture (Phase 3, 2026-09-24)
+
+The fixture this ADR asked for has run: the emulated shim scopes only the outer selector of a nested rule. Nesting is therefore limited to refinements of the same element (`&:hover`, `&[aria-…]`, `&::before`) by `avelune/nesting-same-element`; see ADR 0024.

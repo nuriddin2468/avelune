@@ -1,0 +1,143 @@
+.grid {
+  border-collapse: collapse;
+  inline-size: 100%;
+}
+
+th,
+td {
+  padding: var(--ave-space-2) var(--ave-space-3);
+  text-align: start;
+  vertical-align: middle;
+  border-block-end: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+}
+
+th {
+  font: var(--ave-font-label-md);
+}
+
+.value {
+  display: block;
+  font: var(--ave-font-code);
+  color: var(--ave-color-fg-muted);
+}
+
+.description {
+  display: block;
+  max-inline-size: var(--ave-container-xs);
+  font: var(--ave-font-caption);
+  color: var(--ave-color-fg-muted);
+}
+
+.track {
+  position: relative;
+  display: block;
+  inline-size: calc(var(--ave-space-16) * 2);
+  block-size: var(--ave-control-height-sm);
+  padding: 0;
+  border: var(--ave-border-width-default) solid var(--ave-color-border-default);
+  border-radius: var(--ave-radius-full);
+  background: var(--ave-color-bg-surface-sunken);
+  cursor: pointer;
+}
+
+.dot {
+  position: absolute;
+  inset-block-start: calc((100% - var(--ave-space-5)) / 2);
+  inset-inline-start: var(--ave-space-1);
+  inline-size: var(--ave-space-5);
+  block-size: var(--ave-space-5);
+  border-radius: var(--ave-radius-full);
+  background: var(--ave-color-accent-bg);
+  transition-property: translate;
+}
+
+/* The track is 2 × space.16 wide; the dot travels it minus its own size and both insets. */
+.moved {
+  translate: calc(var(--ave-space-16) * 2 - var(--ave-space-5) - var(--ave-space-2)) 0;
+}
+
+.actions {
+  display: flex;
+  gap: var(--ave-space-2);
+}
+
+.action {
+  block-size: var(--ave-control-height-md);
+  padding-inline: var(--ave-control-padding-inline-md);
+  border: none;
+  border-radius: var(--ave-radius-md);
+  background: var(--ave-color-accent-bg);
+  color: var(--ave-color-fg-on-accent);
+  font: var(--ave-font-label-md);
+  cursor: pointer;
+}
+
+.entries {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--ave-container-xs)), 1fr));
+  gap: var(--ave-space-4);
+}
+
+.entry-button {
+  display: grid;
+  gap: var(--ave-space-3);
+  justify-items: start;
+  padding: var(--ave-space-4);
+  border: var(--ave-border-width-default) solid var(--ave-color-border-default);
+  border-radius: var(--ave-radius-lg);
+  background: var(--ave-color-bg-surface);
+  color: var(--ave-color-fg-default);
+  font: var(--ave-font-body-md);
+  text-align: start;
+  cursor: pointer;
+}
+
+.track:focus-visible,
+.action:focus-visible,
+.entry-button:focus-visible {
+  outline: var(--ave-focus-ring-width) solid var(--ave-color-border-focus);
+  outline-offset: var(--ave-focus-ring-offset);
+}
+
+.entry-label {
+  font: var(--ave-font-label-md);
+}
+
+.card {
+  /* Set per entry by the template from motion.distance and motion.scale tokens. */
+  --offset: 0;
+  --scale: 1;
+
+  padding: var(--ave-space-3) var(--ave-space-4);
+  border-radius: var(--ave-radius-md);
+  border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  background: var(--ave-color-bg-surface-raised);
+  box-shadow: var(--ave-elevation-popover);
+  transition-property: opacity, translate, scale;
+  transition-duration: var(--ave-duration-normal);
+  transition-timing-function: var(--ave-easing-enter);
+}
+
+.hidden {
+  opacity: 0;
+  translate: 0 var(--offset);
+  scale: var(--scale);
+  transition-duration: var(--ave-duration-fast);
+  transition-timing-function: var(--ave-easing-exit);
+}
+
+.timings {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--ave-container-xs)), 1fr));
+  gap: var(--ave-space-4);
+  margin: 0;
+}
+
+dt {
+  font: var(--ave-font-label-md);
+}
+
+dd {
+  margin: 0;
+  color: var(--ave-color-fg-muted);
+}

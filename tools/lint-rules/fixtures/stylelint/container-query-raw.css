@@ -1,0 +1,8 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: avelune/media-query-tokens */
+
+@container (inline-size >= 500px) {
+  .card {
+    display: grid;
+  }
+}

@@ -1,0 +1,6 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: scale-unlimited/declaration-strict-value */
+
+.note {
+  transition-timing-function: ease-in;
+}

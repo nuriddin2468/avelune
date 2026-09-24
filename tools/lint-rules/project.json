@@ -10,16 +10,41 @@
       "inputs": [
         "default",
         "{workspaceRoot}/eslint.config.mjs",
+        "{workspaceRoot}/stylelint.config.mjs",
         "{workspaceRoot}/**/tsconfig*.json",
         "{workspaceRoot}/**/entry.json",
         "{workspaceRoot}/**/project.json",
-        { "externalDependencies": ["eslint", "typescript-eslint", "angular-eslint", "@nx/eslint-plugin"] }
+        {
+          "dependentTasksOutputFiles": "**/*.css"
+        },
+        {
+          "externalDependencies": [
+            "eslint",
+            "typescript-eslint",
+            "angular-eslint",
+            "@nx/eslint-plugin",
+            "stylelint",
+            "stylelint-config-standard",
+            "stylelint-declaration-strict-value",
+            "stylelint-value-no-unknown-custom-properties",
+            "stylelint-plugin-logical-css",
+            "@mdn/browser-compat-data",
+            "browserslist",
+            "@angular/compiler"
+          ]
+        }
       ],
       "cache": true,
       "options": {
         "cwd": "{projectRoot}",
         "command": "node --test \"src/**/*.spec.ts\""
-      }
+      },
+      "dependsOn": [
+        {
+          "projects": ["tokens"],
+          "target": "build"
+        }
+      ]
     },
     "typecheck": {
       "executor": "nx:run-commands",

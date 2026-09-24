@@ -61,67 +61,7 @@ import { cssVar, description, namesUnder } from './token-data';
       </ave-docs-section>
     </ave-docs-page>
   `,
-  styles: `
-    .scale,
-    .boxes {
-      display: grid;
-      gap: var(--ave-space-2);
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-    .step {
-      display: grid;
-      grid-template-columns: minmax(0, calc(var(--ave-space-16) * 2)) var(--ave-space-12) minmax(0, 1fr);
-      align-items: center;
-      gap: var(--ave-space-4);
-    }
-    .name {
-      font: var(--ave-font-label-md);
-    }
-    .value {
-      font: var(--ave-font-code);
-      color: var(--ave-color-fg-muted);
-    }
-    .bar {
-      block-size: var(--ave-space-4);
-      border-radius: var(--ave-radius-sm);
-      background: var(--ave-color-accent-bg);
-    }
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: end;
-      gap: var(--ave-space-4);
-    }
-    .control {
-      display: inline-flex;
-      align-items: center;
-      border: var(--ave-border-width-default) solid var(--ave-color-border-strong);
-      border-radius: var(--ave-radius-md);
-      background: var(--ave-color-bg-surface);
-      font: var(--ave-font-label-md);
-    }
-    .box-item {
-      display: grid;
-      grid-template-columns: var(--ave-space-12) minmax(0, 1fr) auto;
-      align-items: center;
-      column-gap: var(--ave-space-4);
-    }
-    .box {
-      grid-row: span 2;
-      border: var(--ave-border-width-default) dashed var(--ave-color-border-strong);
-      border-radius: var(--ave-radius-sm);
-    }
-    .description {
-      grid-column: 2 / -1;
-      font: var(--ave-font-caption);
-      color: var(--ave-color-fg-muted);
-    }
-    .description:empty {
-      display: none;
-    }
-  `,
+  styleUrl: './docs-spacing.css',
 })
 class Spacing {
   protected readonly space = namesUnder('space.');

@@ -14,34 +14,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
       <ng-content />
     </main>
   `,
-  styles: `
-    .page {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: var(--ave-space-10);
-      max-inline-size: var(--ave-breakpoint-lg);
-      padding: var(--ave-space-10) var(--ave-space-6);
-    }
-    .header {
-      display: grid;
-      gap: var(--ave-space-2);
-    }
-    .kicker {
-      margin: 0;
-      font: var(--ave-font-label-md);
-      color: var(--ave-color-accent-fg);
-    }
-    .title {
-      margin: 0;
-      font: var(--ave-font-display);
-    }
-    .lead {
-      margin: 0;
-      max-inline-size: var(--ave-container-md);
-      font: var(--ave-font-body-lg);
-      color: var(--ave-color-fg-muted);
-    }
-  `,
+  styleUrl: './docs-page.css',
 })
 export class DocsPage {
   /** Page title. */
@@ -61,22 +34,7 @@ export class DocsPage {
       <ng-content />
     </section>
   `,
-  styles: `
-    .section {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: var(--ave-space-4);
-    }
-    .title {
-      margin: 0;
-      font: var(--ave-font-heading-lg);
-    }
-    .note {
-      margin: 0;
-      max-inline-size: var(--ave-container-md);
-      color: var(--ave-color-fg-muted);
-    }
-  `,
+  styleUrl: './docs-section.css',
 })
 export class DocsSection {
   private static count = 0;
@@ -92,15 +50,7 @@ export class DocsSection {
   selector: 'ave-docs-scroll',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<div class="scroll" tabindex="0" role="region" [attr.aria-label]="label()"><ng-content /></div>`,
-  styles: `
-    .scroll {
-      overflow-x: auto;
-    }
-    .scroll:focus-visible {
-      outline: var(--ave-focus-ring-width) solid var(--ave-color-border-focus);
-      outline-offset: var(--ave-focus-ring-offset);
-    }
-  `,
+  styleUrl: './docs-scroll.css',
 })
 export class DocsScroll {
   /** Accessible name of the region. */

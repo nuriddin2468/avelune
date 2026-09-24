@@ -33,3 +33,7 @@ We use Stylelint 17.15.0. `stylelint-use-logical-spec` doesn't support it and ap
 - Physical properties, keywords and units are errors in kit and consumer CSS, because the shared config ships the rules.
 - **Single-maintainer risk:** tracked in ROADMAP.md. The fixture tests make a swap to the fallback safe, because they prove the replacement still rejects every case.
 - Whether `width` / `height` are flagged is set via the plugin's options, decided and documented in Phase 3 together with the fixtures.
+
+## Addendum: rule names and options (Phase 3, 2026-09-24)
+
+Re-verified against the installed 2.1.0: `logical-css/require-logical-properties`, `logical-css/require-logical-keywords`, `logical-css/require-logical-units`. `width` and `height` are flagged (use `inline-size` and `block-size`). The only ignored properties and keywords are those whose logical form is missing at the browser floor, derived from MDN browser-compat-data by a test (ADR 0024).

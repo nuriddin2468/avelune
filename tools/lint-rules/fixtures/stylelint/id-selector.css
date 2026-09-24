@@ -1,0 +1,6 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: selector-max-id, selector-max-specificity */
+
+#note {
+  display: none;
+}

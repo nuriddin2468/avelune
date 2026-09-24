@@ -1,0 +1,6 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: function-disallowed-list */
+
+.note {
+  color: oklch(60% 0.2 38deg);
+}

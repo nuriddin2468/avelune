@@ -1,0 +1,67 @@
+.pairs {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font: var(--ave-font-body-sm);
+}
+
+th {
+  padding: var(--ave-space-2) var(--ave-space-3);
+  text-align: start;
+  font: var(--ave-font-label-sm);
+  color: var(--ave-color-fg-muted);
+  border-block-end: var(--ave-border-width-default) solid var(--ave-color-border-default);
+}
+
+td {
+  padding: var(--ave-space-2) var(--ave-space-3);
+  border-block-end: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  vertical-align: middle;
+}
+
+.number {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.fail {
+  color: var(--ave-color-danger-fg);
+}
+
+.token {
+  font: var(--ave-font-code);
+  overflow-wrap: anywhere;
+}
+
+.over {
+  display: block;
+  color: var(--ave-color-fg-muted);
+}
+
+.sample {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--ave-space-16);
+  block-size: var(--ave-space-10);
+  border-radius: var(--ave-radius-sm);
+  border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+}
+
+.inner {
+  display: grid;
+  place-items: center;
+  inline-size: 100%;
+  block-size: 100%;
+  font: var(--ave-font-label-md);
+  border-radius: var(--ave-radius-sm);
+}
+
+.boundary,
+.filled {
+  inline-size: var(--ave-space-5);
+  block-size: var(--ave-space-5);
+}
+
+.boundary {
+  border: var(--ave-border-width-selected) solid;
+}

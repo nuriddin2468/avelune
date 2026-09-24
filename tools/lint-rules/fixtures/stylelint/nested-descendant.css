@@ -1,0 +1,8 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: avelune/nesting-same-element */
+
+.card {
+  .title {
+    margin: 0;
+  }
+}

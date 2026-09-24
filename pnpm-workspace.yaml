@@ -58,6 +58,15 @@ catalog:
   angular-eslint: 22.5.0
   '@eslint-community/eslint-plugin-eslint-comments': 4.8.1
   prettier: 3.9.8
+  # Stylelint (brief §5.3, ADR 0009, 0024)
+  stylelint: 17.15.0
+  stylelint-config-standard: 40.0.0
+  stylelint-declaration-strict-value: 1.12.1
+  stylelint-value-no-unknown-custom-properties: 6.1.1
+  stylelint-plugin-logical-css: 2.1.0
+  # Browser support data for guardrail tests (ADR 0014, 0024)
+  browserslist: 4.29.0
+  '@mdn/browser-compat-data': 8.1.2
   # Hooks and commits
   lefthook: 2.1.14
   '@commitlint/cli': 21.2.3

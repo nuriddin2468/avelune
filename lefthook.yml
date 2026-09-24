@@ -18,6 +18,11 @@ pre-commit:
       glob: '*tsconfig*.json'
       run: pnpm exec nx run compiler-check:check --output-style=static
 
+    - name: stylelint
+      # Reads token names and breakpoints from the built tokens.css, so the tokens are built first (cached).
+      glob: '*.css'
+      run: pnpm exec nx run tokens:build --output-style=static && pnpm exec stylelint --max-warnings=0 {staged_files}
+
     - name: format
       glob: '*.{ts,mts,cts,js,mjs,cjs,json,html,css,yml,yaml}'
       run: pnpm exec prettier --check {staged_files}

@@ -1,0 +1,30 @@
+.page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ave-space-10);
+  max-inline-size: var(--ave-breakpoint-lg);
+  padding: var(--ave-space-10) var(--ave-space-6);
+}
+
+.header {
+  display: grid;
+  gap: var(--ave-space-2);
+}
+
+.kicker {
+  margin: 0;
+  font: var(--ave-font-label-md);
+  color: var(--ave-color-accent-fg);
+}
+
+.title {
+  margin: 0;
+  font: var(--ave-font-display);
+}
+
+.lead {
+  margin: 0;
+  max-inline-size: var(--ave-container-md);
+  font: var(--ave-font-body-lg);
+  color: var(--ave-color-fg-muted);
+}

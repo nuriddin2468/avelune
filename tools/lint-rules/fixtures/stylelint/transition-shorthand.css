@@ -1,0 +1,6 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: property-disallowed-list */
+
+.note {
+  transition: opacity var(--ave-duration-fast) var(--ave-easing-standard);
+}

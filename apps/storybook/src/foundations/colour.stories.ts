@@ -161,54 +161,7 @@ const groups: readonly Group[] = [
       }
     </ave-docs-page>
   `,
-  styles: `
-    .swatches {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--ave-container-xs)), 1fr));
-      gap: var(--ave-space-4);
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-    .swatch {
-      display: grid;
-      grid-template-columns: var(--ave-space-16) 1fr;
-      grid-template-rows: auto auto 1fr;
-      column-gap: var(--ave-space-3);
-      row-gap: var(--ave-space-1);
-      align-items: start;
-    }
-    .sample {
-      grid-row: 1 / 4;
-      display: grid;
-      place-items: center;
-      block-size: var(--ave-space-16);
-      padding: 0;
-      border-radius: var(--ave-radius-md);
-      border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
-      font: var(--ave-font-label-md);
-    }
-    .text {
-      padding-inline: var(--ave-space-1);
-      text-align: center;
-    }
-    .border {
-      border-width: var(--ave-border-width-selected);
-      background-color: var(--ave-color-bg-surface);
-    }
-    .name {
-      font: var(--ave-font-label-md);
-      overflow-wrap: anywhere;
-    }
-    .value {
-      font: var(--ave-font-code);
-      color: var(--ave-color-fg-muted);
-    }
-    .description {
-      font: var(--ave-font-caption);
-      color: var(--ave-color-fg-muted);
-    }
-  `,
+  styleUrl: './docs-colour-roles.css',
 })
 class ColourRoles {
   /** The theme the page describes. */
@@ -297,65 +250,7 @@ class ColourRoles {
       }
     </ave-docs-page>
   `,
-  styles: `
-    .pairs {
-      inline-size: 100%;
-      border-collapse: collapse;
-      font: var(--ave-font-body-sm);
-    }
-    th {
-      padding: var(--ave-space-2) var(--ave-space-3);
-      text-align: start;
-      font: var(--ave-font-label-sm);
-      color: var(--ave-color-fg-muted);
-      border-block-end: var(--ave-border-width-default) solid var(--ave-color-border-default);
-    }
-    td {
-      padding: var(--ave-space-2) var(--ave-space-3);
-      border-block-end: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
-      vertical-align: middle;
-    }
-    .number {
-      text-align: end;
-      font-variant-numeric: tabular-nums;
-      white-space: nowrap;
-    }
-    .fail {
-      color: var(--ave-color-danger-fg);
-    }
-    .token {
-      font: var(--ave-font-code);
-      overflow-wrap: anywhere;
-    }
-    .over {
-      display: block;
-      color: var(--ave-color-fg-muted);
-    }
-    .sample {
-      display: inline-grid;
-      place-items: center;
-      inline-size: var(--ave-space-16);
-      block-size: var(--ave-space-10);
-      border-radius: var(--ave-radius-sm);
-      border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
-    }
-    .inner {
-      display: grid;
-      place-items: center;
-      inline-size: 100%;
-      block-size: 100%;
-      font: var(--ave-font-label-md);
-      border-radius: var(--ave-radius-sm);
-    }
-    .boundary,
-    .filled {
-      inline-size: var(--ave-space-5);
-      block-size: var(--ave-space-5);
-    }
-    .boundary {
-      border: var(--ave-border-width-selected) solid;
-    }
-  `,
+  styleUrl: './docs-contrast.css',
 })
 class Contrast {
   /** The theme the page describes. */

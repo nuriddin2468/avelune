@@ -1,0 +1,6 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: logical-css/require-logical-properties */
+
+.note {
+  margin-left: 0;
+}

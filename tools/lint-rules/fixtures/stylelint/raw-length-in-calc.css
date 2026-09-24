@@ -1,0 +1,6 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: unit-disallowed-list */
+
+.note {
+  inline-size: calc(100% - 13px);
+}

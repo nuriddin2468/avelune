@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 3 in progress. Compiler strictness (ADR 0022) and ESLint (ADR 0023) are done (2026-09-24). Next: the Stylelint item. The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and must land before the Vitest item.
+**Current position:** Phase 3 in progress. Compiler strictness (ADR 0022), ESLint (ADR 0023) and Stylelint (ADR 0024) are done (2026-09-24). Next: the Vitest and Storybook item; first fix the static Storybook build (see that item). The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and must land before the Vitest item.
 
 ## Parameters
 
@@ -63,13 +63,19 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 
 ### Phase 3: Guardrails (before any component)
 
-Carried over from Phase 2: wire `tokens:colors`, `tokens-check:check`, `fonts:check`, `compiler-check:check` and the `node:test` targets into CI; a lint check that media and container query values equal breakpoint/container tokens (ADR 0017); invariants normalise the browser's `linear(0 0%, …)` easing strings before comparing with tokens.
+Carried over from Phase 2: wire `tokens:colors`, `tokens-check:check`, `fonts:check`, `compiler-check:check`, the `stylelint` targets and the `node:test` targets into CI; invariants normalise the browser's `linear(0 0%, …)` easing strings before comparing with tokens.
 
 Carried over from Phase 1: a SchematicTestRunner test for `ng-add` and the empty migration collection; failing fixtures for `ui:api-report` (untagged export, stale report); a check that every Nx project carries a layer or type tag; a check of `.browserslistrc` against Angular's supported set (ADR 0014).
 
 - [x] TS + Angular compiler strictness (brief §5.1). ADR 0022 adds `exactOptionalPropertyTypes`, `allowUnreachableCode: false` and `strictStandalone`, and sets `typeCheckHostBindings` explicitly. `compiler-check:check` fails on any tsconfig that weakens an option. `compiler-check:test` proves every option and every one of the compiler's 18 extended diagnostics with a violation fixture (46 fixtures), plus a clean control fixture and 10 weakened-config fixtures.
 - [x] ESLint config + custom rules (`avelune/entry-point-layers`, raw-element template rule), with failing fixtures (ADR 0023). typescript-eslint `strictTypeChecked` plus angular-eslint TS, template and a11y rules; every rule an error; `--max-warnings=0`. The `avelune` plugin has four rules: `entry-point-layers`, `public-api-jsdoc` (the JSDoc rule carried over from Phase 1), `no-appearance-inputs` and `no-raw-elements`, the last for consumers; the showcase is linted as one. `lint-rules:test` covers each rule with RuleTester and runs 24 workspace fixtures through the real config, among them the three carried-over module-boundary violations, the `@angular/animations` ban and the Foundations `[style.*]` exception.
-- [ ] Stylelint config (brief §5.3, ADR 0009), with failing fixtures; CSS nesting × emulated encapsulation fixture (ADR 0005)
+- [x] Stylelint config (brief §5.3, ADR 0009), with failing fixtures; CSS nesting × emulated encapsulation fixture (ADR 0005). Done in ADR 0024:
+  - Token-only values: no raw colours, easings, or length or time units, also inside `calc()`; strict values as the brief lists them; unknown `--ave-*` names are errors.
+  - Motion longhands only; `@keyframes` only in `motion.css`.
+  - Logical properties, with the few exceptions derived from MDN browser-compat-data at the floor.
+  - Three `avelune` rules: query widths equal tokens (the Phase 2 carry-over), `@layer components` in kit CSS, and same-element nesting only. The shim fixture showed that the emulated shim leaves nested selectors unscoped.
+  - Component styles live in `.css` files (ESLint bans `styles:`); the Foundations pages moved theirs.
+  - `lint-rules:test` covers it: 34 Stylelint fixtures through the real config, rule unit tests, the derived exceptions and the shim characterisation.
 - [ ] Vitest browser mode + coverage thresholds; Storybook angular-vite (running since Phase 2) + addon-vitest + a11y `error`. Known defect, found 2026-09-24 and present since Phase 2: the static build (`nx build storybook`) renders no story. The console shows "JIT compiler unavailable" from Storybook's `StorybookWrapperComponent` under `jit: false`. The dev server works. Fix this first: the visual job iterates the static build.
 - [ ] Playwright visual in pinned amd64 Docker; axe sweep; invariants skeleton; size-limit
 - [ ] API reports; changesets; `.gitlab-ci.yml` stages (brief §5.6); CODEOWNERS + review rule in CONTRIBUTING
@@ -189,7 +195,7 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 | `@storybook/angular-vite` is preview | independent Playwright axe sweep; known webpack fallback | 0008 |
 | API Extractor bundles TS 5.9 | Phase 1 spike; d.ts-golden fallback | 0007 |
 | Style Dictionary DTCG duration WIP | custom transform, pinned by test | 0003 |
-| `stylelint-plugin-logical-css` has one maintainer | fixtures make a swap to `stylelint-use-logical` safe | 0009 |
+| `stylelint-plugin-logical-css` has one maintainer | the fixtures in `tools/lint-rules/fixtures/stylelint` and `logical.spec.ts` make a swap to `stylelint-use-logical` safe | 0009, 0024 |
 | amd64 emulation slows local visual runs | filtered and affected runs | 0010 |
 | Chromium's Intl formats `uz`/`uz-Latn` with root patterns (`UZS 1,234,567.80`, `2026 M09 23`); `uz-Cyrl` dates are right but currency is `UZS`, not `сўм` (observed in Chromium 153, 2026-09-23; Node's full ICU is right) | check Chrome, Edge, Firefox and Safari before Wave 2; if confirmed, the kit ships its own uz formatting data for dates and numbers (ADR in Wave 2, before DatePicker) | none yet |
 | Storybook's dev server exits when a story file fails to index | restart; CI builds Storybook statically | 0008 |

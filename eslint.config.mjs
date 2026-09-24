@@ -69,6 +69,11 @@ const angularRules = {
       message:
         'Components use emulated encapsulation: None leaks styles, ShadowDom breaks focus and layers (ADR 0004).',
     },
+    {
+      selector: "CallExpression[callee.name='Component'] > ObjectExpression > Property[key.name='styles']",
+      message:
+        'Component styles live in a .css file next to the component (styleUrl), where Stylelint checks them (ADR 0024).',
+    },
   ],
 };
 

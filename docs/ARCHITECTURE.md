@@ -10,13 +10,13 @@ How Avelune is built. Decisions and their reasons live in the [ADRs](adr/README.
 | `packages/icons` | `icons` | `layer:foundations` | Icon set and the generated `IconName` union (Phase 4) |
 | `packages/ui` | `ui` | `layer:patterns` | The Angular library, one secondary entry point per component |
 | `packages/eslint-config` | `eslint-config` | `type:config` | Shared ESLint config for consumers; bundles `tools/lint-rules` when first published (Phase 6) |
-| `packages/stylelint-config` | `stylelint-config` | `type:config` | Shared Stylelint config for consumers (Phase 3) |
+| `packages/stylelint-config` | `stylelint-config` | `type:config` | Shared Stylelint config for consumers; bundles the `avelune` Stylelint rules when first published (Phase 6) |
 | `apps/showcase` | `showcase` | `type:app` | Real Angular app composing the kit into screens |
 | `apps/storybook` | `storybook` | `type:app` | Foundations pages (Phase 2); component docs, stories, interaction and a11y tests (Phase 3) |
 | `tools/tokens-check` | `tokens-check` | `type:tool` | Token validation |
 | `tools/fonts` | `fonts` | `type:tool` | Builds and checks the web font in `packages/ui/styles/fonts` |
 | `tools/compiler-check` | `compiler-check` | `type:tool` | Checks every tsconfig for the required compiler strictness; fixtures prove each option |
-| `tools/lint-rules` | `lint-rules` | `type:tool` | The `avelune` ESLint plugin and the fixtures that prove the workspace ESLint config (ADR 0023) |
+| `tools/lint-rules` | `lint-rules` | `type:tool` | The `avelune` ESLint and Stylelint rules and the fixtures that prove both workspace configs (ADR 0023, 0024) |
 | `tools/invariants` | `invariants` | `type:tool` | Cross-component Playwright invariants (Phase 3/5) |
 | `tools/adoption-metrics` | `adoption-metrics` | `type:tool` | Consumer-repo scanner (Phase 6) |
 
@@ -110,7 +110,19 @@ Conventions:
    - `apps/showcase`, linted as a consumer: `avelune/no-raw-elements`.
    - `apps/storybook/src/foundations`: the one documented exception, `[style.*]` bindings for token swatches.
 
-The `avelune` plugin lives in `tools/lint-rules` (see its README). `pnpm nx run lint-rules:test` proves the plugin rules with RuleTester. It also lints each file in `tools/lint-rules/fixtures/config` through the real config, as if it were the path on its `Lint as:` line. To add a rule or an exception, add a fixture that fails without it; the test also fails when a plugin rule has no fixture.
+`stylelint.config.mjs` lints every `.css` file (ADR 0024). Component styles always live in a `.css` file next to the component (`styleUrl`); ESLint bans `styles` in `@Component`, so nothing escapes. The rules:
+
+- Values come from tokens only: no hex, named colours, colour functions, easing functions, or length and time units. Strict values apply to colours, fonts, radii, shadows, z-index, motion longhands and spacing.
+- Unknown `--ave-*` names are errors.
+- Selectors: no `!important`, no ids, specificity at most `0,4,0`, no `::ng-deep`.
+- Motion: `transition` and `animation` longhands only; `@keyframes` only in `packages/ui/styles/motion.css`.
+- Logical properties throughout.
+- Media and container query widths equal the breakpoint and container tokens.
+- Kit stylesheets wrap everything in `@layer components`.
+
+Nesting may only refine the same element (`&:hover`, `&[aria-disabled='true']`, `&::before`). Angular's emulated shim leaves anything else unscoped. `pnpm nx run-many -t stylelint` runs it per project, after the tokens are built.
+
+The `avelune` rules live in `tools/lint-rules` (see its README). `pnpm nx run lint-rules:test` proves the plugin rules with RuleTester. It also lints each file in `tools/lint-rules/fixtures/config` (ESLint) and `tools/lint-rules/fixtures/stylelint` (Stylelint) through the real config, as if it were the path on its `Lint as:` line. It derives the logical-property exceptions from MDN browser-compat-data and pins how the emulated shim treats nesting. To add a rule or an exception, add a fixture that fails without it; the test also fails when a plugin rule has no fixture.
 
 ## Schematics
 
@@ -173,6 +185,7 @@ What is checked today, by which tool, at which stage. Phase 3 completes this tab
 | Type-aware TS rules (`strictTypeChecked`), angular-eslint TS, template and a11y rules, `ave` prefix, signal API, `host` object, emulated encapsulation, no inline styles, banned imports (`@angular/animations`, `@angular/material`, deep `@avelune/ui`), described disables; raw native elements in consumer templates | ESLint (ADR 0023), a fixture per rule group in `lint-rules:test`; every rule an error, `--max-warnings=0` | staged files | Phase 3 |
 | TS strictness, template types | `ngc --noEmit` (`typecheck` targets) | affected projects | Phase 3 |
 | No tsconfig weakens the required strictness (ADR 0022) | `compiler-check:check`, proven by `compiler-check:test` (a fixture per option and per extended diagnostic) | a staged tsconfig | Phase 3 |
+| Token-only CSS values, no unknown tokens, specificity cap, no `::ng-deep`/`!important`/ids, motion longhands, `@keyframes` only in `motion.css`, logical properties (exceptions derived from browser data), query widths equal tokens, `@layer components`, same-element nesting | Stylelint (ADR 0024), a fixture per rule in `lint-rules:test` | staged `.css` | Phase 3 |
 | Formatting | Prettier (`.md` excluded) | staged files | Phase 3 |
 | Conventional commits, scope = Nx project or `repo`, `deps`, `docs`, `ci`, `release` | commitlint | commit message | n/a |
 | Public API unchanged or report updated; release tags present | API Extractor (`ui:api-report`) | no | Phase 3 |

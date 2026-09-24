@@ -1,0 +1,107 @@
+.radii {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--ave-container-xs)), 1fr));
+  gap: var(--ave-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.radius-item {
+  display: grid;
+  grid-template-columns: var(--ave-space-16) 1fr;
+  grid-template-rows: auto auto 1fr;
+  column-gap: var(--ave-space-3);
+}
+
+.radius {
+  grid-row: 1 / 4;
+  block-size: var(--ave-space-16);
+  background: var(--ave-color-accent-bg-subtle);
+  border: var(--ave-border-width-selected) solid var(--ave-color-accent-border);
+}
+
+.name {
+  font: var(--ave-font-label-md);
+}
+
+.value {
+  font: var(--ave-font-code);
+  color: var(--ave-color-fg-muted);
+}
+
+.description {
+  font: var(--ave-font-caption);
+  color: var(--ave-color-fg-muted);
+}
+
+.menu {
+  display: grid;
+  gap: var(--ave-space-1);
+  max-inline-size: calc(var(--ave-container-xs) - var(--ave-space-8));
+  padding: var(--ave-space-1);
+  border-radius: var(--ave-radius-lg);
+  border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  background: var(--ave-color-bg-surface-raised);
+  box-shadow: var(--ave-elevation-popover);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  block-size: var(--ave-control-height-md);
+  padding-inline: var(--ave-space-3);
+  border-radius: var(--ave-radius-md);
+}
+
+.selected {
+  background: var(--ave-color-accent-bg-subtle);
+  color: var(--ave-color-accent-fg);
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--ave-container-xs) - var(--ave-space-16))), 1fr));
+  gap: var(--ave-space-8);
+  padding: var(--ave-space-6);
+  border-radius: var(--ave-radius-lg);
+  background: var(--ave-color-bg-canvas);
+  border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+}
+
+.on-surface {
+  background: var(--ave-color-bg-surface);
+}
+
+.card {
+  display: grid;
+  gap: var(--ave-space-1);
+  align-content: start;
+  min-block-size: var(--ave-space-16);
+  padding: var(--ave-space-4);
+  border-radius: var(--ave-radius-lg);
+  background: var(--ave-color-bg-surface);
+}
+
+.overlay {
+  background: var(--ave-color-bg-surface-raised);
+  border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+}
+
+.layers {
+  display: grid;
+  gap: var(--ave-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.layer {
+  display: flex;
+  justify-content: space-between;
+  max-inline-size: var(--ave-container-xs);
+  padding: var(--ave-space-2) var(--ave-space-4);
+  border-radius: var(--ave-radius-md);
+  background: var(--ave-color-bg-surface-raised);
+  border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+}

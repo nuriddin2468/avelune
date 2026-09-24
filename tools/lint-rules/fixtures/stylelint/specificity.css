@@ -1,0 +1,6 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: selector-max-specificity */
+
+.page .card[data-size='sm'][data-variant='primary']:hover {
+  display: none;
+}

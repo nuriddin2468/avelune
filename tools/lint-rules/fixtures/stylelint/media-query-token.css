@@ -1,0 +1,8 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: none (840px is breakpoint.md) */
+
+@media (width >= 840px) {
+  .page {
+    display: grid;
+  }
+}

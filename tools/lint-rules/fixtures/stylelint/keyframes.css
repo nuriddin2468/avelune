@@ -1,0 +1,8 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: at-rule-disallowed-list */
+
+@keyframes fade {
+  to {
+    opacity: 0;
+  }
+}

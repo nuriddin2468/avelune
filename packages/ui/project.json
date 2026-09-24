@@ -54,6 +54,7 @@
         "cwd": "{projectRoot}",
         "command": "node scripts/api-report.mjs"
       }
-    }
+    },
+    "stylelint": {}
   }
 }

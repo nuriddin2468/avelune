@@ -1,0 +1,12 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: none (refining the parent element stays scoped) */
+
+.card {
+  &:hover {
+    background-color: var(--ave-color-bg-hover);
+  }
+
+  &[aria-disabled='true'] {
+    color: var(--ave-color-fg-disabled);
+  }
+}

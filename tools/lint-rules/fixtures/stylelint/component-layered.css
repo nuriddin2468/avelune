@@ -1,0 +1,9 @@
+/* Lint as: packages/ui/sample/sample.css
+   Expect: none */
+
+@layer components {
+  :host {
+    display: inline-flex;
+    gap: var(--ave-space-2);
+  }
+}

@@ -1,0 +1,8 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: avelune/media-query-tokens */
+
+@media (width >= 700px) {
+  .page {
+    display: grid;
+  }
+}

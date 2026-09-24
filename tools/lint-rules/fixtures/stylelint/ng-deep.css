@@ -1,0 +1,6 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: selector-disallowed-list, selector-pseudo-element-no-unknown */
+
+:host ::ng-deep .title {
+  display: none;
+}

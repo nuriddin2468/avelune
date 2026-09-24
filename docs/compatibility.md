@@ -42,11 +42,13 @@ Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` an
 | | `@typescript-eslint/utils`, `@typescript-eslint/rule-tester` | 8.70.1 | Authoring and testing the `avelune` rules (`tools/lint-rules`); peer ESLint `^10`, TS `<6.1.0`; installed in Phase 3 (2026-09-24) |
 | | `angular-eslint` | 22.5.0 | Peers ESLint `^9 \|\| ^10`, typescript-eslint `^8`; depends on `@angular-devkit/*` `>=22 <23`. Installed in Phase 3 (2026-09-24; released 2026-09-07) |
 | | `@eslint-community/eslint-plugin-eslint-comments` | 4.8.1 | `require-description` for disables; peers ESLint `^10`. Installed in Phase 3 (2026-09-24) |
-| Lint (CSS) | `stylelint` | 17.15.0 | |
+| Lint (CSS) | `stylelint` | 17.15.0 | Installed in Phase 3 (2026-09-24; released 2026-09-04) |
 | | `stylelint-config-standard` | 40.0.0 | Peers `^17` |
-| | `stylelint-declaration-strict-value` | 1.12.1 | Peers `>=16 <=17` |
+| | `stylelint-declaration-strict-value` | 1.12.1 | Peers `>=16 <=17` (17.x included) |
 | | `stylelint-value-no-unknown-custom-properties` | 6.1.1 | Peers `>=16` |
-| | `stylelint-plugin-logical-css` | 2.1.0 | Replaces `stylelint-use-logical-spec` (ADR 0009) |
+| | `stylelint-plugin-logical-css` | 2.1.0 | Replaces `stylelint-use-logical-spec` (ADR 0009); rule names re-verified in Phase 3 |
+| Browser data | `@mdn/browser-compat-data` | 8.1.2 | Derives the logical-property exceptions at the floor (ADR 0024) |
+| | `browserslist` | 4.29.0 | Reads `.browserslistrc` for guardrail tests; the same version Angular's build resolves |
 | Tokens | `style-dictionary` | 5.5.5 | DTCG colour objects since 5.3, dimension objects since 5.4; duration/gradient still WIP (issue #1590). Installed in Phase 2 (released 2026-09-20); used as the resolver, values converted by our own code (ADR 0017) |
 | | `colorjs.io` | 0.7.1 | ADR 0011; installed in Phase 2 (released 2026-07-24) |
 | API | `@microsoft/api-extractor` | 7.59.1 | Bundles TS 5.9.3; works on TS 6 output (ADR 0007, spike result). *Held back*: 7.59.2 published 2026-09-22 18:27 UTC |

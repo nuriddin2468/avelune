@@ -36,14 +36,49 @@
         "{workspaceRoot}/eslint.config.mjs",
         "{workspaceRoot}/tools/lint-rules/**/*"
       ],
-      "options": { "args": ["--max-warnings=0"] },
+      "options": {
+        "args": ["--max-warnings=0"]
+      },
       "cache": true
+    },
+    "stylelint": {
+      "dependsOn": [
+        {
+          "projects": ["tokens"],
+          "target": "build"
+        }
+      ],
+      "inputs": [
+        "default",
+        "{workspaceRoot}/stylelint.config.mjs",
+        "{workspaceRoot}/tools/lint-rules/src/stylelint/**/*",
+        {
+          "dependentTasksOutputFiles": "**/*.css"
+        },
+        {
+          "externalDependencies": [
+            "stylelint",
+            "stylelint-config-standard",
+            "stylelint-declaration-strict-value",
+            "stylelint-value-no-unknown-custom-properties",
+            "stylelint-plugin-logical-css"
+          ]
+        }
+      ],
+      "cache": true,
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "stylelint \"**/*.css\" --allow-empty-input --max-warnings=0"
+      }
     }
   },
   "plugins": [
     {
       "plugin": "@nx/eslint/plugin",
-      "options": { "targetName": "lint" }
+      "options": {
+        "targetName": "lint"
+      }
     }
   ]
 }

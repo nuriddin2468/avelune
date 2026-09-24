@@ -1,0 +1,6 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: none (overflow-inline is missing at the browser floor) */
+
+.table {
+  overflow-x: auto;
+}

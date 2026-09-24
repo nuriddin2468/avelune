@@ -1,0 +1,6 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: scale-unlimited/declaration-strict-value, unit-disallowed-list */
+
+.note {
+  padding: 4px;
+}
