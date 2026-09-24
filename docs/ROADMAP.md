@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below that is not marked **Deferred**, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 4 done on 2026-09-24 (ADR 0030–0033). Next: Phase 5, Wave 1 (Icon to beta, then Button, IconButton, Input, FormField, Checkbox), ending at the Wave 1 STOP. Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
+**Current position:** Phase 5, Wave 1 built on 2026-09-24 (ADR 0037–0041): Button, IconButton, Input, FormField, Checkbox and the forms foundation, all `experimental`, and the showcase contract form with the same-size invariant. Open before the Wave 1 STOP: the visual baselines of the new stories, a run of `visual:e2e` (with the new docs sweep), `invariants:e2e` and `test-check:e2e`, all blocked while Docker Desktop is down (2026-09-24); then each component to beta, Icon too, and the STOP with the showcase form in light, dark and compact. Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
 
 ## Parameters
 
@@ -154,11 +154,11 @@ Waves and status: see the tables below.
 | Component | Wave | Layer | Status | Owner | Notes |
 |---|---|---|---|---|---|
 | Icon | 1 | foundations | experimental | | `@avelune/ui/icon` (ADR 0033, 0036): every Lucide icon through `provideAveIcons`, custom SVG through `defineAveIcon`, the "Check your icon" guide; in the showcase shell; beta at the Wave 1 gate, with a realistic composition |
-| Button | 1 | components | planned | | `button[aveButton]`, `a[aveButton]` |
-| IconButton | 1 | components | planned | | label required |
-| Input | 1 | components | planned | | `input[aveInput]`; Signal Forms + CVA |
-| FormField | 1 | composites | planned | | label, hint, error, required marker |
-| Checkbox | 1 | components | planned | | incl. indeterminate |
+| Button | 1 | components | experimental | | `@avelune/ui/button` (ADR 0037): `button[aveButton]`, `a[aveButton]`; primary, secondary (bordered, product owner 2026-09-24), ghost, danger; `disabledInteractive`; a loading spinner after 300ms, kept 500ms; 2.42 kB of 2.7 kB; beta after its baselines and the showcase form |
+| IconButton | 1 | components | experimental | | `@avelune/ui/button` (ADR 0038): `button[aveIconButton]`, `a[aveIconButton]`, extends Button; `icon` and `label` required; square of the control height; beta with Button |
+| Input | 1 | components | experimental | | `@avelune/ui/input` (ADR 0039): `input[aveInput]` for text types; Signal Forms and Reactive Forms through their native accessors, state from `@avelune/ui/forms`; `border.strong` (product owner, 2026-09-24); invalid, readonly (dashed), disabled (flat); 1.25 kB of 1.4 kB |
+| FormField | 1 | composites | experimental | | `@avelune/ui/form-field` (ADR 0040): `<ave-form-field label>`, `[aveHint]`, `[aveError]`; the error once invalid and touched; asterisk for required (product owner, 2026-09-24) |
+| Checkbox | 1 | components | experimental | | `@avelune/ui/checkbox` (ADR 0041): `input[type=checkbox][aveCheckbox]` in `label[aveChoice]`; `indeterminate` model; `requiredTrue` recognised; check Firefox and WebKit before stable |
 | Textarea | 2 | components | planned | | |
 | RadioGroup | 2 | components | planned | | ≤ 5 options rule (GUIDELINES) |
 | Switch | 2 | components | planned | | spring easing |
@@ -237,9 +237,11 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 | amd64 emulation slows local visual runs (1.2 min for 49 story tests on 2026-09-24) | filtered (`pnpm visual --grep=…`) and cached runs; Docker targets never run in parallel | 0010, 0027 |
 | Baseline PNGs grow the git history (6.9 MB for the Foundations pages alone, 2026-09-24) | every update reviewed; move `tools/visual/baselines` to Git LFS before the history passes 200 MB (ADR needed) | 0027 |
 | Chromium's Intl formats `uz`/`uz-Latn` with root patterns (`UZS 1,234,567.80`, `2026 M09 23`); `uz-Cyrl` dates are right but currency is `UZS`, not `сўм` (observed in Chromium 153, 2026-09-23; Node's full ICU is right) | check Chrome, Edge, Firefox and Safari before Wave 2; if confirmed, the kit ships its own uz formatting data for dates and numbers (ADR in Wave 2, before DatePicker) | none yet |
-| Storybook's dev server exits when a story file fails to index | restart; CI builds Storybook statically | 0008 |
+| Storybook's dev server exits when a story file fails to index, and can keep serving a stale index: a server started before a story was added showed "Invalid value passed to the 'of' prop" on the Icon docs page (2026-09-24) | restart the dev server after adding, renaming or removing a story, and after changing `.storybook/main.ts`; the visual suite and CI use the static build | 0008 |
 | `@storybook/angular-vite` is patched (a docs-page bootstrap race) | pinned to 10.6.0; `pnpm install` fails if the patch stops applying; upstream issue to file | 0035 |
-| Docs pages are outside every automated check: the visual suite and the axe sweep iterate stories only, and the unreadable dark Icon page (2026-09-24) was found by eye | the docs theme follows the toolbar (ADR 0034); before Icon goes to beta, add every docs entry in both themes to the axe sweep | 0027, 0034 |
+| Docs pages were outside every automated check; the unreadable dark Icon page (2026-09-24) was found by eye | since 2026-09-24 the visual suite renders every docs page in both themes and runs axe on it, failing on errors too (ADR 0034, addendum); layout and overflow on docs pages are still checked by eye only | 0027, 0034 |
+| `@angular-eslint/eslint-plugin` 22.5.0 crashes `reactive-context-must-read-signal` on a call named like an `Object.prototype` method (a destructured `valueOf` in a Signal Forms rule): it looks names up in a plain object (2026-09-24) | write `context.valueOf(…)`; the specs say why; file upstream with the product owner's go-ahead (a public post); re-check on the next angular-eslint | 0023 |
+| The visual baselines show rest, focus, disabled and loading states; hover and press need a real pointer, which a story's `play` function does not have | hover and press checked by script in each component's visual review; a hover pass in the visual suite if a regression slips through | 0027 |
 | iOS Safari 17–18.2 implements `popover` without light dismiss (browser-compat-data 8.1.2; WebKit bug 267688), and the floor is iOS 17.5 | Wave 3: Popover and Menu close on an outside tap on iOS too, through CDK or Angular Aria behaviour where they provide it; otherwise raise the iOS floor to 18.3 (product owner, ADR 0014) | 0014, 0029 |
 
 ## Tracked upgrades
