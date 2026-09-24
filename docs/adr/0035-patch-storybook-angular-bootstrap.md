@@ -29,3 +29,7 @@
 - Theme, density and motion switches on docs pages render every story once, with a clean console. Checked on the Icon page: three switches, 67 icons each time, no errors.
 - The patch targets a bundled chunk file (`dist/_browser-chunks/chunk-UJ3I56EP.js`). Any Storybook upgrade has to re-create or drop it; `pnpm install` fails loudly until then.
 - Story mode is unaffected: its canvas renderer never finds a detached host, so the condition is always true there. The story tests and the visual baselines are unchanged by the patch.
+
+## Addendum: reported upstream (2026-09-24)
+
+With the product owner's go-ahead the bug is filed as [storybookjs/storybook#36423](https://github.com/storybookjs/storybook/issues/36423), with a public minimal reproduction ([nuriddin2468/storybook-angular-vite-docs-ng05104](https://github.com/nuriddin2468/storybook-angular-vite-docs-ng05104): Angular 22.1.7, Storybook 10.6.0, autodocs, one toolbar global). The reproduction logs NG05104 once per story on the first global switch; with this ADR's patch applied, three switches log none. `11.0.0-alpha.1` still has the unpatched code. When the issue is fixed in a release we can use, drop the patch (decision 3).
