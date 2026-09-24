@@ -36,7 +36,7 @@ Storybook 10.6.0 offers two Angular frameworks:
 
 Storybook was set up in Phase 2 for the Foundations pages (brief §4.5); `addon-vitest` and the CI gate follow in Phase 3.
 
-- **AOT, not JIT.** `@storybook/angular-vite` defaults to `jit: true`; `apps/storybook/.storybook/main.ts` sets `jit: false`, so stories compile and type-check as the library does (`strictTemplates`). Compodoc is off.
+- **AOT, not JIT** (superseded by ADR 0025: the static build needs JIT). `@storybook/angular-vite` defaults to `jit: true`; `apps/storybook/.storybook/main.ts` sets `jit: false`, so stories compile and type-check as the library does (`strictTemplates`). Compodoc is off.
 - **Telemetry off** (`core.disableTelemetry`), as Storybook sends usage data by default. The dev server binds to `127.0.0.1`.
 - **Tokens and fonts are served as a consumer loads them:** `staticDirs` serves `packages/tokens/dist` and `packages/ui/styles/fonts`, and `preview-head.html` links `tokens.css` and `fonts.css` and preloads the latin font. The theme, density and motion toolbars write `data-theme`, `data-density` and `data-motion` on `<html>`.
 - **`apps/storybook/tsconfig.json`**, not `.storybook/tsconfig.json`: Vite resolves the `@avelune/*` path mappings from the nearest `tsconfig.json`.

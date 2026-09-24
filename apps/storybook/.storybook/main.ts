@@ -10,8 +10,9 @@ const config: StorybookConfig = {
   addons: ['@storybook/addon-docs', '@storybook/addon-a11y'],
   framework: {
     name: '@storybook/angular-vite',
-    // AOT, not the default JIT: templates are compiled and type-checked as in the library build.
-    options: { jit: false, compodoc: false, tsconfig: join(import.meta.dirname, '..', 'tsconfig.json') },
+    // JIT, the framework default: with AOT the production build drops the compiler that Storybook's wrapper needs.
+    // Templates are type-checked by `storybook:typecheck` (ngc, strictTemplates) instead (ADR 0025).
+    options: { jit: true, compodoc: false, tsconfig: join(import.meta.dirname, '..', 'tsconfig.json') },
   },
   // Storybook collects telemetry by default; nothing leaves the machine.
   core: { disableTelemetry: true },
