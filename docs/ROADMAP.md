@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below that is not marked **Deferred**, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 4 in progress. The global stylesheet and the motion catalog are done (2026-09-24, ADR 0030, 0031). Next: `provideAvelune()` and `AveTheme`. Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
+**Current position:** Phase 4 in progress. The global stylesheet, the motion catalog and the runtime API are done (2026-09-24, ADR 0030–0032). Next: delete the `sample` scaffolding, then the icons. Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
 
 ## Parameters
 
@@ -115,7 +115,10 @@ The carry-overs from Phases 1 and 2 are done, except wiring the targets into CI,
   - `linear` is allowed only on loops: Stylelint allows it in `motion.css`, and the invariants accept it only on an animation that repeats forever.
   - The Foundations page "Motion catalog" checks every class in both modes with its `play` function, and mutations of the CSS fail it.
   - Deferred to their components: the drawer's slide under reduced motion, the list item's expand, shared-element view transitions, and top-layer overlays.
-- [ ] `provideAvelune()` (brief's `provideUi`), `AveTheme` service (theme, density, motion signals; persisted)
+- [x] `provideAvelune()` (brief's `provideUi`), `AveTheme` service (theme, density, motion signals; persisted). Done in ADR 0032:
+  - `@avelune/ui/theme` (foundations) holds both. Signals `theme`, `density` and `motion`; setters write the `data-*` attribute and `localStorage` at once, and another tab's choice is followed.
+  - Every storage failure is caught; on the server the attributes are written and storage is left alone. Covered in Chromium, 1.33 kB of a 1.5 kB budget. The showcase calls `provideAvelune()`.
+  - Open for Phase 6: the inline `index.html` script that applies a stored choice before the first paint (`ng add`).
 - [ ] Icons package with a generated `IconName` union; `<ave-icon>` (Lucide from `lucide-static`, stroke width tuned and frozen, ADR 0020)
 - [ ] Delete the `packages/ui/sample` scaffolding entry point and its API reports once the first real entry point exists
 
@@ -123,7 +126,7 @@ The carry-overs from Phases 1 and 2 are done, except wiring the targets into CI,
 Waves and status: see the tables below.
 
 ### Phase 6: Consumer integration
-- [ ] `ng add @avelune/ui` (peers, styles, fonts, provider, lint configs, AGENTS snippet); build and publish `@avelune/eslint-config` with `tools/lint-rules` bundled (ADR 0023)
+- [ ] `ng add @avelune/ui` (peers, styles, fonts, provider, lint configs, AGENTS snippet); build and publish `@avelune/eslint-config` with `tools/lint-rules` bundled (ADR 0023). It also sets `inlineCritical: false`, `outputHashing: bundles` and the font preload (ADR 0030), and the inline script that applies a stored theme before the first paint (ADR 0032)
 - [ ] `tools/adoption-metrics` (JSON + CI summary)
 - [ ] `docs/consumers/migration.md`, `docs/consumers/AGENTS.snippet.md`
 - [ ] Pilot in the showcase as a consumer; then one real consumer when access is given

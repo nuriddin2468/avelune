@@ -76,6 +76,8 @@ Conventions:
 - Every exported symbol carries an API Extractor release tag that mirrors its ROADMAP status: experimental → `@alpha`, beta → `@beta`, stable → `@public` (ADR 0007).
 - `packages/ui/sample` is scaffolding that proves this layout. It is deleted when the first real entry point lands (Phase 4).
 
+A service without a component, such as `theme`, has no harness and no `testing` entry point.
+
 ### Adding an entry point
 
 1. Create the folder with `index.ts`, `entry.json` and `ng-package.json`, plus `testing/` with its own `index.ts` and `ng-package.json`.
@@ -155,6 +157,16 @@ Motion is CSS only (ADR 0005). Two mechanisms, both on tokens:
 **Reduced motion** (`prefers-reduced-motion: reduce` or `data-motion="reduced"`) is the tokens' override only: distances 0, scale 1, slow and slower 150ms, no stagger, and a shimmer period of 0 (a static skeleton). Fades stay, and so does rotation.
 
 Every easing is a token, except `linear` on a loop (Stylelint allows it in `motion.css` only; the invariants accept it only on an animation that repeats forever). The drawer, list items, shared-element transitions and top-layer overlays get their motion with their components (ADR 0031, point 5). The Foundations page "Motion catalog" plays every class, and its `play` function checks them in both modes.
+
+## Runtime
+
+`@avelune/ui/theme` (ADR 0032) is the kit's runtime API:
+
+- `provideAvelune({ theme, density, motion, persist })` in the application's providers sets the defaults for a first visit. It creates `AveTheme` at bootstrap, so the attributes are on `<html>` before the first render.
+- `AveTheme` exposes the signals `theme` (`light | dark | system`), `density` (`comfortable | compact`) and `motion` (`system | reduced`), and the methods `setTheme`, `setDensity` and `setMotion`. It writes `data-theme`, `data-density` and `data-motion`, which `tokens.css` reads. A preference that follows the system removes its attribute.
+- It keeps the user's choices in `localStorage` (`avelune:preferences`) and follows a choice made in another tab. Storage failures are caught. On the server it writes the attributes and leaves storage alone.
+
+The showcase calls `provideAvelune()`. Storybook sets the same attributes from its toolbar instead.
 
 ## Lint
 
