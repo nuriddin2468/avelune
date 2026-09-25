@@ -7,6 +7,7 @@
 import * as _angular_core from '@angular/core';
 import { AveControlState } from '@avelune/ui/forms';
 import { AveFieldContext } from '@avelune/ui/forms';
+import { Signal } from '@angular/core';
 
 // @alpha
 export class AveChoiceGroup implements AveFieldContext {
@@ -42,15 +43,17 @@ export class AveError {
 export class AveFormField implements AveFieldContext {
     // @internal
     add(kind: 'hint' | 'error', id: string): () => void;
-    protected readonly controlId: _angular_core.Signal<string>;
+    protected readonly controlId: Signal<string>;
     readonly defaultId: string;
-    readonly describedBy: _angular_core.Signal<readonly string[]>;
-    protected readonly disabled: _angular_core.Signal<boolean>;
-    protected readonly errorShown: _angular_core.Signal<boolean>;
+    readonly describedBy: Signal<readonly string[]>;
+    protected readonly disabled: Signal<boolean>;
+    protected readonly errorShown: Signal<boolean>;
     readonly label: _angular_core.InputSignal<string>;
     readonly labelId: string;
     register(control: HTMLElement, state: AveControlState): void;
-    protected readonly required: _angular_core.Signal<boolean>;
+    protected readonly required: Signal<boolean>;
+    showValue(text: Signal<string>): () => void;
+    protected readonly value: Signal<string>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveFormField, "ave-form-field", never, { "label": { "alias": "label"; "required": true; "isSignal": true; }; }, {}, never, ["*", "[aveHint]", "[aveError]"], true, never>;
     // (undocumented)

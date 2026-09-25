@@ -15,6 +15,8 @@ import { ControlValueAccessor } from '@angular/forms';
 export class AveCombobox<V> implements ControlValueAccessor {
     constructor();
     protected choose(values: V[]): void;
+    // @internal
+    readonly controlDisabled: _angular_core.Signal<boolean>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected readonly expanded: _angular_core.WritableSignal<boolean>;
     // (undocumented)
@@ -57,6 +59,8 @@ export class AveMultiselect<V> implements ControlValueAccessor {
     constructor();
     protected choose(values: V[]): void;
     protected readonly chosen: _angular_core.Signal<AveOption<V>[]>;
+    // @internal
+    readonly controlDisabled: _angular_core.Signal<boolean>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected readonly expanded: _angular_core.WritableSignal<boolean>;
     // (undocumented)
@@ -100,6 +104,8 @@ export interface AveOption<V> {
 export class AveSelect<V> implements ControlValueAccessor {
     constructor();
     protected choose(values: V[]): void;
+    // @internal
+    readonly controlDisabled: _angular_core.Signal<boolean>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected readonly expanded: _angular_core.WritableSignal<boolean>;
     // (undocumented)

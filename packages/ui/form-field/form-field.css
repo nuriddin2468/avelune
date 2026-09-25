@@ -7,10 +7,27 @@
     min-inline-size: 0;
   }
 
+  /* The label's row: the label's words, and at its end the value of a control that shows one (a slider), on the same
+     baseline. The value is inside the label, hidden from its name, so it dims with a disabled control as the label
+     does. */
   .label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--ave-space-2);
     margin-block-end: var(--ave-space-1);
     color: var(--ave-color-fg-default);
     font: var(--ave-font-label-md);
+  }
+
+  .text {
+    min-inline-size: 0;
+  }
+
+  .value {
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
   }
 
   :host([data-disabled]) .label {

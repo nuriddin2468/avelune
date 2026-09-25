@@ -198,6 +198,9 @@ export class AveFileUpload implements ControlValueAccessor {
 
   protected readonly isDisabled = computed(() => this.disabled() || this.state.disabled() || this.disabledByForm());
 
+  /** @internal The field around the control dims its label while the control is disabled, by input or by form. */
+  readonly controlDisabled = this.isDisabled;
+
   /** The button is named by the field's label or the `label` input, when there is one, and its own words. */
   protected readonly name = computed(() => {
     const label = this.field?.labelId ?? (this.label() === '' ? undefined : this.labelId);

@@ -56,6 +56,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0048](0048-date-picker-and-uzbek-dates.md) | DatePicker and DateRangePicker: ISO dates, a calendar on Angular Aria's grid, Uzbek dates written by the kit | Accepted |
 | [0049](0049-list-values-need-min-length.md) | A list that must hold an item: `minLength(path, 1)`, shown as required | Accepted |
 | [0050](0050-file-upload-and-uzbek-numbers.md) | FileUpload: a drop zone around a button, a list with reasons; Uzbek numbers from Uzbek Cyrillic's symbols | Accepted |
+| [0051](0051-slider-native-range.md) | Slider and RangeSlider: native range inputs, the value in the field's label row, the ring on the thumb | Accepted |
 
 ## Template
 

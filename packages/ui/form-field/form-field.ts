@@ -1,4 +1,4 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, input, signal, type Signal } from '@angular/core';
 import { lucideCircleAlert } from '@avelune/icons/lucide';
 import { AVE_FIELD, type AveControlState, type AveFieldContext } from '@avelune/ui/forms';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
@@ -38,11 +38,17 @@ let nextField = 0;
     '[attr.data-invalid]': 'errorShown() ? "" : null',
   },
   // The required marker follows the label with no whitespace, behind a no-break space, so the asterisk stays with the
-  // last word when a long label wraps. It is always in the page and hidden while the control is optional.
+  // last word when a long label wraps. It is always in the page and hidden while the control is optional. A control
+  // that shows its value (a slider) puts it at the end of the label, hidden from the name (ADR 0051).
   template: `
-    <label class="label" [id]="labelId" [attr.for]="controlId()"
-      >{{ label() }}<span class="required" aria-hidden="true" [hidden]="!required()">&nbsp;*</span></label
-    >
+    <label class="label" [id]="labelId" [attr.for]="controlId()">
+      <span class="text"
+        >{{ label() }}<span class="required" aria-hidden="true" [hidden]="!required()">&nbsp;*</span></span
+      >
+      @if (value(); as text) {
+        <span class="value" aria-hidden="true">{{ text }}</span>
+      }
+    </label>
     <ng-content />
     <ng-content select="[aveHint]" />
     @if (errorShown()) {
@@ -65,11 +71,15 @@ export class AveFormField implements AveFieldContext {
   readonly labelId = `${this.defaultId}-label`;
 
   private readonly control = signal<{ readonly id: string; readonly state: AveControlState } | null>(null);
+  private readonly shown = signal<Signal<string> | null>(null);
   private readonly hints = signal<readonly string[]>([]);
   private readonly errors = signal<readonly string[]>([]);
 
   /** The control's id, which the label's `for` names. */
   protected readonly controlId = computed(() => this.control()?.id ?? this.defaultId);
+
+  /** The control's value as it writes it, at the end of the label's row, or nothing. */
+  protected readonly value = computed(() => this.shown()?.() ?? '');
 
   /** Whether the control needs a value: the asterisk. */
   protected readonly required = computed(() => this.control()?.state.required() ?? false);
@@ -93,6 +103,14 @@ export class AveFormField implements AveFieldContext {
   /** Called by the control inside the field, with its element and state. */
   register(control: HTMLElement, state: AveControlState): void {
     this.control.set({ id: control.id, state });
+  }
+
+  /** Called by a control that shows its value in the label's row, such as a slider. */
+  showValue(text: Signal<string>): () => void {
+    this.shown.set(text);
+    return () => {
+      if (this.shown() === text) this.shown.set(null);
+    };
   }
 
   /**

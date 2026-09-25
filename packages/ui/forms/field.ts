@@ -22,6 +22,12 @@ export interface AveFieldContext {
   readonly describedBy: Signal<readonly string[]>;
   /** Called once by each control, with its element (whose id may be empty in a group) and its state. */
   register(control: HTMLElement, state: AveControlState): void;
+  /**
+   * Shows a control's value, as it writes it, at the end of the field's label row (a slider's "15 %", ADR 0051);
+   * returns the function that takes it away. Screen readers hear the value from the control, so the field hides its
+   * copy from them. A group of controls (`fieldset[aveChoiceGroup]`) shows none.
+   */
+  showValue?(text: Signal<string>): () => void;
 }
 
 /**

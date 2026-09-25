@@ -41,6 +41,10 @@ export interface AveMessages {
   readonly filesAdded: (count: number) => string;
   /** Describes a required control that ARIA cannot mark `aria-required`, such as a file upload's button. */
   readonly required: string;
+  /** The thumb of a range slider that sets the lower end. */
+  readonly lowerValue: string;
+  /** The thumb of a range slider that sets the upper end. */
+  readonly upperValue: string;
 }
 
 /**
@@ -66,6 +70,8 @@ export const aveMessagesEn: AveMessages = {
   tooManyFiles: (max) => `You can attach at most ${String(max)} ${max === 1 ? 'file' : 'files'}.`,
   filesAdded: (count) => `Files attached: ${String(count)}`,
   required: 'Required',
+  lowerValue: 'Minimum',
+  upperValue: 'Maximum',
 };
 
 /**
@@ -93,6 +99,8 @@ export const aveMessagesRu: AveMessages = {
     `Можно прикрепить не больше ${String(max)} ${new Intl.PluralRules('ru').select(max) === 'one' ? 'файла' : 'файлов'}.`,
   filesAdded: (count) => `Прикреплено файлов: ${String(count)}`,
   required: 'Обязательное поле',
+  lowerValue: 'Минимум',
+  upperValue: 'Максимум',
 };
 
 /**
@@ -118,6 +126,8 @@ export const aveMessagesUzLatn: AveMessages = {
   tooManyFiles: (max) => `Koʻpi bilan ${String(max)} ta fayl biriktirish mumkin.`,
   filesAdded: (count) => `Biriktirilgan fayllar: ${String(count)}`,
   required: 'Majburiy maydon',
+  lowerValue: 'Eng kam',
+  upperValue: 'Eng koʻp',
 };
 
 /**
@@ -143,6 +153,8 @@ export const aveMessagesUzCyrl: AveMessages = {
   tooManyFiles: (max) => `Кўпи билан ${String(max)} та файл бириктириш мумкин.`,
   filesAdded: (count) => `Бириктирилган файллар: ${String(count)}`,
   required: 'Мажбурий майдон',
+  lowerValue: 'Энг кам',
+  upperValue: 'Энг кўп',
 };
 
 /**

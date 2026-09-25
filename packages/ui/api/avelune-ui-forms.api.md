@@ -17,6 +17,7 @@ export const AVE_FIELD: InjectionToken<AveFieldContext>;
 // @alpha
 export interface AveControlOwner {
     readonly controlDescriptions?: Signal<readonly string[]>;
+    readonly controlDisabled: Signal<boolean>;
     readonly state: AveControlState;
 }
 
@@ -45,6 +46,7 @@ export interface AveFieldContext {
     readonly describedBy: Signal<readonly string[]>;
     readonly labelId?: string;
     register(control: HTMLElement, state: AveControlState): void;
+    showValue?(text: Signal<string>): () => void;
 }
 
 // @beta

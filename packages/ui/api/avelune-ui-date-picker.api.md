@@ -20,6 +20,8 @@ export class AveDatePicker implements ControlValueAccessor {
     protected readonly chosen: _angular_core.Signal<readonly string[]>;
     protected close(returnFocus: boolean): void;
     protected commit(): void;
+    // @internal
+    readonly controlDisabled: _angular_core.Signal<boolean>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected readonly earliest: _angular_core.InputSignal<string | null>;
     protected readonly expanded: _angular_core.WritableSignal<boolean>;
@@ -81,6 +83,8 @@ export class AveDateRangePicker implements ControlValueAccessor {
     // (undocumented)
     protected close(returnFocus: boolean): void;
     protected commit(): void;
+    // @internal
+    readonly controlDisabled: _angular_core.Signal<boolean>;
     protected readonly current: _angular_core.Signal<AveDateRange>;
     protected readonly describedBy: _angular_core.Signal<string | null>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;

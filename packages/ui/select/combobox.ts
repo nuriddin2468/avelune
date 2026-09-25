@@ -161,6 +161,9 @@ export class AveCombobox<V> implements ControlValueAccessor {
 
   protected readonly isDisabled = computed(() => this.disabled() || this.state.disabled() || this.disabledByForm());
 
+  /** @internal The field around the control dims its label while the control is disabled, by input or by form. */
+  readonly controlDisabled = this.isDisabled;
+
   private readonly input = viewChild.required<Combobox>('combobox');
   private readonly list = viewChild<Listbox<V>>('listbox');
   private readonly popup = viewChild<ElementRef<HTMLElement>>('popup');

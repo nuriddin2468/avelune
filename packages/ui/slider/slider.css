@@ -1,0 +1,211 @@
+@layer components {
+  /* A slider (ADR 0051): a row of the minimum target height with a 4px track and a native range input over it, whose
+     drawn 16px thumb has the raised elevation; under the track's ends, the bounds. The host binds the shares of the
+     track before each thumb; a range draws its chosen part between them. Each vendor's thumb has a rule of its own: a
+     browser drops a whole rule whose selectors it does not all know. */
+  :host {
+    --ave-slider-start: 0;
+    --ave-slider-end: 0;
+    --ave-slider-colour: var(--ave-color-accent-bg);
+    --ave-slider-colour-hover: var(--ave-color-accent-bg-hover);
+    --ave-slider-colour-active: var(--ave-color-accent-bg-active);
+
+    display: grid;
+    min-inline-size: 0;
+  }
+
+  /* Invalid, once a form binding shows an error: the chosen part and the thumbs in the danger colour, beside the
+     field's error in words. */
+  :host([data-invalid='true']) {
+    --ave-slider-colour: var(--ave-color-danger-bg);
+    --ave-slider-colour-hover: var(--ave-color-danger-bg-hover);
+    --ave-slider-colour-active: var(--ave-color-danger-bg-active);
+  }
+
+  /* The value, when no form field's label row shows it. */
+  .head {
+    justify-self: end;
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-label-md);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The track and the inputs share one cell; a later input, or the one on top, is painted over the other. */
+  .control {
+    display: grid;
+    align-items: center;
+    block-size: var(--ave-size-target-min);
+  }
+
+  .track,
+  .range {
+    grid-area: 1 / 1;
+  }
+
+  /* The track is not positioned, so the inputs after it paint over it, thumbs included. */
+  .track {
+    display: flex;
+    block-size: var(--ave-space-1);
+    border-radius: var(--ave-radius-full);
+    background-color: var(--ave-color-border-strong);
+  }
+
+  /* The chosen part ends under the thumb's centre, which travels the track less the thumb; a range's starts under the
+     lower thumb's. */
+  .fill {
+    flex: none;
+    inline-size: calc(var(--ave-size-icon-sm) / 2 + var(--ave-slider-end) * (100% - var(--ave-size-icon-sm)));
+    border-radius: inherit;
+    background-color: var(--ave-slider-colour);
+  }
+
+  :host([data-range]) .fill {
+    margin-inline-start: calc(var(--ave-size-icon-sm) / 2 + var(--ave-slider-start) * (100% - var(--ave-size-icon-sm)));
+    inline-size: calc((var(--ave-slider-end) - var(--ave-slider-start)) * (100% - var(--ave-size-icon-sm)));
+  }
+
+  .range {
+    inline-size: 100%;
+    block-size: 100%;
+    margin: 0;
+    appearance: none;
+    background-color: transparent;
+    cursor: pointer;
+
+    &::-webkit-slider-runnable-track {
+      block-size: var(--ave-size-target-min);
+      background-color: transparent;
+    }
+
+    &::-moz-range-track {
+      background-color: transparent;
+    }
+
+    &::-webkit-slider-thumb {
+      inline-size: var(--ave-size-icon-sm);
+      block-size: var(--ave-size-icon-sm);
+      margin-block-start: calc((var(--ave-size-target-min) - var(--ave-size-icon-sm)) / 2);
+      border: 0;
+      border-radius: var(--ave-radius-full);
+      appearance: none;
+      background-color: var(--ave-slider-colour);
+      box-shadow: var(--ave-elevation-raised);
+      transition-property: background-color;
+      transition-duration: var(--ave-duration-instant);
+      transition-timing-function: var(--ave-easing-standard);
+    }
+
+    &::-moz-range-thumb {
+      inline-size: var(--ave-size-icon-sm);
+      block-size: var(--ave-size-icon-sm);
+      border: 0;
+      border-radius: var(--ave-radius-full);
+      background-color: var(--ave-slider-colour);
+      box-shadow: var(--ave-elevation-raised);
+      transition-property: background-color;
+      transition-duration: var(--ave-duration-instant);
+      transition-timing-function: var(--ave-easing-standard);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+
+    &:disabled::-webkit-slider-thumb {
+      background-color: var(--ave-color-fg-disabled);
+      box-shadow: none;
+    }
+
+    &:disabled::-moz-range-thumb {
+      background-color: var(--ave-color-fg-disabled);
+      box-shadow: none;
+    }
+
+    &:enabled:hover::-webkit-slider-thumb {
+      background-color: var(--ave-slider-colour-hover);
+    }
+
+    &:enabled:hover::-moz-range-thumb {
+      background-color: var(--ave-slider-colour-hover);
+    }
+
+    &:enabled:active::-webkit-slider-thumb {
+      background-color: var(--ave-slider-colour-active);
+    }
+
+    &:enabled:active::-moz-range-thumb {
+      background-color: var(--ave-slider-colour-active);
+    }
+
+    /* The thumb that can still move is painted over the other where they meet. */
+    &[data-top] {
+      order: 1;
+    }
+  }
+
+  /* Two inputs lie over one track: only their thumbs take the pointer, so either can be dragged. */
+  :host([data-range]) .range {
+    pointer-events: none;
+  }
+
+  :host([data-range]) .range::-webkit-slider-thumb {
+    pointer-events: auto;
+  }
+
+  :host([data-range]) .range::-moz-range-thumb {
+    pointer-events: auto;
+  }
+
+  :host([data-disabled='true']) .track {
+    background-color: var(--ave-color-border-subtle);
+  }
+
+  :host([data-disabled='true']) .fill {
+    background-color: var(--ave-color-fg-disabled);
+  }
+
+  .scale {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--ave-space-2);
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Forced colours would drop the track and the thumb's fill: the track takes the text colour, the chosen part and
+     the thumbs the highlight, and GrayText while disabled. */
+  @media (forced-colors: active) {
+    .track {
+      background-color: CanvasText;
+      forced-color-adjust: none;
+    }
+
+    .fill {
+      background-color: Highlight;
+    }
+
+    .range::-webkit-slider-thumb {
+      background-color: Highlight;
+      forced-color-adjust: none;
+    }
+
+    .range::-moz-range-thumb {
+      background-color: Highlight;
+      forced-color-adjust: none;
+    }
+
+    :host([data-disabled='true']) .track,
+    :host([data-disabled='true']) .fill {
+      background-color: GrayText;
+    }
+
+    .range:disabled::-webkit-slider-thumb {
+      background-color: GrayText;
+    }
+
+    .range:disabled::-moz-range-thumb {
+      background-color: GrayText;
+    }
+  }
+}

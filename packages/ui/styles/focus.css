@@ -13,10 +13,36 @@
     outline-offset: calc(-1 * var(--ave-focus-ring-width));
   }
 
+  /* A range input whose thumb the kit draws (the slider sets data-focus-ring="thumb") rings its thumb, where the value
+     is, not its whole track: on a range slider the ring shows which end moves (ADR 0051). The ring moves to the thumb;
+     it is not removed. Chromium, Firefox and WebKit draw it there. Each vendor's thumb has a rule of its own: a
+     browser drops a whole rule whose selectors it does not all know. */
+  input[type='range'][data-focus-ring='thumb']:focus-visible {
+    outline: none;
+  }
+
+  input[type='range'][data-focus-ring='thumb']:focus-visible::-webkit-slider-thumb {
+    outline: var(--ave-focus-ring-width) solid var(--ave-color-border-focus);
+    outline-offset: var(--ave-focus-ring-offset);
+  }
+
+  input[type='range'][data-focus-ring='thumb']:focus-visible::-moz-range-thumb {
+    outline: var(--ave-focus-ring-width) solid var(--ave-color-border-focus);
+    outline-offset: var(--ave-focus-ring-offset);
+  }
+
   /* Forced colours replace every author colour; the ring takes the system highlight, so it stays distinct from the
      borders (CanvasText). */
   @media (forced-colors: active) {
     :focus-visible {
+      outline-color: Highlight;
+    }
+
+    input[type='range'][data-focus-ring='thumb']:focus-visible::-webkit-slider-thumb {
+      outline-color: Highlight;
+    }
+
+    input[type='range'][data-focus-ring='thumb']:focus-visible::-moz-range-thumb {
       outline-color: Highlight;
     }
   }

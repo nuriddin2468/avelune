@@ -16,6 +16,11 @@ export interface AveControlOwner {
    * "Required", which ARIA has no attribute for on a button (ADR 0050).
    */
   readonly controlDescriptions?: Signal<readonly string[]>;
+  /**
+   * Whether the component is disabled, by its own `disabled` input or by a form: the field's label dims with it, as it
+   * does for a native control, which the form's state alone would not say.
+   */
+  readonly controlDisabled: Signal<boolean>;
 }
 
 /**
@@ -37,6 +42,6 @@ export const AVE_CONTROL_OWNER = new InjectionToken<AveControlOwner>('AVE_CONTRO
 export class AveControlTarget {
   constructor() {
     const owner = inject(AVE_CONTROL_OWNER);
-    connectToField(owner.state, owner.controlDescriptions);
+    connectToField({ ...owner.state, disabled: owner.controlDisabled }, owner.controlDescriptions);
   }
 }

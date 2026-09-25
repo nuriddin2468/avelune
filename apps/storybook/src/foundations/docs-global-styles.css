@@ -42,6 +42,46 @@
   color: var(--ave-color-fg-default);
 }
 
+/* A range input with a drawn thumb, as the Slider draws it: the ring goes around the thumb (data-focus-ring="thumb").
+   Each vendor's thumb has a rule of its own. */
+.thumb-sample {
+  inline-size: calc(var(--ave-space-16) * 3);
+  block-size: var(--ave-size-target-min);
+  margin: 0;
+  appearance: none;
+  background: transparent;
+}
+
+.thumb-sample::-webkit-slider-runnable-track {
+  block-size: var(--ave-space-1);
+  border-radius: var(--ave-radius-full);
+  background: var(--ave-color-border-strong);
+}
+
+.thumb-sample::-moz-range-track {
+  block-size: var(--ave-space-1);
+  border-radius: var(--ave-radius-full);
+  background: var(--ave-color-border-strong);
+}
+
+.thumb-sample::-webkit-slider-thumb {
+  inline-size: var(--ave-size-icon-sm);
+  block-size: var(--ave-size-icon-sm);
+  margin-block-start: calc((var(--ave-space-1) - var(--ave-size-icon-sm)) / 2);
+  border: 0;
+  border-radius: var(--ave-radius-full);
+  appearance: none;
+  background: var(--ave-color-accent-bg);
+}
+
+.thumb-sample::-moz-range-thumb {
+  inline-size: var(--ave-size-icon-sm);
+  block-size: var(--ave-size-icon-sm);
+  border: 0;
+  border-radius: var(--ave-radius-full);
+  background: var(--ave-color-accent-bg);
+}
+
 /* A list that clips its rows at its rounded edge: the rows draw the ring inset. */
 .clipped {
   display: grid;

@@ -1,0 +1,32 @@
+/* The frame of the Slider stories. Stories only. */
+@layer components {
+  :host {
+    display: block;
+    padding: var(--ave-space-6);
+  }
+
+  .stack {
+    display: grid;
+    align-content: start;
+    gap: var(--ave-space-4);
+  }
+
+  .narrow {
+    max-inline-size: var(--ave-container-xs);
+  }
+
+  .field {
+    display: grid;
+    gap: var(--ave-space-1);
+  }
+
+  .label {
+    font: var(--ave-font-label-md);
+  }
+
+  .status {
+    margin-block-start: var(--ave-space-2);
+    font: var(--ave-font-body-sm);
+    color: var(--ave-color-fg-muted);
+  }
+}

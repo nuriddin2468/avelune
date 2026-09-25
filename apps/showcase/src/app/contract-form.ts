@@ -9,6 +9,7 @@ import { AveIcon } from '@avelune/ui/icon';
 import { AveInput } from '@avelune/ui/input';
 import { AveRadio } from '@avelune/ui/radio';
 import { AveCombobox, AveMultiselect, AveSelect } from '@avelune/ui/select';
+import { AveSlider } from '@avelune/ui/slider';
 import { AveTextarea } from '@avelune/ui/textarea';
 import { approvers, contractKinds, counterparties } from './data';
 
@@ -22,6 +23,7 @@ interface Contract {
   subject: string;
   attachments: readonly File[];
   amount: string;
+  advance: number;
   email: string;
   signing: string;
   notify: boolean;
@@ -38,6 +40,7 @@ const empty: Contract = {
   subject: '',
   attachments: [],
   amount: '',
+  advance: 30,
   email: '',
   signing: '',
   notify: true,
@@ -71,6 +74,7 @@ const sendDelay = 1500;
     AveMultiselect,
     AveRadio,
     AveSelect,
+    AveSlider,
     AveTextarea,
     FormField,
   ],
@@ -148,6 +152,11 @@ const sendDelay = 1500;
           }
         </ave-form-field>
 
+        <ave-form-field label="Аванс">
+          <ave-slider [maxValue]="100" [step]="5" [format]="percent" [formField]="contract.advance" />
+          <p aveHint>Доля суммы договора, которую контрагент получает до поставки.</p>
+        </ave-form-field>
+
         <ave-form-field label="Согласующие">
           <ave-multiselect
             [options]="approvers"
@@ -222,6 +231,7 @@ export class ContractForm {
   protected readonly counterparties = counterparties;
   protected readonly approvers = approvers;
   protected readonly attachmentLimit = 20 * 1024 * 1024;
+  protected readonly percent: Intl.NumberFormatOptions = { style: 'unit', unit: 'percent' };
   protected readonly model = signal<Contract>({ ...empty });
   protected readonly contract = form(this.model, (path) => {
     required(path.number);

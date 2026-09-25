@@ -37,6 +37,11 @@
     justify-items: start;
   }
 
+  /* The window of hours under the switches, as wide as a form field. */
+  .hours {
+    max-inline-size: var(--ave-container-sm);
+  }
+
   .status {
     min-block-size: var(--ave-font-body-md-line-height);
     color: var(--ave-color-success-fg);

@@ -188,6 +188,9 @@ export class AveDateRangePicker implements ControlValueAccessor {
   protected readonly latest = this.maxDate;
   protected readonly isDisabled = computed(() => this.disabled() || this.state.disabled() || this.disabledByForm());
 
+  /** @internal The field around the control dims its label while the control is disabled, by input or by form. */
+  readonly controlDisabled = this.isDisabled;
+
   /** The field's hint and error describe the end input too; the start input takes them through `aveControlTarget`. */
   protected readonly describedBy = computed(() => {
     const ids = this.field?.describedBy() ?? [];

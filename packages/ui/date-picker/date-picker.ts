@@ -156,6 +156,9 @@ export class AveDatePicker implements ControlValueAccessor {
   });
   protected readonly isDisabled = computed(() => this.disabled() || this.state.disabled() || this.disabledByForm());
 
+  /** @internal The field around the control dims its label while the control is disabled, by input or by form. */
+  readonly controlDisabled = this.isDisabled;
+
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly injector = inject(Injector);
   private readonly input = viewChild.required<ElementRef<HTMLInputElement>>('input');

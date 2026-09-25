@@ -73,11 +73,12 @@ const amounts = [
       </ave-docs-section>
       <ave-docs-section
         heading="Focus ring"
-        note="One rule, on :focus-visible: a 2px accent outline, 2px outside the element. Inside a container that clips, data-focus-ring='inset' draws it inside the element. In forced colours it takes the system highlight."
+        note="One rule, on :focus-visible: a 2px accent outline, 2px outside the element. Inside a container that clips, data-focus-ring='inset' draws it inside the element; on a range input with a drawn thumb, data-focus-ring='thumb' draws it around the thumb. In forced colours it takes the system highlight."
       >
         <div class="focus-row">
           <a id="global-styles-register" href="#global-styles-register">A link</a>
           <button type="button" class="sample-button">A native button</button>
+          <input type="range" class="thumb-sample" data-focus-ring="thumb" aria-label="A range" value="40" />
         </div>
         <div class="clipped">
           <button type="button" class="row" data-focus-ring="inset">Kiruvchi hujjatlar</button>
@@ -228,9 +229,16 @@ export const Base: StoryObj = {
         await expectRing(canvas.getByRole('link', { name: 'A link' }), offset);
         await userEvent.tab();
         await expectRing(nativeButton, offset);
+        // The range's ring is on its thumb, which computed styles cannot read; the input itself draws none.
+        await userEvent.tab();
+        const range = canvas.getByRole('slider', { name: 'A range' });
+        await expect(range).toHaveFocus();
+        await expect(range.matches(':focus-visible')).toBe(true);
+        await expect(style(range).outlineStyle).toBe('none');
         await userEvent.tab();
         await expectRing(canvas.getByRole('button', { name: 'Kiruvchi hujjatlar' }), inset);
         // Back to the native button, whose ring the screenshot shows.
+        await userEvent.tab({ shift: true });
         await userEvent.tab({ shift: true });
         await expectRing(nativeButton, offset);
       },

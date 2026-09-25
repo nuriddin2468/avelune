@@ -1,0 +1,84 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as SliderStories from './slider.stories';
+
+<Meta of={SliderStories} />
+
+# Slider
+
+`<ave-slider>` chooses a number within bounds by dragging a thumb along a track; `<ave-range-slider>` chooses two, the lower and the upper end of a range, on one track (ADR 0051). Both are native `input[type=range]`, so the keyboard, the role and the value are the browser's. The value is shown in the field's label row, the bounds under the ends of the track (product owner, 2026-09-25).
+
+```ts
+import { AveRangeSlider, AveSlider } from '@avelune/ui/slider';
+```
+
+<Canvas of={SliderStories.Default} />
+<Controls />
+
+## When to use
+
+- For a number where the position in the range matters more than the exact figure: a share (advance payment, discount), a level, a period of hours.
+- For a range the person narrows by eye: a price filter, hours of the day.
+
+## When not to use
+
+- For an exact number people know (an amount, a quantity): an Input with `inputmode="numeric"`, which is faster and exact.
+- For a few named choices (low, medium, high): a radio group.
+- For a range wider than a few hundred steps: the thumb cannot land on each value; use two Inputs.
+
+## Anatomy
+
+A 24px row with a 4px track of `radius.full`: its rest in `border.strong` (3:1), its chosen part in the accent; a 16px accent thumb with the raised elevation. Under the ends of the track, the bounds in `body-sm`. The value, formatted in the locale, sits at the end of the field's label row; without a field, above the track at its end.
+
+```html
+<ave-form-field label="Аванс">
+  <ave-slider [maxValue]="50" [step]="5" [format]="{ style: 'unit', unit: 'percent' }" [formField]="contract.advance" />
+  <p aveHint>Доля суммы договора, которую платят до поставки.</p>
+</ave-form-field>
+```
+
+## Values and formatting
+
+- `minValue` (0), `maxValue` (100) and `step` (1) set the native input's `min`, `max` and `step`. They are named apart from Signal Forms' `min()` and `max()` rules, which a control would take as its own value's type (a range's would be a range, ADR 0051), as a date field's `minDate` is; the rules still validate the value. A slider's value is a number; a range's is `{ start, end }`, `start` never above `end`.
+- `format` takes `Intl.NumberFormatOptions` (`{ style: 'unit', unit: 'percent' }`, `{ maximumFractionDigits: 1 }`); the kit formats with `aveNumberFormat`, so Uzbek in Latin script gets its own separators. Screen readers hear the same text (`aria-valuetext`).
+
+<Canvas of={SliderStories.Range} />
+
+## States
+
+<Canvas of={SliderStories.States} />
+
+- **Hover and press** darken the thumb (`accent.bg-hover`, `accent.bg-active`). **Focus** rings the thumb, not the track: on a range, the ring shows which end moves.
+- **Disabled:** the thumb and the chosen part in `fg.disabled`, the track in `border.subtle`; nothing can be focused.
+- A slider always has a value, so it has no empty state; an error from the application's rules shows in the field as for any control.
+
+## Forms
+
+<Canvas of={SliderStories.Forms} />
+
+**Signal Forms:** `[formField]` on a `number` (a slider) or an `AveNumberRange` (a range). **Reactive Forms:** `[formControl]` or `formControlName`. The value changes while the thumb moves; the field is touched when focus leaves it.
+
+## Long text and locales
+
+<Canvas of={SliderStories.LongText} />
+
+<Canvas of={SliderStories.UzbekLatin} />
+
+## Keyboard
+
+As the browser's range input (WAI-ARIA slider): the arrow keys move a step, Page Up and Page Down a larger step, Home and End to the bounds. On a range, Tab moves from the lower thumb to the upper; neither passes the other.
+
+## Accessibility
+
+- A slider is named by the field's label. Each thumb of a range is named by the label and its end ("Часы доставки, Минимум" and "…, Максимум").
+- The value and the bounds are the native `aria-valuenow`, `-min` and `-max`; `aria-valuetext` says the formatted value. The visible value and bounds are hidden from screen readers, which hear them from the input.
+- On a range, the thumb that can still move is on top where they meet; the keyboard reaches both at any value.
+
+## Motion
+
+None: the thumb follows the pointer or the key at once. Its colour changes on the hover timing (`duration.instant`).
+
+## Do and don't
+
+- Do show the unit in `format` ("15 %", "9 ч"), not in the label alone.
+- Do choose a `step` people can land on with a pointer.
+- Don't use a slider for a value that must be exact.

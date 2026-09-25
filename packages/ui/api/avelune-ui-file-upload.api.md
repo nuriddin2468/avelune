@@ -15,6 +15,8 @@ export class AveFileUpload implements ControlValueAccessor {
     readonly accept: _angular_core.InputSignal<string>;
     // @internal
     readonly controlDescriptions: _angular_core.Signal<string[]>;
+    // @internal
+    readonly controlDisabled: _angular_core.Signal<boolean>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected dismiss(item: {
         readonly file: File;

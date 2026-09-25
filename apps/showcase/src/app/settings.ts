@@ -1,12 +1,15 @@
 import { Component, signal } from '@angular/core';
 import { FormField, form } from '@angular/forms/signals';
 import { AveChoice } from '@avelune/ui/checkbox';
+import { AveFormField, AveHint } from '@avelune/ui/form-field';
+import { AveRangeSlider, type AveNumberRange } from '@avelune/ui/slider';
 import { AveSwitch } from '@avelune/ui/switch';
 
 interface Notices {
   approved: boolean;
   rejected: boolean;
   digest: boolean;
+  hours: AveNumberRange;
 }
 
 /**
@@ -15,7 +18,7 @@ interface Notices {
  */
 @Component({
   selector: 'ave-showcase-settings',
-  imports: [AveChoice, AveSwitch, FormField],
+  imports: [AveChoice, AveFormField, AveHint, AveRangeSlider, AveSwitch, FormField],
   template: `
     <section class="card" lang="ru" aria-labelledby="notices-title">
       <header class="header">
@@ -36,13 +39,23 @@ interface Notices {
           Еженедельная сводка по договорам подразделения
         </label>
       </div>
+      <ave-form-field class="hours" label="Часы доставки писем">
+        <ave-range-slider [maxValue]="24" [format]="hours" [formField]="notices.hours" (change)="saved()" />
+        <p aveHint>Письма, пришедшие ночью, ждут начала этого окна.</p>
+      </ave-form-field>
       <p class="status" role="status">{{ status() }}</p>
     </section>
   `,
   styleUrl: './settings.css',
 })
 export class SettingsPage {
-  protected readonly model = signal<Notices>({ approved: true, rejected: true, digest: false });
+  protected readonly model = signal<Notices>({
+    approved: true,
+    rejected: true,
+    digest: false,
+    hours: { start: 9, end: 18 },
+  });
+  protected readonly hours: Intl.NumberFormatOptions = { style: 'unit', unit: 'hour' };
   protected readonly notices = form(this.model);
   protected readonly status = signal('');
 

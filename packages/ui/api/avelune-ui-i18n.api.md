@@ -38,6 +38,7 @@ export interface AveMessages {
     readonly filesAdded: (count: number) => string;
     readonly fileTooLarge: (limit: string) => string;
     readonly fileTypeRejected: string;
+    readonly lowerValue: string;
     readonly nextMonth: string;
     readonly noResults: string;
     readonly previousMonth: string;
@@ -46,6 +47,7 @@ export interface AveMessages {
     readonly removeFile: (name: string) => string;
     readonly required: string;
     readonly tooManyFiles: (max: number) => string;
+    readonly upperValue: string;
 }
 
 // @alpha
