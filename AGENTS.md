@@ -80,7 +80,7 @@ The pre-commit hook runs ESLint, Stylelint and Prettier on staged files, `typech
 4. Stories: every variant × size × applicable state; stress content (long ru/uz text, empty, overflow); both themes; compact density; `play` interaction tests.
 5. Harness and unit tests through the harness.
 6. Visual baselines; axe clean.
-7. Visual review (brief §8.1): screenshots, inspect, fix, repeat until zero findings.
+7. Visual review (brief §8.1): screenshots, inspect, fix, repeat until zero findings. Since Wave 2 it runs once per wave, at its end, for every component of the wave (product owner, 2026-09-25); until then the wave's components are experimental.
 8. Add it to the showcase in at least one realistic composition; run the invariants (brief §8.2).
 9. Changeset, API report updated, ROADMAP status updated.
 
