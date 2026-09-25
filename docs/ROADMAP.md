@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below that is not marked **Deferred**, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 5, Wave 1 at its STOP (2026-09-25): Icon, Button, IconButton, Input, FormField and Checkbox are beta, with `@avelune/ui/forms`, after the first full runs of the browser suites, the visual review of brief §8.1 (fixes in the Wave 1 summary below) and the baselines of every new story. Waiting for the product owner's approval of the showcase form in light, dark and compact. Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). The Angular 22.2 upgrade (allowed since 2026-09-24 21:37 UTC) and `lucide-static` 1.48 (allowed since 2026-09-25 05:57 UTC) wait for the product owner's go-ahead, each on its own branch ("Tracked upgrades"). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
+**Current position:** Phase 5, Wave 2 starting (2026-09-25). Wave 1 is closed: the product owner approved it on 2026-09-25 without the showcase review of its STOP. Before the first Wave 2 component, the Angular 22.2 upgrade and `lucide-static` 1.48, each on its own branch (product owner, 2026-09-25; "Tracked upgrades"). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
 
 ## Parameters
 
@@ -141,6 +141,9 @@ Wave 1 summary (2026-09-25):
   - the showcase's and the Checkbox story's confirmation error was not named by the checkbox; now it is, and the docs page says how.
 - Reviewed and kept: the checkbox's 2px margins and its label's 2px padding centre a 16px box on a 20px line in a 24px target; the button's 3px block padding plus its 1px border make 4px.
 - Icon, Button, IconButton, Input, FormField, Checkbox and `@avelune/ui/forms` moved to beta (`@beta` in 35 declarations; the API reports differ in those tags only). `@avelune/ui/theme` stays alpha. Changesets are deferred with the CI item.
+- **STOP passed** (2026-09-25): the product owner closed Wave 1 and started Wave 2 without reviewing the showcase form.
+
+Wave 2 decisions (product owner, 2026-09-25): Slider is needed and is built last in the wave, for one value and a range; Switch is a 40×24 track with a 16px thumb 4px from its edge.
 
 ### Phase 6: Consumer integration
 - [ ] `ng add @avelune/ui` (peers, styles, fonts, provider, lint configs, AGENTS snippet); build and publish `@avelune/eslint-config` with `tools/lint-rules` bundled (ADR 0023). It also sets `inlineCritical: false`, `outputHashing: bundles` and the font preload (ADR 0030), and the inline script that applies a stored theme before the first paint (ADR 0032)
@@ -155,8 +158,8 @@ Wave 1 summary (2026-09-25):
 
 | Wave | Components | Gate |
 |---|---|---|
-| 1 Calibration | Icon, Button, IconButton, Input, FormField, Checkbox | **STOP:** showcase form in light, dark and compact for approval |
-| 2 Forms | Textarea, RadioGroup, Switch, Select, Combobox/Autocomplete, Multiselect, DatePicker, DateRangePicker, FileUpload, Slider (if needed) | STOP + summary |
+| 1 Calibration | Icon, Button, IconButton, Input, FormField, Checkbox | **STOP:** passed 2026-09-25 (product owner) |
+| 2 Forms | Textarea, RadioGroup, Switch, Select, Combobox/Autocomplete, Multiselect, DatePicker, DateRangePicker, FileUpload, Slider | STOP + summary |
 | 3 Overlays & feedback | Dialog, ConfirmDialog, Drawer, Popover, Tooltip, Menu, Toast, Alert, Banner, Progress, Spinner, Skeleton, EmptyState | STOP + summary |
 | 4 Navigation | Tabs, Breadcrumbs, Pagination, SidebarNav, Menubar, Toolbar, Stepper, Link | STOP + summary |
 | 5 Data | Badge, Tag, Avatar, Card, Accordion, Tree, List, DataTable (ADR first: CDK Table + virtual scroll vs Aria Grid) | STOP + summary |
@@ -174,14 +177,14 @@ Wave 1 summary (2026-09-25):
 | Checkbox | 1 | components | beta | | `@avelune/ui/checkbox` (ADR 0041): `input[type=checkbox][aveCheckbox]` in `label[aveChoice]`; `indeterminate` model; `requiredTrue` recognised; only system colours in forced colours; its error message is the application's, named by `aria-describedby` (docs page); 1.46 kB of 1.6 kB; beta 2026-09-25; check Firefox and WebKit before stable |
 | Textarea | 2 | components | planned | | |
 | RadioGroup | 2 | components | planned | | ≤ 5 options rule (GUIDELINES); with it, a group of choices (radios or checkboxes) with a legend and one hint and error, which replaces the application's own message of a Checkbox |
-| Switch | 2 | components | planned | | spring easing |
+| Switch | 2 | components | planned | | spring easing; a 40×24 track, a 16px thumb 4px from the edge (product owner, 2026-09-25) |
 | Select | 2 | composites | planned | | Aria Combobox + Listbox |
 | Combobox / Autocomplete | 2 | composites | planned | | Aria Combobox + Listbox |
 | Multiselect | 2 | composites | planned | | Aria Combobox + Listbox (multi) |
 | DatePicker | 2 | composites | planned | | locale-aware; uz/ru first day of week |
 | DateRangePicker | 2 | composites | planned | | |
 | FileUpload | 2 | composites | planned | | |
-| Slider | 2 | components | planned | | only if needed |
+| Slider | 2 | components | planned | | needed (product owner, 2026-09-25); one value and a range; last in the wave |
 | Dialog | 3 | composites | planned | | native `<dialog>` or CDK Dialog (ADR in wave); `ave-motion-dialog-*` and `-backdrop-*` or `@starting-style` (ADR 0031) |
 | ConfirmDialog | 3 | composites | planned | | names the action |
 | Drawer | 3 | composites | planned | | slide 100% from its edge; decide how it stops moving under reduced motion, maybe a token (product owner, ADR 0005, 0031) |
