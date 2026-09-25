@@ -1,15 +1,49 @@
 // The showcase's screens: every same-origin page reachable by links from `/`. The suite finds them itself, so a new
 // screen is checked as soon as the showcase links to it.
-import type { Browser, BrowserContextOptions, Page } from '@playwright/test';
+import { expect, type Browser, type BrowserContextOptions, type Page, type Request } from '@playwright/test';
 import { expectKitFonts } from '@avelune/visual';
 
 /** Upper bound on screens, so a link loop or generated URLs fail instead of running forever. */
 const maxScreens = 200;
 
-/** Opens a screen and waits until it has loaded, gone quiet on the network and set its text in the kit's fonts. */
+/** How long a screen's network must stay quiet: the 500ms of Playwright's `networkidle`. */
+const quietPeriod = 500;
+
+/**
+ * Opens a screen and waits until it has loaded, gone quiet on the network and set its text in the kit's fonts.
+ *
+ * Quiet is `networkidle` counted from the page's own request events. Playwright's `networkidle` state can be lost when
+ * requests finish before DOMContentLoaded, and its wait then never ends (2 of 24 tests timed out in each of two runs
+ * on 2026-09-25; ADR 0027, addendum).
+ */
 export async function openScreen(page: Page, path: string): Promise<void> {
-  await page.goto(path);
-  await page.waitForLoadState('networkidle');
+  const inFlight = new Set<Request>();
+  let lastChange = Date.now();
+  const started = (request: Request): void => {
+    inFlight.add(request);
+    lastChange = Date.now();
+  };
+  const ended = (request: Request): void => {
+    inFlight.delete(request);
+    lastChange = Date.now();
+  };
+  page.on('request', started);
+  page.on('requestfinished', ended);
+  page.on('requestfailed', ended);
+  try {
+    await page.goto(path);
+    await expect
+      .poll(() => inFlight.size === 0 && Date.now() - lastChange >= quietPeriod, {
+        message: `the network of ${path} goes quiet`,
+        intervals: [100],
+        timeout: 0,
+      })
+      .toBe(true);
+  } finally {
+    page.off('request', started);
+    page.off('requestfinished', ended);
+    page.off('requestfailed', ended);
+  }
   await expectKitFonts(page);
 }
 
