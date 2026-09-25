@@ -1,0 +1,87 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as DateRangePickerStories from './date-range-picker.stories';
+
+<Meta of={DateRangePickerStories} />
+
+# DateRangePicker
+
+`<ave-date-range-picker>` is a period: two inputs for its first and last date and one calendar in which the first choice sets the start and the second the end (ADR 0048).
+
+```ts
+import { AveDateRangePicker, type AveDateRange } from '@avelune/ui/date-picker';
+```
+
+<Canvas of={DateRangePickerStories.Default} />
+
+## When to use
+
+- For two dates that make one period: a contract's term, a report's range, a leave.
+
+## When not to use
+
+- For one date: a DatePicker. For two unrelated dates: two DatePickers, each with its label.
+
+## Anatomy
+
+The start input, a dash, and the end input with the calendar button, in two equal columns; each has the box of an Input. In the calendar, the range's ends have the accent fill and the days between a light accent tint.
+
+```html
+<ave-form-field label="Срок действия">
+  <ave-date-range-picker [formField]="contract.term" />
+</ave-form-field>
+```
+
+<Canvas of={DateRangePickerStories.Open} />
+
+## Choosing
+
+- The first day chosen in the calendar sets the start and keeps the calendar open; the second sets the end and closes it. A day before the start begins the range again.
+- Typed dates are read as in a DatePicker; an end typed before the start swaps them.
+
+<Canvas of={DateRangePickerStories.Choosing} />
+
+## States
+
+<Canvas of={DateRangePickerStories.States} />
+
+As a DatePicker's: invalid is a red border on both inputs, readonly a dashed border on a sunken fill, disabled a flat fill.
+
+## Value
+
+`{ start, end }` of ISO dates, either of which may be `null` while it is missing; the value is `null` while both are, so `required` works. A rule such as "the end is required" is the application's, in its schema.
+
+## Forms
+
+<Canvas of={DateRangePickerStories.Forms} />
+
+## Narrow containers
+
+Two dates side by side need 320px (`container.xs`). In a narrower container, such as a form column on a 320px phone, the end input goes under the start input and the dash is left out; the inputs keep their names.
+
+<Canvas of={DateRangePickerStories.Narrow} />
+
+## Long text
+
+<Canvas of={DateRangePickerStories.LongText} />
+
+## Sizes
+
+<Canvas of={DateRangePickerStories.Sizes} />
+
+<Canvas of={DateRangePickerStories.Compact} />
+
+## Keyboard
+
+As a DatePicker's, for each input and for the calendar.
+
+## Accessibility
+
+- Each input is named by the field's label and its part: "Срок действия, Дата начала" and "…, Дата окончания" (`aria-labelledby`); both are described by the field's hint and error. Without an `<ave-form-field>`, the `label` input takes the field's place in the names.
+
+## Motion
+
+As a DatePicker's.
+
+## Do and don't
+
+- Do label the field with what the period is ("Срок действия"), not with "From – To".

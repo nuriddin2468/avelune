@@ -9,6 +9,16 @@ import { InjectionToken, LOCALE_ID, inject, type Provider } from '@angular/core'
 export interface AveMessages {
   /** A combobox's list when no option matches what was typed. */
   readonly noResults: string;
+  /** The button of a date field that opens its calendar. */
+  readonly chooseDate: string;
+  /** The calendar's button to the month before. */
+  readonly previousMonth: string;
+  /** The calendar's button to the month after. */
+  readonly nextMonth: string;
+  /** The first date of a date range field. */
+  readonly rangeStart: string;
+  /** The last date of a date range field. */
+  readonly rangeEnd: string;
 }
 
 /**
@@ -18,6 +28,11 @@ export interface AveMessages {
  */
 export const aveMessagesEn: AveMessages = {
   noResults: 'No results',
+  chooseDate: 'Choose a date',
+  previousMonth: 'Previous month',
+  nextMonth: 'Next month',
+  rangeStart: 'Start date',
+  rangeEnd: 'End date',
 };
 
 /**
@@ -27,6 +42,11 @@ export const aveMessagesEn: AveMessages = {
  */
 export const aveMessagesRu: AveMessages = {
   noResults: 'Ничего не найдено',
+  chooseDate: 'Выбрать дату',
+  previousMonth: 'Предыдущий месяц',
+  nextMonth: 'Следующий месяц',
+  rangeStart: 'Дата начала',
+  rangeEnd: 'Дата окончания',
 };
 
 /**
@@ -36,6 +56,11 @@ export const aveMessagesRu: AveMessages = {
  */
 export const aveMessagesUzLatn: AveMessages = {
   noResults: 'Hech narsa topilmadi',
+  chooseDate: 'Sanani tanlash',
+  previousMonth: 'Oldingi oy',
+  nextMonth: 'Keyingi oy',
+  rangeStart: 'Boshlanish sanasi',
+  rangeEnd: 'Tugash sanasi',
 };
 
 /**
@@ -45,6 +70,11 @@ export const aveMessagesUzLatn: AveMessages = {
  */
 export const aveMessagesUzCyrl: AveMessages = {
   noResults: 'Ҳеч нарса топилмади',
+  chooseDate: 'Санани танлаш',
+  previousMonth: 'Олдинги ой',
+  nextMonth: 'Кейинги ой',
+  rangeStart: 'Бошланиш санаси',
+  rangeEnd: 'Тугаш санаси',
 };
 
 /**

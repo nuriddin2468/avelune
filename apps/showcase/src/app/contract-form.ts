@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { FormField, email, form, maxLength, minLength, pattern, required, submit } from '@angular/forms/signals';
 import { AveButton } from '@avelune/ui/button';
 import { AveCheckbox, AveChoice } from '@avelune/ui/checkbox';
+import { AveDatePicker, AveDateRangePicker, type AveDateRange } from '@avelune/ui/date-picker';
 import { AveChoiceGroup, AveError, AveFormField, AveHint } from '@avelune/ui/form-field';
 import { AveIcon } from '@avelune/ui/icon';
 import { AveInput } from '@avelune/ui/input';
@@ -15,6 +16,8 @@ interface Contract {
   kind: string | null;
   counterparty: number | null;
   approvers: string[];
+  signedOn: string | null;
+  term: AveDateRange | null;
   subject: string;
   amount: string;
   email: string;
@@ -28,6 +31,8 @@ const empty: Contract = {
   kind: null,
   counterparty: null,
   approvers: [],
+  signedOn: null,
+  term: null,
   subject: '',
   amount: '',
   email: '',
@@ -52,6 +57,8 @@ const sendDelay = 1500;
     AveChoice,
     AveChoiceGroup,
     AveCombobox,
+    AveDatePicker,
+    AveDateRangePicker,
     AveError,
     AveFormField,
     AveHint,
@@ -96,6 +103,18 @@ const sendDelay = 1500;
           @if (contract.counterparty().errors().length > 0) {
             <p aveError>Выберите контрагента из справочника.</p>
           }
+        </ave-form-field>
+
+        <ave-form-field label="Дата подписания">
+          <ave-date-picker [formField]="contract.signedOn" />
+          @if (contract.signedOn().errors().length > 0) {
+            <p aveError>Укажите дату подписания, например 18.03.2026.</p>
+          }
+        </ave-form-field>
+
+        <ave-form-field label="Срок действия">
+          <ave-date-range-picker [formField]="contract.term" />
+          <p aveHint>С даты вступления в силу до окончания обязательств.</p>
         </ave-form-field>
 
         <ave-form-field class="wide" label="Предмет договора">
@@ -193,6 +212,7 @@ export class ContractForm {
     pattern(path.number, /^ДК-\d{4}\/\d+$/);
     required(path.kind);
     required(path.counterparty);
+    required(path.signedOn);
     required(path.subject);
     minLength(path.subject, 20);
     maxLength(path.subject, 500);

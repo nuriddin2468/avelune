@@ -75,6 +75,9 @@ export class AveChoiceGroup implements AveFieldContext {
   /** The id of the legend, which names a group of radios. */
   protected readonly legendId = `ave-group-${String(nextGroup++)}`;
 
+  /** The id of the legend, for a control that names its parts with it. */
+  readonly labelId = this.legendId;
+
   /** The controls of a group keep their own ids; the legend names the group. */
   readonly defaultId = null;
 

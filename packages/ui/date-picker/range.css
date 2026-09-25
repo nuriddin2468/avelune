@@ -1,0 +1,47 @@
+@layer components {
+  /* A range: the two inputs in equal columns, 8px from the dash between them; the calendar button is in the second.
+     The columns start at 0, so the start input's padding does not make it wider than the end input. */
+  :host {
+    container-type: inline-size;
+  }
+
+  .range {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--ave-space-2);
+  }
+
+  .end {
+    position: relative;
+    min-inline-size: 0;
+  }
+
+  .start {
+    padding-inline-end: var(--ave-control-padding-inline-md);
+  }
+
+  :host([data-size='sm']) .start {
+    padding-inline-end: var(--ave-control-padding-inline-sm);
+  }
+
+  :host([data-size='lg']) .start {
+    padding-inline-end: var(--ave-control-padding-inline-lg);
+  }
+
+  .dash {
+    color: var(--ave-color-fg-muted);
+  }
+
+  /* Narrower than the smallest container, two dates side by side no longer fit their inputs: the end input goes
+     under the start input, and the dash, which only reads side by side, is left out. */
+  @container (inline-size < 320px) {
+    .range {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dash {
+      display: none;
+    }
+  }
+}

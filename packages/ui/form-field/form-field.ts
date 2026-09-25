@@ -40,7 +40,7 @@ let nextField = 0;
   // The required marker follows the label with no whitespace, behind a no-break space, so the asterisk stays with the
   // last word when a long label wraps. It is always in the page and hidden while the control is optional.
   template: `
-    <label class="label" [attr.for]="controlId()"
+    <label class="label" [id]="labelId" [attr.for]="controlId()"
       >{{ label() }}<span class="required" aria-hidden="true" [hidden]="!required()">&nbsp;*</span></label
     >
     <ng-content />
@@ -60,6 +60,9 @@ export class AveFormField implements AveFieldContext {
 
   /** The id a control without its own takes, so the label names it. */
   readonly defaultId = `ave-field-${String(nextField++)}`;
+
+  /** The id of the label, for a control that names its parts with it. */
+  readonly labelId = `${this.defaultId}-label`;
 
   private readonly control = signal<{ readonly id: string; readonly state: AveControlState } | null>(null);
   private readonly hints = signal<readonly string[]>([]);

@@ -1,0 +1,13 @@
+@layer components {
+  /* The calendar's panel: the raised surface of a popover (ADR 0046), 4px from the field, with 8px around the
+     calendar. */
+  .popup {
+    margin-block: var(--ave-space-1);
+    padding: var(--ave-space-2);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface-raised);
+    box-shadow: var(--ave-elevation-popover);
+    color: var(--ave-color-fg-default);
+  }
+}

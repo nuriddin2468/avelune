@@ -18,13 +18,11 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { NgControl, type ControlValueAccessor } from '@angular/forms';
 import { FORM_FIELD } from '@angular/forms/signals';
 import { lucideCheck } from '@avelune/icons/lucide';
-import { injectControlState } from '@avelune/ui/forms';
+import { AVE_CONTROL_OWNER, AveControlTarget, injectControlState } from '@avelune/ui/forms';
 import { injectAveMessages } from '@avelune/ui/i18n';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
-import { AVE_CONTROL_OWNER, AveControlTarget } from './control';
 import { matches } from './match';
-import { listOverlay } from './overlay';
-import { listPresence } from './presence';
+import { aveConnectedOverlay, aveOverlayPresence } from '@avelune/ui/overlay';
 import type { AveOption, AveSelectSize } from './types';
 
 /**
@@ -168,12 +166,12 @@ export class AveCombobox<V> implements ControlValueAccessor {
   private readonly popup = viewChild<ElementRef<HTMLElement>>('popup');
 
   /** The overlay stays open while the list plays its exit (ADR 0046). */
-  protected readonly presence = listPresence(
+  protected readonly presence = aveOverlayPresence(
     this.expanded,
     computed(() => this.popup()?.nativeElement),
   );
 
-  protected readonly overlay = computed(() => listOverlay(this.input().element));
+  protected readonly overlay = computed(() => aveConnectedOverlay(this.input().element));
 
   private readonly disabledByForm = signal(false);
   private changed: (value: V | null) => void = () => undefined;

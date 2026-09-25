@@ -17,11 +17,9 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { NgControl, type ControlValueAccessor } from '@angular/forms';
 import { FORM_FIELD } from '@angular/forms/signals';
 import { lucideCheck, lucideChevronDown } from '@avelune/icons/lucide';
-import { injectControlState } from '@avelune/ui/forms';
+import { AVE_CONTROL_OWNER, AveControlTarget, injectControlState } from '@avelune/ui/forms';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
-import { AVE_CONTROL_OWNER, AveControlTarget } from './control';
-import { listOverlay } from './overlay';
-import { listPresence } from './presence';
+import { aveConnectedOverlay, aveOverlayPresence } from '@avelune/ui/overlay';
 import type { AveOption, AveSelectSize } from './types';
 
 /**
@@ -149,12 +147,12 @@ export class AveSelect<V> implements ControlValueAccessor {
   private readonly popup = viewChild<ElementRef<HTMLElement>>('popup');
 
   /** The overlay stays open while the list plays its exit (ADR 0046). */
-  protected readonly presence = listPresence(
+  protected readonly presence = aveOverlayPresence(
     this.expanded,
     computed(() => this.popup()?.nativeElement),
   );
 
-  protected readonly overlay = computed(() => listOverlay(this.trigger().element));
+  protected readonly overlay = computed(() => aveConnectedOverlay(this.trigger().element));
 
   private readonly disabledByForm = signal(false);
   private changed: (value: V | null) => void = () => undefined;

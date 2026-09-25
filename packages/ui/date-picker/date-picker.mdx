@@ -1,0 +1,110 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as DatePickerStories from './date-picker.stories';
+
+<Meta of={DatePickerStories} />
+
+# DatePicker
+
+`<ave-date-picker>` is a date field: an input in which people type a date in their locale's order, and a button that opens a calendar of the month. Month names, weekdays and the first day of the week follow the application's `LOCALE_ID`; Uzbek in Latin script is written by the kit, because Chromium has no data for it (ADR 0048).
+
+```ts
+import { AveDatePicker } from '@avelune/ui/date-picker';
+```
+
+<Canvas of={DatePickerStories.Default} />
+<Controls />
+
+## When to use
+
+- For one calendar date: when a contract was signed, when a task is due.
+- Inside an `<ave-form-field>`, which gives it its label, hint and error.
+
+## When not to use
+
+- For two dates that belong together (a period): a DateRangePicker.
+- For a date people know well and type faster than they find (a date of birth): the same field; they can type it, the calendar is only there when it helps.
+- For a time of day: the kit has no time field yet.
+
+## Anatomy
+
+An input with the box of an Input of its size, and the calendar button 4px inside its end. The calendar opens under the field on a raised surface: the month and year between the buttons to the months before and after, the weekdays (abbreviated, "Пн Вт Ср": single letters would repeat), and the days; today has a border, the chosen day the accent fill.
+
+```html
+<ave-form-field label="Дата подписания">
+  <ave-date-picker [formField]="contract.signedOn" maxDate="2026-12-31" />
+  <p aveHint>Как в подписанном экземпляре.</p>
+</ave-form-field>
+```
+
+<Canvas of={DatePickerStories.Open} />
+
+## Value
+
+The value is an ISO calendar date, `2026-03-18`, or `null`: a string without a time or a time zone, so it is the same date for the server wherever it runs. `aveDateFormat(locale)` from `@avelune/ui/i18n` writes it for people.
+
+## Locales
+
+| Locale  | Typed      | Placeholder | In words         | First day |
+| ------- | ---------- | ----------- | ---------------- | --------- |
+| ru      | 18.03.2026 | дд.мм.гггг  | 18 марта 2026 г. | Monday    |
+| uz-Latn | 18/03/2026 | kk/oo/yyyy  | 18-mart, 2026    | Monday    |
+| uz-Cyrl | 18/03/2026 | кк/оо/йййй  | 18 март, 2026    | Monday    |
+| en-US   | 03/18/2026 | mm/dd/yyyy  | March 18, 2026   | Sunday    |
+
+<Canvas of={DatePickerStories.UzbekLatin} />
+
+<Canvas of={DatePickerStories.UzbekCyrillic} />
+
+<Canvas of={DatePickerStories.English} />
+
+## Bounds
+
+`minDate` and `maxDate` (ISO dates) disable the days outside them in the calendar, and a typed date outside them is put back.
+
+<Canvas of={DatePickerStories.Bounds} />
+
+## States
+
+<Canvas of={DatePickerStories.States} />
+
+- **Invalid:** a red border, with a form binding once the field has been left; the field's error says why.
+- **Readonly:** a dashed border on a sunken fill; the calendar button is off. **Disabled:** a flat fill; nothing can be focused.
+
+## Forms
+
+<Canvas of={DatePickerStories.Forms} />
+
+- **Signal Forms:** `[formField]` on a field of `string | null`. **Reactive Forms:** `[formControl]` or `formControlName`.
+- What people type is read when they press Enter or leave the field; a date that does not exist (31.02) is put back, an emptied field clears the value.
+
+## Long text
+
+A long label, hint and error wrap in a narrow column; the field keeps its box. Without an `<ave-form-field>`, the `label` input names the field.
+
+<Canvas of={DatePickerStories.LongText} />
+
+## Sizes
+
+<Canvas of={DatePickerStories.Sizes} />
+
+<Canvas of={DatePickerStories.Compact} />
+
+## Keyboard
+
+- In the field: type the date; Enter reads it; Tab moves to the calendar button, Space or Enter opens the calendar.
+- In the calendar (WAI-ARIA date picker dialog): the arrow keys move a day or a week, and into the next or previous month at its edges; Page Up and Page Down move a month, with Shift a year; Home and End go to the start and end of the week; Enter or Space choose the day and close; Escape closes; Tab moves between the month buttons and the grid.
+
+## Accessibility
+
+- The calendar is a modal dialog named "Choose a date" in the locale; focus stays in it until it closes, then returns to the button.
+- The heading is a live region, so screen readers hear the new month. Each day is named in words ("18 марта 2026 г."), columns by the full weekday; today is `aria-current="date"`.
+
+## Motion
+
+The calendar enters with `ave-motion-popover-enter` and leaves with `ave-motion-popover-exit`, like a select's list.
+
+## Do and don't
+
+- Do say in the hint which date is meant ("as on the signed copy").
+- Do use `minDate` and `maxDate` for dates that cannot be, rather than an error after the fact.
+- Don't make people use the calendar: typing is faster for dates they know.

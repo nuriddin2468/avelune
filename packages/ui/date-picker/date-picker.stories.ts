@@ -1,0 +1,364 @@
+import { Component, LOCALE_ID, input, signal } from '@angular/core';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormField, form, required } from '@angular/forms/signals';
+import {
+  applicationConfig,
+  componentWrapperDecorator,
+  moduleMetadata,
+  type Meta,
+  type StoryObj,
+} from '@storybook/angular-vite';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
+import { AveDatePicker, type AveDatePickerSize } from '@avelune/ui/date-picker';
+import { AveError, AveFormField, AveHint } from '@avelune/ui/form-field';
+import { AveInput } from '@avelune/ui/input';
+
+const sizes = ['sm', 'md', 'lg'] as const satisfies readonly AveDatePickerSize[];
+
+type View = 'sizes' | 'states' | 'compact';
+
+/** The frame the stories draw date fields in, with plain labels. Styled with tokens only. */
+@Component({
+  selector: 'ave-date-picker-stories',
+  imports: [AveDatePicker, AveInput],
+  template: `
+    @switch (view()) {
+      @case ('sizes') {
+        <div class="stack">
+          @for (size of sizes; track size) {
+            <div class="row" [attr.data-row]="size">
+              <input aveInput type="text" [size]="size" [attr.aria-label]="'Number, ' + size" value="ДК-2026/114" />
+              <ave-date-picker [label]="'Signed on, ' + size" [size]="size" value="2026-03-18" />
+            </div>
+          }
+        </div>
+      }
+      @case ('compact') {
+        <div class="stack" data-density="compact">
+          @for (size of sizes; track size) {
+            <div class="row" [attr.data-row]="size">
+              <input aveInput type="text" [size]="size" [attr.aria-label]="'Number, ' + size" value="ДК-2026/114" />
+              <ave-date-picker [label]="'Signed on, ' + size" [size]="size" value="2026-03-18" />
+            </div>
+          }
+        </div>
+      }
+      @default {
+        <div class="grid">
+          <div class="field">
+            <span class="label">Empty</span>
+            <ave-date-picker label="Empty" />
+          </div>
+          <div class="field">
+            <span class="label">Filled</span>
+            <ave-date-picker label="Filled" value="2026-03-18" />
+          </div>
+          <div class="field">
+            <span class="label">Focused</span>
+            <ave-date-picker label="Focused" data-focus-target value="2026-03-18" />
+          </div>
+          <div class="field">
+            <span class="label">Readonly</span>
+            <ave-date-picker label="Readonly" value="2026-03-18" readonly />
+          </div>
+          <div class="field">
+            <span class="label">Disabled</span>
+            <ave-date-picker label="Disabled" value="2026-03-18" disabled />
+          </div>
+        </div>
+      }
+    }
+  `,
+  styleUrl: './date-picker.stories.css',
+})
+class DatePickerStories {
+  readonly view = input<View>('states');
+  protected readonly sizes = sizes;
+}
+
+/** Signal Forms and Reactive Forms: one required date each. */
+@Component({
+  selector: 'ave-date-picker-forms',
+  imports: [AveDatePicker, FormField, ReactiveFormsModule],
+  template: `
+    <div class="stack narrow room">
+      <div class="field">
+        <span class="label">Signed on (Signal Forms)</span>
+        <ave-date-picker label="Signed on (Signal Forms)" [formField]="contract.signedOn" />
+      </div>
+      <div class="field">
+        <span class="label">Signed on (Reactive Forms)</span>
+        <ave-date-picker label="Signed on (Reactive Forms)" [formControl]="signedOn" />
+      </div>
+    </div>
+    <p class="status" role="status">
+      Signal Forms: {{ model().signedOn ?? 'nothing' }} · Reactive Forms: {{ signedOn.value ?? 'nothing' }}
+    </p>
+  `,
+  styleUrl: './date-picker.stories.css',
+})
+class DatePickerForms {
+  protected readonly model = signal<{ signedOn: string | null }>({ signedOn: null });
+  protected readonly contract = form(this.model, (path) => {
+    required(path.signedOn);
+  });
+  // eslint-disable-next-line @typescript-eslint/unbound-method -- Angular's validators are static functions that never read this.
+  protected readonly signedOn = new FormControl<string | null>(null, { validators: [Validators.required] });
+}
+
+/** A long Russian label, hint and error around a required date, in a 320px column; the error shows at once. */
+@Component({
+  selector: 'ave-date-picker-long',
+  imports: [AveDatePicker, AveError, AveFormField, AveHint, FormField],
+  template: `
+    <div class="narrow">
+      <ave-form-field label="Дата подписания договора обеими сторонами в соответствии с протоколом разногласий">
+        <ave-date-picker [formField]="contract.signedOn" />
+        <p aveHint>Как в экземпляре, подписанном последней из сторон; не раньше даты регистрации контрагента.</p>
+        <p aveError>Укажите дату подписания договора, например 18.03.2026.</p>
+      </ave-form-field>
+    </div>
+  `,
+  styleUrl: './date-picker.stories.css',
+})
+class DatePickerLong {
+  protected readonly model = signal<{ signedOn: string | null }>({ signedOn: null });
+  protected readonly contract = form(this.model, (path) => {
+    required(path.signedOn);
+  });
+
+  constructor() {
+    this.contract.signedOn().markAsTouched();
+  }
+}
+
+/** Pads the single-field stories, with room for the calendar. */
+@Component({
+  selector: 'ave-date-picker-story-frame',
+  template: '<div class="narrow room"><ng-content /></div>',
+  styleUrl: './date-picker.stories.css',
+})
+class DatePickerStoryFrame {}
+
+/** The arguments of the Default story. */
+interface DatePickerArgs {
+  readonly size: AveDatePickerSize;
+}
+
+type Story = StoryObj<DatePickerArgs>;
+
+function frame(view: View): NonNullable<Story['render']> {
+  return () => ({
+    props: { view },
+    template: `<ave-date-picker-stories [view]="view" />`,
+    moduleMetadata: { imports: [DatePickerStories] },
+  });
+}
+
+function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
+  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
+}
+
+function locale(value: string): ReturnType<typeof applicationConfig> {
+  return applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: value }] });
+}
+
+/** Opens the calendar with its button and waits for the day that takes focus. */
+async function openCalendar(canvasElement: HTMLElement): Promise<HTMLElement> {
+  const canvas = within(canvasElement);
+  await userEvent.click(canvas.getAllByRole('button', { name: /./ })[0] ?? canvasElement);
+  const dialog = await canvas.findByRole('dialog');
+  await waitFor(() => expect(dialog.querySelector('[data-date]:focus')).not.toBeNull());
+  return dialog;
+}
+
+// No `component`: Storybook instantiates a meta's component outside an injection context, where `model()` throws.
+const meta: Meta<DatePickerArgs> = {
+  title: 'Components/DatePicker',
+  args: { size: 'md' },
+  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
+  decorators: [moduleMetadata({ imports: [AveDatePicker, DatePickerStoryFrame] })],
+  render: (args) => ({
+    props: args,
+    template: `<ave-date-picker label="Дата подписания" [size]="size" value="2026-03-18" />`,
+  }),
+};
+export default meta;
+
+/** One date field in Russian, with controls. */
+export const Default: Story = {
+  decorators: [locale('ru'), componentWrapperDecorator(DatePickerStoryFrame)],
+  parameters: source('<ave-date-picker [formField]="contract.signedOn" />'),
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByRole('textbox', { name: 'Дата подписания' });
+    await expect(input).toHaveValue('18.03.2026');
+    await expect(input).toHaveAttribute('placeholder', 'дд.мм.гггг');
+  },
+};
+
+/** The calendar in Russian: Monday first, today marked, the chosen day filled, focus on it. */
+export const Open: Story = {
+  tags: ['forced-colors'],
+  decorators: [locale('ru'), componentWrapperDecorator(DatePickerStoryFrame)],
+  parameters: source('<ave-date-picker [formField]="contract.signedOn" />'),
+  play: async ({ canvasElement }) => {
+    const dialog = await openCalendar(canvasElement);
+    await expect(within(dialog).getByRole('heading')).toHaveTextContent('Март 2026 г.');
+    const [monday] = within(dialog).getAllByRole('columnheader');
+    await expect(monday).toHaveAttribute('abbr', 'понедельник');
+    await expect(monday).toHaveTextContent('Пн');
+    await expect(dialog.querySelector('[data-date]:focus')).toHaveAttribute('data-date', '2026-03-18');
+    await expect(within(dialog).getByRole('gridcell', { name: '18 марта 2026 г.' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+  },
+};
+
+/** Uzbek in Latin script, written by the kit: Chromium has no data for it (ADR 0048). */
+export const UzbekLatin: Story = {
+  name: 'Uzbek (Latin)',
+  decorators: [locale('uz-Latn'), componentWrapperDecorator(DatePickerStoryFrame)],
+  render: () => ({ template: `<ave-date-picker label="Imzolangan sana" value="2026-03-18" />` }),
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).getByRole('textbox')).toHaveValue('18/03/2026');
+    const dialog = await openCalendar(canvasElement);
+    await expect(within(dialog).getByRole('heading')).toHaveTextContent('Mart, 2026');
+    await expect(within(dialog).getByRole('gridcell', { name: '18-mart, 2026' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+  },
+};
+
+/** Uzbek in Cyrillic script. */
+export const UzbekCyrillic: Story = {
+  name: 'Uzbek (Cyrillic)',
+  decorators: [locale('uz-Cyrl'), componentWrapperDecorator(DatePickerStoryFrame)],
+  render: () => ({ template: `<ave-date-picker label="Имзоланган сана" value="2026-03-18" />` }),
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).getByRole('textbox')).toHaveAttribute('placeholder', 'кк/оо/йййй');
+    const dialog = await openCalendar(canvasElement);
+    await expect(within(dialog).getByRole('heading')).toHaveTextContent('Март, 2026');
+  },
+};
+
+/** English in the US: month first, Sunday first. */
+export const English: Story = {
+  decorators: [locale('en-US'), componentWrapperDecorator(DatePickerStoryFrame)],
+  render: () => ({ template: `<ave-date-picker label="Signed on" value="2026-03-18" />` }),
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).getByRole('textbox')).toHaveValue('03/18/2026');
+    const dialog = await openCalendar(canvasElement);
+    await expect(within(dialog).getAllByRole('columnheader')[0]).toHaveAttribute('abbr', 'Sunday');
+  },
+};
+
+/** Bounds: the days outside them cannot be chosen. */
+export const Bounds: Story = {
+  decorators: [locale('ru'), componentWrapperDecorator(DatePickerStoryFrame)],
+  render: () => ({
+    template: `<ave-date-picker label="Срок исполнения" value="2026-03-18" minDate="2026-03-10" maxDate="2026-03-25" />`,
+  }),
+  parameters: source('<ave-date-picker minDate="2026-03-10" maxDate="2026-03-25" [formField]="contract.due" />'),
+  play: async ({ canvasElement }) => {
+    const dialog = await openCalendar(canvasElement);
+    await expect(within(dialog).getByRole('gridcell', { name: '9 марта 2026 г.' })).toHaveAttribute(
+      'aria-disabled',
+      'true',
+    );
+    await expect(within(dialog).getByRole('gridcell', { name: '10 марта 2026 г.' })).not.toHaveAttribute(
+      'aria-disabled',
+      'true',
+    );
+  },
+};
+
+/** Empty, filled, focused, readonly, disabled. Invalid is in the Forms story. */
+export const States: Story = {
+  tags: ['forced-colors'],
+  decorators: [locale('ru')],
+  render: frame('states'),
+  parameters: source('<ave-date-picker readonly />', '<ave-date-picker disabled />'),
+  play: async ({ canvasElement }) => {
+    for (const input of canvasElement.querySelectorAll('input'))
+      await expect(input.getBoundingClientRect().height).toBe(36);
+    const focused = canvasElement.querySelector<HTMLInputElement>('[data-focus-target] input');
+    focused?.focus();
+    await expect(focused?.matches(':focus-visible')).toBe(true);
+  },
+};
+
+/** Both form APIs: a required date, invalid once left empty; a typed date is read on leaving. */
+export const Forms: Story = {
+  decorators: [locale('ru')],
+  render: () => ({ template: '<ave-date-picker-forms />', moduleMetadata: { imports: [DatePickerForms] } }),
+  parameters: source(
+    '<ave-date-picker [formField]="contract.signedOn" />',
+    '<ave-date-picker [formControl]="signedOn" />',
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const signalForms = canvas.getByRole('textbox', { name: 'Signed on (Signal Forms)' });
+    const reactive = canvas.getByRole('textbox', { name: 'Signed on (Reactive Forms)' });
+    await userEvent.click(signalForms);
+    await userEvent.tab();
+    await userEvent.tab();
+    await waitFor(() => expect(signalForms).toHaveAttribute('aria-invalid', 'true'));
+    await userEvent.type(reactive, '5.3.2026{Enter}');
+    await waitFor(() => expect(canvas.getByRole('status')).toHaveTextContent('Reactive Forms: 2026-03-05'));
+    await expect(reactive).toHaveValue('05.03.2026');
+    (document.activeElement as HTMLElement | null)?.blur();
+  },
+};
+
+/** A long Russian label, hint and error wrap in a 320px column; the field keeps its box. */
+export const LongText: Story = {
+  name: 'Long text',
+  decorators: [locale('ru')],
+  render: () => ({ template: '<ave-date-picker-long />', moduleMetadata: { imports: [DatePickerLong] } }),
+  parameters: source(
+    '<ave-form-field label="Дата подписания договора обеими сторонами…">',
+    '  <ave-date-picker [formField]="contract.signedOn" />',
+    '  <p aveHint>…</p>',
+    '  <p aveError>…</p>',
+    '</ave-form-field>',
+  ),
+  play: async ({ canvasElement }) => {
+    const column = canvasElement.querySelector('.narrow');
+    if (column === null) throw new Error('No column');
+    await expect(column.scrollWidth).toBeLessThanOrEqual(column.clientWidth);
+    const input = within(canvasElement).getByRole('textbox', { name: /^Дата подписания договора/ });
+    await expect(input.getBoundingClientRect().height).toBe(36);
+    await expect(input).toHaveAttribute('aria-invalid', 'true');
+    await expect(input).toHaveAccessibleDescription(/Как в экземпляре.*Укажите дату подписания/);
+  },
+};
+
+/** Each size next to an Input of that size: the same box. */
+export const Sizes: Story = {
+  decorators: [locale('ru')],
+  render: frame('sizes'),
+  play: async ({ canvasElement }) => {
+    for (const row of canvasElement.querySelectorAll('.row')) {
+      const [input, field] = [...row.querySelectorAll('input')];
+      await expect(field?.getBoundingClientRect().height).toBe(input?.getBoundingClientRect().height);
+      await expect(getComputedStyle(field ?? row).borderTopLeftRadius).toBe(
+        getComputedStyle(input ?? row).borderTopLeftRadius,
+      );
+    }
+  },
+};
+
+/** Compact density: every size one step down. */
+export const Compact: Story = {
+  decorators: [locale('ru')],
+  render: frame('compact'),
+  play: async ({ canvasElement }) => {
+    const heights = { sm: 28, md: 32, lg: 36 } as const;
+    for (const size of sizes) {
+      const field = canvasElement.querySelector(`[data-row="${size}"] ave-date-picker input`);
+      await expect(field?.getBoundingClientRect().height, size).toBe(heights[size]);
+    }
+  },
+};

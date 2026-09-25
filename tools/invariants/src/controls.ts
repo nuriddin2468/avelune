@@ -15,6 +15,9 @@ export const controlSelector = [
   'ave-select .trigger',
   'ave-combobox .trigger',
   'ave-multiselect .trigger',
+  // The inputs of the date fields (ADR 0048).
+  'ave-date-picker .trigger',
+  'ave-date-range-picker .trigger',
 ].join(', ');
 
 /** One control as the browser draws it. */

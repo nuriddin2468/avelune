@@ -150,7 +150,9 @@ test('controls of the same size share height, radius, border, font size and padd
         (selector): ControlBox[] =>
           [...document.querySelectorAll(selector)].map((control) => {
             const style = getComputedStyle(control);
-            const owner = control.closest('ave-select, ave-combobox, ave-multiselect');
+            const owner = control.closest(
+              'ave-select, ave-combobox, ave-multiselect, ave-date-picker, ave-date-range-picker',
+            );
             const kind =
               owner?.localName ??
               ['aveButton', 'aveIconButton', 'aveInput', 'aveTextarea'].find((name) => control.hasAttribute(name)) ??

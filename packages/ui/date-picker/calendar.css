@@ -1,0 +1,111 @@
+@layer components {
+  /* The calendar (ADR 0048): the heading row, then seven columns of days of the control's height, 2px apart. */
+  :host {
+    display: grid;
+    gap: var(--ave-space-2);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ave-space-2);
+  }
+
+  .title {
+    margin: 0;
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-label-md);
+    text-align: center;
+  }
+
+  .grid {
+    border-collapse: separate;
+    border-spacing: calc(var(--ave-space-1) / 2);
+    margin-inline: calc(var(--ave-space-1) / -2);
+  }
+
+  th {
+    block-size: var(--ave-control-height-sm);
+    padding: 0;
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-label-sm);
+    text-align: center;
+  }
+
+  /* A day: a square of the control height with its number centred, and a border that only today shows, so no day
+     changes size. */
+  .day,
+  .empty {
+    inline-size: var(--ave-control-height-md);
+    block-size: var(--ave-control-height-md);
+    padding: 0;
+    border: var(--ave-border-width-default) solid transparent;
+    border-radius: var(--ave-radius-md);
+    text-align: center;
+    font: var(--ave-font-body-md);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .day {
+    color: var(--ave-color-fg-default);
+    cursor: pointer;
+    transition-property: background-color, color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+
+    &:hover {
+      background-color: var(--ave-color-bg-hover);
+    }
+
+    /* Today: a 3:1 border, so it differs without colour. */
+    &[aria-current='date'] {
+      border-color: var(--ave-color-border-strong);
+    }
+
+    &[data-range='between'] {
+      background-color: var(--ave-color-accent-bg-subtle);
+    }
+
+    &[aria-selected='true'],
+    &[data-range='start'],
+    &[data-range='end'] {
+      background-color: var(--ave-color-accent-bg);
+      color: var(--ave-color-fg-on-accent);
+    }
+
+    &[aria-disabled='true'] {
+      background-color: transparent;
+      color: var(--ave-color-fg-disabled);
+      cursor: not-allowed;
+    }
+  }
+
+  @media (forced-colors: active) {
+    /* Forced colours draw a transparent border in CanvasText: only today keeps a visible one. */
+    .day,
+    .empty {
+      border-color: Canvas;
+    }
+
+    .day[aria-current='date'] {
+      border-color: CanvasText;
+    }
+
+    .day[aria-selected='true'],
+    .day[data-range='start'],
+    .day[data-range='end'] {
+      background-color: Highlight;
+      color: HighlightText;
+      forced-color-adjust: none;
+    }
+
+    .day[data-range='between'] {
+      text-decoration: underline;
+    }
+
+    .day[aria-disabled='true'] {
+      color: GrayText;
+    }
+  }
+}

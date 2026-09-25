@@ -8,6 +8,7 @@ import * as _angular_cdk_overlay from '@angular/cdk/overlay';
 import * as _angular_core from '@angular/core';
 import * as _avelune_ui_forms from '@avelune/ui/forms';
 import * as _avelune_ui_i18n from '@avelune/ui/i18n';
+import * as _avelune_ui_overlay from '@avelune/ui/overlay';
 import { ControlValueAccessor } from '@angular/forms';
 
 // @alpha
@@ -27,10 +28,7 @@ export class AveCombobox<V> implements ControlValueAccessor {
     // (undocumented)
     protected readonly overlay: _angular_core.Signal<_angular_cdk_overlay.CdkConnectedOverlayConfig>;
     readonly placeholder: _angular_core.InputSignal<string>;
-    protected readonly presence: {
-        readonly open: _angular_core.Signal<boolean>;
-        readonly closing: _angular_core.Signal<boolean>;
-    };
+    protected readonly presence: _avelune_ui_overlay.AveOverlayPresence;
     protected readonly query: _angular_core.WritableSignal<string>;
     readonly readonly: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // @internal (undocumented)
@@ -70,10 +68,7 @@ export class AveMultiselect<V> implements ControlValueAccessor {
     // (undocumented)
     protected readonly overlay: _angular_core.Signal<_angular_cdk_overlay.CdkConnectedOverlayConfig>;
     readonly placeholder: _angular_core.InputSignal<string>;
-    protected readonly presence: {
-        readonly open: _angular_core.Signal<boolean>;
-        readonly closing: _angular_core.Signal<boolean>;
-    };
+    protected readonly presence: _avelune_ui_overlay.AveOverlayPresence;
     readonly readonly: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // @internal (undocumented)
     registerOnChange(callback: (value: V[]) => void): void;
@@ -116,10 +111,7 @@ export class AveSelect<V> implements ControlValueAccessor {
     // (undocumented)
     protected readonly overlay: _angular_core.Signal<_angular_cdk_overlay.CdkConnectedOverlayConfig>;
     readonly placeholder: _angular_core.InputSignal<string>;
-    protected readonly presence: {
-        readonly open: _angular_core.Signal<boolean>;
-        readonly closing: _angular_core.Signal<boolean>;
-    };
+    protected readonly presence: _avelune_ui_overlay.AveOverlayPresence;
     readonly readonly: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // @internal (undocumented)
     registerOnChange(callback: (value: V | null) => void): void;

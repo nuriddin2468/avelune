@@ -7,8 +7,31 @@
 import { Provider } from '@angular/core';
 
 // @alpha
+export interface AveDateFormat {
+    readonly firstDayOfWeek: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+    readonly locale: string;
+    long(date: AvePlainDate): string;
+    monthYear(year: number, month: number): string;
+    numeric(date: AvePlainDate): string;
+    parse(text: string): AvePlainDate | null;
+    readonly placeholder: string;
+    readonly weekdays: readonly {
+        readonly long: string;
+        readonly short: string;
+    }[];
+}
+
+// @alpha
+export function aveDateFormat(locale: string): AveDateFormat;
+
+// @alpha
 export interface AveMessages {
+    readonly chooseDate: string;
+    readonly nextMonth: string;
     readonly noResults: string;
+    readonly previousMonth: string;
+    readonly rangeEnd: string;
+    readonly rangeStart: string;
 }
 
 // @alpha
@@ -27,10 +50,23 @@ export const aveMessagesUzCyrl: AveMessages;
 export const aveMessagesUzLatn: AveMessages;
 
 // @alpha
+export type AvePlainDate = string;
+
+// @alpha
 export function injectAveMessages(): AveMessages;
 
 // @alpha
+export function plainDateParts(date: AvePlainDate): {
+    year: number;
+    month: number;
+    day: number;
+} | null;
+
+// @alpha
 export function provideAveMessages(messages: Partial<AveMessages>): Provider;
+
+// @alpha
+export function toPlainDate(year: number, month: number, day: number): AvePlainDate;
 
 // (No @packageDocumentation comment for this package)
 

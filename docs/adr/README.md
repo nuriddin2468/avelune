@@ -53,6 +53,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0045](0045-switch.md) | Switch: a drawn native checkbox with the switch role, a thumb that slides on its own timing | Accepted |
 | [0046](0046-select-combobox-multiselect.md) | Select, Combobox and Multiselect: Angular Aria in a CDK overlay, options as data, both form APIs | Accepted |
 | [0047](0047-kit-messages.md) | Kit messages: the words components say themselves, per locale, replaceable | Accepted |
+| [0048](0048-date-picker-and-uzbek-dates.md) | DatePicker and DateRangePicker: ISO dates, a calendar on Angular Aria's grid, Uzbek dates written by the kit | Accepted |
 
 ## Template
 

@@ -4,11 +4,20 @@
 
 ```ts
 
+import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { Signal } from '@angular/core';
 
+// @alpha
+export const AVE_CONTROL_OWNER: InjectionToken<AveControlOwner>;
+
 // @beta
 export const AVE_FIELD: InjectionToken<AveFieldContext>;
+
+// @alpha
+export interface AveControlOwner {
+    readonly state: AveControlState;
+}
 
 // @beta
 export interface AveControlState {
@@ -20,10 +29,20 @@ export interface AveControlState {
     readonly touched: Signal<boolean>;
 }
 
+// @alpha
+export class AveControlTarget {
+    constructor();
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<AveControlTarget, "[aveControlTarget]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<AveControlTarget, never>;
+}
+
 // @beta
 export interface AveFieldContext {
     readonly defaultId: string | null;
     readonly describedBy: Signal<readonly string[]>;
+    readonly labelId?: string;
     register(control: HTMLElement, state: AveControlState): void;
 }
 

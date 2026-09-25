@@ -90,7 +90,7 @@ One primary button per view region (a form, a dialog, a toolbar, a card): the on
 
 ## Formatting
 
-Dates, numbers and currency are formatted with `Intl` for the person's locale (uz-Latn, uz-Cyrl, ru, en), never by hand. Some browsers format Uzbek with root patterns; the kit's formatting helpers (Wave 2) cover this (ROADMAP.md, "Tracked risks").
+Dates, numbers and currency are formatted for the person's locale (uz-Latn, uz-Cyrl, ru, en), never by hand. Chrome and Edge have no Uzbek data in Latin script and write `2026 M09 23`, so dates go through `aveDateFormat(locale)` from `@avelune/ui/i18n`, which uses `Intl` for the other locales and the kit's own data for Uzbek (ADR 0048). A date's value is an ISO date (`2026-03-18`), never a `Date` with a time zone. Numbers and currency use `Intl` until the kit's number helpers arrive (ROADMAP.md, "Tracked risks").
 
 ## Content resilience
 

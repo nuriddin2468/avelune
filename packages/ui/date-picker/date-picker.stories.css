@@ -1,0 +1,69 @@
+/* The frame of the DatePicker and DateRangePicker stories. Stories only. */
+@layer components {
+  :host {
+    display: block;
+    padding: var(--ave-space-6);
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: var(--ave-space-2);
+    max-inline-size: var(--ave-container-sm);
+  }
+
+  .row > * {
+    flex: 1;
+  }
+
+  .stack {
+    display: grid;
+    align-content: start;
+    gap: var(--ave-space-4);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(calc(var(--ave-space-16) * 3), 1fr));
+    gap: var(--ave-space-4);
+  }
+
+  /* A range and the Input it is compared with, one above the other. */
+  .pair {
+    display: grid;
+    gap: var(--ave-space-2);
+  }
+
+  .wide {
+    max-inline-size: var(--ave-container-sm);
+  }
+
+  .narrow {
+    max-inline-size: var(--ave-container-xs);
+  }
+
+  /* Narrower than the smallest container, where a range stacks its inputs. */
+  .narrower {
+    max-inline-size: calc(var(--ave-container-xs) - var(--ave-space-12));
+  }
+
+  /* Room under an open calendar, so the screenshot holds it. */
+  .room {
+    min-block-size: calc(var(--ave-space-16) * 7);
+  }
+
+  .field {
+    display: grid;
+    gap: var(--ave-space-1);
+  }
+
+  .label {
+    font: var(--ave-font-label-md);
+  }
+
+  .status {
+    margin-block-start: var(--ave-space-2);
+    font: var(--ave-font-body-sm);
+    color: var(--ave-color-fg-muted);
+  }
+}

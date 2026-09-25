@@ -1,0 +1,106 @@
+@layer components {
+  /* A date field (ADR 0048): an input with the control box of its size, the same as an Input's (brief §8.2), and the
+     calendar button inside its inline end, 4px from the edge, so the focus ring of the input wraps the whole field. */
+  :host {
+    position: relative;
+    display: block;
+    min-inline-size: 0;
+  }
+
+  .trigger {
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: var(--ave-control-height-md);
+    padding-block: 0;
+    padding-inline: var(--ave-control-padding-inline-md) var(--ave-control-height-md);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-strong);
+    border-radius: var(--ave-radius-md);
+    background-color: var(--ave-color-bg-surface);
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-body-md);
+    font-variant-numeric: tabular-nums;
+    transition-property: border-color, background-color, color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+
+    &::placeholder {
+      color: var(--ave-color-fg-subtle);
+      opacity: 1;
+    }
+
+    &[aria-invalid='true'] {
+      border-color: var(--ave-color-danger-border);
+    }
+
+    &:read-only {
+      border-style: dashed;
+      background-color: var(--ave-color-bg-surface-sunken);
+    }
+
+    &:disabled {
+      border-color: transparent;
+      background-color: var(--ave-color-bg-disabled);
+      color: var(--ave-color-fg-disabled);
+      cursor: not-allowed;
+    }
+  }
+
+  :host([data-size='sm']) .trigger {
+    block-size: var(--ave-control-height-sm);
+    padding-inline: var(--ave-control-padding-inline-sm) var(--ave-control-height-sm);
+  }
+
+  :host([data-size='lg']) .trigger {
+    block-size: var(--ave-control-height-lg);
+    padding-inline: var(--ave-control-padding-inline-lg) var(--ave-control-height-lg);
+  }
+
+  /* The calendar button: a square 4px inside the field, with corners concentric to it (8 - 4 = 4). Its focus ring is
+     drawn inside its edge (data-focus-ring="inset"): outside, 4px out, it would lie on the field's border. */
+  .open {
+    position: absolute;
+    inset-block-start: var(--ave-space-1);
+    inset-inline-end: var(--ave-space-1);
+    display: grid;
+    place-items: center;
+    inline-size: calc(var(--ave-control-height-md) - var(--ave-space-2));
+    block-size: calc(var(--ave-control-height-md) - var(--ave-space-2));
+    padding: 0;
+    border: 0;
+    border-radius: var(--ave-radius-sm);
+    background-color: transparent;
+    color: var(--ave-color-fg-muted);
+    cursor: pointer;
+    transition-property: background-color, color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+
+    &:disabled {
+      color: var(--ave-color-fg-disabled);
+      cursor: not-allowed;
+    }
+
+    &:hover:enabled {
+      background-color: var(--ave-color-bg-hover);
+      color: var(--ave-color-fg-default);
+    }
+  }
+
+  :host([data-size='sm']) .open {
+    inline-size: calc(var(--ave-control-height-sm) - var(--ave-space-2));
+    block-size: calc(var(--ave-control-height-sm) - var(--ave-space-2));
+  }
+
+  :host([data-size='lg']) .open {
+    inline-size: calc(var(--ave-control-height-lg) - var(--ave-space-2));
+    block-size: calc(var(--ave-control-height-lg) - var(--ave-space-2));
+  }
+
+  @media (forced-colors: active) {
+    .trigger:disabled,
+    .open:disabled {
+      border-color: GrayText;
+      color: GrayText;
+    }
+  }
+}

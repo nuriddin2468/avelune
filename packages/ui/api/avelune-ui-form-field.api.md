@@ -17,6 +17,7 @@ export class AveChoiceGroup implements AveFieldContext {
     protected readonly disabled: _angular_core.Signal<boolean>;
     protected readonly errorShown: _angular_core.Signal<boolean>;
     protected readonly groupDescribedBy: _angular_core.Signal<string | null>;
+    readonly labelId: string;
     readonly legend: _angular_core.InputSignal<string>;
     protected readonly legendId: string;
     protected readonly radios: _angular_core.Signal<boolean>;
@@ -47,6 +48,7 @@ export class AveFormField implements AveFieldContext {
     protected readonly disabled: _angular_core.Signal<boolean>;
     protected readonly errorShown: _angular_core.Signal<boolean>;
     readonly label: _angular_core.InputSignal<string>;
+    readonly labelId: string;
     register(control: HTMLElement, state: AveControlState): void;
     protected readonly required: _angular_core.Signal<boolean>;
     // (undocumented)
