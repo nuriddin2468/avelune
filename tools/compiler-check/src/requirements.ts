@@ -33,10 +33,12 @@ export const requiredAngularOptions = {
   strictInputAccessModifiers: true,
   strictInjectionParameters: true,
   strictStandalone: true,
+  // Angular 22.2: an event binding that no directive on the element emits and no DOM event names (ADR 0022, addendum).
+  strictUnclaimedEventNames: true,
   typeCheckHostBindings: true,
 } as const satisfies AngularCompilerOptions;
 
-/** The flags `strictTemplates` turns on (Angular 22.1). Each can be switched off on its own, so none may be `false`. */
+/** The flags `strictTemplates` turns on (Angular 22.2). Each can be switched off on its own, so none may be `false`. */
 export const strictTemplatesFlags = [
   'strictInputTypes',
   'strictNullInputTypes',

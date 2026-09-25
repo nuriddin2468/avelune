@@ -40,3 +40,7 @@ Facts from the installed TypeScript 6.0.3 and Angular 22.1.7 compiler:
 - Optional properties are left out, never set to `undefined`: write `...(x === undefined ? {} : { x })`.
 - In host listeners, `$event` is `Event`, because the type checker does not know the host element's event map. Narrow it inside the handler.
 - A new `strict` flag, `strictTemplates` flag or extended diagnostic from an upgrade fails `compiler-check:test` until it gets a fixture and a place in `requirements.ts`. The `strictTemplates` list is not read from the compiler, so review it on every Angular upgrade.
+
+## Addendum: Angular 22.2 (2026-09-25)
+
+Angular 22.2 adds `strictUnclaimedEventNames`: an event binding whose camelCase name no directive on the element emits and no DOM event has is an error (NG8030). `strictTemplates` does not turn it on, so it joins the required Angular options in `requirements.ts` and `tsconfig.base.json`, with the fixture `strict-unclaimed-event-names.ts` (47 fixtures). The `strictTemplates` flags and the 18 extended diagnostics are unchanged. The workspace compiled clean with the option on.

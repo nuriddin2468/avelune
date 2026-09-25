@@ -33,6 +33,7 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
     "strictStandalone": true,
+    "strictUnclaimedEventNames": true,
     "typeCheckHostBindings": true,
     "extendedDiagnostics": {
       "defaultCategory": "error"
