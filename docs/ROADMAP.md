@@ -178,9 +178,9 @@ Wave 2 decisions (product owner, 2026-09-25): Slider is needed and is built last
 | Textarea | 2 | components | experimental | | `@avelune/ui/textarea` (ADR 0043): `textarea[aveTextarea]`; Input's box per size, one row as tall as an input; `rows` 3 by default; drag taller, never wider; no growing with the text; in the showcase form; 1.25 kB of 1.4 kB; beta after the Wave 2 visual review |
 | RadioGroup | 2 | components | experimental | | `@avelune/ui/radio` and `fieldset[aveChoiceGroup]` in `@avelune/ui/form-field` (ADR 0044): a drawn native radio in `label[aveChoice]`; the group holds radios or checkboxes with one legend, hint and error, describes the group, and is a `radiogroup` for radios; ≤ 5 options (GUIDELINES); in the showcase form; beta after the Wave 2 visual review |
 | Switch | 2 | components | experimental | | `@avelune/ui/switch` (ADR 0045): `input[type=checkbox][aveSwitch]` with `role=switch`; a 40×24 track, a 16px thumb 4px from the edge (product owner, 2026-09-25); the thumb slides on the new `timing.slide` (0 under reduced motion), only after a toggle; on the showcase's new settings screen; 1.12 kB of 1.3 kB; beta after the Wave 2 visual review |
-| Select | 2 | composites | planned | | Aria Combobox + Listbox |
-| Combobox / Autocomplete | 2 | composites | planned | | Aria Combobox + Listbox |
-| Multiselect | 2 | composites | planned | | Aria Combobox + Listbox (multi) |
+| Select | 2 | composites | experimental | | `@avelune/ui/select` (ADR 0046): `<ave-select>` on Aria's combobox and listbox in CDK's overlay; options as data; Input's box; both form APIs; in the showcase form; the entry point 4.52 kB of 5 kB with Combobox and Multiselect; beta after the Wave 2 visual review |
+| Combobox / Autocomplete | 2 | composites | experimental | | `<ave-combobox>` (ADR 0046): filters by label, one Uzbek apostrophe for all; the value is always an option; "no results" from `@avelune/ui/i18n` (ADR 0047); in the showcase form; beta after the Wave 2 visual review |
+| Multiselect | 2 | composites | experimental | | `<ave-multiselect>` (ADR 0046): a multi-select listbox that stays open; the chosen labels in the trigger; in the showcase form; beta after the Wave 2 visual review |
 | DatePicker | 2 | composites | planned | | locale-aware; uz/ru first day of week |
 | DateRangePicker | 2 | composites | planned | | |
 | FileUpload | 2 | composites | planned | | |
@@ -261,6 +261,8 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 | iOS Safari 17–18.2 implements `popover` without light dismiss (browser-compat-data 8.1.2; WebKit bug 267688), and the floor is iOS 17.5 | Wave 3: Popover and Menu close on an outside tap on iOS too, through CDK or Angular Aria behaviour where they provide it; otherwise raise the iOS floor to 18.3 (product owner, ADR 0014) | 0014, 0029 |
 | Angular 22.2's emulated shim scopes a nested `&` to the component's content, so `:host { &:hover {} }` never matches the host (2026-09-25); not reported upstream yet | `avelune/nesting-same-element` rejects nesting under `:host`, and `encapsulation.spec.ts` pins the output, so a change in either direction fails `lint-rules:test` | 0024 |
 | ng-packagr 22.2's `.d.ts` bundles export every declaration of a file without an export list (2026-09-25); not reported upstream yet | ng-packagr held at 22.1.1; `ui:api-report` fails on a leaked declaration without a release tag | 0007 |
+| An element with `animate.enter` or `animate.leave` inside a CDK connected overlay throws NG0205 when the application is destroyed with the overlay open (reproduced with a minimal case, 2026-09-25); not reported upstream yet | the select family applies the catalog's classes itself and keeps the overlay open through the exit (`listPresence`); Wave 3's overlays follow the same pattern | 0046 |
+| Storybook's `angular-vite` instantiates a meta's `component` outside an injection context, where `model()` throws NG0203 (2026-09-25) | stories of components with a `model()` declare their arguments without `component` | 0046 |
 
 ## Tracked upgrades
 

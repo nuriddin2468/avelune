@@ -1,4 +1,4 @@
-import { type ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { type ApplicationConfig, LOCALE_ID, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import {
   lucideCircleAlert,
@@ -17,6 +17,8 @@ export const appConfig: ApplicationConfig = {
   // components register their own.
   providers: [
     provideBrowserGlobalErrorListeners(),
+    // The screens are in Russian; the kit's own words follow (ADR 0047).
+    { provide: LOCALE_ID, useValue: 'ru' },
     provideAvelune({ theme: 'light' }),
     provideRouter(routes),
     provideAveIcons([lucideCircleAlert, lucideCircleCheck, lucideMoon, lucideRows2, lucideRows3, lucideSun]),

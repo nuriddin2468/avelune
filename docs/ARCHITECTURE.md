@@ -77,9 +77,9 @@ Conventions:
 - Exported symbols start with `Ave` (`AveButton`, `AveButtonHarness`, `AveButtonVariant`) so they never collide with consumer or Angular Aria names. Selectors use the `ave` prefix (`button[aveButton]`, `<ave-form-field>`).
 - Every exported symbol carries an API Extractor release tag that mirrors its ROADMAP status: experimental → `@alpha`, beta → `@beta`, stable → `@public` (ADR 0007).
 
-A service without a component, such as `theme` or `forms`, has no harness and no `testing` entry point. Closely related components may share one entry point: `button` holds Button and IconButton (ADR 0038), `form-field` FormField and ChoiceGroup with their hint and error, `checkbox` Checkbox with its `label[aveChoice]`, which Radio uses too.
+A service without a component, such as `theme` or `forms`, has no harness and no `testing` entry point. Closely related components may share one entry point: `button` holds Button and IconButton (ADR 0038), `form-field` FormField and ChoiceGroup with their hint and error, `checkbox` Checkbox with its `label[aveChoice]`, which Radio and Switch use too, and `select` Select, Combobox and Multiselect with their shared list (ADR 0046). `i18n` holds the words components say themselves, per locale (ADR 0047).
 
-**Forms** (ADR 0039, 0044). Every control calls `injectControlState()` and `connectToField()` from `@avelune/ui/forms`: the same state signals for Signal Forms, Reactive Forms and a bare element, and the link to the `<ave-form-field>` or `fieldset[aveChoiceGroup]` around it (its label's id, `aria-describedby`, `aria-invalid`, `aria-required`). In a choice group the controls keep their own ids and the fieldset carries the description; a group of radios is a `radiogroup`. A control never adds a value accessor of its own where a native one binds the element.
+**Forms** (ADR 0039, 0044). Every control calls `injectControlState()` and `connectToField()` from `@avelune/ui/forms`: the same state signals for Signal Forms, Reactive Forms and a bare element, and the link to the `<ave-form-field>` or `fieldset[aveChoiceGroup]` around it (its label's id, `aria-describedby`, `aria-invalid`, `aria-required`). In a choice group the controls keep their own ids and the fieldset carries the description; a group of radios is a `radiogroup`. A control never adds a value accessor of its own where a native one binds the element. A control without a native element (the select family) has a `value` model and a `touch` output for Signal Forms, sets itself as `NgControl.valueAccessor` for Reactive Forms (never an `NG_VALUE_ACCESSOR` provider, which would make a dependency cycle), and connects its trigger through an internal directive (ADR 0046).
 
 ### Adding an entry point
 
@@ -161,7 +161,7 @@ Motion is CSS only (ADR 0005). Two mechanisms, both on tokens:
 
 **Reduced motion** (`prefers-reduced-motion: reduce` or `data-motion="reduced"`) is the tokens' override only: distances 0, scale 1, slow and slower 150ms, no stagger, a shimmer period of 0 (a static skeleton), and no slide (`timing.slide` 0, ADR 0045). Fades stay, and so does rotation.
 
-Every easing is a token, except `linear` on a loop (Stylelint allows it in `motion.css` only; the invariants accept it only on an animation that repeats forever). The drawer, list items, shared-element transitions and top-layer overlays get their motion with their components (ADR 0031, point 5). The Foundations page "Motion catalog" plays every class, and its `play` function checks them in both modes.
+Every easing is a token, except `linear` on a loop (Stylelint allows it in `motion.css` only; the invariants accept it only on an animation that repeats forever). The drawer, list items, shared-element transitions and top-layer overlays get their motion with their components (ADR 0031, point 5). Content in a CDK overlay takes the catalog's classes itself and stays until its exit has played (`listPresence`, ADR 0046): `animate.enter` and `animate.leave` there throw NG0205 when the application is destroyed with the overlay open. The Foundations page "Motion catalog" plays every class, and its `play` function checks them in both modes.
 
 ## Icons
 

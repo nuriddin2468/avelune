@@ -22,7 +22,7 @@ Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` an
 |---|---|---|---|
 | Framework | `@angular/{core,common,compiler,forms,router,platform-browser}` | 22.2.0 | Latest stable (released 2026-09-23); installed 2026-09-25. Its compiler scopes nested CSS rules (ADR 0024, addendum) and adds `strictUnclaimedEventNames` (ADR 0022, addendum) |
 | | `@angular/cli`, `@angular/build`, `@angular-devkit/{core,schematics}`, `@schematics/angular` | 22.2.0 | Schematics toolchain for `ng add` / `ng update`. `@angular/build` peers TS `>=6.0 <6.1`, Vitest `^4.0.8 \|\| ^5.0.0` |
-| | `@angular/cdk`, `@angular/aria` | 22.2.0 | Peers `@angular/core ^22 \|\| ^23`; Aria peers `@angular/cdk` 22.2.0 exactly; stable since 22.0 |
+| | `@angular/cdk`, `@angular/aria` | 22.2.0 | Peers `@angular/core ^22 \|\| ^23`; Aria peers `@angular/cdk` 22.2.0 exactly; stable since 22.0. `@avelune/ui` peers both (`^22.2.0`) since the select family (ADR 0046) |
 | | `typescript` | ~6.0.3 | Angular `>=6.0 <6.1`; npm `latest` is 7.0.2, not supported |
 | | `ng-packagr` | 22.1.1 | Peers `@angular/compiler-cli ^22.0.0`, so it builds with 22.2; TS `>=6.0 <6.1`. *Held back*: 22.2.x bundles the `.d.ts` with `rolldown-plugin-dts`, which writes no `export {…}` when every export is inline; TypeScript then exports every declaration of such a file, and `@avelune/ui/form-field` exposed its internal `AVE_FIELD_PARTS` and `AveFieldParts` (found by `ui:api-report`, proven with `tsc`, 2026-09-25) |
 | | `rxjs`, `tslib` | 7.8.2, 2.8.1 | Angular peers |

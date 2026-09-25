@@ -1,0 +1,92 @@
+@layer components {
+  :host {
+    display: block;
+    min-inline-size: 0;
+  }
+
+  /* The trigger has the control box of its size, the same as an Input's (brief §8.2, ADR 0046), with the chevron at
+     the inline end. The value truncates on one line; the list shows every option in full. */
+  .trigger {
+    display: flex;
+    align-items: center;
+    gap: var(--ave-space-2);
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: var(--ave-control-height-md);
+    padding-block: 0;
+    padding-inline: var(--ave-control-padding-inline-md);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-strong);
+    border-radius: var(--ave-radius-md);
+    background-color: var(--ave-color-bg-surface);
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-body-md);
+    text-align: start;
+    cursor: pointer;
+    transition-property: border-color, background-color, color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+
+    &[data-empty] {
+      color: var(--ave-color-fg-subtle);
+    }
+
+    &[aria-invalid='true'] {
+      border-color: var(--ave-color-danger-border);
+    }
+
+    &[aria-readonly='true'],
+    &[readonly] {
+      border-style: dashed;
+      background-color: var(--ave-color-bg-surface-sunken);
+      cursor: default;
+    }
+
+    &:disabled {
+      border-color: transparent;
+      background-color: var(--ave-color-bg-disabled);
+      color: var(--ave-color-fg-disabled);
+      cursor: not-allowed;
+    }
+  }
+
+  /* The combobox's trigger is its text input; a long label ends in an ellipsis while the input is not focused. */
+  .trigger[type='text'] {
+    text-overflow: ellipsis;
+    cursor: text;
+  }
+
+  .trigger::placeholder {
+    color: var(--ave-color-fg-subtle);
+    opacity: 1;
+  }
+
+  :host([data-size='sm']) .trigger {
+    block-size: var(--ave-control-height-sm);
+    padding-inline: var(--ave-control-padding-inline-sm);
+  }
+
+  :host([data-size='lg']) .trigger {
+    block-size: var(--ave-control-height-lg);
+    padding-inline: var(--ave-control-padding-inline-lg);
+  }
+
+  .value {
+    flex: 1;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .chevron {
+    color: var(--ave-color-fg-muted);
+  }
+
+  @media (forced-colors: active) {
+    .trigger:disabled,
+    .trigger:disabled .chevron {
+      border-color: GrayText;
+      color: GrayText;
+    }
+  }
+}

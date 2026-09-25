@@ -11,6 +11,10 @@ export const controlSelector = [
   'a[aveIconButton]',
   'input[aveInput]',
   'textarea[aveTextarea]',
+  // The triggers of the select family (ADR 0046); their size is on the component around them.
+  'ave-select .trigger',
+  'ave-combobox .trigger',
+  'ave-multiselect .trigger',
 ].join(', ');
 
 /** One control as the browser draws it. */

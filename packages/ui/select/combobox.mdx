@@ -1,0 +1,84 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as ComboboxStories from './combobox.stories';
+
+<Meta of={ComboboxStories} />
+
+# Combobox
+
+`<ave-combobox>` is one choice from a long list, found by typing. The input filters the options by their labels as people type, and the list opens under it. It is Angular Aria's combobox with list autocomplete, in CDK's overlay (ADR 0046).
+
+```ts
+import { AveCombobox, type AveOption } from '@avelune/ui/select';
+```
+
+<Canvas of={ComboboxStories.Default} />
+<Controls />
+
+## When to use
+
+- For one choice from more than 15 options, or from a list people search by name: a counterparty, an employee, a city.
+
+## When not to use
+
+- For 15 options or fewer that people read rather than search: a select.
+- For free text with suggestions: an Input (the combobox's value is always one of its options).
+- For several choices: a multiselect.
+
+## Anatomy
+
+An input with the box of an Input of its size. The list opens 4px under it as people type, with the options whose label contains the text; when none does, it says so ("Ничего не найдено" in Russian).
+
+```html
+<ave-form-field label="Контрагент">
+  <ave-combobox [options]="counterparties" placeholder="Начните вводить название" [formField]="contract.counterparty" />
+</ave-form-field>
+```
+
+<Canvas of={ComboboxStories.Filtering} />
+
+<Canvas of={ComboboxStories.NoResults} />
+
+## Search
+
+- An option matches when its label contains the text, in any case.
+- Uzbek apostrophes are one: "o'zbek", "o‘zbek" and "oʻzbek" all find "Oʻzbekiston".
+- When the person leaves, text that matches no option is replaced by the chosen option's label; an emptied input clears the value.
+
+<Canvas of={ComboboxStories.UzbekApostrophes} />
+
+## States
+
+<Canvas of={ComboboxStories.States} />
+
+- **Invalid:** a red border, with a form binding once the combobox has been left; the field's error says why.
+- **Readonly:** a dashed border on a sunken fill; the text can be read and copied. **Disabled:** a flat fill; it cannot be focused.
+
+## Forms
+
+<Canvas of={ComboboxStories.Forms} />
+
+Bind the value (`V | null`) with `[formField]`, `[formControl]` or `formControlName`, as for the select.
+
+## Content
+
+The kit's words ("Ничего не найдено") follow the application's `LOCALE_ID`: uz-Latn, uz-Cyrl, ru or en; `provideAveMessages({ noResults: '…' })` rewords them (ADR 0047).
+
+<Canvas of={ComboboxStories.LongText} />
+
+## Keyboard
+
+Per the WAI-ARIA combobox pattern: typing filters and opens the list; Down and Up move through the matches; Enter chooses and closes; Escape closes; Tab leaves.
+
+## Accessibility
+
+- The input is a `combobox` with `aria-autocomplete="list"`, named by the field's label.
+- The empty list's message is a `status`, so screen readers hear that nothing matched.
+
+## Motion
+
+As the select: `ave-motion-popover-enter` in, `ave-motion-popover-exit` out.
+
+## Do and don't
+
+- Do say in the placeholder or the hint what people can type ("name or tax number").
+- Don't use a combobox for a handful of options.

@@ -1,0 +1,98 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as SelectStories from './select.stories';
+
+<Meta of={SelectStories} />
+
+# Select
+
+`<ave-select>` is one choice from a list that opens under a trigger with the box of an Input. It is Angular Aria's select-only combobox with a listbox, in CDK's overlay; the kit draws it and binds it to both form APIs (ADR 0046).
+
+```ts
+import { AveSelect, type AveOption } from '@avelune/ui/select';
+```
+
+<Canvas of={SelectStories.Default} />
+<Controls />
+
+## When to use
+
+- For one choice among 6 to 15 options that people know: the kind of a contract, a region, a status.
+- Inside an `<ave-form-field>`, which gives it its label, hint and error.
+
+## When not to use
+
+- For 2 to 5 options: radios in a `fieldset[aveChoiceGroup]`, so every option is visible.
+- For more than 15, or a list people search: a combobox.
+- For several choices: a multiselect, or checkboxes.
+- For actions: a menu (Wave 3).
+
+## Anatomy
+
+A trigger with the height, border, radius, padding and text of an Input of its size, the chosen option's label (or the placeholder) and a chevron. The list opens 4px under it (or above it, if there is no room), as wide as the trigger, on a raised surface; options have the control height, the active one a light fill, the chosen one a check.
+
+```ts
+readonly kinds: AveOption<string>[] = [
+  { value: 'supply', label: 'Поставка' },
+  { value: 'services', label: 'Оказание услуг' },
+  { value: 'loan', label: 'Заём', disabled: true },
+];
+```
+
+```html
+<ave-form-field label="Вид договора">
+  <ave-select [options]="kinds" placeholder="Выберите вид" [formField]="contract.kind" />
+</ave-form-field>
+```
+
+<Canvas of={SelectStories.Open} />
+
+## Sizes
+
+<Canvas of={SelectStories.Sizes} />
+
+## States
+
+<Canvas of={SelectStories.States} />
+
+- **Focus:** the kit's focus ring on the trigger; in the list, the active option has a fill (focus stays on the trigger).
+- **Invalid:** a red border, with a form binding once the select has been left; the field's error says why (see Forms).
+- **Readonly:** a dashed border on a sunken fill; the list does not open.
+- **Disabled:** a flat fill, dimmed text; it cannot be focused. A disabled option is shown dimmed and cannot be chosen.
+
+## Forms
+
+<Canvas of={SelectStories.Forms} />
+
+- **Signal Forms:** `[formField]="contract.kind"` on a field of `V | null`. `required`, `disabled` and `readonly` in the schema reach the select.
+- **Reactive Forms:** `[formControl]` or `formControlName`; `Validators.required` counts as required.
+- The value is the option's `value`, compared with `Object.is`: use strings or numbers, or the same object instances.
+
+## Content
+
+- Labels are short and parallel, in a meaningful order (alphabetical, by frequency, or natural: "Low, Medium, High").
+- A long label truncates in the trigger, which keeps its height; the list shows it in full.
+- The placeholder says what to do ("Выберите вид"); it never replaces the label.
+
+<Canvas of={SelectStories.LongText} />
+
+<Canvas of={SelectStories.Compact} />
+
+## Keyboard
+
+Per the WAI-ARIA select-only combobox pattern: Tab moves to the trigger; Down, Enter or Space open the list; the arrow keys, Home and End move; Enter or Space choose and close; Escape closes without choosing; while the list is open, typing a letter moves to the next option that starts with it.
+
+## Accessibility
+
+- The trigger is a `combobox` named by the field's label (`<label for>`), or by `label` when there is none; its text is the chosen option.
+- `aria-activedescendant` tells screen readers which option is active while focus stays on the trigger.
+- Required, invalid and the field's hint and error are on the trigger.
+
+## Motion
+
+The list enters with `ave-motion-popover-enter` (fade and `motion.scale.enter`, `duration.normal`, `easing.enter`) from the trigger's edge, and leaves with `ave-motion-popover-exit` (fade, `duration.fast`). Under reduced motion it only fades.
+
+## Do and don't
+
+- Do keep the options of a select stable while it is open.
+- Do preselect an option only when most people keep it.
+- Don't use a select for yes or no; use a checkbox or a switch.

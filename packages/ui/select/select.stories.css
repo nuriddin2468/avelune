@@ -1,0 +1,55 @@
+/* The frame of the Select, Combobox and Multiselect stories. Stories only; the components' styles are their own. */
+@layer components {
+  :host {
+    display: block;
+    padding: var(--ave-space-6);
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: var(--ave-space-2);
+    max-inline-size: var(--ave-container-sm);
+  }
+
+  .row > * {
+    flex: 1;
+  }
+
+  .stack {
+    display: grid;
+    gap: var(--ave-space-4);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(calc(var(--ave-space-16) * 3), 1fr));
+    gap: var(--ave-space-4);
+  }
+
+  .narrow {
+    max-inline-size: var(--ave-container-xs);
+  }
+
+  /* Room under an open list, so the screenshot holds it. */
+  .room {
+    align-content: start;
+    min-block-size: calc(var(--ave-space-16) * 6);
+  }
+
+  /* A plain label (FormField is the same layer, but the stories show the control alone): 4px above the control. */
+  .field {
+    display: grid;
+    gap: var(--ave-space-1);
+  }
+
+  .label {
+    font: var(--ave-font-label-md);
+  }
+
+  .status {
+    margin-block-start: var(--ave-space-2);
+    font: var(--ave-font-body-sm);
+    color: var(--ave-color-fg-muted);
+  }
+}

@@ -1,0 +1,92 @@
+@layer components {
+  /* The list of a select, a combobox or a multiselect (ADR 0046): a raised surface with the popover elevation and
+     `radius.lg`, 4px of padding around options of `radius.md` (concentric: 8 + 4 = 12), at most eight options tall,
+     then scrolling. Options have the control height and padding of the size; the active option (keyboard or pointer)
+     takes the hover fill, the chosen one a check at the inline end. */
+  .popup {
+    display: grid;
+    inline-size: 100%;
+    margin-block: var(--ave-space-1);
+    padding: var(--ave-space-1);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface-raised);
+    box-shadow: var(--ave-elevation-popover);
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-body-md);
+  }
+
+  /* The listbox scrolls, not the popup: it is the element that takes focus (tabindex -1) and keeps its active option in
+     view, so the scrolling region is reachable by keyboard (axe scrollable-region-focusable). */
+  .listbox {
+    display: grid;
+    max-block-size: calc(var(--ave-control-height-md) * 8);
+    overflow-y: auto;
+  }
+
+  .option {
+    display: flex;
+    align-items: center;
+    gap: var(--ave-space-2);
+    min-block-size: var(--ave-control-height-md);
+    padding-block: var(--ave-space-2);
+    padding-inline: calc(var(--ave-control-padding-inline-md) - var(--ave-space-1));
+    border-radius: var(--ave-radius-md);
+    cursor: pointer;
+    transition-property: background-color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+
+    &:hover,
+    &[data-active='true'] {
+      background-color: var(--ave-color-bg-hover);
+    }
+
+    &[aria-disabled='true'] {
+      color: var(--ave-color-fg-disabled);
+      cursor: not-allowed;
+    }
+  }
+
+  .option > .label {
+    flex: 1;
+    min-inline-size: 0;
+  }
+
+  /* A combobox's list when nothing matches: the height of one option, in muted text. */
+  .empty {
+    display: flex;
+    align-items: center;
+    min-block-size: var(--ave-control-height-md);
+    margin: 0;
+    padding-inline: calc(var(--ave-control-padding-inline-md) - var(--ave-space-1));
+    color: var(--ave-color-fg-muted);
+  }
+
+  .check {
+    visibility: hidden;
+    color: var(--ave-color-accent-fg);
+  }
+
+  .option[aria-selected='true'] > .check {
+    visibility: visible;
+  }
+
+  /* Forced colours paint the hover fill as the canvas; the active option takes the system selection colours. */
+  @media (forced-colors: active) {
+    .option:hover,
+    .option[data-active='true'] {
+      background-color: Highlight;
+      color: HighlightText;
+      forced-color-adjust: none;
+    }
+
+    .option[data-active='true'] > .check {
+      color: HighlightText;
+    }
+
+    .option[aria-disabled='true'] {
+      color: GrayText;
+    }
+  }
+}

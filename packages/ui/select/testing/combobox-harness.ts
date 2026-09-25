@@ -1,0 +1,119 @@
+import { ComponentHarness, HarnessPredicate, TestKey, type BaseHarnessFilters } from '@angular/cdk/testing';
+
+/**
+ * Filters for {@link AveComboboxHarness}.
+ *
+ * @alpha
+ */
+export interface AveComboboxHarnessFilters extends BaseHarnessFilters {
+  /** Only match comboboxes whose input says this, or matches this pattern. */
+  text?: string | RegExp;
+}
+
+/**
+ * Harness for `<ave-combobox>` from `@avelune/ui/select`. Its list opens in the overlay at the end of the document,
+ * so the options are found from the document root, through the input's `aria-controls`.
+ *
+ * @alpha
+ */
+export class AveComboboxHarness extends ComponentHarness {
+  /** Selector that finds kit comboboxes. */
+  static hostSelector = 'ave-combobox';
+
+  private readonly input = this.locatorFor('.trigger');
+
+  /** Gets a predicate that matches comboboxes by the given filters. */
+  static with(options: AveComboboxHarnessFilters = {}): HarnessPredicate<AveComboboxHarness> {
+    return new HarnessPredicate(AveComboboxHarness, options).addOption('text', options.text, (harness, text) =>
+      HarnessPredicate.stringMatches(harness.getText(), text),
+    );
+  }
+
+  /** Gets what the input says: the chosen option's label, or what was typed. */
+  async getText(): Promise<string> {
+    return (await this.input()).getProperty<string>('value');
+  }
+
+  /** Replaces what the input says, as typing does, which opens the list of matches. */
+  async type(text: string): Promise<void> {
+    const input = await this.input();
+    await input.clear();
+    if (text !== '') await input.sendKeys(text);
+  }
+
+  /** Whether the list is open. */
+  async isOpen(): Promise<boolean> {
+    return (await (await this.input()).getAttribute('aria-expanded')) === 'true';
+  }
+
+  /** Presses a key in the input, which the list follows while it is open. */
+  async press(key: 'down' | 'up' | 'enter' | 'escape'): Promise<void> {
+    const keys = {
+      down: TestKey.DOWN_ARROW,
+      up: TestKey.UP_ARROW,
+      enter: TestKey.ENTER,
+      escape: TestKey.ESCAPE,
+    } as const;
+    await (await this.input()).sendKeys(keys[key]);
+  }
+
+  /** Gets the labels of the options the list shows. */
+  async getOptions(): Promise<string[]> {
+    const options = await this.optionElements();
+    return Promise.all(options.map(async (option) => (await option.text()).trim()));
+  }
+
+  /** Gets the message the list shows when nothing matches, or null. */
+  async getEmptyMessage(): Promise<string | null> {
+    const id = (await (await this.input()).getAttribute('aria-controls')) ?? '';
+    const message = await this.documentRootLocatorFactory().locatorForOptional(`[id="${id}"] + .empty`)();
+    return message === null ? null : (await message.text()).trim();
+  }
+
+  /** Chooses the shown option with this label, as a click does. */
+  async choose(label: string | RegExp): Promise<void> {
+    for (const option of await this.optionElements()) {
+      if (await HarnessPredicate.stringMatches((await option.text()).trim(), label)) {
+        await option.click();
+        return;
+      }
+    }
+    throw new Error(`AveComboboxHarness: no shown option matches ${String(label)}.`);
+  }
+
+  /** Whether the combobox is disabled. */
+  async isDisabled(): Promise<boolean> {
+    return (await this.input()).getProperty<boolean>('disabled');
+  }
+
+  /** Whether the value can be read but not changed. */
+  async isReadonly(): Promise<boolean> {
+    return (await this.input()).getProperty<boolean>('readOnly');
+  }
+
+  /** Whether a choice is required (`aria-required`). */
+  async isRequired(): Promise<boolean> {
+    return (await (await this.input()).getAttribute('aria-required')) === 'true';
+  }
+
+  /** Whether the combobox shows as invalid (`aria-invalid="true"`). */
+  async isInvalid(): Promise<boolean> {
+    return (await (await this.input()).getAttribute('aria-invalid')) === 'true';
+  }
+
+  /** Focuses the input. */
+  async focus(): Promise<void> {
+    await (await this.input()).focus();
+  }
+
+  /** Blurs the input, which marks a form control touched and puts back text that matches no option. */
+  async blur(): Promise<void> {
+    await (await this.input()).blur();
+  }
+
+  /** The options of the open list, found from the document root by the id the input controls. */
+  private async optionElements() {
+    const id = (await (await this.input()).getAttribute('aria-controls')) ?? '';
+    return this.documentRootLocatorFactory().locatorForAll(`[id="${id}"] [role="option"]`)();
+  }
+}

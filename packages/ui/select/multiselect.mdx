@@ -1,0 +1,72 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as MultiselectStories from './multiselect.stories';
+
+<Meta of={MultiselectStories} />
+
+# Multiselect
+
+`<ave-multiselect>` is several choices from a list, under a trigger that names what is chosen. The list stays open while people check and uncheck options. It is Angular Aria's combobox with a multi-select listbox, in CDK's overlay (ADR 0046).
+
+```ts
+import { AveMultiselect, type AveOption } from '@avelune/ui/select';
+```
+
+<Canvas of={MultiselectStories.Default} />
+<Controls />
+
+## When to use
+
+- For several choices from 6 to 15 options, where space is short: approvers, regions, document types in a filter.
+
+## When not to use
+
+- For 2 to 5 options: checkboxes in a `fieldset[aveChoiceGroup]`, all visible.
+- For one choice: a select.
+
+## Anatomy
+
+A trigger with the box of an Input, the chosen labels comma-separated in the order of the list (or the placeholder), and a chevron. The list is the select's, with a check on every chosen option.
+
+```html
+<ave-form-field label="Согласующие">
+  <ave-multiselect [options]="approvers" placeholder="Выберите согласующих" [formField]="contract.approvers" />
+</ave-form-field>
+```
+
+<Canvas of={MultiselectStories.Open} />
+
+## States
+
+<Canvas of={MultiselectStories.States} />
+
+As the select: invalid, readonly and disabled on the trigger; disabled options dimmed.
+
+## Forms
+
+<Canvas of={MultiselectStories.Forms} />
+
+The value is an array (`V[]`), empty while nothing is chosen, always in the order of the options. `required` means at least one.
+
+## Content
+
+When the chosen labels do not fit, the trigger truncates them on one line; the list shows which are chosen.
+
+<Canvas of={MultiselectStories.LongText} />
+
+## Keyboard
+
+Tab moves to the trigger; Down, Enter or Space open the list; the arrow keys move; Enter or Space check or uncheck the active option; Escape or Tab close the list.
+
+## Accessibility
+
+- The list is `aria-multiselectable`; each option says whether it is selected.
+- The trigger is named by the field's label; its text lists what is chosen.
+
+## Motion
+
+As the select.
+
+## Do and don't
+
+- Do keep the number of options small enough to scan.
+- Don't use a multiselect where people need to see every choice at once; use checkboxes.

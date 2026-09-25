@@ -6,11 +6,15 @@ import { AveChoiceGroup, AveError, AveFormField, AveHint } from '@avelune/ui/for
 import { AveIcon } from '@avelune/ui/icon';
 import { AveInput } from '@avelune/ui/input';
 import { AveRadio } from '@avelune/ui/radio';
+import { AveCombobox, AveMultiselect, AveSelect } from '@avelune/ui/select';
 import { AveTextarea } from '@avelune/ui/textarea';
+import { approvers, contractKinds, counterparties } from './data';
 
 interface Contract {
   number: string;
-  counterparty: string;
+  kind: string | null;
+  counterparty: number | null;
+  approvers: string[];
   subject: string;
   amount: string;
   email: string;
@@ -21,7 +25,9 @@ interface Contract {
 
 const empty: Contract = {
   number: '',
-  counterparty: '',
+  kind: null,
+  counterparty: null,
+  approvers: [],
   subject: '',
   amount: '',
   email: '',
@@ -45,12 +51,15 @@ const sendDelay = 1500;
     AveCheckbox,
     AveChoice,
     AveChoiceGroup,
+    AveCombobox,
     AveError,
     AveFormField,
     AveHint,
     AveIcon,
     AveInput,
+    AveMultiselect,
     AveRadio,
+    AveSelect,
     AveTextarea,
     FormField,
   ],
@@ -70,11 +79,22 @@ const sendDelay = 1500;
           }
         </ave-form-field>
 
+        <ave-form-field label="Вид договора">
+          <ave-select [options]="contractKinds" placeholder="Выберите вид" [formField]="contract.kind" />
+          @if (contract.kind().errors().length > 0) {
+            <p aveError>Выберите вид договора.</p>
+          }
+        </ave-form-field>
+
         <ave-form-field label="Контрагент">
-          <input aveInput type="text" autocomplete="organization" [formField]="contract.counterparty" />
-          <p aveHint>Полное наименование организации, как в её уставе.</p>
+          <ave-combobox
+            [options]="counterparties"
+            placeholder="Начните вводить название"
+            [formField]="contract.counterparty"
+          />
+          <p aveHint>Организации из справочника контрагентов.</p>
           @if (contract.counterparty().errors().length > 0) {
-            <p aveError>Укажите наименование контрагента.</p>
+            <p aveError>Выберите контрагента из справочника.</p>
           }
         </ave-form-field>
 
@@ -92,6 +112,15 @@ const sendDelay = 1500;
           @if (contract.amount().errors().length > 0) {
             <p aveError>Укажите сумму цифрами, например 125000000.</p>
           }
+        </ave-form-field>
+
+        <ave-form-field label="Согласующие">
+          <ave-multiselect
+            [options]="approvers"
+            placeholder="Выберите подразделения"
+            [formField]="contract.approvers"
+          />
+          <p aveHint>Юридический отдел согласует каждый договор.</p>
         </ave-form-field>
 
         <ave-form-field label="Почта для уведомлений">
@@ -155,10 +184,14 @@ const sendDelay = 1500;
   styleUrl: './contract-form.css',
 })
 export class ContractForm {
+  protected readonly contractKinds = contractKinds;
+  protected readonly counterparties = counterparties;
+  protected readonly approvers = approvers;
   protected readonly model = signal<Contract>({ ...empty });
   protected readonly contract = form(this.model, (path) => {
     required(path.number);
     pattern(path.number, /^ДК-\d{4}\/\d+$/);
+    required(path.kind);
     required(path.counterparty);
     required(path.subject);
     minLength(path.subject, 20);
