@@ -1,4 +1,4 @@
-import { Directive, InjectionToken, inject } from '@angular/core';
+import { Directive, InjectionToken, inject, type Signal } from '@angular/core';
 import type { AveControlState } from './control-state';
 import { connectToField } from './connect';
 
@@ -11,6 +11,11 @@ import { connectToField } from './connect';
 export interface AveControlOwner {
   /** The form state of the component, read on its host, where the form binding is. */
   readonly state: AveControlState;
+  /**
+   * The ids of the component's own descriptions of the element, before the field's hint and error: a file upload's
+   * "Required", which ARIA has no attribute for on a button (ADR 0050).
+   */
+  readonly controlDescriptions?: Signal<readonly string[]>;
 }
 
 /**
@@ -31,6 +36,7 @@ export const AVE_CONTROL_OWNER = new InjectionToken<AveControlOwner>('AVE_CONTRO
 @Directive({ selector: '[aveControlTarget]' })
 export class AveControlTarget {
   constructor() {
-    connectToField(inject(AVE_CONTROL_OWNER).state);
+    const owner = inject(AVE_CONTROL_OWNER);
+    connectToField(owner.state, owner.controlDescriptions);
   }
 }

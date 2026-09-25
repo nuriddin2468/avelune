@@ -25,13 +25,27 @@ export interface AveDateFormat {
 export function aveDateFormat(locale: string): AveDateFormat;
 
 // @alpha
+export function aveFileSize(bytes: number, locale: string): string;
+
+// @alpha
 export interface AveMessages {
     readonly chooseDate: string;
+    readonly chooseFile: string;
+    readonly chooseFiles: string;
+    readonly dropFile: string;
+    readonly dropFiles: string;
+    readonly files: string;
+    readonly filesAdded: (count: number) => string;
+    readonly fileTooLarge: (limit: string) => string;
+    readonly fileTypeRejected: string;
     readonly nextMonth: string;
     readonly noResults: string;
     readonly previousMonth: string;
     readonly rangeEnd: string;
     readonly rangeStart: string;
+    readonly removeFile: (name: string) => string;
+    readonly required: string;
+    readonly tooManyFiles: (max: number) => string;
 }
 
 // @alpha
@@ -48,6 +62,9 @@ export const aveMessagesUzCyrl: AveMessages;
 
 // @alpha
 export const aveMessagesUzLatn: AveMessages;
+
+// @alpha
+export function aveNumberFormat(locale: string, options?: Intl.NumberFormatOptions): Intl.NumberFormat;
 
 // @alpha
 export type AvePlainDate = string;

@@ -1,0 +1,129 @@
+@layer components {
+  /* A file upload (ADR 0050): the drop zone, then the list of files 8px under it. */
+  :host {
+    display: grid;
+    gap: var(--ave-space-2);
+    min-inline-size: 0;
+  }
+
+  /* The zone: a dashed boundary of 3:1 around the button and the drop hint, which wraps under the button in a narrow
+     column. While files are dragged over it, the accent. */
+  .zone {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ave-space-2) var(--ave-space-3);
+    padding: var(--ave-space-4);
+    border: var(--ave-border-width-default) dashed var(--ave-color-border-strong);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface);
+    transition-property: border-color, background-color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+
+    &[data-dragging='true'] {
+      border-color: var(--ave-color-accent-border);
+      background-color: var(--ave-color-accent-bg-subtle);
+    }
+  }
+
+  :host([data-invalid='true']) .zone {
+    border-color: var(--ave-color-danger-border);
+  }
+
+  :host([data-disabled='true']) .zone {
+    border-color: var(--ave-color-border-subtle);
+    background-color: var(--ave-color-bg-disabled);
+  }
+
+  .drop {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-md);
+  }
+
+  /* Nothing can be dropped on a disabled field, so it does not offer it; the words keep their place, so the zone keeps
+     its size when a form disables it. */
+  :host([data-disabled='true']) .drop {
+    visibility: hidden;
+  }
+
+  /* Nothing can be dragged without a fine pointer (a phone): the zone shows only its button. */
+  @media not (any-pointer: fine) {
+    .drop {
+      display: none;
+    }
+  }
+
+  /* The files: a boxed list, rows of the large control height with 4px around the remove button, whose corners are
+     concentric with the list's (12 - 4 = 8). */
+  .files {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface);
+  }
+
+  .file {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: var(--ave-space-2);
+    min-block-size: var(--ave-control-height-lg);
+    padding-block: var(--ave-space-1);
+    padding-inline: var(--ave-space-3) var(--ave-space-1);
+  }
+
+  .file + .file {
+    border-block-start: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  }
+
+  .icon {
+    color: var(--ave-color-fg-muted);
+  }
+
+  /* The name takes the row and wraps anywhere, however long; the size follows it, or goes under it. */
+  .text {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: var(--ave-space-2);
+  }
+
+  .name {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-body-md);
+  }
+
+  .meta {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* A file that was not taken: the danger colour and the reason on its own line. */
+  .file[data-rejected] .icon,
+  .reason {
+    color: var(--ave-color-danger-fg);
+  }
+
+  .reason {
+    flex-basis: 100%;
+    white-space: normal;
+  }
+
+  @media (forced-colors: active) {
+    .zone[data-dragging='true'] {
+      border-color: Highlight;
+    }
+
+    :host([data-disabled='true']) .zone {
+      border-color: GrayText;
+    }
+  }
+}

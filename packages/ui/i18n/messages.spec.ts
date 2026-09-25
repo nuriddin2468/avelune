@@ -34,10 +34,32 @@ describe('aveMessagesFor', () => {
 
   it('has every message in every locale', () => {
     const keys = Object.keys(aveMessagesEn).sort() as (keyof AveMessages)[];
-    for (const messages of [aveMessagesRu, aveMessagesUzLatn, aveMessagesUzCyrl]) {
+    for (const messages of [aveMessagesEn, aveMessagesRu, aveMessagesUzLatn, aveMessagesUzCyrl]) {
       expect(Object.keys(messages).sort()).toEqual(keys);
-      expect(keys.every((key) => messages[key].trim() !== '')).toBe(true);
+      for (const key of keys) {
+        const message: unknown = messages[key];
+        const text: unknown = typeof message === 'function' ? Reflect.apply(message, undefined, ['1']) : message;
+        expect(typeof text === 'string' && text.trim() !== '', key).toBe(true);
+      }
     }
+  });
+});
+
+describe('the messages of a file upload', () => {
+  it('name the file and the limit, and count in Russian with the right case', () => {
+    expect(aveMessagesRu.removeFile('Смета.xlsx')).toBe('Удалить «Смета.xlsx»');
+    expect(aveMessagesRu.fileTooLarge('20 МБ')).toBe('Файл больше 20 МБ. Выберите файл поменьше.');
+    expect([1, 2, 5, 21].map((max) => aveMessagesRu.tooManyFiles(max))).toEqual([
+      'Можно прикрепить не больше 1 файла.',
+      'Можно прикрепить не больше 2 файлов.',
+      'Можно прикрепить не больше 5 файлов.',
+      'Можно прикрепить не больше 21 файла.',
+    ]);
+    expect([1, 3].map((max) => aveMessagesEn.tooManyFiles(max))).toEqual([
+      'You can attach at most 1 file.',
+      'You can attach at most 3 files.',
+    ]);
+    expect(aveMessagesUzLatn.filesAdded(2)).toBe('Biriktirilgan fayllar: 2');
   });
 });
 

@@ -3,6 +3,7 @@ import { FormField, email, form, maxLength, minLength, pattern, required, submit
 import { AveButton } from '@avelune/ui/button';
 import { AveCheckbox, AveChoice } from '@avelune/ui/checkbox';
 import { AveDatePicker, AveDateRangePicker, type AveDateRange } from '@avelune/ui/date-picker';
+import { AveFileUpload } from '@avelune/ui/file-upload';
 import { AveChoiceGroup, AveError, AveFormField, AveHint } from '@avelune/ui/form-field';
 import { AveIcon } from '@avelune/ui/icon';
 import { AveInput } from '@avelune/ui/input';
@@ -19,6 +20,7 @@ interface Contract {
   signedOn: string | null;
   term: AveDateRange | null;
   subject: string;
+  attachments: readonly File[];
   amount: string;
   email: string;
   signing: string;
@@ -34,6 +36,7 @@ const empty: Contract = {
   signedOn: null,
   term: null,
   subject: '',
+  attachments: [],
   amount: '',
   email: '',
   signing: '',
@@ -60,6 +63,7 @@ const sendDelay = 1500;
     AveDatePicker,
     AveDateRangePicker,
     AveError,
+    AveFileUpload,
     AveFormField,
     AveHint,
     AveIcon,
@@ -123,6 +127,17 @@ const sendDelay = 1500;
           @if (contract.subject().errors().length > 0) {
             <p aveError>Опишите предмет договора: не короче 20 знаков.</p>
           }
+        </ave-form-field>
+
+        <ave-form-field class="wide" label="Приложения">
+          <ave-file-upload
+            multiple
+            accept=".pdf,.docx,image/*"
+            [maxSize]="attachmentLimit"
+            [maxFiles]="10"
+            [formField]="contract.attachments"
+          />
+          <p aveHint>Спецификация, смета, скан подписанного экземпляра: PDF, DOCX или изображения, до 20 МБ каждый.</p>
         </ave-form-field>
 
         <ave-form-field label="Сумма договора, сум">
@@ -206,6 +221,7 @@ export class ContractForm {
   protected readonly contractKinds = contractKinds;
   protected readonly counterparties = counterparties;
   protected readonly approvers = approvers;
+  protected readonly attachmentLimit = 20 * 1024 * 1024;
   protected readonly model = signal<Contract>({ ...empty });
   protected readonly contract = form(this.model, (path) => {
     required(path.number);

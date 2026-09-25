@@ -1,0 +1,87 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as FileUploadStories from './file-upload.stories';
+
+<Meta of={FileUploadStories} />
+
+# FileUpload
+
+`<ave-file-upload>` attaches files to a form: a drop zone with a button that opens the system's file dialog, and the list of the files chosen, each with its size and a button that removes it (ADR 0050). Files the field does not take (their type, their size, one too many) appear in the list with the reason, and are not part of the value.
+
+```ts
+import { AveFileUpload } from '@avelune/ui/file-upload';
+```
+
+<Canvas of={FileUploadStories.Default} />
+<Controls />
+
+## When to use
+
+- To attach one or more files to what the form creates: a signed scan to a contract, attachments to a letter.
+- Inside an `<ave-form-field>`, which gives it its label, hint and error. Say in the hint which files are taken ("PDF или DOCX, до 20 МБ").
+
+## When not to use
+
+- To upload at once, outside a form (a document library): the kit has no uploader with progress yet; the application sends the files it gets from this field.
+- For an image that needs a preview or cropping: not in this version.
+
+## Anatomy
+
+A zone with a dashed border and `radius.lg`: the button ("Выбрать файлы", secondary, with an upload icon) and, next to it, "или перетащите их сюда". Under it, once there are files, a boxed list: per file an icon, the name (it wraps, however long), the size in the locale ("2,4 МБ") and a remove button 4px inside the list's edge (radius concentric, 12 − 4 = 8). A file that was not taken has the danger colour, an alert icon and the reason in place of its size.
+
+```html
+<ave-form-field label="Скан подписанного договора">
+  <ave-file-upload accept=".pdf,image/*" [maxSize]="20 * 1024 * 1024" [formField]="contract.scan" />
+  <p aveHint>PDF или изображение, до 20 МБ.</p>
+</ave-form-field>
+```
+
+## Behaviour
+
+- **One file** by default: choosing another replaces it. **`multiple`**: files are added to the list, a file already there is not added twice, and `maxFiles` caps the number.
+- **`accept`** takes the native attribute's list: extensions (`.pdf`), MIME types (`application/pdf`) and wildcards (`image/*`). The dialog offers only those, and a dropped file is checked against it too.
+- **`maxSize`** is in bytes; a larger file is not taken, and its row says the limit in the locale ("Файл больше 20 МБ. Выберите файл поменьше.").
+- The reasons stay in the list until the person removes them or chooses again. Screen readers hear how many files were attached and why any were not.
+- A file dropped on a disabled field is not taken, and the browser does not open it either.
+
+<Canvas of={FileUploadStories.Files} />
+
+## States
+
+<Canvas of={FileUploadStories.States} />
+
+- **Dragging:** while files are dragged over the zone, its border and its tint take the accent.
+- **Invalid:** a red border on the zone once a required field has been left empty; the field's error says what to attach.
+- **Disabled:** the zone takes the disabled fill and leaves out "или перетащите их сюда"; its button and every remove button are off. The names and sizes stay readable. There is no readonly state: files shown but not changed are a list, not a field.
+
+## Forms
+
+<Canvas of={FileUploadStories.Forms} />
+
+- The value is `File[]`, empty while nothing is attached. **Signal Forms:** `[formField]`; to ask for at least one file, write `minLength(path.scan, 1)`, because Signal Forms' `required` accepts an empty array (ADR 0049); the field then shows as required. **Reactive Forms:** `[formControl]` with `Validators.required`.
+- The field is touched when focus leaves it, not while the system's dialog is open.
+
+## Long text and narrow screens
+
+<Canvas of={FileUploadStories.LongText} />
+
+A long file name wraps anywhere, never pushes the size or the button out; the zone's text wraps under the button in a narrow column. On a touch screen, where nothing can be dragged, the zone shows only the button.
+
+## Keyboard
+
+- Tab reaches the button, then each remove button; Space or Enter opens the system's file dialog, or removes the file.
+- When a file is removed, focus goes to the remove button that takes its place, or the one before, or back to the choose button.
+
+## Accessibility
+
+- The button is named by the field's label and its own words ("Скан подписанного договора, Выбрать файл") and described by the field's hint and error, and by "Обязательное поле" when a file is required (ARIA has no `aria-required` for a button).
+- The list is named "Файлы"; each remove button names its file ("Удалить «Смета.xlsx»").
+
+## Motion
+
+None: the zone's border and tint change on the hover colour's timing (`duration.instant`).
+
+## Do and don't
+
+- Do say in the hint which types and what size the field takes.
+- Do set `accept` and `maxSize` to the same limits the server checks, so people learn them before they send.
+- Don't use the field for one image that needs a preview; don't hide the list.

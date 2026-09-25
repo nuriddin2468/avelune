@@ -16,6 +16,7 @@ export const AVE_FIELD: InjectionToken<AveFieldContext>;
 
 // @alpha
 export interface AveControlOwner {
+    readonly controlDescriptions?: Signal<readonly string[]>;
     readonly state: AveControlState;
 }
 
@@ -47,7 +48,7 @@ export interface AveFieldContext {
 }
 
 // @beta
-export function connectToField(state: AveControlState): void;
+export function connectToField(state: AveControlState, describedBy?: Signal<readonly string[]>): void;
 
 // @beta
 export function injectControlState(): AveControlState;

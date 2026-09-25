@@ -1,3 +1,5 @@
+import { isUzbekLatin, localeTags } from './locale';
+
 /**
  * A calendar date without a time or a time zone, in ISO 8601 form: `2026-09-23`. The date picker's value
  * (ADR 0048): a string, so it survives JSON and time zones unchanged.
@@ -89,19 +91,8 @@ function utc(date: AvePlainDate): Date {
   return new Date(Date.UTC(parts.year, parts.month - 1, parts.day));
 }
 
-function tags(locale: string): { language: string; subtags: string[] } {
-  const [language = '', ...subtags] = locale.toLowerCase().split(/[-_]/);
-  return { language, subtags };
-}
-
-/** Whether the kit writes the locale's dates itself: Uzbek, unless in Cyrillic. */
-function isUzbekLatin(locale: string): boolean {
-  const { language, subtags } = tags(locale);
-  return language === 'uz' && !subtags.includes('cyrl');
-}
-
 function firstDayOf(locale: string): AveDateFormat['firstDayOfWeek'] {
-  const { language, subtags } = tags(locale);
+  const { language, subtags } = localeTags(locale);
   // English in the United States (and English without a region) starts on Sunday; the kit's other locales on Monday.
   return language === 'en' && (subtags.length === 0 || subtags.includes('us')) ? 7 : 1;
 }
@@ -114,7 +105,7 @@ function firstDayOf(locale: string): AveDateFormat['firstDayOfWeek'] {
  */
 export function aveDateFormat(locale: string): AveDateFormat {
   const uz = isUzbekLatin(locale);
-  const { language } = tags(locale);
+  const { language } = localeTags(locale);
   const order: Order = language === 'en' ? 'mdy' : 'dmy';
   const separator = language === 'ru' ? '.' : '/';
   const intl = (options: Intl.DateTimeFormatOptions) =>

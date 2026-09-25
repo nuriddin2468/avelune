@@ -19,6 +19,28 @@ export interface AveMessages {
   readonly rangeStart: string;
   /** The last date of a date range field. */
   readonly rangeEnd: string;
+  /** The button of a file upload that takes one file. */
+  readonly chooseFile: string;
+  /** The button of a file upload that takes several files. */
+  readonly chooseFiles: string;
+  /** Next to the button: the file can be dropped instead. */
+  readonly dropFile: string;
+  /** Next to the button: the files can be dropped instead. */
+  readonly dropFiles: string;
+  /** The name of a file upload's list of files. */
+  readonly files: string;
+  /** The button that takes a file off the list, with the file's name. */
+  readonly removeFile: (name: string) => string;
+  /** Why a file was not taken: it is larger than the limit, written as a size ("20 МБ"). */
+  readonly fileTooLarge: (limit: string) => string;
+  /** Why a file was not taken: its type is not one the field accepts. */
+  readonly fileTypeRejected: string;
+  /** Why a file was not taken: the field already holds the most files it takes. */
+  readonly tooManyFiles: (max: number) => string;
+  /** Said to screen readers after files were taken, with their number. */
+  readonly filesAdded: (count: number) => string;
+  /** Describes a required control that ARIA cannot mark `aria-required`, such as a file upload's button. */
+  readonly required: string;
 }
 
 /**
@@ -33,6 +55,17 @@ export const aveMessagesEn: AveMessages = {
   nextMonth: 'Next month',
   rangeStart: 'Start date',
   rangeEnd: 'End date',
+  chooseFile: 'Choose a file',
+  chooseFiles: 'Choose files',
+  dropFile: 'or drag it here',
+  dropFiles: 'or drag them here',
+  files: 'Files',
+  removeFile: (name) => `Remove ${name}`,
+  fileTooLarge: (limit) => `The file is larger than ${limit}. Choose a smaller file.`,
+  fileTypeRejected: 'Files of this type are not accepted.',
+  tooManyFiles: (max) => `You can attach at most ${String(max)} ${max === 1 ? 'file' : 'files'}.`,
+  filesAdded: (count) => `Files attached: ${String(count)}`,
+  required: 'Required',
 };
 
 /**
@@ -47,6 +80,19 @@ export const aveMessagesRu: AveMessages = {
   nextMonth: 'Следующий месяц',
   rangeStart: 'Дата начала',
   rangeEnd: 'Дата окончания',
+  chooseFile: 'Выбрать файл',
+  chooseFiles: 'Выбрать файлы',
+  dropFile: 'или перетащите его сюда',
+  dropFiles: 'или перетащите их сюда',
+  files: 'Файлы',
+  removeFile: (name) => `Удалить «${name}»`,
+  fileTooLarge: (limit) => `Файл больше ${limit}. Выберите файл поменьше.`,
+  fileTypeRejected: 'Файлы этого типа не принимаются.',
+  // After "не больше" the noun is genitive: 1, 21 файла; 2, 5, 11 файлов.
+  tooManyFiles: (max) =>
+    `Можно прикрепить не больше ${String(max)} ${new Intl.PluralRules('ru').select(max) === 'one' ? 'файла' : 'файлов'}.`,
+  filesAdded: (count) => `Прикреплено файлов: ${String(count)}`,
+  required: 'Обязательное поле',
 };
 
 /**
@@ -61,6 +107,17 @@ export const aveMessagesUzLatn: AveMessages = {
   nextMonth: 'Keyingi oy',
   rangeStart: 'Boshlanish sanasi',
   rangeEnd: 'Tugash sanasi',
+  chooseFile: 'Faylni tanlash',
+  chooseFiles: 'Fayllarni tanlash',
+  dropFile: 'yoki uni shu yerga torting',
+  dropFiles: 'yoki ularni shu yerga torting',
+  files: 'Fayllar',
+  removeFile: (name) => `«${name}» faylini olib tashlash`,
+  fileTooLarge: (limit) => `Fayl ${limit} dan katta. Kichikroq fayl tanlang.`,
+  fileTypeRejected: 'Bu turdagi fayllar qabul qilinmaydi.',
+  tooManyFiles: (max) => `Koʻpi bilan ${String(max)} ta fayl biriktirish mumkin.`,
+  filesAdded: (count) => `Biriktirilgan fayllar: ${String(count)}`,
+  required: 'Majburiy maydon',
 };
 
 /**
@@ -75,6 +132,17 @@ export const aveMessagesUzCyrl: AveMessages = {
   nextMonth: 'Кейинги ой',
   rangeStart: 'Бошланиш санаси',
   rangeEnd: 'Тугаш санаси',
+  chooseFile: 'Файлни танлаш',
+  chooseFiles: 'Файлларни танлаш',
+  dropFile: 'ёки уни шу ерга тортинг',
+  dropFiles: 'ёки уларни шу ерга тортинг',
+  files: 'Файллар',
+  removeFile: (name) => `«${name}» файлини олиб ташлаш`,
+  fileTooLarge: (limit) => `Файл ${limit} дан катта. Кичикроқ файл танланг.`,
+  fileTypeRejected: 'Бу турдаги файллар қабул қилинмайди.',
+  tooManyFiles: (max) => `Кўпи билан ${String(max)} та файл бириктириш мумкин.`,
+  filesAdded: (count) => `Бириктирилган файллар: ${String(count)}`,
+  required: 'Мажбурий майдон',
 };
 
 /**

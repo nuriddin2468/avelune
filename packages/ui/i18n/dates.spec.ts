@@ -18,6 +18,14 @@ describe('aveDateFormat', () => {
     expect(format.parse(numeric)).toBe('2026-09-23');
   });
 
+  it('writes a locale outside the four in its own words, with the numeric form of the others', () => {
+    const german = aveDateFormat('de');
+    expect(german.placeholder).toBe('dd/mm/yyyy');
+    expect(german.numeric('2026-09-23')).toBe('23/09/2026');
+    expect(german.monthYear(2026, 9)).toBe('September 2026');
+    expect(german.firstDayOfWeek).toBe(1);
+  });
+
   it('names the weekdays from Sunday, abbreviated with a capital, in Uzbek Latin from its own data', () => {
     expect(aveDateFormat('uz-Latn').weekdays[1]).toEqual({ long: 'dushanba', short: 'Dush' });
     expect(aveDateFormat('ru').weekdays[0]).toEqual({ long: 'воскресенье', short: 'Вс' });
