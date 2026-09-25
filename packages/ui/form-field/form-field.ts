@@ -37,13 +37,12 @@ let nextField = 0;
     '[attr.data-disabled]': 'disabled() ? "" : null',
     '[attr.data-invalid]': 'errorShown() ? "" : null',
   },
+  // The required marker follows the label with no whitespace, behind a no-break space, so the asterisk stays with the
+  // last word when a long label wraps. It is always in the page and hidden while the control is optional.
   template: `
-    <label class="label" [attr.for]="controlId()">
-      {{ label() }}
-      @if (required()) {
-        <span class="required" aria-hidden="true">*</span>
-      }
-    </label>
+    <label class="label" [attr.for]="controlId()"
+      >{{ label() }}<span class="required" aria-hidden="true" [hidden]="!required()">&nbsp;*</span></label
+    >
     <ng-content />
     <ng-content select="[aveHint]" />
     @if (errorShown()) {

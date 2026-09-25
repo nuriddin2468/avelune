@@ -40,7 +40,7 @@ A 16px box with a 3:1 border, then the label, 8px apart. The box sits on the mid
 <Canvas of={CheckboxStories.States} />
 
 - **Checked:** the accent fill with a tick. **Mixed** (`indeterminate`): the accent fill with a bar, for a checkbox that stands for a group whose items are partly checked; a click clears it and checks the box.
-- **Invalid:** a red border, with a form binding once touched. Say why in words next to it.
+- **Invalid:** a red border, with a form binding once touched. Say why in words next to it, with the `circle-alert` icon, and point the checkbox's `aria-describedby` at an element that is always in the page and holds the message while it shows, so a screen reader says why too. A group of choices with one message comes with RadioGroup (Wave 2).
 - **Disabled:** a flat fill without a border, a dimmed label.
 - **Focus:** the kit's focus ring around the box.
 

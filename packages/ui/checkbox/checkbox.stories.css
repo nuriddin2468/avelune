@@ -15,7 +15,17 @@
     max-inline-size: var(--ave-container-xs);
   }
 
+  /* The slot of the confirmation's error: no grid gap while it is empty. */
+  .message:empty {
+    display: none;
+  }
+
+  /* As the form field draws its error: the icon, 4px, the message. */
   .error {
+    display: flex;
+    align-items: start;
+    gap: var(--ave-space-1);
+    margin: 0;
     color: var(--ave-color-danger-fg);
     font: var(--ave-font-body-sm);
   }

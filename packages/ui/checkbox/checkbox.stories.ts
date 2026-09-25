@@ -2,7 +2,9 @@ import { Component, input, signal } from '@angular/core';
 import { FormField, form, required } from '@angular/forms/signals';
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { expect, userEvent, within } from 'storybook/test';
+import { lucideCircleAlert } from '@avelune/icons/lucide';
 import { AveCheckbox, AveChoice } from '@avelune/ui/checkbox';
+import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
 
 type View = 'default' | 'states' | 'long';
 
@@ -47,21 +49,30 @@ class CheckboxStories {
   readonly view = input<View>('default');
 }
 
-/** A Signal Forms confirmation that must be given, and an optional notice. */
+/**
+ * A Signal Forms confirmation that must be given, and an optional notice. The error sits in an element that is always
+ * in the page, which the checkbox's aria-describedby names, so a screen reader says why it is invalid.
+ */
 @Component({
   selector: 'ave-checkbox-forms',
-  imports: [AveCheckbox, AveChoice, FormField],
+  imports: [AveCheckbox, AveChoice, AveIcon, FormField],
+  providers: [provideAveIcons([lucideCircleAlert])],
   template: `
     <div class="stack">
       <label aveChoice
         ><input type="checkbox" aveCheckbox [formField]="terms.notify" /> Notify the counterparty by email</label
       >
       <label aveChoice
-        ><input type="checkbox" aveCheckbox [formField]="terms.confirm" /> I confirm the data is correct</label
+        ><input type="checkbox" aveCheckbox aria-describedby="confirm-error" [formField]="terms.confirm" /> I confirm
+        the data is correct</label
       >
-      @if (terms.confirm().invalid() && terms.confirm().touched()) {
-        <p class="error">Confirm the data to send the contract for approval.</p>
-      }
+      <div id="confirm-error" class="message">
+        @if (terms.confirm().invalid() && terms.confirm().touched()) {
+          <p class="error">
+            <ave-icon name="circle-alert" decorative />Confirm the data to send the contract for approval.
+          </p>
+        }
+      </div>
     </div>
   `,
   styleUrl: './checkbox.stories.css',
@@ -142,7 +153,15 @@ export const Forms: Story = {
           '  required(path.confirm);',
           '});',
           '',
-          '// <label aveChoice><input type="checkbox" aveCheckbox [formField]="terms.confirm" /> I confirm the data is correct</label>',
+          '// <label aveChoice>',
+          '//   <input type="checkbox" aveCheckbox aria-describedby="confirm-error" [formField]="terms.confirm" />',
+          '//   I confirm the data is correct',
+          '// </label>',
+          '// <div id="confirm-error">',
+          '//   @if (terms.confirm().invalid() && terms.confirm().touched()) {',
+          '//     <p><ave-icon name="circle-alert" decorative />Confirm the data to send the contract for approval.</p>',
+          '//   }',
+          '// </div>',
         ].join('\n'),
       },
     },
@@ -155,6 +174,7 @@ export const Forms: Story = {
     await userEvent.tab();
     await expect(confirm).toHaveAttribute('aria-invalid', 'true');
     await expect(canvas.getByText('Confirm the data to send the contract for approval.')).toBeVisible();
+    await expect(confirm).toHaveAccessibleDescription('Confirm the data to send the contract for approval.');
   },
 };
 

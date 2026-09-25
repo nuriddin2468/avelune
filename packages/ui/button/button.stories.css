@@ -39,9 +39,13 @@
     color: var(--ave-color-fg-muted);
   }
 
-  /* The states table is wider than a phone; it scrolls inside its frame, not the page. */
+  /* The states table is wider than a phone; it scrolls inside its frame, not the page. Its padding and scroll
+     padding are the focus ring's reach, so the ring of a button at its edge, or of one Tab scrolls into view, is
+     never cut off. */
   .scroll {
     overflow: auto;
+    padding: calc(var(--ave-focus-ring-width) + var(--ave-focus-ring-offset));
+    scroll-padding: calc(var(--ave-focus-ring-width) + var(--ave-focus-ring-offset));
   }
 
   .states {

@@ -1,14 +1,15 @@
 @layer components {
   /* One box for every variant and every control of a size (brief §8.2, ADR 0037): the control height as a minimum,
-     so a long label can wrap and grow the button, with a little block padding for a wrapped label; the control
-     padding; a border that is transparent where it is not drawn; the control radius; the label type at every size.
-     The content and the spinner share one grid cell. */
+     so a long label can wrap and grow the button; the control padding; a border that is transparent where it is not
+     drawn; the control radius; the label type at every size. The content and the spinner share one grid cell.
+     The block padding and the border make 4px around a wrapped label, so a button of n lines is 20n + 8px tall, on
+     the 4px grid; one line (28px) fits every control height, compact sm included. */
   :host {
     position: relative;
     display: inline-grid;
     place-items: center;
     min-block-size: var(--ave-control-height-md);
-    padding-block: var(--ave-space-1);
+    padding-block: calc(var(--ave-space-1) - var(--ave-border-width-default));
     padding-inline: var(--ave-control-padding-inline-md);
     border: var(--ave-border-width-default) solid transparent;
     border-radius: var(--ave-radius-md);
@@ -23,10 +24,8 @@
     transition-timing-function: var(--ave-easing-standard);
   }
 
-  /* No block padding at sm: a line, two paddings and the border would pass the compact sm height (28px). */
   :host([data-size='sm']) {
     min-block-size: var(--ave-control-height-sm);
-    padding-block: 0;
     padding-inline: var(--ave-control-padding-inline-sm);
   }
 

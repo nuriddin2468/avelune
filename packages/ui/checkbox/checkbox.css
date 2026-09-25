@@ -63,16 +63,22 @@
     background-color: var(--ave-color-fg-disabled);
   }
 
-  /* Forced colours would paint the box and the mark in the canvas colour; they get system colours of their own. */
+  /* Forced colours would paint the box and the mark in the canvas colour; they get system colours of their own.
+     With forced-color-adjust: none every author colour above would show, so each rule above that sets one has a
+     system-colour rule here of at least its specificity: invalid takes the plain border, as an invalid Input does
+     (the error message says why), and hover changes nothing. */
   @media (forced-colors: active) {
-    :host {
+    :host,
+    :host([aria-invalid='true']) {
       border-color: CanvasText;
       background-color: Canvas;
       forced-color-adjust: none;
     }
 
     :host(:checked),
-    :host(:indeterminate) {
+    :host(:indeterminate),
+    :host(:enabled:checked:hover),
+    :host(:enabled:indeterminate:hover) {
       border-color: Highlight;
       background-color: Highlight;
     }
@@ -89,6 +95,10 @@
     :host(:disabled:checked),
     :host(:disabled:indeterminate) {
       background-color: GrayText;
+    }
+
+    :host(:disabled)::before {
+      background-color: Canvas;
     }
   }
 }

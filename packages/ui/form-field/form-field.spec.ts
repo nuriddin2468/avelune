@@ -86,6 +86,8 @@ describe('AveFormField', () => {
     // The label names the control, so assistive technology reads "Contract number".
     expect(control?.labels?.[0]?.textContent.replace(/\s+/g, ' ').trim()).toBe('Contract number *');
     expect(element.querySelector('.required')?.getAttribute('aria-hidden')).toBe('true');
+    // No whitespace between the label and the marker, so a wrapped label never leaves the asterisk alone on a line.
+    expect(element.querySelector('.required')?.previousSibling?.textContent).toBe('Contract number');
   });
 
   it('shows its error once the control is invalid and touched, and describes the control by it', async () => {

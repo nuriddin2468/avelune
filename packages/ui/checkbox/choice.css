@@ -13,4 +13,11 @@
   :host(:has(:disabled)) {
     color: var(--ave-color-fg-disabled);
   }
+
+  /* Forced colours replace the dimmed colour with the text colour; the label dims with its control, in GrayText. */
+  @media (forced-colors: active) {
+    :host(:has(:disabled)) {
+      color: GrayText;
+    }
+  }
 }

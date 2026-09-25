@@ -168,7 +168,7 @@ export const States: Story = {
     await expect(canvas.getByRole('textbox', { name: 'With an error' })).toHaveAccessibleDescription(
       'Enter the contract number, for example ДК-2026/114.',
     );
-    await expect(canvasElement.querySelectorAll('.required')).toHaveLength(2);
+    await expect(canvasElement.querySelectorAll('.required:not([hidden])')).toHaveLength(2);
     // The label sits 8px above the control, the hint 4px under it.
     const field = canvas.getByRole('textbox', { name: 'With a hint' });
     if (!(field instanceof HTMLInputElement)) throw new Error('No input');
@@ -234,5 +234,14 @@ export const LongText: Story = {
     const column = canvasElement.querySelector('.narrow');
     if (column === null) throw new Error('No column');
     await expect(column.scrollWidth).toBeLessThanOrEqual(column.clientWidth);
+    // The asterisk wraps with the last word of the label, never alone onto a line of its own.
+    const marker = canvasElement.querySelector('.required');
+    const text = marker?.previousSibling;
+    if (marker === null || !(text instanceof Text)) throw new Error('No marker after the label text');
+    const words = document.createRange();
+    words.selectNodeContents(text);
+    const lines = [...words.getClientRects()];
+    await expect(lines.length).toBeGreaterThan(1);
+    await expect(marker.getBoundingClientRect().top).toBe(lines.at(-1)?.top);
   },
 };

@@ -21,7 +21,7 @@ export class AveFormFieldHarness extends ContentContainerComponentHarness {
   static hostSelector = 'ave-form-field';
 
   private readonly labelElement = this.locatorFor('.label');
-  private readonly marker = this.locatorForOptional('.required');
+  private readonly marker = this.locatorFor('.required');
   private readonly hint = this.locatorForOptional('[aveHint]');
   private readonly error = this.locatorForOptional('.error [aveError]');
 
@@ -43,9 +43,9 @@ export class AveFormFieldHarness extends ContentContainerComponentHarness {
     return (await this.labelElement()).getAttribute('for');
   }
 
-  /** Whether the field shows the required marker. */
+  /** Whether the field shows the required marker (always in the page, hidden while the control is optional). */
   async isRequired(): Promise<boolean> {
-    return (await this.marker()) !== null;
+    return !(await (await this.marker()).getProperty<boolean>('hidden'));
   }
 
   /** Gets the hint, or null without one. */
