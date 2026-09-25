@@ -1,0 +1,45 @@
+/* The frame of the Textarea stories. Stories only; the component's own styles are textarea.css. */
+@layer components {
+  :host {
+    display: block;
+    padding: var(--ave-space-6);
+  }
+
+  .columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(calc(var(--ave-space-16) * 3), 1fr));
+    gap: var(--ave-space-6);
+    align-items: start;
+  }
+
+  .stack {
+    display: grid;
+    gap: var(--ave-space-4);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(calc(var(--ave-space-16) * 4), 1fr));
+    gap: var(--ave-space-4);
+  }
+
+  .narrow {
+    max-inline-size: var(--ave-container-xs);
+  }
+
+  /* A plain label (FormField is a higher layer): label type above the field, 4px apart. */
+  .field {
+    display: grid;
+    gap: var(--ave-space-1);
+  }
+
+  .label {
+    font: var(--ave-font-label-md);
+  }
+
+  .hint {
+    margin-block-start: var(--ave-space-2);
+    font: var(--ave-font-body-sm);
+    color: var(--ave-color-fg-muted);
+  }
+}

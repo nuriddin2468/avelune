@@ -48,6 +48,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0040](0040-form-field.md) | FormField: a label, a projected control, a hint and an error that register themselves | Accepted |
 | [0041](0041-checkbox.md) | Checkbox: a drawn native checkbox and a choice label | Accepted |
 | [0042](0042-release-age-16-hours.md) | Release age: 16 hours | Accepted |
+| [0043](0043-textarea.md) | Textarea: a native textarea in the box of an input, a fixed number of rows | Accepted |
 
 ## Template
 

@@ -6,6 +6,7 @@ const box = (overrides: Partial<ControlBox>): ControlBox => ({
   control: 'button[aveButton] "Save"',
   size: 'md',
   square: false,
+  multiline: false,
   height: 36,
   radius: '8px',
   border: '1px',
@@ -47,6 +48,23 @@ describe('sameSizeViolations', () => {
         'input[aveInput] (md): border width 2px, but button[aveButton] "Save" has 1px',
         'input[aveInput] (md): font size 16px, but button[aveButton] "Save" has 14px',
         'input[aveInput] (md): inline padding 12px, but button[aveButton] "Save" has 16px',
+      ],
+    );
+  });
+
+  it('compares a textarea with the single-line controls of its size, but not its height, wherever it comes', () => {
+    assert.deepEqual(
+      sameSizeViolations([
+        box({ control: 'textarea[aveTextarea]', multiline: true, height: 76, radius: '4px' }),
+        box({}),
+        box({ control: 'textarea[aveTextarea]', multiline: true, height: 116 }),
+        box({ control: 'textarea[aveTextarea]', size: 'sm', multiline: true, height: 72, padding: '12px' }),
+        box({ control: 'textarea[aveTextarea]', size: 'sm', multiline: true, height: 32, fontSize: '12px' }),
+      ]),
+      [
+        'textarea[aveTextarea] (md): radius 4px, but button[aveButton] "Save" has 8px',
+        'textarea[aveTextarea] (sm): font size 12px, but textarea[aveTextarea] has 14px',
+        'textarea[aveTextarea] (sm): inline padding 16px, but textarea[aveTextarea] has 12px',
       ],
     );
   });

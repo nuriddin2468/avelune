@@ -1,32 +1,54 @@
 import { Component, signal } from '@angular/core';
-import { FormField, email, form, pattern, required, submit } from '@angular/forms/signals';
+import { FormField, email, form, maxLength, minLength, pattern, required, submit } from '@angular/forms/signals';
 import { AveButton } from '@avelune/ui/button';
 import { AveCheckbox, AveChoice } from '@avelune/ui/checkbox';
 import { AveError, AveFormField, AveHint } from '@avelune/ui/form-field';
 import { AveIcon } from '@avelune/ui/icon';
 import { AveInput } from '@avelune/ui/input';
+import { AveTextarea } from '@avelune/ui/textarea';
 
 interface Contract {
   number: string;
   counterparty: string;
+  subject: string;
   amount: string;
   email: string;
   notify: boolean;
   confirm: boolean;
 }
 
-const empty: Contract = { number: '', counterparty: '', amount: '', email: '', notify: true, confirm: false };
+const empty: Contract = {
+  number: '',
+  counterparty: '',
+  subject: '',
+  amount: '',
+  email: '',
+  notify: true,
+  confirm: false,
+};
 
 /** How long the showcase pretends the server takes to accept a contract. */
 const sendDelay = 1500;
 
 /**
- * A realistic form of the calibration set (Wave 1): every field in a FormField, required and optional, a hint on
- * each, errors once a field is left or the form is sent, two checkboxes, and the form's actions, primary last.
+ * A realistic form of the kit's controls: every field in a FormField, required and optional, a hint on each, errors
+ * once a field is left or the form is sent, a textarea across both columns, two checkboxes, and the form's actions,
+ * primary last.
  */
 @Component({
   selector: 'ave-showcase-contract-form',
-  imports: [AveButton, AveCheckbox, AveChoice, AveError, AveFormField, AveHint, AveIcon, AveInput, FormField],
+  imports: [
+    AveButton,
+    AveCheckbox,
+    AveChoice,
+    AveError,
+    AveFormField,
+    AveHint,
+    AveIcon,
+    AveInput,
+    AveTextarea,
+    FormField,
+  ],
   template: `
     <form class="card" lang="ru" novalidate (submit)="send($event)">
       <header class="header">
@@ -48,6 +70,14 @@ const sendDelay = 1500;
           <p aveHint>Полное наименование организации, как в её уставе.</p>
           @if (contract.counterparty().errors().length > 0) {
             <p aveError>Укажите наименование контрагента.</p>
+          }
+        </ave-form-field>
+
+        <ave-form-field class="wide" label="Предмет договора">
+          <textarea aveTextarea [formField]="contract.subject"></textarea>
+          <p aveHint>Кратко: что поставляется или выполняется, куда и в какие сроки. До 500 знаков.</p>
+          @if (contract.subject().errors().length > 0) {
+            <p aveError>Опишите предмет договора: не короче 20 знаков.</p>
           }
         </ave-form-field>
 
@@ -113,6 +143,9 @@ export class ContractForm {
     required(path.number);
     pattern(path.number, /^ДК-\d{4}\/\d+$/);
     required(path.counterparty);
+    required(path.subject);
+    minLength(path.subject, 20);
+    maxLength(path.subject, 500);
     required(path.amount);
     pattern(path.amount, /^\d+$/);
     email(path.email);

@@ -38,6 +38,11 @@
     align-items: start;
   }
 
+  /* A field of long text takes both columns. */
+  .wide {
+    grid-column: 1 / -1;
+  }
+
   .choices {
     display: grid;
     gap: var(--ave-space-2);

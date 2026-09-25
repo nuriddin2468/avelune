@@ -7,6 +7,6 @@ export const kitElements = {
   button: ['aveButton', 'aveIconButton'],
   input: ['aveInput', 'aveCheckbox'],
   select: [],
-  textarea: [],
+  textarea: ['aveTextarea'],
   dialog: [],
 } as const satisfies RawElementMarkers;

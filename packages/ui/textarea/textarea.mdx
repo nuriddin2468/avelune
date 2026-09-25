@@ -1,0 +1,98 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as TextareaStories from './textarea.stories';
+
+<Meta of={TextareaStories} />
+
+# Textarea
+
+`aveTextarea` turns a native `<textarea>` into the kit's text field of several lines. The element stays native: Signal Forms and Reactive Forms bind it as they bind any textarea, and the kit shows the control's state (ADR 0043).
+
+```ts
+import { AveTextarea } from '@avelune/ui/textarea';
+```
+
+<Canvas of={TextareaStories.Default} />
+<Controls />
+
+## When to use
+
+- For text of more than one line: the subject of a contract, a comment, a reason for a refusal.
+- Inside an `<ave-form-field>`, which gives it its label, hint and error.
+
+## When not to use
+
+- For one line: a name, a number, an address. Use Input.
+- For formatted text (bold, lists, links): the kit has no rich-text editor.
+- For a choice from a list: use a radio group, a select or a combobox.
+
+## Anatomy
+
+A native textarea in the box of an Input of its size: the same border, corners, inline padding and 14/20 text, so its text starts where an input's does. It shows `rows` lines, 3 by default, and its text scrolls after that. One line is as tall as an input of the same size, and every further line adds 20px. People can drag the corner to make it taller, never wider.
+
+```html
+<ave-form-field label="Предмет договора">
+  <textarea aveTextarea [formField]="contract.subject"></textarea>
+  <p aveHint>Кратко: что поставляется и куда.</p>
+</ave-form-field>
+```
+
+## Sizes
+
+<Canvas of={TextareaStories.Sizes} />
+
+Use the size of the inputs around it. `rows` sets how much it shows; choose it for the text people usually write: 3 for a comment, 5 or more for a description.
+
+## States
+
+<Canvas of={TextareaStories.States} />
+
+- **Focus:** the kit's focus ring, outside the field.
+- **Invalid:** a red border. On its own the colour is not enough: in a form field the error says what is wrong, in words and with an icon. With a form binding the kit sets `aria-invalid` once the field is touched; without one, set it yourself.
+- **Readonly:** a dashed border on a sunken fill. The text stays readable, can be scrolled and copied, and the field can still be dragged taller to read it.
+- **Disabled:** a flat fill without a border, dimmed text, no resize handle. It cannot be focused.
+
+No state changes the size of the field.
+
+## Forms
+
+Bind the textarea with either form API; nothing kit-specific is needed.
+
+<Canvas of={TextareaStories.SignalForms} />
+
+<Canvas of={TextareaStories.ReactiveForms} />
+
+- **Signal Forms:** `[formField]="contract.subject"`. `required`, `disabled` and `readonly` in the schema reach the textarea.
+- **Reactive Forms:** `[formControl]` or `formControlName`. `Validators.required` counts as required.
+- The field shows as invalid once it has been touched. Submitting a form should mark its fields touched: Signal Forms' `submit()` does, and with Reactive Forms call `markAllAsTouched()`.
+
+## Content
+
+- Long text scrolls inside the field; the field keeps its size until someone drags it. Long words wrap.
+- A limit on the length goes into `maxlength` and the hint says it: "Up to 500 characters".
+- Placeholders never replace a label.
+
+<Canvas of={TextareaStories.LongText} />
+
+<Canvas of={TextareaStories.Compact} />
+
+## Keyboard
+
+Native: Tab moves into and out of the field, the text keys edit it, and Enter breaks the line; it never submits the form.
+
+## Accessibility
+
+- Every textarea needs a label: an `<ave-form-field label="…">` around it, or `aria-label`.
+- Its role is a multi-line text box; screen readers say so.
+- Hints and errors are linked with `aria-describedby`, by the form field. Ids the application writes in the template are kept.
+- The border, the invalid border and the focus ring each reach 3:1 against the surface in both themes.
+
+## Motion
+
+None but colour: the border changes colour in `duration.instant` when the field becomes invalid.
+
+## Do and don't
+
+- Do give it as many rows as the usual answer needs, so most people never scroll.
+- Do say a length limit in the hint before people reach it.
+- Don't use a textarea for one line of text.
+- Don't make it grow with its text; it keeps its rows (ADR 0043).

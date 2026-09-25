@@ -150,12 +150,15 @@ test('controls of the same size share height, radius, border, font size and padd
         (selector): ControlBox[] =>
           [...document.querySelectorAll(selector)].map((control) => {
             const style = getComputedStyle(control);
-            const kind = ['aveButton', 'aveIconButton', 'aveInput'].find((name) => control.hasAttribute(name)) ?? '';
+            const kind =
+              ['aveButton', 'aveIconButton', 'aveInput', 'aveTextarea'].find((name) => control.hasAttribute(name)) ??
+              '';
             const text = (control.getAttribute('aria-label') ?? control.textContent).replace(/\s+/g, ' ').trim();
             return {
               control: `${control.localName}[${kind}] "${text}"`,
               size: control.getAttribute('data-size') ?? '',
               square: kind === 'aveIconButton',
+              multiline: kind === 'aveTextarea',
               height: control.getBoundingClientRect().height,
               radius: style.borderTopLeftRadius,
               border: style.borderTopWidth,

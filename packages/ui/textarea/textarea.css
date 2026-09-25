@@ -1,0 +1,76 @@
+@layer components {
+  /* The box of an Input of the size (brief §8.2, ADR 0043): its border, radius, inline padding and text. The block
+     padding centres one line in the control height, so a one-row textarea is as tall as an input, and n rows are
+     20n + (control height - 20) px. It fills its container's width; people drag it taller, never wider. */
+  :host {
+    display: block;
+    inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: var(--ave-control-height-md);
+    padding-block: calc(
+      (var(--ave-control-height-md) - var(--ave-font-body-md-line-height)) / 2 - var(--ave-border-width-default)
+    );
+    padding-inline: var(--ave-control-padding-inline-md);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-strong);
+    border-radius: var(--ave-radius-md);
+    background-color: var(--ave-color-bg-surface);
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-body-md);
+    resize: block;
+    transition-property: border-color, background-color, color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+  }
+
+  :host::placeholder {
+    color: var(--ave-color-fg-subtle);
+    opacity: 1;
+  }
+
+  :host([data-size='sm']) {
+    min-block-size: var(--ave-control-height-sm);
+    padding-block: calc(
+      (var(--ave-control-height-sm) - var(--ave-font-body-md-line-height)) / 2 - var(--ave-border-width-default)
+    );
+    padding-inline: var(--ave-control-padding-inline-sm);
+  }
+
+  :host([data-size='lg']) {
+    min-block-size: var(--ave-control-height-lg);
+    padding-block: calc(
+      (var(--ave-control-height-lg) - var(--ave-font-body-md-line-height)) / 2 - var(--ave-border-width-default)
+    );
+    padding-inline: var(--ave-control-padding-inline-lg);
+  }
+
+  /* Invalid: the danger border; the field's error, in words and with an icon, says why. */
+  :host([aria-invalid='true']) {
+    border-color: var(--ave-color-danger-border);
+  }
+
+  /* Readonly: the text stays fully readable on a sunken fill, and the border turns dashed, as on an input. */
+  :host([readonly]) {
+    border-style: dashed;
+    background-color: var(--ave-color-bg-surface-sunken);
+  }
+
+  /* Disabled: a flat fill without a border, dimmed text, and no resize handle. */
+  :host(:disabled) {
+    border-color: transparent;
+    background-color: var(--ave-color-bg-disabled);
+    color: var(--ave-color-fg-disabled);
+    cursor: not-allowed;
+    resize: none;
+  }
+
+  :host(:disabled)::placeholder {
+    color: var(--ave-color-fg-disabled);
+  }
+
+  @media (forced-colors: active) {
+    :host(:disabled) {
+      border-color: GrayText;
+      color: GrayText;
+    }
+  }
+}
