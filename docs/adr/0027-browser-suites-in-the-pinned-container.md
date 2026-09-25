@@ -51,3 +51,18 @@ ADR 0006 chose the tools and ADR 0010 fixed the environment: the image by digest
 - Docker is needed for the e2e targets. The Foundations baselines are 6.3 MB, and every baseline update adds to the git history.
 - Any story that logs an error, or loads a file that is missing, fails the visual suite.
 - The CI job must run in the same digest and set `AVELUNE_PLAYWRIGHT_IMAGE`. The next roadmap item checks `.gitlab-ci.yml` against `tools/visual/src/image.ts`.
+
+## Addendum: one load per story, a quiet-network wait of our own, a caret that does not blink (2026-09-25)
+
+The first full runs of the Wave 1 suites (Docker was down when Wave 1 was built) found four problems in the suites themselves. None of the fixes lets through anything that failed before.
+
+- **Speed.** 47 stories took 6.9 to 7.6 minutes with 5 workers. Each story × project was two tests, the screenshot and the axe sweep, and each loaded the story. Measured on 2026-09-25, the container's 11 CPUs are the limit under amd64 emulation (Rosetta): 10 workers keep about 9 cores busy and are only 13% faster than 5 (Button's 83 tests: 1.3 against 1.5 minutes).
+  - Decision: one test per story × project, `matches its baseline and has no axe violations`. It loads the story once and makes both checks as soft assertions, so a failing one never hides the other. The same run takes 4.3 minutes: 208 tests instead of 396.
+  - The proof checks that each failure is reported by its own assertion and not the other's, by the first line of each error. Its counts change from 16 tests with 8 failing to 10 with 7.
+  - Workers stay at Playwright's default, half the CPUs. `pnpm visual --workers=10` is there when nothing else runs on the machine.
+- **The showcase suite hung.** In each of two runs, 2 of 24 tests (a different pair each time) waited on `waitForLoadState('networkidle')` until the 90-second timeout, while the trace showed every request finished within 0.6 seconds of navigation. A likely cause is [microsoft/playwright#42598](https://github.com/microsoft/playwright/issues/42598) (the idle state is lost when requests finish before DOMContentLoaded); that is not confirmed.
+  - `openScreen` now counts the page's own `request`, `requestfinished` and `requestfailed` events and waits for 500 ms with no request in flight, which is what `networkidle` means.
+  - Two runs after the change: 24 of 24 each, 31 seconds instead of 1.6 to 1.9 minutes.
+- **A blinking caret in forced colours.** Forced colours force `caret-color`, so the screenshot option `caret: 'hide'` (a transparent caret) does nothing there. A focused text field's caret then blinks into some screenshots and not others: the Input States forced-colors baseline differed by one 1 × 18 px column between two runs.
+  - The forced-colors spec sets `caret-animation: manual` (Chromium 153) before its screenshot. The caret stops blinking and is drawn in every run; checked with the style applied at six points of the blink cycle.
+- **The same-size proof had never run.** Its fixture row was wider than 320 px, so the page broke the overflow invariant as well. Its pattern expected plain quotes where Playwright's diff prints `\"`. Both are fixed, and the proof fails and passes where it should.

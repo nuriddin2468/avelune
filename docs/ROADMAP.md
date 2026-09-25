@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below that is not marked **Deferred**, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 5, Wave 1 built on 2026-09-24 (ADR 0037–0041): Button, IconButton, Input, FormField, Checkbox and the forms foundation, all `experimental`, and the showcase contract form with the same-size invariant. Open before the Wave 1 STOP: the visual baselines of the new stories, a run of `visual:e2e` (with the new docs sweep), `invariants:e2e` and `test-check:e2e`, all blocked while Docker Desktop is down (2026-09-24); then each component to beta, Icon too, and the STOP with the showcase form in light, dark and compact. Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). The Angular 22.2 upgrade is allowed from 2026-09-24 21:37 UTC ("Tracked upgrades") and is independent of the Vitest item: Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
+**Current position:** Phase 5, Wave 1 at its STOP (2026-09-25): Icon, Button, IconButton, Input, FormField and Checkbox are beta, with `@avelune/ui/forms`, after the first full runs of the browser suites, the visual review of brief §8.1 (fixes in the Wave 1 summary below) and the baselines of every new story. Waiting for the product owner's approval of the showcase form in light, dark and compact. Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). The Angular 22.2 upgrade (allowed since 2026-09-24 21:37 UTC) and `lucide-static` 1.48 (allowed since 2026-09-25 05:57 UTC) wait for the product owner's go-ahead, each on its own branch ("Tracked upgrades"). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
 
 ## Parameters
 
@@ -129,6 +129,19 @@ The carry-overs from Phases 1 and 2 are done, except wiring the targets into CI,
 ### Phase 5: Components
 Waves and status: see the tables below.
 
+Wave 1 summary (2026-09-25):
+- Built on 2026-09-24 (ADR 0037–0041); verified on 2026-09-25 with the first full runs of `visual:e2e`, `invariants:e2e` and `test-check:e2e` (Docker had been down). 124 baselines and 5 forced-colors baselines for the 31 new stories, every image inspected.
+- The suites themselves had four problems, fixed in ADR 0027, addendum: two page loads per story (now one, 7.6 → 4.3 min), a `networkidle` wait that hung, a blinking caret in forced colours, and a same-size proof that had never run.
+- The visual review of brief §8.1 ran as a script with a real pointer in both themes, both densities, 1280 and 390 px and forced colours: hover and press, focus rings (contrast, clipping), layout shift between states and while loading, the 4px grid, computed contrast of text and boundaries, and centring on the cap height. Fixed:
+  - FormField: a long label left the asterisk alone on a line;
+  - Checkbox, forced colours: invalid kept the danger red, a checked box turned the accent on hover, and a disabled box drew its mark in `fg.disabled`;
+  - FormField and Checkbox, forced colours: the label of a disabled control did not dim (now GrayText, like the control);
+  - Button: a wrapped label made a 50px button (now 20n + 8px);
+  - Button States story: the focus ring was cut off by the table's scroller at 390 px;
+  - the showcase's and the Checkbox story's confirmation error was not named by the checkbox; now it is, and the docs page says how.
+- Reviewed and kept: the checkbox's 2px margins and its label's 2px padding centre a 16px box on a 20px line in a 24px target; the button's 3px block padding plus its 1px border make 4px.
+- Icon, Button, IconButton, Input, FormField, Checkbox and `@avelune/ui/forms` moved to beta (`@beta` in 35 declarations; the API reports differ in those tags only). `@avelune/ui/theme` stays alpha. Changesets are deferred with the CI item.
+
 ### Phase 6: Consumer integration
 - [ ] `ng add @avelune/ui` (peers, styles, fonts, provider, lint configs, AGENTS snippet); build and publish `@avelune/eslint-config` with `tools/lint-rules` bundled (ADR 0023). It also sets `inlineCritical: false`, `outputHashing: bundles` and the font preload (ADR 0030), and the inline script that applies a stored theme before the first paint (ADR 0032)
 - [ ] `tools/adoption-metrics` (JSON + CI summary)
@@ -153,14 +166,14 @@ Waves and status: see the tables below.
 
 | Component | Wave | Layer | Status | Owner | Notes |
 |---|---|---|---|---|---|
-| Icon | 1 | foundations | experimental | | `@avelune/ui/icon` (ADR 0033, 0036): every Lucide icon through `provideAveIcons`, custom SVG through `defineAveIcon`, the "Check your icon" guide; in the showcase shell; beta at the Wave 1 gate, with a realistic composition |
-| Button | 1 | components | experimental | | `@avelune/ui/button` (ADR 0037): `button[aveButton]`, `a[aveButton]`; primary, secondary (bordered, product owner 2026-09-24), ghost, danger; `disabledInteractive`; a loading spinner after 300ms, kept 500ms; 2.42 kB of 2.7 kB; beta after its baselines and the showcase form |
-| IconButton | 1 | components | experimental | | `@avelune/ui/button` (ADR 0038): `button[aveIconButton]`, `a[aveIconButton]`, extends Button; `icon` and `label` required; square of the control height; beta with Button |
-| Input | 1 | components | experimental | | `@avelune/ui/input` (ADR 0039): `input[aveInput]` for text types; Signal Forms and Reactive Forms through their native accessors, state from `@avelune/ui/forms`; `border.strong` (product owner, 2026-09-24); invalid, readonly (dashed), disabled (flat); 1.25 kB of 1.4 kB |
-| FormField | 1 | composites | experimental | | `@avelune/ui/form-field` (ADR 0040): `<ave-form-field label>`, `[aveHint]`, `[aveError]`; the error once invalid and touched; asterisk for required (product owner, 2026-09-24) |
-| Checkbox | 1 | components | experimental | | `@avelune/ui/checkbox` (ADR 0041): `input[type=checkbox][aveCheckbox]` in `label[aveChoice]`; `indeterminate` model; `requiredTrue` recognised; check Firefox and WebKit before stable |
+| Icon | 1 | foundations | beta | | `@avelune/ui/icon` (ADR 0033, 0036): every Lucide icon through `provideAveIcons`, custom SVG through `defineAveIcon`, the "Check your icon" guide; in the showcase shell and form; 5.21 kB of 5.6 kB; beta 2026-09-25 |
+| Button | 1 | components | beta | | `@avelune/ui/button` (ADR 0037): `button[aveButton]`, `a[aveButton]`; primary, secondary (bordered, product owner 2026-09-24), ghost, danger; `disabledInteractive`; a loading spinner after 300ms, kept 500ms; a wrapped label is 20n + 8px tall; 2.78 kB of 3.1 kB with IconButton; beta 2026-09-25. Before stable: forced colours show no hover or press on secondary and ghost (the state layer becomes Canvas) |
+| IconButton | 1 | components | beta | | `@avelune/ui/button` (ADR 0038): `button[aveIconButton]`, `a[aveIconButton]`, extends Button; `icon` and `label` required; square of the control height; beta 2026-09-25 |
+| Input | 1 | components | beta | | `@avelune/ui/input` (ADR 0039): `input[aveInput]` for text types; Signal Forms and Reactive Forms through their native accessors, state from `@avelune/ui/forms` (beta with it); `border.strong` (product owner, 2026-09-24); invalid, readonly (dashed), disabled (flat); 1.25 kB of 1.4 kB; beta 2026-09-25 |
+| FormField | 1 | composites | beta | | `@avelune/ui/form-field` (ADR 0040): `<ave-form-field label>`, `[aveHint]`, `[aveError]`; the error once invalid and touched; asterisk for required (product owner, 2026-09-24), kept with the last word of a wrapped label; 1.86 kB of 2.1 kB; beta 2026-09-25 |
+| Checkbox | 1 | components | beta | | `@avelune/ui/checkbox` (ADR 0041): `input[type=checkbox][aveCheckbox]` in `label[aveChoice]`; `indeterminate` model; `requiredTrue` recognised; only system colours in forced colours; its error message is the application's, named by `aria-describedby` (docs page); 1.46 kB of 1.6 kB; beta 2026-09-25; check Firefox and WebKit before stable |
 | Textarea | 2 | components | planned | | |
-| RadioGroup | 2 | components | planned | | ≤ 5 options rule (GUIDELINES) |
+| RadioGroup | 2 | components | planned | | ≤ 5 options rule (GUIDELINES); with it, a group of choices (radios or checkboxes) with a legend and one hint and error, which replaces the application's own message of a Checkbox |
 | Switch | 2 | components | planned | | spring easing |
 | Select | 2 | composites | planned | | Aria Combobox + Listbox |
 | Combobox / Autocomplete | 2 | composites | planned | | Aria Combobox + Listbox |
@@ -234,14 +247,14 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 | API Extractor bundles TS 5.9 | Phase 1 spike; d.ts-golden fallback | 0007 |
 | Style Dictionary DTCG duration WIP | custom transform, pinned by test | 0003 |
 | `stylelint-plugin-logical-css` has one maintainer | the fixtures in `tools/lint-rules/fixtures/stylelint` and `logical.spec.ts` make a swap to `stylelint-use-logical` safe | 0009, 0024 |
-| amd64 emulation slows local visual runs (1.2 min for 49 story tests on 2026-09-24) | filtered (`pnpm visual --grep=…`) and cached runs; Docker targets never run in parallel | 0010, 0027 |
-| Baseline PNGs grow the git history (6.9 MB for the Foundations pages alone, 2026-09-24) | every update reviewed; move `tools/visual/baselines` to Git LFS before the history passes 200 MB (ADR needed) | 0027 |
+| amd64 emulation slows local visual runs: CPU-bound, 10 workers only 13% faster than 5; 4.3 to 5 min for 47 stories with one load per story × project (2026-09-25) | per component `pnpm visual --grep=components-<name>--` (about 1 min), the full suite once per wave and before a merge; cached runs; Docker targets never run in parallel | 0010, 0027 |
+| Baseline PNGs grow the git history (10 MB on disk after Wave 1, 2.5 MB of it the Wave 1 components, 2026-09-25) | every update reviewed; move `tools/visual/baselines` to Git LFS before the history passes 200 MB (ADR needed) | 0027 |
 | Chromium's Intl formats `uz`/`uz-Latn` with root patterns (`UZS 1,234,567.80`, `2026 M09 23`); `uz-Cyrl` dates are right but currency is `UZS`, not `сўм` (observed in Chromium 153, 2026-09-23; Node's full ICU is right) | check Chrome, Edge, Firefox and Safari before Wave 2; if confirmed, the kit ships its own uz formatting data for dates and numbers (ADR in Wave 2, before DatePicker) | none yet |
 | Storybook's dev server exits when a story file fails to index, and can keep serving a stale index: a server started before a story was added showed "Invalid value passed to the 'of' prop" on the Icon docs page (2026-09-24) | restart the dev server after adding, renaming or removing a story, and after changing `.storybook/main.ts`; the visual suite and CI use the static build | 0008 |
 | `@storybook/angular-vite` is patched (a docs-page bootstrap race) | pinned to 10.6.0; `pnpm install` fails if the patch stops applying; reported as [storybookjs/storybook#36423](https://github.com/storybookjs/storybook/issues/36423) with a public reproduction (2026-09-24); drop the patch once a release fixes it | 0035 |
 | Docs pages were outside every automated check; the unreadable dark Icon page (2026-09-24) was found by eye | since 2026-09-24 the visual suite renders every docs page in both themes and runs axe on it, failing on errors too (ADR 0034, addendum); layout and overflow on docs pages are still checked by eye only | 0027, 0034 |
 | `@angular-eslint/eslint-plugin` 22.5.0 crashes `reactive-context-must-read-signal` on a call named like an `Object.prototype` method (a destructured `valueOf` in a Signal Forms rule): it looks names up in a plain object (2026-09-24) | already reported upstream ([angular-eslint#3198](https://github.com/angular-eslint/angular-eslint/issues/3198)) and fixed ([#3201](https://github.com/angular-eslint/angular-eslint/pull/3201), merged 2026-09-17), in 22.5.1 alphas only; until a stable release has it, write `context.valueOf(…)` (the specs say why) | 0023 |
-| The visual baselines show rest, focus, disabled and loading states; hover and press need a real pointer, which a story's `play` function does not have | hover and press checked by script in each component's visual review; a hover pass in the visual suite if a regression slips through | 0027 |
+| The visual baselines show rest, focus, disabled and loading states; hover and press need a real pointer, which a story's `play` function does not have | hover and press checked by script in each component's visual review (Wave 1: real pointer in both themes, both densities and forced colours, 2026-09-25); make that script a checked-in tool before Wave 2's review; a hover pass in the visual suite if a regression slips through | 0027 |
 | iOS Safari 17–18.2 implements `popover` without light dismiss (browser-compat-data 8.1.2; WebKit bug 267688), and the floor is iOS 17.5 | Wave 3: Popover and Menu close on an outside tap on iOS too, through CDK or Angular Aria behaviour where they provide it; otherwise raise the iOS floor to 18.3 (product owner, ADR 0014) | 0014, 0029 |
 
 ## Tracked upgrades
