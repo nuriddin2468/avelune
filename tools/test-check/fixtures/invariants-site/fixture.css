@@ -128,9 +128,11 @@ main {
 }
 
 /* Same-size controls: the medium box of the kit. The control page's pair matches; on same-size.html the input is
-   4px taller, and the square has no padding, which the invariant ignores for squares. */
+   4px taller, and the square has no padding, which the invariant ignores for squares. The row wraps, so the three
+   controls of same-size.html never overflow at 320px and break the overflow invariant as well. */
 .controls {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 

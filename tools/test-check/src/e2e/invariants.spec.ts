@@ -99,7 +99,11 @@ describe('showcase suite', () => {
     const test = result('controls of the same size share height, radius, border, font size and padding');
     assert.deepEqual(failingScreens(test), ['/same-size.html']);
     const errors = test.errors.join('\n');
-    assert.match(errors, /input\[aveInput\] "Query" \(md\): height 40, but button\[aveButton\] "Search" has 36/);
+    // Playwright's diff prints the violation as a JSON string, so its quotes arrive escaped (\").
+    assert.match(
+      errors,
+      /input\[aveInput\] \\"Query\\" \(md\): height 40, but button\[aveButton\] \\"Search\\" has 36/,
+    );
     assert.doesNotMatch(errors, /aveIconButton.*padding/);
   });
 });
