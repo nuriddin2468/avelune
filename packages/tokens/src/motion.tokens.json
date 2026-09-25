@@ -133,6 +133,13 @@
         "unit": "ms"
       },
       "$description": "One spinner revolution, linear, infinite."
+    },
+    "slide": {
+      "$value": {
+        "value": 120,
+        "unit": "ms"
+      },
+      "$description": "How long a part of a control slides to show its new state: the switch thumb, and later the tabs indicator, on easing.spring or easing.standard. The same 120ms as duration.fast; 0ms under reduced motion, where the part jumps (ADR 0045)."
     }
   }
 }

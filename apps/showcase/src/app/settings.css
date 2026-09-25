@@ -1,0 +1,45 @@
+/* The settings screen: one card of settings. Tokens only. */
+@layer app {
+  :host {
+    display: block;
+  }
+
+  .card {
+    display: grid;
+    gap: var(--ave-space-6);
+    max-inline-size: var(--ave-container-md);
+    margin-inline: auto;
+    padding: var(--ave-space-6);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface);
+    box-shadow: var(--ave-elevation-raised);
+  }
+
+  .header {
+    display: grid;
+    gap: var(--ave-space-1);
+  }
+
+  .title {
+    font: var(--ave-font-heading-lg);
+  }
+
+  .note {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+
+  /* One setting per line, 16px apart. */
+  .list {
+    display: grid;
+    gap: var(--ave-space-4);
+    justify-items: start;
+  }
+
+  .status {
+    min-block-size: var(--ave-font-body-md-line-height);
+    color: var(--ave-color-success-fg);
+    font: var(--ave-font-body-md);
+  }
+}

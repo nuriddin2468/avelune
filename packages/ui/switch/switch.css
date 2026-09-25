@@ -1,0 +1,115 @@
+@layer components {
+  /* A 40 × 24 track with a 16px thumb 4px from its edge (product owner, 2026-09-25; ADR 0045), drawn by the kit on a
+     native checkbox. The track is 4px taller than the 20px line of its label, so it reaches 2px above and below it,
+     into the label's own padding: the label stays 24px tall. The thumb is the ::before; off, a 3:1 border and a thumb
+     in the same colour; on, the accent fill and a thumb in its text colour. */
+  :host {
+    display: inline-grid;
+    flex-shrink: 0;
+    align-items: center;
+    inline-size: calc(var(--ave-size-icon-sm) * 2.5);
+    block-size: var(--ave-size-target-min);
+    margin-block: calc(var(--ave-space-1) / -2);
+    margin-inline: 0;
+    border: var(--ave-border-width-default) solid var(--ave-color-border-strong);
+    border-radius: var(--ave-radius-full);
+    appearance: none;
+    background-color: var(--ave-color-bg-surface);
+    transition-property: background-color, border-color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+  }
+
+  /* The thumb: 4px from the track's outer edge, so 3px inside its border; it travels the track less the thumb and
+     both gaps, 16px. Its colour changes at once, as the checkbox's tick appears. */
+  :host::before {
+    inline-size: var(--ave-size-icon-sm);
+    block-size: var(--ave-size-icon-sm);
+    margin-inline-start: calc(var(--ave-space-1) - var(--ave-border-width-default));
+    border-radius: var(--ave-radius-full);
+    background-color: var(--ave-color-border-strong);
+    content: '';
+  }
+
+  /* The thumb slides on the spring only once the person has toggled the switch here: a state the form writes after
+     the first render (zoneless change detection writes it a frame later) is shown at once, never animated in. */
+  :host([data-toggled])::before {
+    transition-property: translate;
+    transition-duration: var(--ave-timing-slide);
+    transition-timing-function: var(--ave-easing-spring);
+  }
+
+  :host(:enabled:hover) {
+    background-color: var(--ave-color-bg-hover);
+  }
+
+  :host(:checked) {
+    border-color: transparent;
+    background-color: var(--ave-color-accent-bg);
+  }
+
+  :host(:enabled:checked:hover) {
+    background-color: var(--ave-color-accent-bg-hover);
+  }
+
+  :host(:checked)::before {
+    background-color: var(--ave-color-fg-on-accent);
+    translate: calc(var(--ave-size-icon-sm) * 2.5 - var(--ave-size-icon-sm) - var(--ave-space-1) * 2) 0;
+  }
+
+  :host([aria-invalid='true']) {
+    border-color: var(--ave-color-danger-border);
+  }
+
+  :host(:disabled) {
+    border-color: transparent;
+    background-color: var(--ave-color-bg-disabled);
+  }
+
+  :host(:disabled)::before {
+    background-color: var(--ave-color-fg-disabled);
+  }
+
+  /* Forced colours would paint the track and the thumb in the canvas colour; they get system colours, as the
+     checkbox's do: invalid takes the plain border, and hover changes nothing. */
+  @media (forced-colors: active) {
+    :host,
+    :host(:enabled:hover),
+    :host([aria-invalid='true']) {
+      border-color: CanvasText;
+      background-color: Canvas;
+      forced-color-adjust: none;
+    }
+
+    :host::before {
+      background-color: CanvasText;
+    }
+
+    :host(:checked),
+    :host(:enabled:checked:hover) {
+      border-color: Highlight;
+      background-color: Highlight;
+    }
+
+    :host(:checked)::before {
+      background-color: HighlightText;
+    }
+
+    :host(:disabled) {
+      border-color: GrayText;
+      background-color: Canvas;
+    }
+
+    :host(:disabled)::before {
+      background-color: GrayText;
+    }
+
+    :host(:disabled:checked) {
+      background-color: GrayText;
+    }
+
+    :host(:disabled:checked)::before {
+      background-color: Canvas;
+    }
+  }
+}

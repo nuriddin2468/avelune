@@ -52,6 +52,13 @@
         "unit": "ms"
       },
       "$description": "No sweep: the skeleton is a static fill (brief §6.5)."
+    },
+    "slide": {
+      "$value": {
+        "value": 0,
+        "unit": "ms"
+      },
+      "$description": "Nothing slides: the part jumps to its new state (brief §6.5)."
     }
   }
 }

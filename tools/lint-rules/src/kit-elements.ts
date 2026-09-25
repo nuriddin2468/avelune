@@ -5,7 +5,7 @@ import type { RawElementMarkers } from './rules/no-raw-elements.ts';
 
 export const kitElements = {
   button: ['aveButton', 'aveIconButton'],
-  input: ['aveInput', 'aveCheckbox', 'aveRadio'],
+  input: ['aveInput', 'aveCheckbox', 'aveRadio', 'aveSwitch'],
   select: [],
   textarea: ['aveTextarea'],
   dialog: [],

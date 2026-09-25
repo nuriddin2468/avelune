@@ -1,18 +1,28 @@
 import { Component, computed, inject } from '@angular/core';
 import { AveIconButton } from '@avelune/ui/button';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AveTheme } from '@avelune/ui/theme';
-import { ContractForm } from './contract-form';
 
 /**
- * The showcase shell: the application bar, with the theme and density switches the review of the calibration set
- * needs (Wave 1), and the contract form.
+ * The showcase shell: the application bar, with the screens and the theme and density switches the reviews need,
+ * and the screen below it.
  */
 @Component({
   selector: 'ave-showcase-root',
-  imports: [AveIconButton, ContractForm],
+  imports: [AveIconButton, RouterLink, RouterLinkActive, RouterOutlet],
   template: `
     <header class="bar" lang="ru">
       <p class="product">Avelune · Документооборот</p>
+      <nav class="nav" aria-label="Разделы">
+        <a
+          routerLink="/"
+          routerLinkActive="current"
+          ariaCurrentWhenActive="page"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >Новый договор</a
+        >
+        <a routerLink="/settings" routerLinkActive="current" ariaCurrentWhenActive="page">Настройки</a>
+      </nav>
       <div class="settings" role="group" aria-label="Вид">
         <button
           aveIconButton
@@ -33,7 +43,7 @@ import { ContractForm } from './contract-form';
       </div>
     </header>
     <main class="main">
-      <ave-showcase-contract-form />
+      <router-outlet />
     </main>
   `,
   styleUrl: './app.css',

@@ -5,11 +5,13 @@
     min-block-size: 100dvb;
   }
 
+  /* The product, the screens and the view switches in one row; on a phone they wrap, in reading order. */
   .bar {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: var(--ave-space-4);
+    gap: var(--ave-space-2) var(--ave-space-4);
     padding: var(--ave-space-2) var(--ave-space-4);
     border-block-end: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
     background-color: var(--ave-color-bg-surface);
@@ -17,6 +19,24 @@
 
   .product {
     font: var(--ave-font-label-md);
+  }
+
+  /* The screens: plain links, the current one in the text colour and underlined. */
+  .nav {
+    display: flex;
+    flex: 1 0 auto;
+    gap: var(--ave-space-4);
+    font: var(--ave-font-label-md);
+  }
+
+  .nav a {
+    text-decoration: none;
+  }
+
+  .nav .current {
+    color: var(--ave-color-fg-default);
+    text-decoration: underline;
+    text-underline-offset: var(--ave-space-1);
   }
 
   .settings {

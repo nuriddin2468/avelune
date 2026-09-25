@@ -150,7 +150,7 @@ Storybook imports the same file in `.storybook/preview.ts` (`@avelune/ui/styles.
 
 Motion is CSS only (ADR 0005). Two mechanisms, both on tokens:
 
-- **State changes** (hover, pressed, expanded, the switch thumb, the tabs indicator) are transitions in the component's own CSS. They use the motion longhands with duration and easing tokens.
+- **State changes** (hover, pressed, expanded, the switch thumb, the tabs indicator) are transitions in the component's own CSS. They use the motion longhands with duration and easing tokens; a part that slides to show a state (the switch thumb, the tabs indicator) takes `timing.slide`, and the switch slides only after the person has toggled it (ADR 0045).
 - **Entering and leaving** use the classes of `packages/ui/styles/motion.css` (ADR 0031), through `animate.enter` and `animate.leave`: `ave-motion-popover-*`, `-tooltip-*`, `-dialog-*`, `-backdrop-*` and `-toast-*`, each with `-enter` and `-exit`. The loops are `ave-motion-shimmer` and `ave-motion-spin`. `motion.css` also times the route cross-fade (`::view-transition-*(root)`). Tooltips and toasts take their direction from `data-side`.
 
 ```html
@@ -159,7 +159,7 @@ Motion is CSS only (ADR 0005). Two mechanisms, both on tokens:
 }
 ```
 
-**Reduced motion** (`prefers-reduced-motion: reduce` or `data-motion="reduced"`) is the tokens' override only: distances 0, scale 1, slow and slower 150ms, no stagger, and a shimmer period of 0 (a static skeleton). Fades stay, and so does rotation.
+**Reduced motion** (`prefers-reduced-motion: reduce` or `data-motion="reduced"`) is the tokens' override only: distances 0, scale 1, slow and slower 150ms, no stagger, a shimmer period of 0 (a static skeleton), and no slide (`timing.slide` 0, ADR 0045). Fades stay, and so does rotation.
 
 Every easing is a token, except `linear` on a loop (Stylelint allows it in `motion.css` only; the invariants accept it only on an animation that repeats forever). The drawer, list items, shared-element transitions and top-layer overlays get their motion with their components (ADR 0031, point 5). The Foundations page "Motion catalog" plays every class, and its `play` function checks them in both modes.
 

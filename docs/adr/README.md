@@ -50,6 +50,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0042](0042-release-age-16-hours.md) | Release age: 16 hours | Accepted |
 | [0043](0043-textarea.md) | Textarea: a native textarea in the box of an input, a fixed number of rows | Accepted |
 | [0044](0044-radio-and-choice-group.md) | Radio and choice group: a drawn native radio, a fieldset that describes its choices | Accepted |
+| [0045](0045-switch.md) | Switch: a drawn native checkbox with the switch role, a thumb that slides on its own timing | Accepted |
 
 ## Template
 

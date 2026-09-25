@@ -1,0 +1,72 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as SwitchStories from './switch.stories';
+
+<Meta of={SwitchStories} />
+
+# Switch
+
+`aveSwitch` turns a native `<input type="checkbox">` into the kit's switch, with the `switch` role, inside the `label[aveChoice]` of the checkbox. The input stays native: both form APIs bind it, a click on the label or Space toggles it (ADR 0045).
+
+```ts
+import { AveChoice } from '@avelune/ui/checkbox';
+import { AveSwitch } from '@avelune/ui/switch';
+```
+
+<Canvas of={SwitchStories.Default} />
+
+## When to use
+
+- For a setting that takes effect at once, without a Save button: email notices, compact tables, dark theme.
+
+## When not to use
+
+- For a choice that is sent with a form: use a checkbox.
+- For a choice between two named options ("Monthly" / "Yearly"): use radios.
+- To start an action: use a button.
+
+## Anatomy
+
+A 40 × 24 track with a 16px thumb 4px from its edge, then the label, 8px apart. Off: a 3:1 border and a thumb in the same colour. On: the accent fill and a white thumb at the other end. The track sits on the middle of the first line of the label, which stays 24px tall.
+
+```html
+<label aveChoice><input type="checkbox" aveSwitch [formField]="settings.notices" /> Email notices</label>
+```
+
+## States
+
+<Canvas of={SwitchStories.States} />
+
+- **On / off:** the position of the thumb and the fill, so the state never rests on colour alone.
+- **Invalid:** a red border; rare for a setting, but available when a form requires it.
+- **Disabled:** a flat fill without a border, a dimmed label. **Focus:** the kit's focus ring around the track.
+
+## Forms
+
+<Canvas of={SwitchStories.Forms} />
+
+Bind it as a checkbox: `[formField]` on a boolean, or `[formControl]`. Save the setting when it changes; say so if saving fails, next to the switch.
+
+## Content
+
+Name the setting, not the action: "Email notices", not "Turn on email notices". Don't add "On" or "Off" next to it: the switch says it. Labels wrap; they never truncate.
+
+<Canvas of={SwitchStories.LongText} />
+
+## Keyboard
+
+Per the WAI-ARIA switch pattern: Tab moves to it, Space toggles it.
+
+## Accessibility
+
+- The label names the switch; screen readers say "switch, on" or "off".
+- In forced colours the track, the thumb and the fill take system colours.
+
+## Motion
+
+The thumb slides in `timing.slide` (120ms) with `easing.spring`, the switch-thumb entry of the motion catalog. Under reduced motion `timing.slide` is 0 and the thumb jumps. The fill changes colour in `duration.instant`.
+
+## Do and don't
+
+- Do apply the setting as soon as it changes.
+- Do use a switch for one setting on its own line; a list of settings is a list of switches.
+- Don't put a switch in a form that has a Send button.
