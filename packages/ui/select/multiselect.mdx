@@ -41,6 +41,12 @@ A trigger with the box of an Input, the chosen labels comma-separated in the ord
 
 As the select: invalid, readonly and disabled on the trigger; disabled options dimmed.
 
+## Clearing
+
+A multiselect that is not required shows a clear button before the chevron while at least one option is chosen and it can be changed (ADR 0052). A press unchecks every option (`[]`), closes the list and leaves focus on the trigger; Delete or Backspace on the trigger do the same. One option is unchecked in the list.
+
+<Canvas of={MultiselectStories.Clearing} />
+
 ## Forms
 
 <Canvas of={MultiselectStories.Forms} />
@@ -55,12 +61,13 @@ When the chosen labels do not fit, the trigger truncates them on one line; the l
 
 ## Keyboard
 
-Tab moves to the trigger; Down, Enter or Space open the list; the arrow keys move; Enter or Space check or uncheck the active option; Escape or Tab close the list.
+Tab moves to the trigger; Down, Enter or Space open the list; the arrow keys move; Enter or Space check or uncheck the active option; Escape or Tab close the list. Delete or Backspace on the trigger uncheck every option of a multiselect that is not required.
 
 ## Accessibility
 
 - The list is `aria-multiselectable`; each option says whether it is selected.
 - The trigger is named by the field's label; its text lists what is chosen.
+- The clear button is named "Clear" and the field's label; it is left out of the Tab order.
 
 ## Motion
 

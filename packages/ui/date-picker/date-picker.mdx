@@ -70,6 +70,12 @@ The value is an ISO calendar date, `2026-03-18`, or `null`: a string without a t
 - **Invalid:** a red border, with a form binding once the field has been left; the field's error says why.
 - **Readonly:** a dashed border on a sunken fill; the calendar button is off. **Disabled:** a flat fill; nothing can be focused.
 
+## Clearing
+
+A date field that is not required shows a clear button before the calendar button while it has a date and can be changed (ADR 0052). A press empties the field, clears the value, closes the calendar and leaves focus in the input. On the keyboard, deleting the date and pressing Enter or leaving does the same; the button is not a Tab stop.
+
+<Canvas of={DatePickerStories.Clearing} />
+
 ## Forms
 
 <Canvas of={DatePickerStories.Forms} />
@@ -97,6 +103,7 @@ A long label, hint and error wrap in a narrow column; the field keeps its box. W
 ## Accessibility
 
 - The calendar is a modal dialog named "Choose a date" in the locale; focus stays in it until it closes, then returns to the button.
+- The clear button is named "Clear" and the field's label ("Очистить Дата подписания"); it is left out of the Tab order.
 - The heading is a live region, so screen readers hear the new month. Each day is named in words ("18 марта 2026 г."), columns by the full weekday; today is `aria-current="date"`.
 
 ## Motion

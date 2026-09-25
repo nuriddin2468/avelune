@@ -138,6 +138,42 @@ class DateRangeLong {
   }
 }
 
+/**
+ * Clearing (ADR 0052): an optional range has a wider end input with the clear button before the calendar button, at
+ * 320px and wider; a required range keeps two equal inputs.
+ */
+@Component({
+  selector: 'ave-date-range-picker-clearing',
+  imports: [AveDateRangePicker, FormField],
+  template: `
+    <div class="stack narrow">
+      <div class="field">
+        <span class="label">Можно очистить</span>
+        <ave-date-range-picker label="Отпуск" [(value)]="leave" />
+      </div>
+      <div class="field">
+        <span class="label">Можно очистить, пусто</span>
+        <ave-date-range-picker label="Командировка" />
+      </div>
+      <div class="field">
+        <span class="label">Обязательный</span>
+        <ave-date-range-picker label="Срок действия (обязательный)" [formField]="contract.term" />
+      </div>
+    </div>
+    <p class="status" role="status">Отпуск: {{ leave()?.start ?? '…' }} – {{ leave()?.end ?? '…' }}</p>
+  `,
+  styleUrl: './date-picker.stories.css',
+})
+class DateRangeClearing {
+  protected readonly leave = signal<AveDateRange | null>({ start: '2026-07-06', end: '2026-07-24' });
+  protected readonly model = signal<{ term: AveDateRange | null }>({
+    term: { start: '2026-03-09', end: '2026-12-31' },
+  });
+  protected readonly contract = form(this.model, (path) => {
+    required(path.term);
+  });
+}
+
 /** Pads the single-field stories, with room for the calendar. */
 @Component({
   selector: 'ave-date-range-picker-story-frame',
@@ -329,5 +365,45 @@ export const Compact: Story = {
       for (const field of canvasElement.querySelectorAll(`[data-row="${size}"] ave-date-range-picker input`))
         await expect(field.getBoundingClientRect().height, size).toBe(heights[size]);
     }
+  },
+};
+
+/**
+ * Clearing (ADR 0052): the button empties both dates of an optional range and moves focus to the start input; the end
+ * input keeps its width, and both dates show in full in a 320px column.
+ */
+export const Clearing: Story = {
+  decorators: [locale('ru')],
+  render: () => ({ template: '<ave-date-range-picker-clearing />', moduleMetadata: { imports: [DateRangeClearing] } }),
+  parameters: source('<ave-date-range-picker [formField]="request.leave" />'),
+  play: async ({ canvasElement }) => {
+    // The dash's column follows the font: measure once the kit's font has replaced the fallback.
+    await document.fonts.ready;
+    const canvas = within(canvasElement);
+    const start = canvas.getByRole('textbox', { name: 'Отпуск Дата начала' });
+    const end = canvas.getByRole('textbox', { name: 'Отпуск Дата окончания' });
+    const clear = canvas.getByRole('button', { name: 'Очистить Отпуск' });
+    await expect(canvas.getAllByRole('button', { name: /^Очистить/ })).toHaveLength(1);
+    for (const input of canvasElement.querySelectorAll('input')) {
+      await expect(input.scrollWidth).toBeLessThanOrEqual(input.clientWidth);
+    }
+    const [, emptyEnd] = canvas.getAllByRole('textbox', { name: /^Командировка/ });
+    const [requiredStart, requiredEnd] = canvas.getAllByRole('textbox', { name: /^Срок действия/ });
+    await expect(end.getBoundingClientRect().width).toBeGreaterThan(start.getBoundingClientRect().width);
+    await expect(emptyEnd?.getBoundingClientRect().width).toBeCloseTo(end.getBoundingClientRect().width, 1);
+    await expect(requiredEnd?.getBoundingClientRect().width).toBeCloseTo(
+      requiredStart?.getBoundingClientRect().width ?? 0,
+      1,
+    );
+    const width = end.getBoundingClientRect().width;
+    await userEvent.click(clear);
+    await expect(start).toHaveFocus();
+    await expect([start, end].map((input) => (input as HTMLInputElement).value)).toEqual(['', '']);
+    await expect(canvas.getByRole('status')).toHaveTextContent('Отпуск: … – …');
+    await expect(end.getBoundingClientRect().width).toBe(width);
+    await userEvent.type(start, '06.07.2026');
+    await userEvent.type(end, '24.07.2026{Enter}');
+    (document.activeElement as HTMLElement | null)?.blur();
+    await expect(canvas.getByRole('button', { name: 'Очистить Отпуск' })).toBeVisible();
   },
 };

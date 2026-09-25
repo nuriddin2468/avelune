@@ -18,8 +18,8 @@ import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { NgControl, type ControlValueAccessor } from '@angular/forms';
 import { FORM_FIELD } from '@angular/forms/signals';
-import { lucideCalendar } from '@avelune/icons/lucide';
-import { AVE_CONTROL_OWNER, AVE_FIELD, AveControlTarget, injectControlState } from '@avelune/ui/forms';
+import { lucideCalendar, lucideX } from '@avelune/icons/lucide';
+import { AVE_CONTROL_OWNER, AVE_FIELD, AveClearButton, AveControlTarget, injectControlState } from '@avelune/ui/forms';
 import { aveDateFormat, injectAveMessages, type AvePlainDate } from '@avelune/ui/i18n';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
 import { aveConnectedOverlay, aveOverlayPresence } from '@avelune/ui/overlay';
@@ -49,8 +49,11 @@ type RangeEnd = 'start' | 'end';
  */
 @Component({
   selector: 'ave-date-range-picker',
-  imports: [AveCalendar, AveControlTarget, AveIcon, CdkTrapFocus, OverlayModule],
-  providers: [provideAveIcons([lucideCalendar]), { provide: AVE_CONTROL_OWNER, useExisting: AveDateRangePicker }],
+  imports: [AveCalendar, AveClearButton, AveControlTarget, AveIcon, CdkTrapFocus, OverlayModule],
+  providers: [
+    provideAveIcons([lucideCalendar, lucideX]),
+    { provide: AVE_CONTROL_OWNER, useExisting: AveDateRangePicker },
+  ],
   host: {
     '[attr.data-size]': 'size()',
     '(focusout)': 'left($event)',
@@ -61,8 +64,9 @@ type RangeEnd = 'start' | 'end';
     }
     <span hidden [id]="startNameId">{{ messages.rangeStart }}</span>
     <span hidden [id]="endNameId">{{ messages.rangeEnd }}</span>
-    <div class="range" #origin>
+    <div class="range" #origin [attr.data-clearable]="canClear() ? '' : null">
       <input
+        #start
         class="trigger start"
         type="text"
         inputmode="numeric"
@@ -90,9 +94,15 @@ type RangeEnd = 'start' | 'end';
           [attr.aria-labelledby]="labelledBy(endNameId)"
           [attr.aria-describedby]="describedBy()"
           [attr.aria-invalid]="state.bound && state.showError() ? 'true' : null"
+          [attr.data-clear]="clearable() ? '' : null"
           (input)="typed('end', $event)"
           (keydown.enter)="commit()"
         />
+        @if (clearable()) {
+          <button aveClearButton type="button" class="clear" [label]="label()" (click)="clear()">
+            <ave-icon name="x" decorative />
+          </button>
+        }
         <button
           #opener
           class="open"
@@ -188,6 +198,12 @@ export class AveDateRangePicker implements ControlValueAccessor {
   protected readonly latest = this.maxDate;
   protected readonly isDisabled = computed(() => this.disabled() || this.state.disabled() || this.disabledByForm());
 
+  /** Whether the range may be taken away: it can be changed and is not required (ADR 0052). Its end input is wider. */
+  protected readonly canClear = computed(() => !this.isDisabled() && !this.readonly() && !this.state.required());
+
+  /** Whether the clear button shows: either date, in a range that may be cleared. */
+  protected readonly clearable = computed(() => this.value() !== null && this.canClear());
+
   /** @internal The field around the control dims its label while the control is disabled, by input or by form. */
   readonly controlDisabled = this.isDisabled;
 
@@ -204,6 +220,7 @@ export class AveDateRangePicker implements ControlValueAccessor {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly injector = inject(Injector);
   private readonly origin = viewChild.required<ElementRef<HTMLElement>>('origin');
+  private readonly start = viewChild.required<ElementRef<HTMLInputElement>>('start');
   private readonly opener = viewChild.required<ElementRef<HTMLButtonElement>>('opener');
   private readonly popup = viewChild<ElementRef<HTMLElement>>('popup');
   private readonly calendar = viewChild(AveCalendar);
@@ -262,6 +279,15 @@ export class AveDateRangePicker implements ControlValueAccessor {
   protected outside(event: MouseEvent): void {
     if (event.target instanceof Node && this.host.contains(event.target)) return;
     this.close(false);
+  }
+
+  /** The clear button: both inputs empty, the calendar closes, and focus goes to the start input (ADR 0052). */
+  protected clear(): void {
+    this.set({ start: null, end: null });
+    this.startText.set('');
+    this.endText.set('');
+    this.expanded.set(false);
+    this.start().nativeElement.focus();
   }
 
   /** A date chosen in the calendar: the start first, then the end, which closes the calendar. */

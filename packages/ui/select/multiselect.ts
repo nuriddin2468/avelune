@@ -16,8 +16,8 @@ import { Listbox, Option } from '@angular/aria/listbox';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { NgControl, type ControlValueAccessor } from '@angular/forms';
 import { FORM_FIELD } from '@angular/forms/signals';
-import { lucideCheck, lucideChevronDown } from '@avelune/icons/lucide';
-import { AVE_CONTROL_OWNER, AveControlTarget, injectControlState } from '@avelune/ui/forms';
+import { lucideCheck, lucideChevronDown, lucideX } from '@avelune/icons/lucide';
+import { AVE_CONTROL_OWNER, AveClearButton, AveControlTarget, injectControlState } from '@avelune/ui/forms';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
 import { aveConnectedOverlay, aveOverlayPresence } from '@avelune/ui/overlay';
 import type { AveOption, AveSelectSize } from './types';
@@ -37,9 +37,19 @@ import type { AveOption, AveSelectSize } from './types';
  */
 @Component({
   selector: 'ave-multiselect',
-  imports: [AveControlTarget, AveIcon, Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule],
+  imports: [
+    AveClearButton,
+    AveControlTarget,
+    AveIcon,
+    Combobox,
+    ComboboxPopup,
+    ComboboxWidget,
+    Listbox,
+    Option,
+    OverlayModule,
+  ],
   providers: [
-    provideAveIcons([lucideCheck, lucideChevronDown]),
+    provideAveIcons([lucideCheck, lucideChevronDown, lucideX]),
     { provide: AVE_CONTROL_OWNER, useExisting: AveMultiselect },
   ],
   host: {
@@ -58,12 +68,20 @@ import type { AveOption, AveSelectSize } from './types';
       [readonly]="readonly()"
       [attr.aria-label]="label() || null"
       [attr.data-empty]="chosen().length === 0 ? '' : null"
+      [attr.data-clear]="clearable() ? '' : null"
       [(expanded)]="expanded"
       (focusout)="left($event)"
+      (keydown.delete)="clearByKey($event)"
+      (keydown.backspace)="clearByKey($event)"
     >
       <span class="value">{{ text() }}</span>
       <ave-icon class="chevron" name="chevron-down" decorative />
     </button>
+    @if (clearable()) {
+      <button aveClearButton type="button" class="clear" [label]="label()" (click)="clear()">
+        <ave-icon name="x" decorative />
+      </button>
+    }
     <!-- The popup outside the overlay, so the combobox knows its popup (aria-haspopup, aria-autocomplete) before it
          first opens; the overlay renders once the list is first shown and stays, closed, after (preserveContent). -->
     <ng-template ngComboboxPopup [combobox]="combobox">
@@ -151,6 +169,11 @@ export class AveMultiselect<V> implements ControlValueAccessor {
 
   protected readonly isDisabled = computed(() => this.disabled() || this.state.disabled() || this.disabledByForm());
 
+  /** Whether the clear button shows: chosen options that can be changed and may be taken away (ADR 0052). */
+  protected readonly clearable = computed(
+    () => this.value().length > 0 && !this.isDisabled() && !this.readonly() && !this.state.required(),
+  );
+
   /** @internal The field around the control dims its label while the control is disabled, by input or by form. */
   readonly controlDisabled = this.isDisabled;
 
@@ -189,6 +212,21 @@ export class AveMultiselect<V> implements ControlValueAccessor {
       .filter((value) => values.some((chosen) => Object.is(chosen, value)));
     this.value.set(ordered);
     this.changed(ordered);
+  }
+
+  /** The clear button, or Delete: every option is unchecked, the list closes, focus stays on the trigger (ADR 0052). */
+  protected clear(): void {
+    this.value.set([]);
+    this.changed([]);
+    this.expanded.set(false);
+    this.trigger().element.focus();
+  }
+
+  /** Delete or Backspace on the trigger clear a multiselect that may be empty; Aria's combobox has no key for it. */
+  protected clearByKey(event: Event): void {
+    if (!this.clearable()) return;
+    event.preventDefault();
+    this.clear();
   }
 
   /** Focus left the multiselect, not into its own list. */

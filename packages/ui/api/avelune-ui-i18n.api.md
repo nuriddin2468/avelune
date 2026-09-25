@@ -32,6 +32,7 @@ export interface AveMessages {
     readonly chooseDate: string;
     readonly chooseFile: string;
     readonly chooseFiles: string;
+    readonly clear: string;
     readonly dropFile: string;
     readonly dropFiles: string;
     readonly files: string;

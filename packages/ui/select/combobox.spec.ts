@@ -5,6 +5,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormField, disabled, form, required } from '@angular/forms/signals';
 import { AveCombobox, type AveOption } from '@avelune/ui/select';
 import { AveComboboxHarness } from '@avelune/ui/select/testing';
+import { tokens, type TokenName } from '@avelune/tokens';
 import { describe, expect, it } from 'vitest';
 
 const counterparties: readonly AveOption<number>[] = [
@@ -46,6 +47,27 @@ class ReactiveHost {
   readonly counterparties = counterparties;
   // eslint-disable-next-line @typescript-eslint/unbound-method -- Angular's validators are static functions that never read this.
   readonly counterparty = new FormControl<number | null>(3, { validators: [Validators.required] });
+}
+
+@Component({
+  selector: 'ave-combobox-optional',
+  imports: [AveCombobox],
+  template: `<ave-combobox label="Payer" [options]="counterparties" [(value)]="payer" />`,
+})
+class OptionalHost {
+  readonly counterparties = counterparties;
+  readonly payer = signal<number | null>(1);
+}
+
+/** Border-box sizing, as the kit's reset gives every page (the global stylesheet is not loaded here). */
+function withReset(set: boolean): void {
+  const id = 'ave-spec-reset';
+  document.getElementById(id)?.remove();
+  if (!set) return;
+  const style = document.createElement('style');
+  style.id = id;
+  style.textContent = '*, ::before, ::after { box-sizing: border-box; }';
+  document.head.append(style);
 }
 
 function mount<T>(type: new () => T): { fixture: ComponentFixture<T>; element: HTMLElement } {
@@ -130,6 +152,44 @@ describe('AveCombobox', () => {
     await combobox.blur();
     expect(await combobox.getText()).toBe('');
     expect(fixture.componentInstance.contract.counterparty().touched()).toBe(true);
+  });
+
+  it('clears an optional value with its button, empties the input and keeps focus in it (ADR 0052)', async () => {
+    const used = [
+      'control.height.md',
+      'control.padding-inline.md',
+      'border-width.default',
+      'space.1',
+      'space.2',
+      'size.icon.sm',
+      'font.body-md',
+    ] as const satisfies readonly TokenName[];
+    const root = document.documentElement;
+    for (const name of used) root.style.setProperty(tokens[name].cssVar, tokens[name].css);
+    withReset(true);
+    const { fixture, element } = mount(OptionalHost);
+    const combobox = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveComboboxHarness);
+    expect(await combobox.canClear()).toBe(true);
+    const input = element.querySelector('input');
+    const clear = element.querySelector('.clear');
+    if (input === null || clear === null) throw new Error('No parts');
+    // The button is 4px inside the input's end; the text stops 4px before it.
+    const box = input.getBoundingClientRect();
+    const textEnd = box.right - Number.parseFloat(getComputedStyle(input).paddingInlineEnd);
+    expect(box.right - clear.getBoundingClientRect().right).toBe(4);
+    expect(clear.getBoundingClientRect().left - textEnd).toBe(4);
+    await combobox.clear();
+    expect(fixture.componentInstance.payer()).toBeNull();
+    expect(await combobox.getText()).toBe('');
+    expect(await combobox.canClear()).toBe(false);
+    expect(document.activeElement).toBe(input);
+    const { fixture: required } = mount(ReactiveHost);
+    const [needed, frozen] = await TestbedHarnessEnvironment.loader(required).getAllHarnesses(AveComboboxHarness);
+    expect(await needed?.canClear()).toBe(false);
+    expect(await frozen?.canClear()).toBe(false);
+    await expect(needed?.clear()).rejects.toThrow('shows no clear button');
+    for (const name of used) root.style.removeProperty(tokens[name].cssVar);
+    withReset(false);
   });
 
   it('keeps focus in the input when an option is pressed', async () => {

@@ -12,7 +12,9 @@ import { HarnessPredicate } from '@angular/cdk/testing';
 // @alpha
 export class AveComboboxHarness extends ComponentHarness {
     blur(): Promise<void>;
+    canClear(): Promise<boolean>;
     choose(label: string | RegExp): Promise<void>;
+    clear(): Promise<void>;
     focus(): Promise<void>;
     getEmptyMessage(): Promise<string | null>;
     getOptions(): Promise<string[]>;
@@ -44,7 +46,9 @@ export class AveMultiselectHarness extends AveSelectHarness {
 // @alpha
 export class AveSelectHarness extends ComponentHarness {
     blur(): Promise<void>;
+    canClear(): Promise<boolean>;
     choose(label: string | RegExp): Promise<void>;
+    clear(): Promise<void>;
     close(): Promise<void>;
     focus(): Promise<void>;
     getActiveOption(): Promise<string | null>;
@@ -61,6 +65,7 @@ export class AveSelectHarness extends ComponentHarness {
     open(): Promise<void>;
     protected optionElements(): Promise<_angular_cdk_testing.TestElement[]>;
     press(key: 'down' | 'up' | 'home' | 'end' | 'enter' | 'escape'): Promise<void>;
+    pressDelete(): Promise<void>;
     static with(options?: AveSelectHarnessFilters): HarnessPredicate<AveSelectHarness>;
 }
 

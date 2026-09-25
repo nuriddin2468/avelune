@@ -1,5 +1,10 @@
 @layer components {
+  /* The size's height and padding, for the clear button's rules below. */
   :host {
+    --ave-select-height: var(--ave-control-height-md);
+    --ave-select-padding: var(--ave-control-padding-inline-md);
+
+    position: relative;
     display: block;
     min-inline-size: 0;
   }
@@ -80,6 +85,40 @@
 
   .chevron {
     color: var(--ave-color-fg-muted);
+  }
+
+  /* The clear button (ADR 0052): the date field's square, 4px inside the trigger's block edges, its box ending where
+     the chevron begins (past the trigger's border and padding). The value stops space.1 before it: past the flex gap to the chevron, the square minus space.1
+     (the control height minus space.3). The combobox has no chevron; its button is 4px inside its end, and its text
+     stops space.1 before it (a padding of the control height). */
+  :host([data-size='sm']) {
+    --ave-select-height: var(--ave-control-height-sm);
+    --ave-select-padding: var(--ave-control-padding-inline-sm);
+  }
+
+  :host([data-size='lg']) {
+    --ave-select-height: var(--ave-control-height-lg);
+    --ave-select-padding: var(--ave-control-padding-inline-lg);
+  }
+
+  .clear {
+    position: absolute;
+    inset-block-start: var(--ave-space-1);
+    inset-inline-end: calc(var(--ave-border-width-default) + var(--ave-select-padding) + var(--ave-size-icon-sm));
+    inline-size: calc(var(--ave-select-height) - var(--ave-space-2));
+    block-size: calc(var(--ave-select-height) - var(--ave-space-2));
+  }
+
+  .trigger[data-clear] > .value {
+    margin-inline-end: calc(var(--ave-select-height) - var(--ave-space-3));
+  }
+
+  .trigger[type='text'] ~ .clear {
+    inset-inline-end: var(--ave-space-1);
+  }
+
+  .trigger[type='text'][data-clear] {
+    padding-inline-end: var(--ave-select-height);
   }
 
   @media (forced-colors: active) {

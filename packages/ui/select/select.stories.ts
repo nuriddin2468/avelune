@@ -1,7 +1,13 @@
-import { Component, input, signal } from '@angular/core';
+import { Component, LOCALE_ID, input, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormField, form, required } from '@angular/forms/signals';
-import { componentWrapperDecorator, moduleMetadata, type Meta, type StoryObj } from '@storybook/angular-vite';
+import {
+  applicationConfig,
+  componentWrapperDecorator,
+  moduleMetadata,
+  type Meta,
+  type StoryObj,
+} from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { AveInput } from '@avelune/ui/input';
 import { AveSelect, type AveOption, type AveSelectSize } from '@avelune/ui/select';
@@ -120,6 +126,41 @@ class SelectForms {
   protected readonly kind = new FormControl<string | null>(null, { validators: [Validators.required] });
 }
 
+/**
+ * Clearing (ADR 0052): an optional select with a value shows the clear button before its chevron; a required or a
+ * readonly one does not.
+ */
+@Component({
+  selector: 'ave-select-clearing',
+  imports: [AveSelect, FormField],
+  template: `
+    <div class="grid" lang="ru">
+      <div class="field">
+        <span class="label">Можно очистить</span>
+        <ave-select label="Вид договора" placeholder="Выберите вид" [options]="kinds" [(value)]="kind" />
+      </div>
+      <div class="field">
+        <span class="label">Обязательный</span>
+        <ave-select label="Вид договора (обязательный)" [options]="kinds" [formField]="contract.kind" />
+      </div>
+      <div class="field">
+        <span class="label">Только чтение</span>
+        <ave-select label="Вид договора (только чтение)" [options]="kinds" value="services" readonly />
+      </div>
+    </div>
+    <p class="status" role="status">Можно очистить: {{ kind() ?? 'ничего' }}</p>
+  `,
+  styleUrl: './select.stories.css',
+})
+class SelectClearing {
+  protected readonly kinds = kinds;
+  protected readonly kind = signal<string | null>('services');
+  protected readonly model = signal<{ kind: string | null }>({ kind: 'supply' });
+  protected readonly contract = form(this.model, (path) => {
+    required(path.kind);
+  });
+}
+
 /** Pads the Default and Open stories; styled with tokens only. */
 @Component({
   selector: 'ave-select-story-frame',
@@ -142,6 +183,10 @@ function frame(view: View): NonNullable<Story['render']> {
     template: `<ave-select-stories [view]="view" />`,
     moduleMetadata: { imports: [SelectStories] },
   });
+}
+
+function locale(value: string): ReturnType<typeof applicationConfig> {
+  return applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: value }] });
 }
 
 function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
@@ -296,5 +341,38 @@ export const Compact: Story = {
       const trigger = canvasElement.querySelector(`[data-row="${size}"] .trigger`);
       await expect(trigger?.getBoundingClientRect().height, size).toBe(heights[size]);
     }
+  },
+};
+
+/**
+ * Clearing (ADR 0052): the button empties an optional select and leaves focus on the trigger; Delete does the same on
+ * the keyboard. A required or readonly select has none.
+ */
+export const Clearing: Story = {
+  decorators: [locale('ru')],
+  render: () => ({ template: '<ave-select-clearing />', moduleMetadata: { imports: [SelectClearing] } }),
+  parameters: source('<ave-select [options]="kinds" [formField]="contract.kind" />'),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('combobox', { name: 'Вид договора' });
+    const clear = canvas.getByRole('button', { name: 'Очистить Вид договора' });
+    await expect(clear).toHaveAttribute('tabindex', '-1');
+    await expect(canvas.getAllByRole('button', { name: /^Очистить/ })).toHaveLength(1);
+    const value = trigger.querySelector('.value');
+    await expect(clear.getBoundingClientRect().left - (value?.getBoundingClientRect().right ?? 0)).toBe(4);
+    await userEvent.click(clear);
+    await expect(trigger).toHaveFocus();
+    await expect(trigger).toHaveTextContent('Выберите вид');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Можно очистить: ничего');
+    await expect(canvas.queryByRole('button', { name: /^Очистить/ })).toBeNull();
+    await userEvent.keyboard('{ArrowDown}');
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Можно очистить: supply');
+    await userEvent.keyboard('{Delete}');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Можно очистить: ничего');
+    await userEvent.click(trigger);
+    await userEvent.click(await canvas.findByRole('option', { name: 'Оказание услуг' }));
+    await expect(canvas.getByRole('button', { name: 'Очистить Вид договора' })).toBeVisible();
+    trigger.blur();
   },
 };

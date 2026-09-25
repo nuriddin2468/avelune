@@ -53,10 +53,11 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0045](0045-switch.md) | Switch: a drawn native checkbox with the switch role, a thumb that slides on its own timing | Accepted |
 | [0046](0046-select-combobox-multiselect.md) | Select, Combobox and Multiselect: Angular Aria in a CDK overlay, options as data, both form APIs | Accepted |
 | [0047](0047-kit-messages.md) | Kit messages: the words components say themselves, per locale, replaceable | Accepted |
-| [0048](0048-date-picker-and-uzbek-dates.md) | DatePicker and DateRangePicker: ISO dates, a calendar on Angular Aria's grid, Uzbek dates written by the kit | Accepted |
+| [0048](0048-date-picker-and-uzbek-dates.md) | DatePicker and DateRangePicker: ISO dates, a calendar on Angular Aria's grid, Uzbek dates written by the kit | Accepted; the range's equal columns changed by 0052 for a range that may be cleared |
 | [0049](0049-list-values-need-min-length.md) | A list that must hold an item: `minLength(path, 1)`, shown as required | Accepted |
 | [0050](0050-file-upload-and-uzbek-numbers.md) | FileUpload: a drop zone around a button, a list with reasons; Uzbek numbers from Uzbek Cyrillic's symbols | Accepted |
 | [0051](0051-slider-native-range.md) | Slider and RangeSlider: native range inputs, the value in the field's label row, the ring on the thumb | Accepted |
+| [0052](0052-clearing-a-selection-field.md) | Clearing a selection field: a clear button while the value may be taken away, deleting on the keyboard | Accepted |
 
 ## Template
 

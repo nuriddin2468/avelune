@@ -45,6 +45,8 @@ export interface AveMessages {
   readonly lowerValue: string;
   /** The thumb of a range slider that sets the upper end. */
   readonly upperValue: string;
+  /** The button that takes a selection field's value away; screen readers hear the field's label after it. */
+  readonly clear: string;
 }
 
 /**
@@ -72,6 +74,7 @@ export const aveMessagesEn: AveMessages = {
   required: 'Required',
   lowerValue: 'Minimum',
   upperValue: 'Maximum',
+  clear: 'Clear',
 };
 
 /**
@@ -101,6 +104,7 @@ export const aveMessagesRu: AveMessages = {
   required: 'Обязательное поле',
   lowerValue: 'Минимум',
   upperValue: 'Максимум',
+  clear: 'Очистить',
 };
 
 /**
@@ -128,6 +132,7 @@ export const aveMessagesUzLatn: AveMessages = {
   required: 'Majburiy maydon',
   lowerValue: 'Eng kam',
   upperValue: 'Eng koʻp',
+  clear: 'Tozalash',
 };
 
 /**
@@ -155,6 +160,7 @@ export const aveMessagesUzCyrl: AveMessages = {
   required: 'Мажбурий майдон',
   lowerValue: 'Энг кам',
   upperValue: 'Энг кўп',
+  clear: 'Тозалаш',
 };
 
 /**

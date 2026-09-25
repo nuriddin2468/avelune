@@ -1,18 +1,32 @@
 @layer components {
   /* A date field (ADR 0048): an input with the control box of its size, the same as an Input's (brief §8.2), and the
-     calendar button inside its inline end, 4px from the edge, so the focus ring of the input wraps the whole field. */
+     calendar button inside its inline end, 4px from the edge, so the focus ring of the input wraps the whole field.
+     The size's height and padding are set once here, for every rule below. */
   :host {
+    --ave-date-height: var(--ave-control-height-md);
+    --ave-date-padding: var(--ave-control-padding-inline-md);
+
     position: relative;
     display: block;
     min-inline-size: 0;
   }
 
+  :host([data-size='sm']) {
+    --ave-date-height: var(--ave-control-height-sm);
+    --ave-date-padding: var(--ave-control-padding-inline-sm);
+  }
+
+  :host([data-size='lg']) {
+    --ave-date-height: var(--ave-control-height-lg);
+    --ave-date-padding: var(--ave-control-padding-inline-lg);
+  }
+
   .trigger {
     inline-size: 100%;
     min-inline-size: 0;
-    block-size: var(--ave-control-height-md);
+    block-size: var(--ave-date-height);
     padding-block: 0;
-    padding-inline: var(--ave-control-padding-inline-md) var(--ave-control-height-md);
+    padding-inline: var(--ave-date-padding) var(--ave-date-height);
     border: var(--ave-border-width-default) solid var(--ave-color-border-strong);
     border-radius: var(--ave-radius-md);
     background-color: var(--ave-color-bg-surface);
@@ -43,16 +57,11 @@
       color: var(--ave-color-fg-disabled);
       cursor: not-allowed;
     }
-  }
 
-  :host([data-size='sm']) .trigger {
-    block-size: var(--ave-control-height-sm);
-    padding-inline: var(--ave-control-padding-inline-sm) var(--ave-control-height-sm);
-  }
-
-  :host([data-size='lg']) .trigger {
-    block-size: var(--ave-control-height-lg);
-    padding-inline: var(--ave-control-padding-inline-lg) var(--ave-control-height-lg);
+    /* While the clear button shows (ADR 0052), the text stops space.1 before it: two squares and their inset. */
+    &[data-clear] {
+      padding-inline-end: calc(var(--ave-date-height) * 2 - var(--ave-space-2));
+    }
   }
 
   /* The calendar button: a square 4px inside the field, with corners concentric to it (8 - 4 = 4). Its focus ring is
@@ -63,8 +72,8 @@
     inset-inline-end: var(--ave-space-1);
     display: grid;
     place-items: center;
-    inline-size: calc(var(--ave-control-height-md) - var(--ave-space-2));
-    block-size: calc(var(--ave-control-height-md) - var(--ave-space-2));
+    inline-size: calc(var(--ave-date-height) - var(--ave-space-2));
+    block-size: calc(var(--ave-date-height) - var(--ave-space-2));
     padding: 0;
     border: 0;
     border-radius: var(--ave-radius-sm);
@@ -86,14 +95,26 @@
     }
   }
 
-  :host([data-size='sm']) .open {
-    inline-size: calc(var(--ave-control-height-sm) - var(--ave-space-2));
-    block-size: calc(var(--ave-control-height-sm) - var(--ave-space-2));
+  /* The clear button (ADR 0052): the same square, right before the calendar button. */
+  .clear {
+    position: absolute;
+    inset-block-start: var(--ave-space-1);
+    inset-inline-end: calc(var(--ave-date-height) - var(--ave-space-1));
+    inline-size: calc(var(--ave-date-height) - var(--ave-space-2));
+    block-size: calc(var(--ave-date-height) - var(--ave-space-2));
   }
 
-  :host([data-size='lg']) .open {
-    inline-size: calc(var(--ave-control-height-lg) - var(--ave-space-2));
-    block-size: calc(var(--ave-control-height-lg) - var(--ave-space-2));
+  /* A range (range.css): the start input has no button, so its text stops at the size's padding. A range that can be
+     cleared (ADR 0052) makes its end input wider by the room its two buttons take beyond that padding, so both inputs
+     have the same room for a date, down to 320px, and nothing moves when the clear button comes. */
+  .start {
+    padding-inline-end: var(--ave-date-padding);
+  }
+
+  .range[data-clearable] {
+    grid-template-columns:
+      minmax(0, 1fr) auto minmax(0, 1fr)
+      calc(var(--ave-date-height) * 2 - var(--ave-date-padding) - var(--ave-space-4));
   }
 
   @media (forced-colors: active) {

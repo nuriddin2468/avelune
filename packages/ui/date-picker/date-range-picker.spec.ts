@@ -6,6 +6,7 @@ import { FormField, form, required } from '@angular/forms/signals';
 import { AveDateRangePicker, type AveDateRange } from '@avelune/ui/date-picker';
 import { AveDateRangePickerHarness } from '@avelune/ui/date-picker/testing';
 import { AveFormField, AveHint } from '@avelune/ui/form-field';
+import { tokens, type TokenName } from '@avelune/tokens';
 import { describe, expect, it } from 'vitest';
 
 @Component({
@@ -40,6 +41,51 @@ class ReactiveHost {
   template: `<ave-date-range-picker label="Отпуск" />`,
 })
 class LabelledHost {}
+
+@Component({
+  selector: 'ave-range-optional',
+  imports: [AveDateRangePicker, AveFormField],
+  template: `
+    <ave-form-field label="Отпуск">
+      <ave-date-range-picker [(value)]="leave" />
+    </ave-form-field>
+  `,
+})
+class OptionalHost {
+  readonly leave = signal<AveDateRange | null>({ start: '2026-09-10', end: '2026-09-20' });
+}
+
+const layout = [
+  'control.height.md',
+  'control.padding-inline.md',
+  'border-width.default',
+  'space.1',
+  'space.2',
+  'space.4',
+  'font.body-md',
+  'font.label-md',
+] as const satisfies readonly TokenName[];
+
+/** The layout tokens and border-box sizing, as the kit's global stylesheet gives every page. */
+function withLayout(set: boolean): void {
+  document.getElementById('ave-spec-reset')?.remove();
+  if (set) {
+    const reset = document.createElement('style');
+    reset.id = 'ave-spec-reset';
+    reset.textContent = '*, ::before, ::after { box-sizing: border-box; }';
+    document.head.append(reset);
+  }
+  for (const name of layout) {
+    if (set) document.documentElement.style.setProperty(tokens[name].cssVar, tokens[name].css);
+    else document.documentElement.style.removeProperty(tokens[name].cssVar);
+  }
+}
+
+/** The room an input leaves for its text: its width without borders and paddings. */
+function room(input: HTMLInputElement): number {
+  const style = getComputedStyle(input);
+  return input.clientWidth - Number.parseFloat(style.paddingInlineStart) - Number.parseFloat(style.paddingInlineEnd);
+}
 
 function mount<T>(type: new () => T): ComponentFixture<T> {
   TestBed.configureTestingModule({ providers: [{ provide: LOCALE_ID, useValue: 'ru' }] });
@@ -154,5 +200,47 @@ describe('AveDateRangePicker', () => {
     expect(fixture.componentInstance.period.touched).toBe(true);
     fixture.componentInstance.period.disable();
     expect(await range.isDisabled()).toBe(true);
+  });
+  it('clears both dates with one button in the end input, and moves focus to the start (ADR 0052)', async () => {
+    withLayout(true);
+    const fixture = mount(OptionalHost);
+    const range = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveDateRangePickerHarness);
+    const element = fixture.nativeElement as HTMLElement;
+    // The narrowest container in which the dates stand side by side.
+    element.style.display = 'block';
+    element.style.inlineSize = '320px';
+    const [start, end] = [...element.querySelectorAll<HTMLInputElement>('.trigger')];
+    const clear = element.querySelector('.clear');
+    if (start === undefined || end === undefined || clear === null) throw new Error('No parts');
+    expect(await range.canClear()).toBe(true);
+    expect(clear.parentElement).toBe(end.parentElement);
+    expect(start.getBoundingClientRect().top).toBe(end.getBoundingClientRect().top);
+    // Both inputs have the same room for a date; the end input is wider by the clear button's room.
+    expect(room(end)).toBe(room(start));
+    expect(end.getBoundingClientRect().width).toBeGreaterThan(start.getBoundingClientRect().width);
+    const names = (clear.getAttribute('aria-labelledby') ?? '').split(' ').map((id) => document.getElementById(id));
+    // "Clear" in the locale, then the field's own label (whose hidden asterisk is no part of a name).
+    expect(names[0]?.textContent).toBe('Очистить');
+    expect(names[1]).toBe(element.querySelector('ave-form-field label'));
+    const wide = end.getBoundingClientRect().width;
+    await range.clear();
+    expect(fixture.componentInstance.leave()).toBeNull();
+    expect([await range.getText(), await range.getEndText()]).toEqual(['', '']);
+    expect(document.activeElement).toBe(start);
+    // Nothing moves when the button goes: the room for it stays while the range may be cleared.
+    expect(end.getBoundingClientRect().width).toBe(wide);
+    expect(await range.canClear()).toBe(false);
+    withLayout(false);
+  });
+
+  it('keeps two equal inputs and no clear button while the range is required', async () => {
+    withLayout(true);
+    const fixture = mount(SignalHost);
+    fixture.componentInstance.model.set({ period: { start: '2026-09-07', end: '2026-09-09' } });
+    const range = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveDateRangePickerHarness);
+    expect(await range.canClear()).toBe(false);
+    const [start, end] = [...(fixture.nativeElement as HTMLElement).querySelectorAll('.trigger')];
+    expect(end?.getBoundingClientRect().width).toBe(start?.getBoundingClientRect().width);
+    withLayout(false);
   });
 });

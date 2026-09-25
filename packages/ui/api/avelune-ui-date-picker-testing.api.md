@@ -15,7 +15,9 @@ export type AveCalendarKey = 'left' | 'right' | 'up' | 'down' | 'home' | 'end' |
 // @alpha
 export class AveDatePickerHarness extends ComponentHarness {
     blur(): Promise<void>;
+    canClear(): Promise<boolean>;
     chooseDay(day: number): Promise<void>;
+    clear(): Promise<void>;
     focus(): Promise<void>;
     getChosenDates(): Promise<string[]>;
     getDisabledDates(): Promise<string[]>;

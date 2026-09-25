@@ -132,6 +132,40 @@ class DatePickerLong {
   }
 }
 
+/**
+ * Clearing (ADR 0052): an optional date field with a date shows the clear button before the calendar button; a
+ * required or a readonly one does not.
+ */
+@Component({
+  selector: 'ave-date-picker-clearing',
+  imports: [AveDatePicker, FormField],
+  template: `
+    <div class="grid">
+      <div class="field">
+        <span class="label">Можно очистить</span>
+        <ave-date-picker label="Дата оплаты" [(value)]="paidOn" />
+      </div>
+      <div class="field">
+        <span class="label">Обязательная</span>
+        <ave-date-picker label="Дата подписания (обязательная)" [formField]="contract.signedOn" />
+      </div>
+      <div class="field">
+        <span class="label">Только чтение</span>
+        <ave-date-picker label="Дата регистрации (только чтение)" value="2026-03-02" readonly />
+      </div>
+    </div>
+    <p class="status" role="status">Дата оплаты: {{ paidOn() ?? 'не указана' }}</p>
+  `,
+  styleUrl: './date-picker.stories.css',
+})
+class DatePickerClearing {
+  protected readonly paidOn = signal<string | null>('2026-03-18');
+  protected readonly model = signal<{ signedOn: string | null }>({ signedOn: '2026-03-10' });
+  protected readonly contract = form(this.model, (path) => {
+    required(path.signedOn);
+  });
+}
+
 /** Pads the single-field stories, with room for the calendar. */
 @Component({
   selector: 'ave-date-picker-story-frame',
@@ -163,10 +197,10 @@ function locale(value: string): ReturnType<typeof applicationConfig> {
   return applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: value }] });
 }
 
-/** Opens the calendar with its button and waits for the day that takes focus. */
+/** Opens the calendar with its button (the one with a dialog popup) and waits for the day that takes focus. */
 async function openCalendar(canvasElement: HTMLElement): Promise<HTMLElement> {
   const canvas = within(canvasElement);
-  await userEvent.click(canvas.getAllByRole('button', { name: /./ })[0] ?? canvasElement);
+  await userEvent.click(canvasElement.querySelector('button[aria-haspopup="dialog"]') ?? canvasElement);
   const dialog = await canvas.findByRole('dialog');
   await waitFor(() => expect(dialog.querySelector('[data-date]:focus')).not.toBeNull());
   return dialog;
@@ -360,5 +394,35 @@ export const Compact: Story = {
       const field = canvasElement.querySelector(`[data-row="${size}"] ave-date-picker input`);
       await expect(field?.getBoundingClientRect().height, size).toBe(heights[size]);
     }
+  },
+};
+
+/**
+ * Clearing (ADR 0052): the button empties an optional date field and leaves focus in its input; deleting the date and
+ * pressing Enter does the same on the keyboard.
+ */
+export const Clearing: Story = {
+  decorators: [locale('ru')],
+  render: () => ({ template: '<ave-date-picker-clearing />', moduleMetadata: { imports: [DatePickerClearing] } }),
+  parameters: source('<ave-date-picker [formField]="payment.paidOn" />'),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole('textbox', { name: 'Дата оплаты' });
+    const clear = canvas.getByRole('button', { name: 'Очистить Дата оплаты' });
+    await expect(canvas.getAllByRole('button', { name: /^Очистить/ })).toHaveLength(1);
+    const opener = canvas.getAllByRole('button', { name: 'Выбрать дату' })[0];
+    await expect(clear.getBoundingClientRect().right).toBe(opener?.getBoundingClientRect().left);
+    await userEvent.click(clear);
+    await expect(input).toHaveFocus();
+    await expect(input).toHaveValue('');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Дата оплаты: не указана');
+    await userEvent.type(input, '20.03.2026{Enter}');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Дата оплаты: 2026-03-20');
+    await userEvent.clear(input);
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Дата оплаты: не указана');
+    await userEvent.type(input, '18.03.2026{Enter}');
+    input.blur();
+    await expect(canvas.getByRole('button', { name: 'Очистить Дата оплаты' })).toBeVisible();
   },
 };

@@ -1,6 +1,6 @@
 # 0048. DatePicker and DateRangePicker: ISO dates, a calendar on Angular Aria's grid, Uzbek dates written by the kit
 
-- Status: Accepted (2026-09-25, technical decision within Wave 2)
+- Status: Accepted (2026-09-25, technical decision within Wave 2); a range that may be cleared has a wider end input (0052)
 - Date: 2026-09-25
 - Related: 0046, 0047; brief §9.4 (DatePicker locale-aware, uz-Latn and ru first day and month names); ROADMAP.md tracked risk "Chromium's Intl formats uz"
 

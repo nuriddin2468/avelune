@@ -21,6 +21,7 @@ export class AveComboboxHarness extends ComponentHarness {
   static hostSelector = 'ave-combobox';
 
   private readonly input = this.locatorFor('.trigger');
+  private readonly clearButton = this.locatorForOptional('.clear');
 
   /** Gets a predicate that matches comboboxes by the given filters. */
   static with(options: AveComboboxHarnessFilters = {}): HarnessPredicate<AveComboboxHarness> {
@@ -79,6 +80,18 @@ export class AveComboboxHarness extends ComponentHarness {
       }
     }
     throw new Error(`AveComboboxHarness: no shown option matches ${String(label)}.`);
+  }
+
+  /** Whether the clear button shows: a value that can be changed and is not required (ADR 0052). */
+  async canClear(): Promise<boolean> {
+    return (await this.clearButton()) !== null;
+  }
+
+  /** Takes the value away with the clear button, as a click does. */
+  async clear(): Promise<void> {
+    const button = await this.clearButton();
+    if (button === null) throw new Error('AveComboboxHarness: the combobox shows no clear button.');
+    await button.click();
   }
 
   /** Whether the combobox is disabled. */

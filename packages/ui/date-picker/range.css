@@ -17,16 +17,10 @@
     min-inline-size: 0;
   }
 
-  .start {
-    padding-inline-end: var(--ave-control-padding-inline-md);
-  }
-
-  :host([data-size='sm']) .start {
-    padding-inline-end: var(--ave-control-padding-inline-sm);
-  }
-
-  :host([data-size='lg']) .start {
-    padding-inline-end: var(--ave-control-padding-inline-lg);
+  /* A range that can be cleared (ADR 0052) has a fourth column, sized in field.css with the size's height, which the
+     end input spans with the gap before it. */
+  .range[data-clearable] > .end {
+    grid-column: 3 / span 2;
   }
 
   .dash {
@@ -36,8 +30,13 @@
   /* Narrower than the smallest container, two dates side by side no longer fit their inputs: the end input goes
      under the start input, and the dash, which only reads side by side, is left out. */
   @container (inline-size < 320px) {
-    .range {
+    .range,
+    .range[data-clearable] {
       grid-template-columns: minmax(0, 1fr);
+    }
+
+    .range[data-clearable] > .end {
+      grid-column: auto;
     }
 
     .dash {

@@ -23,7 +23,7 @@ import { AveDateRangePicker, type AveDateRange } from '@avelune/ui/date-picker';
 
 ## Anatomy
 
-The start input, a dash, and the end input with the calendar button, in two equal columns; each has the box of an Input. In the calendar, the range's ends have the accent fill and the days between a light accent tint.
+The start input, a dash, and the end input with the calendar button, in two equal columns; each has the box of an Input. A range that can be cleared has a wider end input, with the clear button before the calendar button (see Clearing). In the calendar, the range's ends have the accent fill and the days between a light accent tint.
 
 ```html
 <ave-form-field label="Срок действия">
@@ -46,6 +46,14 @@ The start input, a dash, and the end input with the calendar button, in two equa
 
 As a DatePicker's: invalid is a red border on both inputs, readonly a dashed border on a sunken fill, disabled a flat fill.
 
+## Clearing
+
+A range that is not required shows a clear button before the calendar button, in the end input, while either date is there and it can be changed (ADR 0052). A press empties both inputs (the value becomes `null`), closes the calendar and moves focus to the start input. On the keyboard, deleting both dates does the same; the button is not a Tab stop.
+
+The end input of a range that can be cleared is wider, by the room of the clear button, whether or not a date is there: both inputs have the same room for their dates, which show in full down to 320px, and nothing moves when a date arrives. A required, readonly or disabled range keeps two equal inputs.
+
+<Canvas of={DateRangePickerStories.Clearing} />
+
 ## Value
 
 `{ start, end }` of ISO dates, either of which may be `null` while it is missing; the value is `null` while both are, so `required` works. A rule such as "the end is required" is the application's, in its schema.
@@ -56,7 +64,7 @@ As a DatePicker's: invalid is a red border on both inputs, readonly a dashed bor
 
 ## Narrow containers
 
-Two dates side by side need 320px (`container.xs`). In a narrower container, such as a form column on a 320px phone, the end input goes under the start input and the dash is left out; the inputs keep their names.
+Two dates side by side need 320px (`container.xs`), with or without the clear button. In a narrower container, such as a form column on a 320px phone, the end input goes under the start input and the dash is left out; the inputs keep their names.
 
 <Canvas of={DateRangePickerStories.Narrow} />
 
@@ -77,6 +85,7 @@ As a DatePicker's, for each input and for the calendar.
 ## Accessibility
 
 - Each input is named by the field's label and its part: "Срок действия, Дата начала" and "…, Дата окончания" (`aria-labelledby`); both are described by the field's hint and error. Without an `<ave-form-field>`, the `label` input takes the field's place in the names.
+- The clear button is named "Clear" and the field's label ("Очистить Срок действия"); it is left out of the Tab order.
 
 ## Motion
 

@@ -4,6 +4,7 @@
 
 ```ts
 
+import * as _avelune_ui_i18n from '@avelune/ui/i18n';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { Signal } from '@angular/core';
@@ -13,6 +14,24 @@ export const AVE_CONTROL_OWNER: InjectionToken<AveControlOwner>;
 
 // @beta
 export const AVE_FIELD: InjectionToken<AveFieldContext>;
+
+// @alpha
+export class AveClearButton {
+    protected keepFocus(event: Event): void;
+    readonly label: i0.InputSignal<string>;
+    // (undocumented)
+    protected readonly labelId: string;
+    protected labelledBy(): string;
+    // (undocumented)
+    protected readonly messages: _avelune_ui_i18n.AveMessages;
+    // (undocumented)
+    protected readonly nameId: string;
+    protected ownLabel(): boolean;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<AveClearButton, "button[aveClearButton]", never, { "label": { "alias": "label"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<AveClearButton, never>;
+}
 
 // @alpha
 export interface AveControlOwner {

@@ -77,6 +77,35 @@ describe('AveMultiselect', () => {
     expect(fixture.componentInstance.contract.approvers().invalid()).toBe(false);
   });
 
+  it('clears every chosen option with its button or Delete, unless one is required (ADR 0052)', async () => {
+    const { fixture, element } = mount(ReactiveHost);
+    const select = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveMultiselectHarness);
+    expect(await select.canClear()).toBe(true);
+    const clear = element.querySelector('.clear');
+    const names = (clear?.getAttribute('aria-labelledby') ?? '').split(' ').map((id) => document.getElementById(id));
+    expect(names.map((name) => name?.textContent)).toEqual(['Clear', 'Approvers']);
+    await select.toggle('Финансовый отдел');
+    await select.clear();
+    expect(fixture.componentInstance.chosen.value).toEqual([]);
+    expect(await select.isOpen()).toBe(false);
+    expect(await select.isEmpty()).toBe(true);
+    expect(await select.canClear()).toBe(false);
+    expect(document.activeElement).toBe(element.querySelector('.trigger'));
+    await select.toggle('Юридический отдел');
+    await select.close();
+    await select.press('backspace');
+    expect(fixture.componentInstance.chosen.value).toEqual([]);
+    await select.press('delete');
+    expect(fixture.componentInstance.chosen.value).toEqual([]);
+    const { fixture: required } = mount(SignalHost);
+    const needed = await TestbedHarnessEnvironment.loader(required).getHarness(AveMultiselectHarness);
+    await needed.toggle('Юридический отдел');
+    expect(await needed.canClear()).toBe(false);
+    await needed.close();
+    await needed.press('delete');
+    expect(required.componentInstance.model().approvers).toEqual(['legal']);
+  });
+
   it('keeps focus on the trigger when an option is pressed', async () => {
     const { fixture } = mount(SignalHost);
     const select = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveMultiselectHarness);

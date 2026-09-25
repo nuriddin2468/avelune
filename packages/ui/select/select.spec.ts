@@ -56,8 +56,9 @@ class ReactiveHost {
   template: `
     <input aveInput type="text" aria-label="Number" [size]="size()" />
     <ave-select label="Kind" placeholder="Choose" [options]="kinds" [size]="size()" [(value)]="kind" />
-    <ave-select label="Off" [options]="kinds" disabled />
+    <ave-select label="Off" [options]="kinds" value="supply" disabled />
     <ave-select label="Nothing" [options]="[]" />
+    <ave-select label="Frozen" [options]="kinds" value="loan" readonly />
   `,
 })
 class PlainHost {
@@ -98,6 +99,8 @@ const used = [
   'radius.lg',
   'space.1',
   'space.2',
+  'space.3',
+  'size.icon.sm',
   'font.body-md',
   'color.border.strong',
   'color.danger.border',
@@ -224,6 +227,59 @@ describe('AveSelect', () => {
     await select.close();
     await expect.poll(() => popup?.isConnected, { timeout: 2000 }).toBe(false);
     motion.remove();
+  });
+
+  it('clears an optional value with its button or Delete, and leaves focus on the trigger (ADR 0052)', async () => {
+    const { fixture, element } = mount(PlainHost);
+    const select = await TestbedHarnessEnvironment.loader(fixture).getHarness(
+      AveSelectHarness.with({ text: 'Choose' }),
+    );
+    expect(await select.canClear()).toBe(false);
+    await select.choose('Заём');
+    expect(await select.canClear()).toBe(true);
+    const trigger = element.querySelector('.trigger');
+    const value = element.querySelector('.value');
+    const clear = element.querySelector('.clear');
+    const chevron = element.querySelector('.chevron');
+    if (trigger === null || value === null || clear === null || chevron === null) throw new Error('No parts');
+    // The value stops 4px before the button, whose box ends where the chevron begins, 4px inside the trigger.
+    expect(clear.getBoundingClientRect().left - value.getBoundingClientRect().right).toBe(4);
+    expect(chevron.getBoundingClientRect().left).toBe(clear.getBoundingClientRect().right);
+    expect(clear.getBoundingClientRect().top - trigger.getBoundingClientRect().top).toBe(4);
+    expect(clear.getBoundingClientRect().height).toBe(28);
+    // Named "Clear" and the select's own label; not a Tab stop; a press keeps focus where it is.
+    const names = (clear.getAttribute('aria-labelledby') ?? '').split(' ').map((id) => document.getElementById(id));
+    expect(names.map((name) => name?.textContent)).toEqual(['Clear', 'Kind']);
+    expect(clear.getAttribute('tabindex')).toBe('-1');
+    const press = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
+    clear.dispatchEvent(press);
+    expect(press.defaultPrevented).toBe(true);
+    await select.open();
+    await select.clear();
+    expect(fixture.componentInstance.kind()).toBeNull();
+    expect(await select.isOpen()).toBe(false);
+    expect(await select.canClear()).toBe(false);
+    expect(await select.isEmpty()).toBe(true);
+    expect(document.activeElement).toBe(trigger);
+    await select.choose('Поставка');
+    await select.press('delete');
+    expect(fixture.componentInstance.kind()).toBeNull();
+    await select.press('backspace');
+    expect(fixture.componentInstance.kind()).toBeNull();
+  });
+
+  it('shows no clear button while the value is required, readonly or disabled', async () => {
+    const { fixture } = mount(SignalHost);
+    const select = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveSelectHarness);
+    await select.choose('Поставка');
+    expect(await select.canClear()).toBe(false);
+    await select.press('delete');
+    expect(fixture.componentInstance.model().kind).toBe('supply');
+    await expect(select.clear()).rejects.toThrow('shows no clear button');
+    const { fixture: plain } = mount(PlainHost);
+    const [, off, , frozen] = await TestbedHarnessEnvironment.loader(plain).getAllHarnesses(AveSelectHarness);
+    expect(await off?.canClear()).toBe(false);
+    expect(await frozen?.canClear()).toBe(false);
   });
 
   it('keeps focus on the trigger when an option is pressed', async () => {

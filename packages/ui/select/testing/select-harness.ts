@@ -21,6 +21,7 @@ export class AveSelectHarness extends ComponentHarness {
   static hostSelector = 'ave-select';
 
   private readonly trigger = this.locatorFor('.trigger');
+  private readonly clearButton = this.locatorForOptional('.clear');
 
   /** Gets a predicate that matches selects by the given filters. */
   static with(options: AveSelectHarnessFilters = {}): HarnessPredicate<AveSelectHarness> {
@@ -54,8 +55,11 @@ export class AveSelectHarness extends ComponentHarness {
     if (await this.isOpen()) await (await this.trigger()).sendKeys(TestKey.ESCAPE);
   }
 
-  /** Presses a key on the trigger, which the list follows while it is open. */
-  async press(key: 'down' | 'up' | 'home' | 'end' | 'enter' | 'escape'): Promise<void> {
+  /**
+   * Presses a key on the trigger, which the list follows while it is open; Delete and Backspace clear a select that
+   * may be empty.
+   */
+  async press(key: 'down' | 'up' | 'home' | 'end' | 'enter' | 'escape' | 'delete' | 'backspace'): Promise<void> {
     const keys = {
       down: TestKey.DOWN_ARROW,
       up: TestKey.UP_ARROW,
@@ -63,6 +67,8 @@ export class AveSelectHarness extends ComponentHarness {
       end: TestKey.END,
       enter: TestKey.ENTER,
       escape: TestKey.ESCAPE,
+      delete: TestKey.DELETE,
+      backspace: TestKey.BACKSPACE,
     } as const;
     await (await this.trigger()).sendKeys(keys[key]);
   }
@@ -90,6 +96,18 @@ export class AveSelectHarness extends ComponentHarness {
       }
     }
     throw new Error(`AveSelectHarness: no option matches ${String(label)}.`);
+  }
+
+  /** Whether the clear button shows: a value that can be changed and is not required (ADR 0052). */
+  async canClear(): Promise<boolean> {
+    return (await this.clearButton()) !== null;
+  }
+
+  /** Takes the value away with the clear button, as a click does. */
+  async clear(): Promise<void> {
+    const button = await this.clearButton();
+    if (button === null) throw new Error('AveSelectHarness: the select shows no clear button.');
+    await button.click();
   }
 
   /** Whether the select is disabled. */

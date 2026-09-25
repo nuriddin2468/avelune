@@ -18,8 +18,8 @@ import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { NgControl, type ControlValueAccessor } from '@angular/forms';
 import { FORM_FIELD } from '@angular/forms/signals';
-import { lucideCalendar } from '@avelune/icons/lucide';
-import { AVE_CONTROL_OWNER, AveControlTarget, injectControlState } from '@avelune/ui/forms';
+import { lucideCalendar, lucideX } from '@avelune/icons/lucide';
+import { AVE_CONTROL_OWNER, AveClearButton, AveControlTarget, injectControlState } from '@avelune/ui/forms';
 import { aveDateFormat, injectAveMessages, type AvePlainDate } from '@avelune/ui/i18n';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
 import { aveConnectedOverlay, aveOverlayPresence } from '@avelune/ui/overlay';
@@ -42,8 +42,8 @@ import type { AveDatePickerSize } from './types';
  */
 @Component({
   selector: 'ave-date-picker',
-  imports: [AveCalendar, AveControlTarget, AveIcon, CdkTrapFocus, OverlayModule],
-  providers: [provideAveIcons([lucideCalendar]), { provide: AVE_CONTROL_OWNER, useExisting: AveDatePicker }],
+  imports: [AveCalendar, AveClearButton, AveControlTarget, AveIcon, CdkTrapFocus, OverlayModule],
+  providers: [provideAveIcons([lucideCalendar, lucideX]), { provide: AVE_CONTROL_OWNER, useExisting: AveDatePicker }],
   host: {
     '[attr.data-size]': 'size()',
     '(focusout)': 'left($event)',
@@ -61,9 +61,15 @@ import type { AveDatePickerSize } from './types';
       [readOnly]="readonly()"
       [attr.placeholder]="format.placeholder"
       [attr.aria-label]="label() || null"
+      [attr.data-clear]="clearable() ? '' : null"
       (input)="typed($event)"
       (keydown.enter)="commit()"
     />
+    @if (clearable()) {
+      <button aveClearButton type="button" class="clear" [label]="label()" (click)="clear()">
+        <ave-icon name="x" decorative />
+      </button>
+    }
     <button
       #opener
       class="open"
@@ -156,6 +162,11 @@ export class AveDatePicker implements ControlValueAccessor {
   });
   protected readonly isDisabled = computed(() => this.disabled() || this.state.disabled() || this.disabledByForm());
 
+  /** Whether the clear button shows: a date that can be changed and may be taken away (ADR 0052). */
+  protected readonly clearable = computed(
+    () => this.value() !== null && !this.isDisabled() && !this.readonly() && !this.state.required(),
+  );
+
   /** @internal The field around the control dims its label while the control is disabled, by input or by form. */
   readonly controlDisabled = this.isDisabled;
 
@@ -211,6 +222,13 @@ export class AveDatePicker implements ControlValueAccessor {
   protected outside(event: MouseEvent): void {
     if (event.target instanceof Node && this.host.contains(event.target)) return;
     this.close(false);
+  }
+
+  /** The clear button: the field empties, the calendar closes, and focus is in the input (ADR 0052). */
+  protected clear(): void {
+    this.set(null);
+    this.expanded.set(false);
+    this.input().nativeElement.focus();
   }
 
   /** The person chose a date in the calendar. */

@@ -43,6 +43,7 @@ export class AveDatePickerHarness extends ComponentHarness {
 
   protected readonly input = this.locatorFor('.trigger');
   protected readonly opener = this.locatorFor('.open');
+  private readonly clearButton = this.locatorForOptional('.clear');
   private readonly title = this.locatorForOptional('.popup .title');
   private readonly days = this.locatorForAll('.popup [data-date]');
   private readonly previous = this.locatorFor('.popup .header button:first-child');
@@ -137,6 +138,18 @@ export class AveDatePickerHarness extends ComponentHarness {
       }
     }
     throw new Error('AveDatePickerHarness: no day of the calendar has focus.');
+  }
+
+  /** Whether the clear button shows: a date that can be changed and is not required (ADR 0052). */
+  async canClear(): Promise<boolean> {
+    return (await this.clearButton()) !== null;
+  }
+
+  /** Takes the value away with the clear button, as a click does. */
+  async clear(): Promise<void> {
+    const button = await this.clearButton();
+    if (button === null) throw new Error('AveDatePickerHarness: the field shows no clear button.');
+    await button.click();
   }
 
   /** Whether the field is disabled. */

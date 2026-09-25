@@ -53,6 +53,12 @@ An input with the box of an Input of its size. The list opens 4px under it as pe
 - **Invalid:** a red border, with a form binding once the combobox has been left; the field's error says why.
 - **Readonly:** a dashed border on a sunken fill; the text can be read and copied. **Disabled:** a flat fill; it cannot be focused.
 
+## Clearing
+
+A combobox that is not required shows a clear button inside its end while it has a value and can be changed (ADR 0052). A press empties the input, clears the value, closes the list and leaves focus in the input. On the keyboard, deleting the text and leaving the combobox does the same; the button is not a Tab stop.
+
+<Canvas of={ComboboxStories.Clearing} />
+
 ## Forms
 
 <Canvas of={ComboboxStories.Forms} />
@@ -73,6 +79,7 @@ Per the WAI-ARIA combobox pattern: typing filters and opens the list; Down and U
 
 - The input is a `combobox` with `aria-autocomplete="list"`, named by the field's label.
 - The empty list's message is a `status`, so screen readers hear that nothing matched.
+- The clear button is named "Clear" and the field's label ("Очистить Контрагент"); it is left out of the Tab order.
 
 ## Motion
 

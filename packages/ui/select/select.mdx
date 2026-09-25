@@ -59,6 +59,12 @@ readonly kinds: AveOption<string>[] = [
 - **Readonly:** a dashed border on a sunken fill; the list does not open.
 - **Disabled:** a flat fill, dimmed text; it cannot be focused. A disabled option is shown dimmed and cannot be chosen.
 
+## Clearing
+
+A select that is not required shows a clear button before the chevron while it has a value and can be changed (ADR 0052). A press takes the value back to none (`null`), closes the list and leaves focus on the trigger. On the keyboard, Delete or Backspace on the trigger does the same; the button is not a Tab stop. A required, readonly or disabled select has no clear button.
+
+<Canvas of={SelectStories.Clearing} />
+
 ## Forms
 
 <Canvas of={SelectStories.Forms} />
@@ -79,13 +85,14 @@ readonly kinds: AveOption<string>[] = [
 
 ## Keyboard
 
-Per the WAI-ARIA select-only combobox pattern: Tab moves to the trigger; Down, Enter or Space open the list; the arrow keys, Home and End move; Enter or Space choose and close; Escape closes without choosing; while the list is open, typing a letter moves to the next option that starts with it.
+Per the WAI-ARIA select-only combobox pattern: Tab moves to the trigger; Down, Enter or Space open the list; the arrow keys, Home and End move; Enter or Space choose and close; Escape closes without choosing; while the list is open, typing a letter moves to the next option that starts with it. Delete or Backspace clear the value of a select that is not required (the kit's own key: the pattern has none).
 
 ## Accessibility
 
 - The trigger is a `combobox` named by the field's label (`<label for>`), or by `label` when there is none; its text is the chosen option.
 - `aria-activedescendant` tells screen readers which option is active while focus stays on the trigger.
 - Required, invalid and the field's hint and error are on the trigger.
+- The clear button is named "Clear" in the locale and the field's label ("Очистить Вид договора"), for a screen reader's virtual cursor; it is left out of the Tab order.
 
 ## Motion
 

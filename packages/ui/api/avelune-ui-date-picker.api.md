@@ -18,6 +18,8 @@ export class AveDatePicker implements ControlValueAccessor {
     protected choose(date: AvePlainDate): void;
     // (undocumented)
     protected readonly chosen: _angular_core.Signal<readonly string[]>;
+    protected clear(): void;
+    protected readonly clearable: _angular_core.Signal<boolean>;
     protected close(returnFocus: boolean): void;
     protected commit(): void;
     // @internal
@@ -77,9 +79,12 @@ export interface AveDateRange {
 // @alpha
 export class AveDateRangePicker implements ControlValueAccessor {
     constructor();
+    protected readonly canClear: _angular_core.Signal<boolean>;
     protected choose(date: AvePlainDate): void;
     // (undocumented)
     protected readonly chosen: _angular_core.Signal<string[]>;
+    protected clear(): void;
+    protected readonly clearable: _angular_core.Signal<boolean>;
     // (undocumented)
     protected close(returnFocus: boolean): void;
     protected commit(): void;

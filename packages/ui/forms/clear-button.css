@@ -1,0 +1,23 @@
+@layer components {
+  /* The clear button of a selection field (ADR 0052): the date field's calendar button, with Lucide's x. The field
+     gives it its size (its control height minus space.2) and its place; the corners are concentric with the field's
+     (radius.md − space.1 = radius.sm). */
+  :host {
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: var(--ave-radius-sm);
+    background-color: transparent;
+    color: var(--ave-color-fg-muted);
+    cursor: pointer;
+    transition-property: background-color, color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+  }
+
+  :host(:hover) {
+    background-color: var(--ave-color-bg-hover);
+    color: var(--ave-color-fg-default);
+  }
+}

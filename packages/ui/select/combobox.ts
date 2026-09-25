@@ -17,8 +17,8 @@ import { Listbox, Option } from '@angular/aria/listbox';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { NgControl, type ControlValueAccessor } from '@angular/forms';
 import { FORM_FIELD } from '@angular/forms/signals';
-import { lucideCheck } from '@avelune/icons/lucide';
-import { AVE_CONTROL_OWNER, AveControlTarget, injectControlState } from '@avelune/ui/forms';
+import { lucideCheck, lucideX } from '@avelune/icons/lucide';
+import { AVE_CONTROL_OWNER, AveClearButton, AveControlTarget, injectControlState } from '@avelune/ui/forms';
 import { injectAveMessages } from '@avelune/ui/i18n';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
 import { matches } from './match';
@@ -40,8 +40,18 @@ import type { AveOption, AveSelectSize } from './types';
  */
 @Component({
   selector: 'ave-combobox',
-  imports: [AveControlTarget, AveIcon, Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule],
-  providers: [provideAveIcons([lucideCheck]), { provide: AVE_CONTROL_OWNER, useExisting: AveCombobox }],
+  imports: [
+    AveClearButton,
+    AveControlTarget,
+    AveIcon,
+    Combobox,
+    ComboboxPopup,
+    ComboboxWidget,
+    Listbox,
+    Option,
+    OverlayModule,
+  ],
+  providers: [provideAveIcons([lucideCheck, lucideX]), { provide: AVE_CONTROL_OWNER, useExisting: AveCombobox }],
   host: {
     '[attr.data-size]': 'size()',
   },
@@ -59,10 +69,16 @@ import type { AveOption, AveSelectSize } from './types';
       [readonly]="readonly()"
       [attr.aria-label]="label() || null"
       [attr.placeholder]="placeholder() || null"
+      [attr.data-clear]="clearable() ? '' : null"
       [(value)]="query"
       [(expanded)]="expanded"
       (focusout)="left($event)"
     />
+    @if (clearable()) {
+      <button aveClearButton type="button" class="clear" [label]="label()" (click)="clear()">
+        <ave-icon name="x" decorative />
+      </button>
+    }
     <!-- The popup outside the overlay, so the combobox knows its popup (aria-haspopup, aria-autocomplete) before it
          first opens; the overlay renders once the list is first shown and stays, closed, after (preserveContent). -->
     <ng-template ngComboboxPopup [combobox]="combobox">
@@ -161,6 +177,11 @@ export class AveCombobox<V> implements ControlValueAccessor {
 
   protected readonly isDisabled = computed(() => this.disabled() || this.state.disabled() || this.disabledByForm());
 
+  /** Whether the clear button shows: a value that can be changed and may be taken away (ADR 0052). */
+  protected readonly clearable = computed(
+    () => this.value() !== null && !this.isDisabled() && !this.readonly() && !this.state.required(),
+  );
+
   /** @internal The field around the control dims its label while the control is disabled, by input or by form. */
   readonly controlDisabled = this.isDisabled;
 
@@ -199,6 +220,15 @@ export class AveCombobox<V> implements ControlValueAccessor {
     this.query.set(this.selected()?.label ?? '');
     this.changed(value);
     this.expanded.set(false);
+  }
+
+  /** The clear button: the input empties, the value goes, the list closes, and focus is in the input (ADR 0052). */
+  protected clear(): void {
+    this.value.set(null);
+    this.query.set('');
+    this.changed(null);
+    this.expanded.set(false);
+    this.input().element.focus();
   }
 
   /**

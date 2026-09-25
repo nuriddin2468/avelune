@@ -5,6 +5,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormField, disabled, form, required } from '@angular/forms/signals';
 import { AveDatePicker } from '@avelune/ui/date-picker';
 import { AveDatePickerHarness } from '@avelune/ui/date-picker/testing';
+import { tokens, type TokenName } from '@avelune/tokens';
 import { describe, expect, it } from 'vitest';
 
 @Component({
@@ -32,6 +33,41 @@ class SignalHost {
 class ReactiveHost {
   // eslint-disable-next-line @typescript-eslint/unbound-method -- Angular's validators are static functions that never read this.
   readonly due = new FormControl<string | null>(null, { validators: [Validators.required] });
+}
+
+@Component({
+  selector: 'ave-date-optional',
+  imports: [AveDatePicker],
+  template: `<ave-date-picker label="Paid on" [(value)]="paidOn" />`,
+})
+class OptionalHost {
+  readonly paidOn = signal<string | null>('2026-09-23');
+}
+
+/** The tokens the layout of a date field reads. */
+const layout = [
+  'control.height.md',
+  'control.padding-inline.md',
+  'border-width.default',
+  'space.1',
+  'space.2',
+  'space.4',
+  'font.body-md',
+] as const satisfies readonly TokenName[];
+
+/** The layout tokens and border-box sizing, as the kit's global stylesheet gives every page. */
+function withLayout(set: boolean): void {
+  document.getElementById('ave-spec-reset')?.remove();
+  if (set) {
+    const reset = document.createElement('style');
+    reset.id = 'ave-spec-reset';
+    reset.textContent = '*, ::before, ::after { box-sizing: border-box; }';
+    document.head.append(reset);
+  }
+  for (const name of layout) {
+    if (set) document.documentElement.style.setProperty(tokens[name].cssVar, tokens[name].css);
+    else document.documentElement.style.removeProperty(tokens[name].cssVar);
+  }
 }
 
 function mount<T>(type: new () => T, locale = 'ru'): ComponentFixture<T> {
@@ -157,6 +193,38 @@ describe('AveDatePicker', () => {
     expect(fixture.componentInstance.due.value).toBe('2026-09-15');
     fixture.componentInstance.due.setValue(42 as unknown as string);
     expect(await due.getText()).toBe('');
+  });
+
+  it('clears an optional date with its button, before the calendar button, and keeps focus in it (ADR 0052)', async () => {
+    withLayout(true);
+    const fixture = mount(OptionalHost, 'ru');
+    const field = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveDatePickerHarness);
+    expect(await field.canClear()).toBe(true);
+    const element = fixture.nativeElement as HTMLElement;
+    const input = element.querySelector('input');
+    const clear = element.querySelector('.clear');
+    const opener = element.querySelector('.open');
+    if (input === null || clear === null || opener === null) throw new Error('No parts');
+    const textEnd = input.getBoundingClientRect().right - Number.parseFloat(getComputedStyle(input).paddingInlineEnd);
+    expect(clear.getBoundingClientRect().right).toBe(opener.getBoundingClientRect().left);
+    expect(clear.getBoundingClientRect().left - textEnd).toBe(4);
+    await field.open();
+    await field.clear();
+    expect(fixture.componentInstance.paidOn()).toBeNull();
+    expect(await field.getText()).toBe('');
+    expect(await field.isOpen()).toBe(false);
+    expect(await field.canClear()).toBe(false);
+    expect(document.activeElement).toBe(input);
+    withLayout(false);
+  });
+
+  it('shows no clear button on a required or readonly date', async () => {
+    const fixture = mount(ReactiveHost, 'ru');
+    const [due, frozen] = await TestbedHarnessEnvironment.loader(fixture).getAllHarnesses(AveDatePickerHarness);
+    await due?.type('01.10.2026');
+    expect(await due?.canClear()).toBe(false);
+    expect(await frozen?.canClear()).toBe(false);
+    await expect(due?.clear()).rejects.toThrow('shows no clear button');
   });
 
   it('binds a Reactive Forms control, keeps dates within its bounds, and is readonly or disabled', async () => {

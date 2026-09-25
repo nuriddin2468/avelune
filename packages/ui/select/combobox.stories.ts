@@ -1,7 +1,13 @@
-import { Component, input, signal } from '@angular/core';
+import { Component, LOCALE_ID, input, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormField, form, required } from '@angular/forms/signals';
-import { componentWrapperDecorator, moduleMetadata, type Meta, type StoryObj } from '@storybook/angular-vite';
+import {
+  applicationConfig,
+  componentWrapperDecorator,
+  moduleMetadata,
+  type Meta,
+  type StoryObj,
+} from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { AveCombobox, type AveSelectSize } from '@avelune/ui/select';
 import { counterparties } from './fixtures/options';
@@ -84,6 +90,43 @@ class ComboboxForms {
   protected readonly counterparty = new FormControl<number | null>(null, { validators: [Validators.required] });
 }
 
+/** Clearing (ADR 0052): an optional combobox with a value shows the clear button inside its end; a required one does not. */
+@Component({
+  selector: 'ave-combobox-clearing',
+  imports: [AveCombobox, FormField],
+  template: `
+    <div class="grid" lang="ru">
+      <div class="field">
+        <span class="label">Можно очистить</span>
+        <ave-combobox
+          label="Плательщик"
+          placeholder="Начните вводить название"
+          [options]="counterparties"
+          [(value)]="payer"
+        />
+      </div>
+      <div class="field">
+        <span class="label">Обязательный</span>
+        <ave-combobox
+          label="Контрагент (обязательный)"
+          [options]="counterparties"
+          [formField]="contract.counterparty"
+        />
+      </div>
+    </div>
+    <p class="status" role="status">Плательщик: {{ payer() ?? 'не выбран' }}</p>
+  `,
+  styleUrl: './select.stories.css',
+})
+class ComboboxClearing {
+  protected readonly counterparties = counterparties;
+  protected readonly payer = signal<number | null>(6);
+  protected readonly model = signal<{ counterparty: number | null }>({ counterparty: 3 });
+  protected readonly contract = form(this.model, (path) => {
+    required(path.counterparty);
+  });
+}
+
 /** Pads the single-combobox stories. */
 @Component({
   selector: 'ave-combobox-story-frame',
@@ -106,6 +149,10 @@ function frame(view: View): NonNullable<Story['render']> {
     template: `<ave-combobox-stories [view]="view" />`,
     moduleMetadata: { imports: [ComboboxStories] },
   });
+}
+
+function locale(value: string): ReturnType<typeof applicationConfig> {
+  return applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: value }] });
 }
 
 function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
@@ -228,5 +275,39 @@ export const LongText: Story = {
     const column = canvasElement.querySelector('.narrow');
     if (column === null) throw new Error('No column');
     await expect(column.scrollWidth).toBeLessThanOrEqual(column.clientWidth);
+  },
+};
+
+/**
+ * Clearing (ADR 0052): the button empties an optional combobox and leaves focus in it; deleting the text and leaving
+ * does the same on the keyboard. A long label stops before the button.
+ */
+export const Clearing: Story = {
+  decorators: [locale('ru')],
+  render: () => ({ template: '<ave-combobox-clearing />', moduleMetadata: { imports: [ComboboxClearing] } }),
+  parameters: source('<ave-combobox [options]="counterparties" [formField]="contract.payer" />'),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole('combobox', { name: 'Плательщик' });
+    const clear = canvas.getByRole('button', { name: 'Очистить Плательщик' });
+    await expect(canvas.getAllByRole('button', { name: /^Очистить/ })).toHaveLength(1);
+    const style = getComputedStyle(input);
+    const textEnd = input.getBoundingClientRect().right - Number.parseFloat(style.paddingInlineEnd);
+    await expect(clear.getBoundingClientRect().left - textEnd).toBe(4);
+    await userEvent.click(clear);
+    await expect(input).toHaveFocus();
+    await expect(input).toHaveValue('');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Плательщик: не выбран');
+    await userEvent.type(input, 'Гамма');
+    await userEvent.click(await canvas.findByRole('option', { name: 'ООО «Гамма Консалтинг»' }));
+    await expect(canvas.getByRole('status')).toHaveTextContent('Плательщик: 9');
+    await userEvent.clear(input);
+    await userEvent.keyboard('{Escape}');
+    input.blur();
+    await waitFor(() => expect(canvas.getByRole('status')).toHaveTextContent('Плательщик: не выбран'));
+    await userEvent.type(input, 'документооборот');
+    await userEvent.click(await canvas.findByRole('option', { name: /документооборота/ }));
+    input.blur();
+    await expect(canvas.getByRole('button', { name: 'Очистить Плательщик' })).toBeVisible();
   },
 };

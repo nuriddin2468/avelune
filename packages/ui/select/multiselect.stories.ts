@@ -1,7 +1,13 @@
-import { Component, input, signal } from '@angular/core';
+import { Component, LOCALE_ID, input, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { FormField, form, minLength } from '@angular/forms/signals';
-import { componentWrapperDecorator, moduleMetadata, type Meta, type StoryObj } from '@storybook/angular-vite';
+import {
+  applicationConfig,
+  componentWrapperDecorator,
+  moduleMetadata,
+  type Meta,
+  type StoryObj,
+} from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { AveMultiselect, type AveSelectSize } from '@avelune/ui/select';
 import { approvers } from './fixtures/options';
@@ -80,6 +86,39 @@ class MultiselectForms {
   protected readonly chosen = new FormControl<string[]>(['legal'], { nonNullable: true });
 }
 
+/** Clearing (ADR 0052): an optional multiselect with chosen options shows the clear button; one that needs an option does not. */
+@Component({
+  selector: 'ave-multiselect-clearing',
+  imports: [AveMultiselect, FormField],
+  template: `
+    <div class="grid" lang="ru">
+      <div class="field">
+        <span class="label">Можно очистить</span>
+        <ave-multiselect
+          label="Наблюдатели"
+          placeholder="Выберите подразделения"
+          [options]="approvers"
+          [(value)]="watchers"
+        />
+      </div>
+      <div class="field">
+        <span class="label">Нужен хотя бы один</span>
+        <ave-multiselect label="Согласующие (обязательно)" [options]="approvers" [formField]="contract.approvers" />
+      </div>
+    </div>
+    <p class="status" role="status">Наблюдатели: {{ watchers().join(', ') || 'нет' }}</p>
+  `,
+  styleUrl: './select.stories.css',
+})
+class MultiselectClearing {
+  protected readonly approvers = approvers;
+  protected readonly watchers = signal<string[]>(['legal', 'security']);
+  protected readonly model = signal<{ approvers: string[] }>({ approvers: ['finance'] });
+  protected readonly contract = form(this.model, (path) => {
+    minLength(path.approvers, 1);
+  });
+}
+
 /** Pads the single-multiselect stories. */
 @Component({
   selector: 'ave-multiselect-story-frame',
@@ -102,6 +141,10 @@ function frame(view: View): NonNullable<Story['render']> {
     template: `<ave-multiselect-stories [view]="view" />`,
     moduleMetadata: { imports: [MultiselectStories] },
   });
+}
+
+function locale(value: string): ReturnType<typeof applicationConfig> {
+  return applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: value }] });
 }
 
 function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
@@ -194,5 +237,36 @@ export const LongText: Story = {
     await expect(trigger?.getBoundingClientRect().height).toBe(36);
     const value = canvasElement.querySelector('.value');
     await expect((value?.scrollWidth ?? 0) > (value?.clientWidth ?? 0)).toBe(true);
+  },
+};
+
+/**
+ * Clearing (ADR 0052): the button unchecks every option of an optional multiselect; Delete does the same on the
+ * keyboard. One that needs an option has no button.
+ */
+export const Clearing: Story = {
+  decorators: [locale('ru')],
+  render: () => ({ template: '<ave-multiselect-clearing />', moduleMetadata: { imports: [MultiselectClearing] } }),
+  parameters: source('<ave-multiselect [options]="approvers" [formField]="contract.watchers" />'),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('combobox', { name: 'Наблюдатели' });
+    await expect(canvas.getAllByRole('button', { name: /^Очистить/ })).toHaveLength(1);
+    await userEvent.click(canvas.getByRole('button', { name: 'Очистить Наблюдатели' }));
+    await expect(trigger).toHaveFocus();
+    await expect(trigger).toHaveTextContent('Выберите подразделения');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Наблюдатели: нет');
+    await userEvent.keyboard('{ArrowDown}');
+    await userEvent.keyboard('{Enter}');
+    await userEvent.keyboard('{Escape}');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Наблюдатели: legal');
+    await userEvent.keyboard('{Backspace}');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Наблюдатели: нет');
+    await userEvent.click(trigger);
+    await userEvent.click(await canvas.findByRole('option', { name: 'Финансовый отдел' }));
+    await userEvent.click(await canvas.findByRole('option', { name: 'Отдел закупок' }));
+    await userEvent.keyboard('{Escape}');
+    trigger.blur();
+    await expect(canvas.getByRole('button', { name: 'Очистить Наблюдатели' })).toBeVisible();
   },
 };
