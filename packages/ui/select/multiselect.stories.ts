@@ -1,6 +1,6 @@
 import { Component, input, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { FormField, form, required } from '@angular/forms/signals';
+import { FormField, form, minLength } from '@angular/forms/signals';
 import { componentWrapperDecorator, moduleMetadata, type Meta, type StoryObj } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { AveMultiselect, type AveSelectSize } from '@avelune/ui/select';
@@ -75,7 +75,7 @@ class MultiselectForms {
   protected readonly approvers = approvers;
   protected readonly model = signal<{ approvers: string[] }>({ approvers: [] });
   protected readonly contract = form(this.model, (path) => {
-    required(path.approvers);
+    minLength(path.approvers, 1);
   });
   protected readonly chosen = new FormControl<string[]>(['legal'], { nonNullable: true });
 }

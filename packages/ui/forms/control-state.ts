@@ -1,6 +1,6 @@
 import { DestroyRef, ElementRef, afterNextRender, computed, inject, signal, type Signal } from '@angular/core';
 import { NgControl, Validators, type AbstractControl } from '@angular/forms';
-import { FORM_FIELD } from '@angular/forms/signals';
+import { FORM_FIELD, MIN_LENGTH } from '@angular/forms/signals';
 
 /**
  * The state of a form control as the kit shows it (ADR 0039): the same signals whether the control is bound with
@@ -13,7 +13,7 @@ export interface AveControlState {
   readonly invalid: Signal<boolean>;
   /** Whether the person has left the control at least once. */
   readonly touched: Signal<boolean>;
-  /** Whether the control needs a value. */
+  /** Whether the control needs a value; for a list, at least one item (`minLength(path, 1)` in Signal Forms). */
   readonly required: Signal<boolean>;
   /** Whether the control is disabled. */
   readonly disabled: Signal<boolean>;
@@ -62,7 +62,12 @@ export function injectControlState(): AveControlState {
     state = {
       invalid: computed(() => field.state().invalid()),
       touched: computed(() => field.state().touched()),
-      required: computed(() => field.state().required()),
+      // Signal Forms' required() accepts an empty array, so a list that must hold an item says so with
+      // minLength(path, 1); the kit shows that list as required too (ADR 0049).
+      required: computed(() => {
+        const current = field.state();
+        return current.required() || (Array.isArray(current.value()) && (current.metadata(MIN_LENGTH)?.() ?? 0) > 0);
+      }),
       disabled: computed(() => field.state().disabled()),
     };
   } else if (ngControl !== null) {

@@ -45,7 +45,7 @@ As the select: invalid, readonly and disabled on the trigger; disabled options d
 
 <Canvas of={MultiselectStories.Forms} />
 
-The value is an array (`V[]`), empty while nothing is chosen, always in the order of the options. `required` means at least one.
+The value is an array (`V[]`), empty while nothing is chosen, always in the order of the options. To ask for at least one, Signal Forms need `minLength(path.approvers, 1)`: their `required` accepts an empty array. The field then shows as required too (ADR 0049). Reactive Forms' `Validators.required` already fails on an empty array.
 
 ## Content
 

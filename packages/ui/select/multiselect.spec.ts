@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { FormField, form, required } from '@angular/forms/signals';
+import { FormField, form, minLength } from '@angular/forms/signals';
 import { AveMultiselect, type AveOption } from '@avelune/ui/select';
 import { AveMultiselectHarness } from '@avelune/ui/select/testing';
 import { describe, expect, it } from 'vitest';
@@ -27,7 +27,7 @@ class SignalHost {
   readonly approvers = approvers;
   readonly model = signal<{ approvers: string[] }>({ approvers: [] });
   readonly contract = form(this.model, (path) => {
-    required(path.approvers);
+    minLength(path.approvers, 1);
   });
 }
 
@@ -66,6 +66,15 @@ describe('AveMultiselect', () => {
     expect(await select.getText()).toBe('Юридический отдел, Служба безопасности');
     await select.toggle('Юридический отдел');
     expect(fixture.componentInstance.model().approvers).toEqual(['security']);
+  });
+
+  it('needs one option chosen with minLength(path, 1), and says so as required', async () => {
+    const { fixture } = mount(SignalHost);
+    const select = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveMultiselectHarness);
+    expect(fixture.componentInstance.contract.approvers().invalid()).toBe(true);
+    expect(await select.isRequired()).toBe(true);
+    await select.toggle('Юридический отдел');
+    expect(fixture.componentInstance.contract.approvers().invalid()).toBe(false);
   });
 
   it('keeps focus on the trigger when an option is pressed', async () => {
