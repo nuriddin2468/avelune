@@ -1,6 +1,6 @@
 # 0029. Repository guardrails: project tags, browser floor, commits, formatting, dependency policy
 
-- Status: Accepted (2026-09-24, technical decision within Phase 3)
+- Status: Accepted (2026-09-24, technical decision within Phase 3); the pinned release age is 960 minutes since 0042
 - Date: 2026-09-24
 - Related: 0001, 0005, 0007, 0012, 0014, 0015; brief §5
 

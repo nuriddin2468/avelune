@@ -17,7 +17,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0009](0009-stylelint-logical-css-plugin.md) | Logical-properties lint: `stylelint-plugin-logical-css` | Accepted |
 | [0010](0010-visual-test-determinism.md) | Visual-test determinism: pinned image, amd64, fonts | Accepted |
 | [0011](0011-color-generation-and-contrast.md) | Colour generation in OKLCH and contrast maths | Accepted; accent fill replaced by 0019, restored by 0021 |
-| [0012](0012-pnpm-11.md) | Package manager: pnpm 11 | Accepted |
+| [0012](0012-pnpm-11.md) | Package manager: pnpm 11 | Accepted; the addendum's release age superseded by 0042 |
 | [0013](0013-vitest-4-now-5-later.md) | Vitest 4 now, Vitest 5 after Angular 22.2 | Accepted |
 | [0014](0014-browser-floor-follows-angular.md) | Browser floor follows Angular's supported set | Accepted |
 | [0015](0015-node-scripts-typescript-node-test.md) | Repository scripts in TypeScript, run by Node; `node:test` | Accepted; resolution exception in addendum (0022); schematics tests in addendum (0029) |
@@ -34,7 +34,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0026](0026-unit-and-story-tests.md) | Unit and story tests: Angular's unit-test builder in Chromium, per-file thresholds, failing fixtures | Accepted |
 | [0027](0027-browser-suites-in-the-pinned-container.md) | Browser suites: visual, axe sweep and invariants in the pinned container | Accepted |
 | [0028](0028-size-budget-per-entry-point.md) | Size budgets: one per entry point, declared in its manifest | Accepted |
-| [0029](0029-repository-guardrails-proven.md) | Repository guardrails: project tags, browser floor, commits, formatting, dependency policy | Accepted |
+| [0029](0029-repository-guardrails-proven.md) | Repository guardrails: project tags, browser floor, commits, formatting, dependency policy | Accepted; the pinned release age changed by 0042 |
 | [0030](0030-global-stylesheet.md) | Global stylesheet: one entry, layered files, loaded through the consumer's bundler; one focus ring | Accepted |
 | [0031](0031-motion-catalog.md) | Motion catalog: motion.css classes, reduced motion from tokens, linear only on loops | Accepted |
 | [0032](0032-runtime-theme-api.md) | Runtime API: provideAvelune() and AveTheme in @avelune/ui/theme | Accepted |
@@ -47,6 +47,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0039](0039-forms-and-input.md) | Forms and Input: one control state for both form APIs, a field context, a native input | Accepted |
 | [0040](0040-form-field.md) | FormField: a label, a projected control, a hint and an error that register themselves | Accepted |
 | [0041](0041-checkbox.md) | Checkbox: a drawn native checkbox and a choice label | Accepted |
+| [0042](0042-release-age-16-hours.md) | Release age: 16 hours | Accepted |
 
 ## Template
 

@@ -2,7 +2,7 @@
 
 Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` and the official docs; re-verified and installed in Phase 1 the same day; the lint, browser-suite and size packages re-verified and installed in Phase 3 (2026-09-24). Re-verify before every upgrade; update this file in the same merge request as the version change.
 
-**Maturity rule.** pnpm resolves no version younger than 24 hours (`minimumReleaseAge`, ADR 0012 addendum). Rows marked *held back* pin the previous release until the newer one matures; the upgrade is listed in ROADMAP.md, "Tracked upgrades".
+**Maturity rule.** pnpm resolves no version younger than 16 hours (`minimumReleaseAge`, ADR 0042; 24 hours until 2026-09-25, ADR 0012 addendum). Rows marked *held back* pin the previous release until the newer one matures; the upgrade is listed in ROADMAP.md, "Tracked upgrades".
 
 ## 1. Environment (development machine, Phase 0 doctor)
 

@@ -310,7 +310,7 @@ What is checked, by which tool, at which stage, and what proves that the check f
 | Formatting | Prettier (`.md` excluded), proven by `repo-check:test` | staged files | deferred |
 | Conventional commits, scope = Nx project or `repo`, `deps`, `docs`, `ci`, `release` | commitlint, proven by `repo-check:test` | commit message | n/a |
 | Public API unchanged or report updated; release tags present | API Extractor (`ui:api-report`), proven by `test-check:test` | no | deferred |
-| No dependency younger than 24 h; install scripts only where listed | pnpm (`minimumReleaseAge`, `allowBuilds`), effective settings pinned by `repo-check:test` | `pnpm install` | `pnpm install` |
+| No dependency younger than 16 h (ADR 0042); install scripts only where listed | pnpm (`minimumReleaseAge`, `allowBuilds`), effective settings pinned by `repo-check:test` | `pnpm install` | `pnpm install` |
 | Every Nx project has exactly one constrained layer or type tag; `.browserslistrc` is the higher of the CSS-feature floor and Angular's supported set (ADR 0014) | `repo-check:check`, proven by `repo-check:test` | no | deferred |
 | `ng add` runs, `ng update` finds its migration collection, the package group lists every package | `ui:test-schematics` | no | deferred |
 | Colour primitives are exactly what the config generates (no hand edits) | `tokens:colors` | no | deferred |

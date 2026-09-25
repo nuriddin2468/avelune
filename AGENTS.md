@@ -7,7 +7,7 @@ Rules for any coding agent (and any human) working in this repository. `CLAUDE.m
 1. Read [docs/ROADMAP.md](docs/ROADMAP.md): current position, parameters, first unchecked item that is not marked **Deferred**.
 2. Read the sections of [docs/BRIEF.md](docs/BRIEF.md) (the product owner's original brief) that cover that item. "brief §N" anywhere in the repo refers to that file. Where the brief's placeholders differ from the resolved parameters in ROADMAP.md, ROADMAP.md wins.
 3. Read the ADRs in [docs/adr](docs/adr/README.md) that touch the area you will change, and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for where things live.
-4. Versions are pinned in [docs/compatibility.md](docs/compatibility.md). Before installing or upgrading anything, verify with `npm view <pkg> version peerDependencies time` and update that file in the same change. pnpm refuses versions younger than 24 hours (ADR 0012); pin the previous release and list the upgrade in ROADMAP.md.
+4. Versions are pinned in [docs/compatibility.md](docs/compatibility.md). Before installing or upgrading anything, verify with `npm view <pkg> version peerDependencies time` and update that file in the same change. pnpm refuses versions younger than 16 hours (ADR 0012, 0042); pin the previous release and list the upgrade in ROADMAP.md.
 5. At the end of every phase or wave: update the ROADMAP checkboxes, write a short summary, and ask the product owner whether to continue in the same session or a fresh one (brief §1 rule 8). Talk to the product owner in Russian; write the docs in English.
 
 ## Non-negotiables

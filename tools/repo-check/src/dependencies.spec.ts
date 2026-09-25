@@ -1,5 +1,5 @@
-// The dependency policy (ADR 0012): pnpm's effective configuration, as `pnpm config list` reports it, refuses versions
-// younger than 24 hours without exceptions, enforces engines, and runs install scripts for esbuild only. Changing any
+// The dependency policy (ADR 0012, 0042): pnpm's effective configuration, as `pnpm config list` reports it, refuses
+// versions younger than 16 hours without exceptions, enforces engines, and runs install scripts for esbuild only. Changing any
 // of these is a guardrail change and must show up here.
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
@@ -14,8 +14,8 @@ const config: unknown = JSON.parse(
 const setting = (name: string): unknown => Reflect.get(Object(config), name);
 
 describe('pnpm policy', () => {
-  it('refuses versions younger than 24 hours, with no exceptions', () => {
-    assert.equal(setting('minimumReleaseAge'), 1440);
+  it('refuses versions younger than 16 hours, with no exceptions', () => {
+    assert.equal(setting('minimumReleaseAge'), 960);
     assert.equal(setting('minimumReleaseAgeExclude'), undefined);
   });
 

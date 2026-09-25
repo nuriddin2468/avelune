@@ -5,9 +5,9 @@ packages:
 # Fail on a Node or pnpm version outside `engines`.
 engineStrict: true
 
-# Supply-chain guard: never resolve a version younger than 24 hours (ADR 0012, addendum).
-# This is also pnpm 11's default; it is set explicitly so it cannot drift silently.
-minimumReleaseAge: 1440
+# Supply-chain guard: never resolve a version younger than 16 hours (ADR 0012, addendum; ADR 0042).
+# Lower than pnpm 11's default of 24 hours (product owner, 2026-09-25); set explicitly so it cannot drift silently.
+minimumReleaseAge: 960
 
 # Install scripts: allowed only where needed; every other dependency is blocked by pnpm.
 allowBuilds:
