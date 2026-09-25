@@ -39,8 +39,7 @@ export class AveCombobox<V> implements ControlValueAccessor {
     registerOnChange(callback: (value: V | null) => void): void;
     // @internal (undocumented)
     registerOnTouched(callback: () => void): void;
-    // (undocumented)
-    protected readonly selectedValues: _angular_core.Signal<V[]>;
+    protected readonly selectedValues: _angular_core.WritableSignal<V[]>;
     // @internal (undocumented)
     setDisabledState(disabled: boolean): void;
     protected readonly shown: _angular_core.Signal<readonly AveOption<V>[]>;
@@ -133,8 +132,7 @@ export class AveSelect<V> implements ControlValueAccessor {
     registerOnTouched(callback: () => void): void;
     // (undocumented)
     protected readonly selected: _angular_core.Signal<AveOption<V> | undefined>;
-    // (undocumented)
-    protected readonly selectedValues: _angular_core.Signal<V[]>;
+    protected readonly selectedValues: _angular_core.WritableSignal<V[]>;
     // @internal (undocumented)
     setDisabledState(disabled: boolean): void;
     readonly size: _angular_core.InputSignal<AveSelectSize>;

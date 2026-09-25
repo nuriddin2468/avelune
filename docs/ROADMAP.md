@@ -158,6 +158,7 @@ Wave 2 build (2026-09-25), before the product owner's corrections and the wave's
 - DatePicker and DateRangePicker (ADR 0048), FileUpload (ADR 0050) and Slider with RangeSlider (ADR 0051) joined Textarea, RadioGroup, Switch and the select family. The product owner chose the FileUpload's drop zone with its button inside and the Slider's value in the label row (2026-09-25).
 - New shared parts: `@avelune/ui/overlay` (the connected overlay and its presence); `aveDateFormat`, `aveNumberFormat` and `aveFileSize` in `@avelune/ui/i18n`, which write Uzbek in Latin script right where Chromium cannot; messages that are functions; the field's value slot (`showValue`); `controlDescriptions` and `controlDisabled` on `AveControlOwner`; the thumb ring in `focus.css`.
 - Found and fixed on the way: a multiselect with `required` was valid with nothing chosen (ADR 0049: `minLength(path, 1)`); the field's label did not dim for a composite control disabled by its own input; `aria-required` went on a plain button; CDK's `LiveAnnouncer` showed its words on the page; forced colours drew a border round every calendar day; a range's end date was clipped at 320px.
+- Found after the build (2026-09-25): choosing a select's or a combobox's chosen option again cleared the value, because Aria's single selection toggles; fixed, the value stays and the list is given it back.
 - Not fixed, upstream: Angular Aria's combobox logs NG0953 when destroyed with focus inside (tracked risk).
 
 ### Phase 6: Consumer integration

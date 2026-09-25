@@ -192,6 +192,19 @@ describe('AveCombobox', () => {
     withReset(false);
   });
 
+  it('keeps the value when the chosen option is chosen again', async () => {
+    const { fixture } = mount(OptionalHost);
+    const combobox = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveComboboxHarness);
+    await combobox.focus();
+    await combobox.press('down');
+    await combobox.choose('ООО «Альфа Технологии»');
+    expect(fixture.componentInstance.payer()).toBe(1);
+    expect(await combobox.getText()).toBe('ООО «Альфа Технологии»');
+    await combobox.press('down');
+    const chosen = document.querySelector('[role="option"][aria-selected="true"]');
+    expect(chosen?.textContent.trim()).toBe('ООО «Альфа Технологии»');
+  });
+
   it('keeps focus in the input when an option is pressed', async () => {
     const { fixture } = mount(SignalHost);
     const combobox = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveComboboxHarness);

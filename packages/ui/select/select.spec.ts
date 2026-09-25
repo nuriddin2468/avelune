@@ -282,6 +282,23 @@ describe('AveSelect', () => {
     expect(await frozen?.canClear()).toBe(false);
   });
 
+  it('keeps the value when the chosen option is chosen again, with a click or Enter', async () => {
+    const { fixture } = mount(PlainHost);
+    const select = await TestbedHarnessEnvironment.loader(fixture).getHarness(
+      AveSelectHarness.with({ text: 'Choose' }),
+    );
+    await select.choose('Поставка');
+    await select.choose('Поставка');
+    expect(fixture.componentInstance.kind()).toBe('supply');
+    expect(await select.isOpen()).toBe(false);
+    await select.open();
+    const chosen = document.querySelector('[role="option"][aria-selected="true"]');
+    expect(chosen?.textContent.trim()).toBe('Поставка');
+    await select.press('enter');
+    expect(fixture.componentInstance.kind()).toBe('supply');
+    expect(await select.isOpen()).toBe(false);
+  });
+
   it('keeps focus on the trigger when an option is pressed', async () => {
     const { fixture, element } = mount(PlainHost);
     const select = await TestbedHarnessEnvironment.loader(fixture).getHarness(

@@ -170,7 +170,11 @@ export class AveCombobox<V> implements ControlValueAccessor {
       : options.filter((option) => matches(option.label, query));
   });
 
-  protected readonly selectedValues = computed<V[]>(() => {
+  /**
+   * The list's selection: the value. Aria's single selection toggles, so choosing the chosen option again takes it
+   * away in the list; the list is then given the value back (see `choose`).
+   */
+  protected readonly selectedValues = linkedSignal<V[]>(() => {
     const value = this.value();
     return value === null ? [] : [value];
   });
@@ -213,9 +217,13 @@ export class AveCombobox<V> implements ControlValueAccessor {
     });
   }
 
-  /** The person chose an option: the value changes, the input shows its label, and the list closes. */
+  /**
+   * The person chose an option: the value changes, the input shows its label, and the list closes. The chosen option
+   * chosen again keeps it.
+   */
   protected choose(values: V[]): void {
-    const value = values[0] ?? null;
+    const value = values[0] ?? this.value();
+    this.selectedValues.set(value === null ? [] : [value]);
     this.value.set(value);
     this.query.set(this.selected()?.label ?? '');
     this.changed(value);
