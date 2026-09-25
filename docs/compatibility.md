@@ -1,6 +1,6 @@
 # Compatibility matrix
 
-Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` and the official docs; re-verified and installed in Phase 1 the same day; the lint, browser-suite and size packages re-verified and installed in Phase 3 (2026-09-24). Re-verify before every upgrade; update this file in the same merge request as the version change.
+Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` and the official docs; re-verified and installed in Phase 1 the same day; the lint, browser-suite and size packages re-verified and installed in Phase 3 (2026-09-24); the Angular 22.2 set re-verified and installed on 2026-09-25. Re-verify before every upgrade; update this file in the same merge request as the version change.
 
 **Maturity rule.** pnpm resolves no version younger than 16 hours (`minimumReleaseAge`, ADR 0042; 24 hours until 2026-09-25, ADR 0012 addendum). Rows marked *held back* pin the previous release until the newer one matures; the upgrade is listed in ROADMAP.md, "Tracked upgrades".
 
@@ -20,21 +20,21 @@ Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` an
 
 | Area | Package | Version | Deciding constraint |
 |---|---|---|---|
-| Framework | `@angular/{core,common,compiler,forms,router,platform-browser}` | 22.1.7 | Latest stable; 22.2.0 is rc |
-| | `@angular/cli`, `@angular/build`, `@angular-devkit/{core,schematics}`, `@schematics/angular` | 22.1.8 | Schematics toolchain for `ng add` / `ng update` |
-| | `@angular/cdk`, `@angular/aria` | 22.1.7 | Peers `@angular/core ^22 \|\| ^23`; Aria stable since 22.0. *Held back*: 22.2.0 published 2026-09-23 12:14 UTC |
+| Framework | `@angular/{core,common,compiler,forms,router,platform-browser}` | 22.2.0 | Latest stable (released 2026-09-23); installed 2026-09-25. Its compiler scopes nested CSS rules (ADR 0024, addendum) and adds `strictUnclaimedEventNames` (ADR 0022, addendum) |
+| | `@angular/cli`, `@angular/build`, `@angular-devkit/{core,schematics}`, `@schematics/angular` | 22.2.0 | Schematics toolchain for `ng add` / `ng update`. `@angular/build` peers TS `>=6.0 <6.1`, Vitest `^4.0.8 \|\| ^5.0.0` |
+| | `@angular/cdk`, `@angular/aria` | 22.2.0 | Peers `@angular/core ^22 \|\| ^23`; Aria peers `@angular/cdk` 22.2.0 exactly; stable since 22.0 |
 | | `typescript` | ~6.0.3 | Angular `>=6.0 <6.1`; npm `latest` is 7.0.2, not supported |
-| | `ng-packagr` | 22.1.1 | Peers `@angular/compiler-cli ^22`, TS `>=6.0 <6.1`. *Held back*: 22.2.0 published 2026-09-23 09:19 UTC |
+| | `ng-packagr` | 22.1.1 | Peers `@angular/compiler-cli ^22.0.0`, so it builds with 22.2; TS `>=6.0 <6.1`. *Held back*: 22.2.x bundles the `.d.ts` with `rolldown-plugin-dts`, which writes no `export {…}` when every export is inline; TypeScript then exports every declaration of such a file, and `@avelune/ui/form-field` exposed its internal `AVE_FIELD_PARTS` and `AveFieldParts` (found by `ui:api-report`, proven with `tsc`, 2026-09-25) |
 | | `rxjs`, `tslib` | 7.8.2, 2.8.1 | Angular peers |
-| Workspace | `nx`, `@nx/{js,eslint,eslint-plugin}` | 23.2.1 | Nx matrix: Angular ~22.1 needs Nx ≥ 23.2.0. `@nx/angular` is not used: Nx runs the Angular builders directly |
+| Workspace | `nx`, `@nx/{js,eslint,eslint-plugin}` | 23.2.1 | `@nx/angular` is not used: Nx runs the Angular builders directly, so the Angular version does not constrain Nx |
 | | `pnpm` | 11.27.1 | ADR 0012 |
-| Unit tests | `vitest`, `@vitest/browser`, `@vitest/browser-playwright`, `@vitest/coverage-v8` | 4.1.11 | `@angular/build` 22.1 peers `^4.0.8`; `@storybook/addon-vitest` and `@nx/vitest` peer `^3 \|\| ^4` (ADR 0013); installed in Phase 3 (2026-09-24) |
+| Unit tests | `vitest`, `@vitest/browser`, `@vitest/browser-playwright`, `@vitest/coverage-v8` | 4.1.11 | `@angular/build` 22.2 peers `^4.0.8 \|\| ^5.0.0`; `@storybook/addon-vitest` 10.6.0 and `@nx/vitest` 23.2.1 still peer `^3 \|\| ^4` (ADR 0013; re-checked 2026-09-25); installed in Phase 3 (2026-09-24) |
 | | `playwright` | 1.63.0 | Peer of `@vitest/browser-playwright`; its chromium 1243 was already in the user's Playwright cache, and its install script stays blocked (`allowBuilds`) |
 | | `vite` | 8.3.0 | Required by `@storybook/angular-vite` |
 | Storybook | `storybook`, `@storybook/angular-vite`, `@storybook/addon-{vitest,a11y,docs}` | 10.6.0 | ADR 0008. Installed in Phase 2; `addon-vitest` added in Phase 3 (2026-09-24). JIT since ADR 0025. `angular-vite` carries a pnpm patch (ADR 0035): an upgrade must re-create or drop it |
-| | `@analogjs/vite-plugin-angular` | 2.7.2 | Required peer of `angular-vite` (≥ 2.0.0) |
-| | `@angular/animations` | 22.1.7 | Required peer of `angular-vite` 10.6; devDependency only, never imported (ADR 0005, 0008). npm marks it deprecated |
-| | `@angular-devkit/architect` | 0.2201.8 | Required peer of `angular-vite`; matches CLI 22.1.8 |
+| | `@analogjs/vite-plugin-angular` | 2.7.4 | Required peer of `angular-vite` (≥ 2.0.0). 2.7.3 is the first that initialises `@angular/build` 22.2's hash utility; with 2.7.2 the Storybook build fails (`Hash utility must be initialized`). Installed 2026-09-25 (released 2026-09-24 13:18 UTC, allowed by ADR 0042) |
+| | `@angular/animations` | 22.2.0 | Required peer of `angular-vite` 10.6; devDependency only, never imported (ADR 0005, 0008). npm marks it deprecated |
+| | `@angular-devkit/architect` | 0.2202.0 | Required peer of `angular-vite`; matches CLI 22.2.0 |
 | | `react`, `@types/react` | 19.3.0 | The React addon-docs 10.6 resolves (its dependency, peer range `^16.8 … ^19`), imported by the themed docs container; one copy in the lockfile. devDependencies only (ADR 0034). Installed 2026-09-24 (released 2026-09-09) |
 | | `remark-gfm` | 4.0.1 | GitHub-flavoured Markdown (tables) in the MDX docs pages; ESM, unified 11 like addon-docs' MDX 3. devDependency (ADR 0034). Installed 2026-09-24 (released 2025-02-10) |
 | E2E / visual | `@playwright/test` | 1.63.0 | Must equal the image tag `mcr.microsoft.com/playwright:v1.63.0-noble`, pinned by the amd64 digest in `tools/visual/src/image.ts` (`visual:test` checks it). Installed in Phase 3 (2026-09-24; released 2026-09-04) |
@@ -54,11 +54,11 @@ Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` an
 | | `browserslist` | 4.29.0 | Reads `.browserslistrc` for guardrail tests; the same version Angular's build resolves |
 | Tokens | `style-dictionary` | 5.5.5 | DTCG colour objects since 5.3, dimension objects since 5.4; duration/gradient still WIP (issue #1590). Installed in Phase 2 (released 2026-09-20); used as the resolver, values converted by our own code (ADR 0017) |
 | | `colorjs.io` | 0.7.1 | ADR 0011; installed in Phase 2 (released 2026-07-24) |
-| API | `@microsoft/api-extractor` | 7.59.1 | Bundles TS 5.9.3; works on TS 6 output (ADR 0007, spike result). *Held back*: 7.59.2 published 2026-09-22 18:27 UTC |
+| API | `@microsoft/api-extractor` | 7.59.2 | Bundles TS 5.9.3; works on TS 6 output (ADR 0007, spike result). Installed 2026-09-25 |
 | Release | `@changesets/cli` | 3.0.3 | Node `^22.11 \|\| ^24`, pnpm `>=10` |
 | Hooks | `lefthook` | 2.1.14 | |
 | | `@commitlint/cli`, `@commitlint/config-conventional`, `@commitlint/config-nx-scopes` | 21.2.3 | Node `>=22.12`; scopes = Nx project names |
-| Format | `prettier` | 3.9.8 | *Held back*: 3.9.9 published 2026-09-23 06:31 UTC |
+| Format | `prettier` | 3.9.9 | Installed 2026-09-25 |
 | Budgets | `size-limit`, `@size-limit/file`, `@size-limit/esbuild` | 14.0.0 | Node `^22.19 \|\| ^24.5 \|\| >=26`; plugins peer `size-limit` 14.0.0; `@size-limit/esbuild` uses esbuild `^0.28.2`, deduplicated with Angular's 0.28.2 (ADR 0028). Installed in Phase 3 (2026-09-24; released 2026-09-15) |
 | Node types | `@types/node` | 24.13.6 | Follows `engines.node` (^24.15.0), not npm `latest` (26.x); ADR 0015 |
 | Icons | `lucide-static` | 1.47.0 | ISC. `icon-nodes.json` (all 1848 icons) and the licence are read only by `packages/icons/scripts` at generation time, and `tags.json` by the Icon gallery story; nothing ships at run time (ADR 0020, 0033, 0036). Installed in Phase 4 (2026-09-24; released 2026-09-17). *Held back*: 1.48.0 published 2026-09-24 05:57 UTC |

@@ -48,3 +48,10 @@ Brief §5.3 lists what Stylelint must enforce. ADR 0005 left one question open: 
 
 - Kit CSS reads as tokens only. A missing token shows up as a lint error, not as a raw value.
 - A new floor, a new Angular or a new plugin version can fail `lint-rules:test` until the lists or the rule are updated, which is the intent.
+
+## Addendum: nesting under Angular 22.2 (2026-09-25)
+
+Angular 22.2 changed the shim (angular/angular d0d7f57, "scope nested CSS rules"): it now adds the content attribute to every nested selector, `&` included. `.card { .title {} }` is scoped, and `.card { &:hover {} }` stays scoped. But `:host { &:hover {} }` becomes `[_nghost-c] { &[_ngcontent-c]:hover {} }`, which asks the host for its own content attribute; the host does not carry it, so the rule never matches. No kit stylesheet nests under `:host`; the rule had allowed it.
+
+- `avelune/nesting-same-element` now also rejects any nested rule under a `:host` or `:host-context` rule: write `:host(:hover)` flat. The fixture `nested-under-host.css` and a rule test prove it; `encapsulation.spec.ts` pins the 22.2 output.
+- Nested selectors for other elements no longer leak, so the reason for decision 5's flat-only rule is gone. The rule keeps it for now; relaxing it is a separate decision.

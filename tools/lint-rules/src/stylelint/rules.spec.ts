@@ -97,9 +97,19 @@ describe('avelune/nesting-same-element', () => {
       &[data-size='sm']:focus-visible {}
       &:not([aria-disabled='true'], [data-state='open']):hover {}
       @media (forced-colors: active) { &:focus-visible {} }
-    }
-    :host { &:focus-visible {} }`;
+    }`;
     assert.deepEqual(await lint(code, rules), []);
+  });
+
+  it('rejects refinements of :host, which the shim scopes to the content since Angular 22.2', async () => {
+    const code = `:host { &:focus-visible {} }
+    :host([data-size='sm']) { @media (forced-colors: active) { &:hover {} } }
+    :host-context([data-theme='dark']) { &::before {} }`;
+    const found = await lint(code, rules);
+    assert.deepEqual(
+      found.map((finding) => /Nested "(.+?)" refines :host/.exec(finding)?.[1]),
+      ['&:focus-visible', '&:hover', '&::before'],
+    );
   });
 
   it('rejects nested rules that reach another element, also through at-rules', async () => {

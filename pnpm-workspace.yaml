@@ -22,23 +22,23 @@ allowBuilds:
 # Shared versions, declared once (ADR 0012). Exact pins; ranges live in published peerDependencies.
 catalog:
   # Angular framework (compatibility.md §2)
-  '@angular/common': 22.1.7
-  '@angular/compiler': 22.1.7
-  '@angular/compiler-cli': 22.1.7
-  '@angular/core': 22.1.7
-  '@angular/forms': 22.1.7
-  '@angular/platform-browser': 22.1.7
-  '@angular/router': 22.1.7
-  '@angular/build': 22.1.8
-  '@angular/cli': 22.1.8
-  '@angular-devkit/core': 22.1.8
-  '@angular-devkit/schematics': 22.1.8
-  '@schematics/angular': 22.1.8
-  '@angular/cdk': 22.1.7
-  '@angular/aria': 22.1.7
+  '@angular/common': 22.2.0
+  '@angular/compiler': 22.2.0
+  '@angular/compiler-cli': 22.2.0
+  '@angular/core': 22.2.0
+  '@angular/forms': 22.2.0
+  '@angular/platform-browser': 22.2.0
+  '@angular/router': 22.2.0
+  '@angular/build': 22.2.0
+  '@angular/cli': 22.2.0
+  '@angular-devkit/core': 22.2.0
+  '@angular-devkit/schematics': 22.2.0
+  '@schematics/angular': 22.2.0
+  '@angular/cdk': 22.2.0
+  '@angular/aria': 22.2.0
   # Storybook peer only, never imported (ADR 0005, 0008)
-  '@angular/animations': 22.1.7
-  '@angular-devkit/architect': 0.2201.8
+  '@angular/animations': 22.2.0
+  '@angular-devkit/architect': 0.2202.0
   ng-packagr: 22.1.1
   rxjs: 7.8.2
   tslib: 2.8.1
@@ -57,7 +57,7 @@ catalog:
   '@typescript-eslint/rule-tester': 8.70.1
   angular-eslint: 22.5.0
   '@eslint-community/eslint-plugin-eslint-comments': 4.8.1
-  prettier: 3.9.8
+  prettier: 3.9.9
   # Stylelint (brief §5.3, ADR 0009, 0024)
   stylelint: 17.15.0
   stylelint-config-standard: 40.0.0
@@ -77,7 +77,7 @@ catalog:
   '@storybook/angular-vite': 10.6.0
   '@storybook/addon-docs': 10.6.0
   '@storybook/addon-a11y': 10.6.0
-  '@analogjs/vite-plugin-angular': 2.7.2
+  '@analogjs/vite-plugin-angular': 2.7.4
   # The themed docs container: the React that addon-docs renders with, never in a published package (ADR 0034)
   react: 19.3.0
   '@types/react': 19.3.0
@@ -99,7 +99,7 @@ catalog:
   '@size-limit/file': 14.0.0
   '@size-limit/esbuild': 14.0.0
   # API reports
-  '@microsoft/api-extractor': 7.59.1
+  '@microsoft/api-extractor': 7.59.2
   # Tokens (ADR 0003, 0011)
   colorjs.io: 0.7.1
   style-dictionary: 5.5.5

@@ -1,0 +1,10 @@
+/* Lint as: packages/ui/icon/icon.css
+   Expect: avelune/nesting-same-element */
+
+@layer components {
+  :host {
+    &:hover {
+      background-color: var(--ave-color-bg-hover);
+    }
+  }
+}

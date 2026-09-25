@@ -209,7 +209,7 @@ The showcase calls `provideAvelune()`. Storybook sets the same attributes from i
 - Media and container query widths equal the breakpoint and container tokens.
 - Kit stylesheets wrap everything in `@layer components`; the global stylesheets in `reset`, `base` or `utilities`, and `styles.css` starts with the layer order.
 
-Nesting may only refine the same element (`&:hover`, `&[aria-disabled='true']`, `&::before`). Angular's emulated shim leaves anything else unscoped. `pnpm nx run-many -t stylelint` runs it per project, after the tokens are built.
+Nesting may only refine the same element (`&:hover`, `&[aria-disabled='true']`, `&::before`), and never `:host`: since Angular 22.2 the emulated shim scopes a nested `&` to the component's content, so `:host { &:hover {} }` never matches; write `:host(:hover)` (ADR 0024, addendum). `pnpm nx run-many -t stylelint` runs it per project, after the tokens are built.
 
 The `avelune` rules live in `tools/lint-rules` (see its README). `pnpm nx run lint-rules:test` proves the plugin rules with RuleTester. It also lints each file in `tools/lint-rules/fixtures/config` (ESLint) and `tools/lint-rules/fixtures/stylelint` (Stylelint) through the real config, as if it were the path on its `Lint as:` line. It derives the logical-property exceptions from MDN browser-compat-data and pins how the emulated shim treats nesting. To add a rule or an exception, add a fixture that fails without it; the test also fails when a plugin rule has no fixture.
 
