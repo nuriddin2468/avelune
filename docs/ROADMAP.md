@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below that is not marked **Deferred**, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 5, Wave 2 starting (2026-09-25). Wave 1 is closed: the product owner approved it on 2026-09-25 without the showcase review of its STOP. Angular 22.2 is in (2026-09-25; ng-packagr held at 22.1.1, see "Tracked upgrades"); next `lucide-static` 1.48 on its own branch, then Textarea. The release age is 16 hours since 2026-09-25 (ADR 0042). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-25.
+**Current position:** Phase 5, Wave 2 starting (2026-09-25). Wave 1 is closed: the product owner approved it on 2026-09-25 without the showcase review of its STOP. Angular 22.2 (ng-packagr held at 22.1.1, see "Tracked upgrades") and `lucide-static` 1.48 are in (2026-09-25); next is Textarea. The release age is 16 hours since 2026-09-25 (ADR 0042). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-25.
 
 ## Parameters
 
@@ -267,7 +267,6 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 | Upgrade | Trigger |
 |---|---|
 | `ng-packagr` 22.2.x | A release whose `.d.ts` bundle keeps non-exported declarations private (an `export {…}` in every file, or no stray declarations). Then run `ui:api-report`: the reports change in form only (named imports instead of `_angular_core`, one input per line in `ɵcmp`); review that diff, update compatibility.md |
-| `lucide-static` 1.48.0 | Allowed from **2026-09-25 05:57 UTC** (ADR 0012). Run `pnpm nx run icons:generate --update`, review the diff of `src/*.ts`, the Gallery baselines and `icons:size`, update compatibility.md |
 | Vitest 5 | `@angular/build` 22.2 peers it; waits for `@storybook/addon-vitest` and `@nx/vitest`, which peer `^3 \|\| ^4` (re-checked 2026-09-25; ADR 0013) |
 | angular-eslint 22.5.1 (the next stable after 22.5.0) | It contains the fix for [#3198](https://github.com/angular-eslint/angular-eslint/issues/3198). Upgrade with the release-age rule (16 hours, ADR 0042), run `lint-rules:test`, update compatibility.md; the `context.valueOf` comments in the specs may then go |
 | Storybook 11 | `angular-vite` stable; drop the `@angular/animations` devDependency (ADR 0008); check whether AOT builds keep `@angular/compiler`, and return to `jit: false` if so (ADR 0025); re-check the themed docs container and its `react` version (ADR 0034); drop or re-create the `angular-vite` patch (ADR 0035) |

@@ -160,8 +160,8 @@ catalogs:
       specifier: 2.1.14
       version: 2.1.14
     lucide-static:
-      specifier: 1.47.0
-      version: 1.47.0
+      specifier: 1.48.0
+      version: 1.48.0
     ng-packagr:
       specifier: 22.1.1
       version: 22.1.1
@@ -398,7 +398,7 @@ importers:
         version: 2.1.14
       lucide-static:
         specifier: 'catalog:'
-        version: 1.47.0
+        version: 1.48.0
       ng-packagr:
         specifier: 'catalog:'
         version: 22.1.1(@angular/compiler-cli@22.2.0(@angular/compiler@22.2.0)(typescript@6.0.3))(supports-color@7.2.0)(tslib@2.8.1)(typescript@6.0.3)
@@ -5257,8 +5257,8 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
-  lucide-static@1.47.0:
-    resolution: {integrity: sha512-yWIrkdXc688Feq5VjOktsKmV5Ikc7y5Nu3rrdtbr8nWjkJWk8QlnZfVtIak22Af+fNhZ7k4cTJpZo1zmj7X5sA==}
+  lucide-static@1.48.0:
+    resolution: {integrity: sha512-ZUGgZ4rzlLfVbhN2Zi37TMrTaSpXAbWx6Y/xZxKSDLPiqxtTK7Mw2M+oBJa0gjV8p3+CWBHh48u+IC9+jKlUjA==}
 
   lz-string@1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
@@ -11541,7 +11541,7 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  lucide-static@1.47.0: {}
+  lucide-static@1.48.0: {}
 
   lz-string@1.5.0: {}
 

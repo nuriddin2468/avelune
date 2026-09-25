@@ -254,7 +254,8 @@ export function indexModule(names: readonly string[], source: string): string {
 
 /**
  * The whole set in one list, for `provideAveIcons(lucideIcons)`. Named imports rather than the module namespace, so a
- * bundler renames every icon instead of keeping 1848 export names as keys (75 kB instead of 83 kB brotli).
+ * bundler renames every icon instead of keeping every export name as a key (75 kB instead of 83 kB brotli, measured
+ * with 1848 icons).
  */
 export function allModule(icons: ReadonlyMap<string, readonly Element[]>, source: string): string {
   const names = [...icons.keys()].map(exportName);
@@ -265,7 +266,7 @@ export function allModule(icons: ReadonlyMap<string, readonly Element[]>, source
     "import type { IconDefinition } from './index.js';",
     `import { ${names.join(', ')} } from './lucide.js';`,
     '',
-    '/** Lists icons one argument at a time, so TypeScript never joins 1848 icon types into one union (TS2590). */',
+    '/** Lists icons one argument at a time, so TypeScript never joins every icon type into one union (TS2590). */',
     'const list = (...icons: readonly IconDefinition[]): readonly IconDefinition[] => icons;',
     '',
     '/** Every icon of `@avelune/icons/lucide`, for `provideAveIcons(lucideIcons)`. */',
