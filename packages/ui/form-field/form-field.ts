@@ -23,7 +23,7 @@ let nextField = 0;
  * </ave-form-field>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-form-field',

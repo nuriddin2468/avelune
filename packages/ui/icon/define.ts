@@ -5,7 +5,7 @@ import type { AveIconDefinition, AveIconName } from './types';
 /**
  * How `<ave-icon>` paints an application's own icon (ADR 0036).
  *
- * @alpha
+ * @beta
  */
 export interface AveCustomIconOptions {
   /**
@@ -65,7 +65,7 @@ function nodeInCurrentColour(node: IconNode): IconNode {
  * Throws, listing every problem, on markup that is not SVG or that an icon may not contain: scripts, style sheets,
  * classes, event handlers, embedded content, text, animation, or references outside the icon.
  *
- * @alpha
+ * @beta
  */
 export function defineAveIcon<const TName extends AveIconName>(
   name: TName,

@@ -6,7 +6,7 @@
 
 import * as i0 from '@angular/core';
 
-// @alpha
+// @beta
 export class AveInput {
     constructor();
     readonly size: i0.InputSignal<AveInputSize>;
@@ -16,7 +16,7 @@ export class AveInput {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveInput, never>;
 }
 
-// @alpha
+// @beta
 export type AveInputSize = 'sm' | 'md' | 'lg';
 
 // (No @packageDocumentation comment for this package)

@@ -7,7 +7,7 @@ const SIZES: readonly AveButtonSize[] = ['sm', 'md', 'lg'];
 /**
  * Filters for {@link AveButtonHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveButtonHarnessFilters extends BaseHarnessFilters {
   /** Only match buttons whose text is this string, or matches this pattern. */
@@ -19,7 +19,7 @@ export interface AveButtonHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `button[aveButton]` and `a[aveButton]` from `@avelune/ui/button`.
  *
- * @alpha
+ * @beta
  */
 export class AveButtonHarness extends ComponentHarness {
   /** Selector that finds kit buttons and button-styled links. */

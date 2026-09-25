@@ -39,7 +39,7 @@ function withIcons(
  * The whole Lucide set at once, about 75 kB brotli: `provideAveIcons(lucideIcons)`, with `lucideIcons` from
  * `@avelune/icons/lucide/all`. In development, one name registered with two different drawings throws.
  *
- * @alpha
+ * @beta
  */
 export function provideAveIcons(icons: readonly AveIconDefinition[]): Provider {
   return {

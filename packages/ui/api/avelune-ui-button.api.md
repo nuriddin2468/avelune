@@ -8,7 +8,7 @@ import * as _angular_core from '@angular/core';
 import { AveIconSize } from '@avelune/ui/icon';
 import * as _avelune_icons from '@avelune/icons';
 
-// @alpha
+// @beta
 export class AveButton {
     constructor();
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -25,13 +25,13 @@ export class AveButton {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveButton, never>;
 }
 
-// @alpha
+// @beta
 export type AveButtonSize = 'sm' | 'md' | 'lg';
 
-// @alpha
+// @beta
 export type AveButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
 
-// @alpha
+// @beta
 export class AveIconButton extends AveButton {
     protected readonly accessibleName: _angular_core.Signal<string>;
     readonly icon: _angular_core.InputSignal<keyof _avelune_icons.IconNames>;

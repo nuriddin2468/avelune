@@ -10,13 +10,13 @@ import { IconDefinition } from '@avelune/icons';
 import { IconName } from '@avelune/icons';
 import { Provider } from '@angular/core';
 
-// @alpha
+// @beta
 export interface AveCustomIconOptions {
     readonly colors?: 'current' | 'original';
     readonly strokes?: 'kit' | 'original';
 }
 
-// @alpha
+// @beta
 export class AveIcon {
     constructor();
     protected readonly accessibleName: _angular_core.Signal<string | null>;
@@ -31,19 +31,19 @@ export class AveIcon {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveIcon, never>;
 }
 
-// @alpha
+// @beta
 export type AveIconDefinition<TName extends AveIconName = AveIconName> = IconDefinition<TName>;
 
-// @alpha
+// @beta
 export type AveIconName = IconName;
 
-// @alpha
+// @beta
 export type AveIconSize = 'sm' | 'md' | 'lg';
 
-// @alpha
+// @beta
 export function defineAveIcon<const TName extends AveIconName>(name: TName, svg: string, options?: AveCustomIconOptions): AveIconDefinition<TName>;
 
-// @alpha
+// @beta
 export function provideAveIcons(icons: readonly AveIconDefinition[]): Provider;
 
 // (No @packageDocumentation comment for this package)

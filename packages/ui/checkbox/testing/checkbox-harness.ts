@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters } from '@an
 /**
  * Filters for {@link AveCheckboxHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveCheckboxHarnessFilters extends BaseHarnessFilters {
   /** Only match checkboxes whose label is this string, or matches this pattern. */
@@ -15,7 +15,7 @@ export interface AveCheckboxHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `input[type=checkbox][aveCheckbox]` from `@avelune/ui/checkbox`.
  *
- * @alpha
+ * @beta
  */
 export class AveCheckboxHarness extends ComponentHarness {
   /** Selector that finds kit checkboxes. */

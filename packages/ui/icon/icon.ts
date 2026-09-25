@@ -24,7 +24,7 @@ const lucideExport = (name: string) =>
  * <ave-icon name="download" decorative /> Download
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-icon',

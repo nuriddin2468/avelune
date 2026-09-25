@@ -29,7 +29,7 @@ function fieldPart(kind: 'hint' | 'error'): string {
  * <p aveHint>As written on the signed copy, for example ДК-2026/114.</p>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: '[aveHint]',
@@ -51,7 +51,7 @@ export class AveHint {
  * <p aveError>Enter the contract number, for example ДК-2026/114.</p>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: '[aveError]',

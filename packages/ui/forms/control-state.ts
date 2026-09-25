@@ -6,7 +6,7 @@ import { FORM_FIELD } from '@angular/forms/signals';
  * The state of a form control as the kit shows it (ADR 0039): the same signals whether the control is bound with
  * Signal Forms (`[formField]`), Reactive Forms (`formControl`, `formControlName`), or neither.
  *
- * @alpha
+ * @beta
  */
 export interface AveControlState {
   /** Whether the value fails its validation. */
@@ -51,7 +51,7 @@ function nativeState(element: HTMLInputElement): Omit<AveControlState, 'showErro
  * from the first render on; its control does not exist before. Call it in the injection context of a directive or
  * component on the control's element.
  *
- * @alpha
+ * @beta
  */
 export function injectControlState(): AveControlState {
   const element = inject<ElementRef<HTMLInputElement>>(ElementRef).nativeElement;

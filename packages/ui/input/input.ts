@@ -16,7 +16,7 @@ const textTypes = new Set(['text', 'email', 'tel', 'url', 'password', 'search', 
  * <input aveInput type="email" formControlName="email" size="sm" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'input[aveInput]',

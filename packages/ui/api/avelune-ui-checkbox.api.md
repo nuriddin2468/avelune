@@ -6,7 +6,7 @@
 
 import * as i0 from '@angular/core';
 
-// @alpha
+// @beta
 export class AveCheckbox {
     constructor();
     protected cleared(): void;
@@ -17,7 +17,7 @@ export class AveCheckbox {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveCheckbox, never>;
 }
 
-// @alpha
+// @beta
 export class AveChoice {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<AveChoice, "label[aveChoice]", never, {}, {}, never, ["*"], true, never>;

@@ -12,7 +12,7 @@ import { AVE_FIELD } from './field';
  *
  * Call it in the injection context of a directive or component on the control's element.
  *
- * @alpha
+ * @beta
  */
 export function connectToField(state: AveControlState): void {
   const element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;

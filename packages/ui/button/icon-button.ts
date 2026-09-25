@@ -12,7 +12,7 @@ import { AveButton } from './button';
  * <button aveIconButton type="button" variant="ghost" size="sm" icon="trash" label="Delete row"></button>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'button[aveIconButton], a[aveIconButton]',

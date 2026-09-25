@@ -8,7 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ContentContainerComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveFormFieldHarness extends ContentContainerComponentHarness {
     getControlId(): Promise<string | null>;
     getError(): Promise<string | null>;
@@ -19,7 +19,7 @@ export class AveFormFieldHarness extends ContentContainerComponentHarness {
     static with(options?: AveFormFieldHarnessFilters): HarnessPredicate<AveFormFieldHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveFormFieldHarnessFilters extends BaseHarnessFilters {
     label?: string | RegExp;
 }

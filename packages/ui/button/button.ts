@@ -18,7 +18,7 @@ import type { AveButtonSize, AveButtonVariant } from './types';
  *
  * Icons go inside, before or after the label: `<ave-icon name="download" decorative />`.
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'button[aveButton], a[aveButton]',

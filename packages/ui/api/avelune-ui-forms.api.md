@@ -7,10 +7,10 @@
 import { InjectionToken } from '@angular/core';
 import { Signal } from '@angular/core';
 
-// @alpha
+// @beta
 export const AVE_FIELD: InjectionToken<AveFieldContext>;
 
-// @alpha
+// @beta
 export interface AveControlState {
     readonly bound: boolean;
     readonly disabled: Signal<boolean>;
@@ -20,17 +20,17 @@ export interface AveControlState {
     readonly touched: Signal<boolean>;
 }
 
-// @alpha
+// @beta
 export interface AveFieldContext {
     readonly defaultId: string;
     readonly describedBy: Signal<readonly string[]>;
     register(id: string, state: AveControlState): void;
 }
 
-// @alpha
+// @beta
 export function connectToField(state: AveControlState): void;
 
-// @alpha
+// @beta
 export function injectControlState(): AveControlState;
 
 // (No @packageDocumentation comment for this package)

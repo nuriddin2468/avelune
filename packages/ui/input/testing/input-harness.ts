@@ -6,7 +6,7 @@ const SIZES: readonly AveInputSize[] = ['sm', 'md', 'lg'];
 /**
  * Filters for {@link AveInputHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveInputHarnessFilters extends BaseHarnessFilters {
   /** Only match inputs whose value is this string, or matches this pattern. */
@@ -18,7 +18,7 @@ export interface AveInputHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `input[aveInput]` from `@avelune/ui/input`.
  *
- * @alpha
+ * @beta
  */
 export class AveInputHarness extends ComponentHarness {
   /** Selector that finds kit inputs. */

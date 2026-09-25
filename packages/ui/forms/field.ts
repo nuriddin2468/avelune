@@ -5,7 +5,7 @@ import type { AveControlState } from './control-state';
  * What a form field (`<ave-form-field>`) offers the control inside it (ADR 0039): the control registers its id and
  * its state, and describes itself with the field's hint and error.
  *
- * @alpha
+ * @beta
  */
 export interface AveFieldContext {
   /** The id to give the control when it has none, so the field's label can name it. */
@@ -19,6 +19,6 @@ export interface AveFieldContext {
 /**
  * Provided by a form field for the control inside it.
  *
- * @alpha
+ * @beta
  */
 export const AVE_FIELD = new InjectionToken<AveFieldContext>('AVE_FIELD');

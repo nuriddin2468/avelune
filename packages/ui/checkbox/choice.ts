@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
  * <label aveChoice><input type="checkbox" aveCheckbox /> Notify the counterparty by email</label>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'label[aveChoice]',

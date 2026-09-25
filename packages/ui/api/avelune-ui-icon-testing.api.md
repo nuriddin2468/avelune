@@ -10,7 +10,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveIconHarness extends ComponentHarness {
     getLabel(): Promise<string | null>;
     getName(): Promise<string>;
@@ -24,7 +24,7 @@ export class AveIconHarness extends ComponentHarness {
     static with(options?: AveIconHarnessFilters): HarnessPredicate<AveIconHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveIconHarnessFilters extends BaseHarnessFilters {
     label?: string;
     name?: AveIconName;

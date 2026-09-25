@@ -3,7 +3,7 @@ import { ContentContainerComponentHarness, HarnessPredicate, type BaseHarnessFil
 /**
  * Filters for {@link AveFormFieldHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveFormFieldHarnessFilters extends BaseHarnessFilters {
   /** Only match fields whose label is this string, or matches this pattern. */
@@ -14,7 +14,7 @@ export interface AveFormFieldHarnessFilters extends BaseHarnessFilters {
  * Harness for `<ave-form-field>` from `@avelune/ui/form-field`. Get the control inside it with the control's own
  * harness, loaded from this one: `field.getHarness(AveInputHarness)`.
  *
- * @alpha
+ * @beta
  */
 export class AveFormFieldHarness extends ContentContainerComponentHarness {
   /** Selector that finds form fields. */

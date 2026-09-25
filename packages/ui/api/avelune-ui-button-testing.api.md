@@ -10,7 +10,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveButtonHarness extends ComponentHarness {
     click(): Promise<void>;
     focus(): Promise<void>;
@@ -26,13 +26,13 @@ export class AveButtonHarness extends ComponentHarness {
     static with(options?: AveButtonHarnessFilters): HarnessPredicate<AveButtonHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveButtonHarnessFilters extends BaseHarnessFilters {
     text?: string | RegExp;
     variant?: AveButtonVariant;
 }
 
-// @alpha
+// @beta
 export class AveIconButtonHarness extends AveButtonHarness {
     getIcon(): Promise<string>;
     getLabel(): Promise<string>;
@@ -40,7 +40,7 @@ export class AveIconButtonHarness extends AveButtonHarness {
     static with(options?: AveIconButtonHarnessFilters): HarnessPredicate<AveIconButtonHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveIconButtonHarnessFilters extends Omit<AveButtonHarnessFilters, 'text'> {
     label?: string | RegExp;
 }

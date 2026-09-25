@@ -6,7 +6,7 @@ const SIZES: readonly AveIconSize[] = ['sm', 'md', 'lg'];
 /**
  * Filters for {@link AveIconHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveIconHarnessFilters extends BaseHarnessFilters {
   /** Only match icons with this name. */
@@ -18,7 +18,7 @@ export interface AveIconHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-icon>` from `@avelune/ui/icon`.
  *
- * @alpha
+ * @beta
  */
 export class AveIconHarness extends ComponentHarness {
   /** Selector that finds icon hosts. */

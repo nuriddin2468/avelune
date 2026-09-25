@@ -4,7 +4,7 @@ import { AveButtonHarness, type AveButtonHarnessFilters } from './button-harness
 /**
  * Filters for {@link AveIconButtonHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveIconButtonHarnessFilters extends Omit<AveButtonHarnessFilters, 'text'> {
   /** Only match icon buttons whose label is this string, or matches this pattern. */
@@ -15,7 +15,7 @@ export interface AveIconButtonHarnessFilters extends Omit<AveButtonHarnessFilter
  * Harness for `button[aveIconButton]` and `a[aveIconButton]` from `@avelune/ui/button`: the Button harness, with the
  * label and the icon.
  *
- * @alpha
+ * @beta
  */
 export class AveIconButtonHarness extends AveButtonHarness {
   /** Selector that finds icon buttons. */

@@ -11,7 +11,7 @@ import { connectToField, injectControlState } from '@avelune/ui/forms';
  * <label aveChoice><input type="checkbox" aveCheckbox [formField]="settings.notify" /> Notify the counterparty</label>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'input[type=checkbox][aveCheckbox]',

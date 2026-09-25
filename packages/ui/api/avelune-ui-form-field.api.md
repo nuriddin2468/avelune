@@ -8,7 +8,7 @@ import * as _angular_core from '@angular/core';
 import { AveControlState } from '@avelune/ui/forms';
 import { AveFieldContext } from '@avelune/ui/forms';
 
-// @alpha
+// @beta
 export class AveError {
     readonly id: string;
     // (undocumented)
@@ -17,7 +17,7 @@ export class AveError {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveError, never>;
 }
 
-// @alpha
+// @beta
 export class AveFormField implements AveFieldContext {
     // @internal
     add(kind: 'hint' | 'error', id: string): () => void;
@@ -35,7 +35,7 @@ export class AveFormField implements AveFieldContext {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveFormField, never>;
 }
 
-// @alpha
+// @beta
 export class AveHint {
     readonly id: string;
     // (undocumented)
