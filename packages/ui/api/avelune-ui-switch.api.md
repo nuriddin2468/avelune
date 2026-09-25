@@ -9,6 +9,7 @@ import * as i0 from '@angular/core';
 // @alpha
 export class AveSwitch {
     constructor();
+    protected toggled(): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<AveSwitch, "input[type=checkbox][aveSwitch]", never, {}, {}, never, never, true, never>;
     // (undocumented)
