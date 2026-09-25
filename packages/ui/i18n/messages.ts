@@ -15,6 +15,18 @@ export interface AveMessages {
   readonly previousMonth: string;
   /** The calendar's button to the month after. */
   readonly nextMonth: string;
+  /** The calendar's button to the year before, among the months. */
+  readonly previousYear: string;
+  /** The calendar's button to the year after, among the months. */
+  readonly nextYear: string;
+  /** The calendar's button to the twelve years before, among the years. */
+  readonly previousYears: string;
+  /** The calendar's button to the twelve years after, among the years. */
+  readonly nextYears: string;
+  /** Describes the calendar's heading among the days: pressing it shows the months. */
+  readonly chooseMonth: string;
+  /** Describes the calendar's heading among the months: pressing it shows the years. */
+  readonly chooseYear: string;
   /** The first date of a date range field. */
   readonly rangeStart: string;
   /** The last date of a date range field. */
@@ -59,6 +71,12 @@ export const aveMessagesEn: AveMessages = {
   chooseDate: 'Choose a date',
   previousMonth: 'Previous month',
   nextMonth: 'Next month',
+  previousYear: 'Previous year',
+  nextYear: 'Next year',
+  previousYears: 'Previous years',
+  nextYears: 'Next years',
+  chooseMonth: 'Choose a month',
+  chooseYear: 'Choose a year',
   rangeStart: 'Start date',
   rangeEnd: 'End date',
   chooseFile: 'Choose a file',
@@ -87,6 +105,12 @@ export const aveMessagesRu: AveMessages = {
   chooseDate: 'Выбрать дату',
   previousMonth: 'Предыдущий месяц',
   nextMonth: 'Следующий месяц',
+  previousYear: 'Предыдущий год',
+  nextYear: 'Следующий год',
+  previousYears: 'Предыдущие годы',
+  nextYears: 'Следующие годы',
+  chooseMonth: 'Выбрать месяц',
+  chooseYear: 'Выбрать год',
   rangeStart: 'Дата начала',
   rangeEnd: 'Дата окончания',
   chooseFile: 'Выбрать файл',
@@ -117,6 +141,12 @@ export const aveMessagesUzLatn: AveMessages = {
   chooseDate: 'Sanani tanlash',
   previousMonth: 'Oldingi oy',
   nextMonth: 'Keyingi oy',
+  previousYear: 'Oldingi yil',
+  nextYear: 'Keyingi yil',
+  previousYears: 'Oldingi yillar',
+  nextYears: 'Keyingi yillar',
+  chooseMonth: 'Oyni tanlash',
+  chooseYear: 'Yilni tanlash',
   rangeStart: 'Boshlanish sanasi',
   rangeEnd: 'Tugash sanasi',
   chooseFile: 'Faylni tanlash',
@@ -145,6 +175,12 @@ export const aveMessagesUzCyrl: AveMessages = {
   chooseDate: 'Санани танлаш',
   previousMonth: 'Олдинги ой',
   nextMonth: 'Кейинги ой',
+  previousYear: 'Олдинги йил',
+  nextYear: 'Кейинги йил',
+  previousYears: 'Олдинги йиллар',
+  nextYears: 'Кейинги йиллар',
+  chooseMonth: 'Ойни танлаш',
+  chooseYear: 'Йилни танлаш',
   rangeStart: 'Бошланиш санаси',
   rangeEnd: 'Тугаш санаси',
   chooseFile: 'Файлни танлаш',

@@ -24,6 +24,8 @@ export interface AveDateFormat {
    * heads them ("Пн"); single letters would repeat (П, В, С twice in Russian).
    */
   readonly weekdays: readonly { readonly long: string; readonly short: string }[];
+  /** The month names as they stand alone, January first, with a capital, as a calendar's months show them ("Сентябрь"). */
+  readonly months: readonly string[];
   /** What a date field shows while empty: the order and the separators, in the locale's letters ("дд.мм.гггг"). */
   readonly placeholder: string;
   /** A date as people type it: `23.09.2026` (ru), `23/09/2026` (uz), `09/23/2026` (en). */
@@ -114,6 +116,7 @@ export function aveDateFormat(locale: string): AveDateFormat {
   const monthYearFormat = intl({ month: 'long', year: 'numeric' });
   const weekdayLong = intl({ weekday: 'long' });
   const weekdayShort = intl({ weekday: 'short' });
+  const monthAlone = intl({ month: 'long' });
   const capital = (text: string) => text.charAt(0).toLocaleUpperCase(locale) + text.slice(1);
   // 2026-09-20 is a Sunday.
   const sunday = (offset: number) => new Date(Date.UTC(2026, 8, 20 + offset));
@@ -121,6 +124,10 @@ export function aveDateFormat(locale: string): AveDateFormat {
     uz
       ? { long: uzLatn.weekdaysLong[offset] ?? '', short: uzLatn.weekdaysShort[offset] ?? '' }
       : { long: weekdayLong.format(sunday(offset)), short: capital(weekdayShort.format(sunday(offset))) },
+  );
+  // A month alone is in the nominative ("сентябрь"); in a date, in the genitive ("23 сентября"), ADR 0053.
+  const months = Array.from({ length: 12 }, (_, index) =>
+    capital(uz ? (uzLatn.monthsInDate[index] ?? '') : monthAlone.format(new Date(Date.UTC(2026, index, 1)))),
   );
   const letters: Readonly<Record<string, readonly [string, string, string]>> = {
     ru: ['дд', 'мм', 'гггг'],
@@ -136,6 +143,7 @@ export function aveDateFormat(locale: string): AveDateFormat {
     locale,
     firstDayOfWeek: firstDayOf(locale),
     weekdays,
+    months,
     placeholder: order === 'mdy' ? [mm, dd, yyyy].join(separator) : [dd, mm, yyyy].join(separator),
     numeric(date) {
       const parts = plainDateParts(date);

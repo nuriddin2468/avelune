@@ -426,3 +426,57 @@ export const Clearing: Story = {
     await expect(canvas.getByRole('button', { name: 'Очистить Дата оплаты' })).toBeVisible();
   },
 };
+
+/** The heading opens the twelve months of the year: the chosen month filled, this month bordered (ADR 0053). */
+export const Months: Story = {
+  decorators: [locale('ru'), componentWrapperDecorator(DatePickerStoryFrame)],
+  render: () => ({ template: `<ave-date-picker label="Дата регистрации" value="2026-03-18" />` }),
+  parameters: source('<ave-date-picker [formField]="company.registeredOn" />'),
+  play: async ({ canvasElement }) => {
+    const dialog = await openCalendar(canvasElement);
+    const heading = within(dialog).getByRole('button', { name: 'Март 2026 г.' });
+    await expect(heading).toHaveAccessibleDescription('Выбрать месяц');
+    await userEvent.click(heading);
+    await waitFor(() => expect(dialog.querySelector('[data-month]:focus')).toHaveAttribute('data-month', '2026-03'));
+    await expect(within(dialog).getByRole('heading')).toHaveTextContent('2026');
+    await expect(within(dialog).getByRole('gridcell', { name: 'Март 2026 г.' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+    await expect(within(dialog).getByRole('button', { name: 'Предыдущий год' })).toBeInTheDocument();
+    await userEvent.keyboard('{ArrowRight}{ArrowRight}{Enter}');
+    await expect(within(dialog).getByRole('heading')).toHaveTextContent('Май 2026 г.');
+    await waitFor(() => expect(dialog.querySelector('[data-date]:focus')).toHaveAttribute('data-date', '2026-05-18'));
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Май 2026 г.' }));
+    await waitFor(() => expect(dialog.querySelector('[data-month]:focus')).not.toBeNull());
+  },
+};
+
+/**
+ * From the months, the heading opens twelve years; the arrows move past the page's edges. Uzbek in Latin script, and
+ * bounds from 2019 to 2030: the years outside them cannot be chosen.
+ */
+export const Years: Story = {
+  decorators: [locale('uz-Latn'), componentWrapperDecorator(DatePickerStoryFrame)],
+  render: () => ({
+    template: `<ave-date-picker label="Roʻyxatdan oʻtgan sana" value="2026-03-18" minDate="2019-06-01" maxDate="2030-12-31" />`,
+  }),
+  parameters: source(
+    '<ave-date-picker minDate="2019-06-01" maxDate="2030-12-31" [formField]="company.registeredOn" />',
+  ),
+  play: async ({ canvasElement }) => {
+    const dialog = await openCalendar(canvasElement);
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Mart, 2026' }));
+    await userEvent.click(await within(dialog).findByRole('button', { name: '2026' }));
+    await waitFor(() => expect(dialog.querySelector('[data-year]:focus')).toHaveAttribute('data-year', '2026'));
+    await expect(within(dialog).getByRole('heading')).toHaveTextContent('2016–2027');
+    await expect(within(dialog).getByRole('gridcell', { name: '2018' })).toHaveAttribute('aria-disabled', 'true');
+    await expect(within(dialog).getByRole('gridcell', { name: '2019' })).not.toHaveAttribute('aria-disabled', 'true');
+    await expect(within(dialog).getByRole('button', { name: 'Keyingi yillar' })).toBeInTheDocument();
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(dialog.querySelector('[data-date]:focus')).toHaveAttribute('data-date', '2026-03-18'));
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Mart, 2026' }));
+    await userEvent.click(await within(dialog).findByRole('button', { name: '2026' }));
+    await waitFor(() => expect(dialog.querySelector('[data-year]:focus')).not.toBeNull());
+  },
+};

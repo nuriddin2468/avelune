@@ -64,8 +64,7 @@ export class AveSelectHarness extends ComponentHarness {
     isRequired(): Promise<boolean>;
     open(): Promise<void>;
     protected optionElements(): Promise<_angular_cdk_testing.TestElement[]>;
-    press(key: 'down' | 'up' | 'home' | 'end' | 'enter' | 'escape'): Promise<void>;
-    pressDelete(): Promise<void>;
+    press(key: 'down' | 'up' | 'home' | 'end' | 'enter' | 'escape' | 'delete' | 'backspace'): Promise<void>;
     static with(options?: AveSelectHarnessFilters): HarnessPredicate<AveSelectHarness>;
 }
 

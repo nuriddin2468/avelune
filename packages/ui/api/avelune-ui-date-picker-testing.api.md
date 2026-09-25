@@ -17,14 +17,23 @@ export class AveDatePickerHarness extends ComponentHarness {
     blur(): Promise<void>;
     canClear(): Promise<boolean>;
     chooseDay(day: number): Promise<void>;
+    chooseMonth(name: string | RegExp): Promise<void>;
+    chooseYear(year: number): Promise<void>;
     clear(): Promise<void>;
+    clickHeading(): Promise<void>;
     focus(): Promise<void>;
     getChosenDates(): Promise<string[]>;
     getDisabledDates(): Promise<string[]>;
+    getDisabledPeriods(): Promise<string[]>;
     getFocusedDate(): Promise<string | null>;
+    getFocusedMonth(): Promise<string | null>;
+    getFocusedYear(): Promise<number | null>;
     getMonth(): Promise<string | null>;
+    getMonths(): Promise<string[]>;
     getPlaceholder(): Promise<string>;
     getText(): Promise<string>;
+    getView(): Promise<'days' | 'months' | 'years' | null>;
+    getYears(): Promise<number[]>;
     static hostSelector: string;
     // (undocumented)
     protected readonly input: () => Promise<_angular_cdk_testing.TestElement>;

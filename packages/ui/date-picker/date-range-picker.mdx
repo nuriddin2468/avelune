@@ -37,6 +37,7 @@ The start input, a dash, and the end input with the calendar button, in two equa
 
 - The first day chosen in the calendar sets the start and keeps the calendar open; the second sets the end and closes it. A day before the start begins the range again.
 - Typed dates are read as in a DatePicker; an end typed before the start swaps them.
+- The heading opens the months, then the years, as in a DatePicker (ADR 0053); they only move the calendar, and the range is still chosen among the days.
 
 <Canvas of={DateRangePickerStories.Choosing} />
 

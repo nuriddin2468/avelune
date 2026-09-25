@@ -58,6 +58,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0050](0050-file-upload-and-uzbek-numbers.md) | FileUpload: a drop zone around a button, a list with reasons; Uzbek numbers from Uzbek Cyrillic's symbols | Accepted |
 | [0051](0051-slider-native-range.md) | Slider and RangeSlider: native range inputs, the value in the field's label row, the ring on the thumb | Accepted |
 | [0052](0052-clearing-a-selection-field.md) | Clearing a selection field: a clear button while the value may be taken away, deleting on the keyboard | Accepted |
+| [0053](0053-calendar-months-and-years.md) | The calendar's months and years: its heading opens a grid of months, then of years, on Angular Aria's grid | Accepted |
 
 ## Template
 

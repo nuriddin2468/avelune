@@ -38,6 +38,14 @@ An input with the box of an Input of its size, and the calendar button 4px insid
 
 <Canvas of={DatePickerStories.Open} />
 
+## Months and years
+
+For a date far away, the calendar's heading is a button (ADR 0053): "Март 2026 г." opens the twelve months of 2026, and "2026" opens twelve years (2016–2027). Choosing a year shows its months, choosing a month shows its days, with focus on the same day of the month. The buttons beside the heading move a month, a year or twelve years. Escape goes back to the days.
+
+<Canvas of={DatePickerStories.Months} />
+
+<Canvas of={DatePickerStories.Years} />
+
 ## Value
 
 The value is an ISO calendar date, `2026-03-18`, or `null`: a string without a time or a time zone, so it is the same date for the server wherever it runs. `aveDateFormat(locale)` from `@avelune/ui/i18n` writes it for people.
@@ -59,7 +67,7 @@ The value is an ISO calendar date, `2026-03-18`, or `null`: a string without a t
 
 ## Bounds
 
-`minDate` and `maxDate` (ISO dates) disable the days outside them in the calendar, and a typed date outside them is put back.
+`minDate` and `maxDate` (ISO dates) disable the days outside them in the calendar, and the months and years without a day inside them; a typed date outside them is put back.
 
 <Canvas of={DatePickerStories.Bounds} />
 
@@ -98,13 +106,14 @@ A long label, hint and error wrap in a narrow column; the field keeps its box. W
 ## Keyboard
 
 - In the field: type the date; Enter reads it; Tab moves to the calendar button, Space or Enter opens the calendar.
-- In the calendar (WAI-ARIA date picker dialog): the arrow keys move a day or a week, and into the next or previous month at its edges; Page Up and Page Down move a month, with Shift a year; Home and End go to the start and end of the week; Enter or Space choose the day and close; Escape closes; Tab moves between the month buttons and the grid.
+- In the calendar (WAI-ARIA date picker dialog): the arrow keys move a day or a week, and into the next or previous month at its edges; Page Up and Page Down move a month, with Shift a year; Home and End go to the start and end of the week; Enter or Space choose the day and close; Escape closes; Tab moves between the month buttons, the heading and the grid.
+- On the heading, Enter or Space open the months, then the years. In the months and years the arrow keys move a month or a year, and a row of three up and down, into the year or the twelve years before and after at the edges; Page Up and Page Down move a year among the months and twelve years among the years; Enter or Space choose; Escape goes back to the days.
 
 ## Accessibility
 
 - The calendar is a modal dialog named "Choose a date" in the locale; focus stays in it until it closes, then returns to the button.
 - The clear button is named "Clear" and the field's label ("Очистить Дата подписания"); it is left out of the Tab order.
-- The heading is a live region, so screen readers hear the new month. Each day is named in words ("18 марта 2026 г."), columns by the full weekday; today is `aria-current="date"`.
+- The heading is a live region, so screen readers hear the new month, year or years. Its button is named by what it shows and described by "Выбрать месяц" or "Выбрать год"; each month is named with its year ("Сентябрь 2026 г."); the current month and year are `aria-current="date"`. Each day is named in words ("18 марта 2026 г."), columns by the full weekday; today is `aria-current="date"`.
 
 ## Motion
 

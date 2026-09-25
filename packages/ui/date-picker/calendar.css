@@ -1,8 +1,11 @@
 @layer components {
-  /* The calendar (ADR 0048): the heading row, then seven columns of days of the control's height, 2px apart. */
+  /* The calendar (ADR 0048, 0053): the heading row, then the days, months or years. It keeps one size in every view
+     and every month, so the panel never jumps: the width of seven days of the control's height, 2px apart, and the
+     height of the weekdays and six weeks. */
   :host {
     display: grid;
     gap: var(--ave-space-2);
+    inline-size: calc(var(--ave-control-height-md) * 7 + var(--ave-space-1) * 3);
   }
 
   .header {
@@ -12,11 +15,47 @@
     gap: var(--ave-space-2);
   }
 
-  .title {
+  .heading {
     margin: 0;
     color: var(--ave-color-fg-default);
     font: var(--ave-font-label-md);
     text-align: center;
+  }
+
+  /* The heading's button looks like the heading, with a fill under the pointer (product owner, 2026-09-25); among the
+     years the heading is text in the same box. */
+  .title {
+    display: inline-flex;
+    align-items: center;
+    block-size: var(--ave-control-height-sm);
+    padding-block: 0;
+    padding-inline: var(--ave-space-2);
+    border: 0;
+    border-radius: var(--ave-radius-sm);
+    background-color: transparent;
+    color: inherit;
+    font: inherit;
+  }
+
+  button.title {
+    cursor: pointer;
+    transition-property: background-color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+
+    &:hover {
+      background-color: var(--ave-color-bg-hover);
+    }
+  }
+
+  /* The weekdays and six weeks: 2px between and around the rows, as the day grid spaces them. */
+  .body {
+    display: grid;
+    grid-template-rows: minmax(
+      calc(var(--ave-control-height-sm) + var(--ave-control-height-md) * 6 + var(--ave-space-1) * 4),
+      auto
+    );
+    align-items: start;
   }
 
   .grid {
@@ -33,6 +72,21 @@
     text-align: center;
   }
 
+  /* The months and the years: three columns by four rows that fill the body, 2px apart, as the days are. */
+  .picks {
+    display: grid;
+    grid-template-rows: repeat(4, 1fr);
+    gap: calc(var(--ave-space-1) / 2);
+    align-self: stretch;
+    padding-block: calc(var(--ave-space-1) / 2);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: calc(var(--ave-space-1) / 2);
+  }
+
   /* A day: a square of the control height with its number centred, and a border that only today shows, so no day
      changes size. */
   .day,
@@ -47,7 +101,22 @@
     font-variant-numeric: tabular-nums;
   }
 
-  .day {
+  /* A month or a year: its cell of the grid, the name centred, the same border and fills as a day. */
+  .pick {
+    display: grid;
+    place-items: center;
+    min-inline-size: 0;
+    padding-inline: var(--ave-space-1);
+    border: var(--ave-border-width-default) solid transparent;
+    border-radius: var(--ave-radius-md);
+    font: var(--ave-font-body-md);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+
+  .day,
+  .pick {
     color: var(--ave-color-fg-default);
     cursor: pointer;
     transition-property: background-color, color;
@@ -58,7 +127,7 @@
       background-color: var(--ave-color-bg-hover);
     }
 
-    /* Today: a 3:1 border, so it differs without colour. */
+    /* Today, this month, this year: a 3:1 border, so it differs without colour. */
     &[aria-current='date'] {
       border-color: var(--ave-color-border-strong);
     }
@@ -84,17 +153,20 @@
   @media (forced-colors: active) {
     /* Forced colours draw a transparent border in CanvasText: only today keeps a visible one. */
     .day,
-    .empty {
+    .empty,
+    .pick {
       border-color: Canvas;
     }
 
-    .day[aria-current='date'] {
+    .day[aria-current='date'],
+    .pick[aria-current='date'] {
       border-color: CanvasText;
     }
 
     .day[aria-selected='true'],
     .day[data-range='start'],
-    .day[data-range='end'] {
+    .day[data-range='end'],
+    .pick[aria-selected='true'] {
       background-color: Highlight;
       color: HighlightText;
       forced-color-adjust: none;
@@ -104,7 +176,8 @@
       text-decoration: underline;
     }
 
-    .day[aria-disabled='true'] {
+    .day[aria-disabled='true'],
+    .pick[aria-disabled='true'] {
       color: GrayText;
     }
   }

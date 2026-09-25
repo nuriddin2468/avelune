@@ -243,4 +243,21 @@ describe('AveDateRangePicker', () => {
     expect(end?.getBoundingClientRect().width).toBe(start?.getBoundingClientRect().width);
     withLayout(false);
   });
+  it('moves between months and years without choosing one, and marks the months of both ends (ADR 0053)', async () => {
+    const fixture = mount(ReactiveHost);
+    const range = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveDateRangePickerHarness);
+    fixture.componentInstance.period.setValue({ start: '2026-09-10', end: '2026-11-02' });
+    await range.open();
+    await range.clickHeading();
+    const element = fixture.nativeElement as HTMLElement;
+    const selected = [...element.querySelectorAll('[data-month][aria-selected="true"]')].map((cell) =>
+      cell.getAttribute('data-month'),
+    );
+    expect(selected).toEqual(['2026-09', '2026-11']);
+    expect(await range.getDisabledPeriods()).toContain('2026-08');
+    await range.chooseMonth('Октябрь');
+    expect(await range.getMonth()).toBe('Октябрь 2026 г.');
+    expect(fixture.componentInstance.period.value).toEqual({ start: '2026-09-10', end: '2026-11-02' });
+    expect(await range.getRangeDates()).toContain('2026-10-15');
+  });
 });

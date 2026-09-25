@@ -24,7 +24,7 @@ import { aveDateFormat, injectAveMessages, type AvePlainDate } from '@avelune/ui
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
 import { aveConnectedOverlay, aveOverlayPresence } from '@avelune/ui/overlay';
 import { AveCalendar } from './calendar';
-import { today, within } from './calendar-math';
+import { clamp, today, within } from './calendar-math';
 import type { AveDatePickerSize } from './types';
 
 /**
@@ -208,7 +208,7 @@ export class AveDatePicker implements ControlValueAccessor {
     }
     this.commit();
     this.expanded.set(true);
-    const start = this.value() ?? this.clamp(this.today);
+    const start = this.value() ?? clamp(this.today, this.earliest(), this.latest());
     afterNextRender(() => this.calendar()?.focus(start), { injector: this.injector });
   }
 
@@ -267,14 +267,6 @@ export class AveDatePicker implements ControlValueAccessor {
     this.value.set(date);
     this.text.set(date === null ? '' : this.format.numeric(date));
     this.changed(date);
-  }
-
-  private clamp(date: AvePlainDate): AvePlainDate {
-    const min = this.earliest();
-    const max = this.latest();
-    if (min !== null && date < min) return min;
-    if (max !== null && date > max) return max;
-    return date;
   }
 
   /** @internal */

@@ -14,6 +14,11 @@ function parts(date: AvePlainDate): { year: number; month: number; day: number }
   return value;
 }
 
+/** The day of the month of a date. */
+export function dayOfMonth(date: AvePlainDate): number {
+  return parts(date).day;
+}
+
 /** The date a number of days away. */
 export function addDays(date: AvePlainDate, days: number): AvePlainDate {
   const { year, month, day } = parts(date);
@@ -65,4 +70,33 @@ export function weeksOf(view: CalendarMonth, firstDay: number): (AvePlainDate | 
 /** Whether a date lies within the bounds; a missing bound does not limit. */
 export function within(date: AvePlainDate, min: AvePlainDate | null, max: AvePlainDate | null): boolean {
   return (min === null || date >= min) && (max === null || date <= max);
+}
+
+/** The number of days in a month. */
+export function daysIn(year: number, month: number): number {
+  return new Date(Date.UTC(year, month, 0)).getUTCDate();
+}
+
+/** Whether a month has a day within the bounds (ADR 0053). */
+export function monthWithin(year: number, month: number, min: AvePlainDate | null, max: AvePlainDate | null): boolean {
+  const first = toPlainDate(year, month, 1);
+  const last = toPlainDate(year, month, daysIn(year, month));
+  return (min === null || last >= min) && (max === null || first <= max);
+}
+
+/** Whether a year has a day within the bounds. */
+export function yearWithin(year: number, min: AvePlainDate | null, max: AvePlainDate | null): boolean {
+  return (min === null || toPlainDate(year, 12, 31) >= min) && (max === null || toPlainDate(year, 1, 1) <= max);
+}
+
+/** The first year of the page of twelve that holds a year: a multiple of 12 (2016–2027 holds 2026). */
+export function yearPage(year: number): number {
+  return year - (((year % 12) + 12) % 12);
+}
+
+/** A date moved into the bounds; a missing bound does not limit. */
+export function clamp(date: AvePlainDate, min: AvePlainDate | null, max: AvePlainDate | null): AvePlainDate {
+  if (min !== null && date < min) return min;
+  if (max !== null && date > max) return max;
+  return date;
 }

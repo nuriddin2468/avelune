@@ -26,6 +26,15 @@ describe('aveDateFormat', () => {
     expect(german.firstDayOfWeek).toBe(1);
   });
 
+  it('names the months as they stand alone, with a capital, in Uzbek Latin from its own data (ADR 0053)', () => {
+    expect(aveDateFormat('ru').months.slice(0, 3)).toEqual(['Январь', 'Февраль', 'Март']);
+    expect(aveDateFormat('ru').months[8]).toBe('Сентябрь');
+    expect(aveDateFormat('uz-Latn').months.slice(7, 9)).toEqual(['Avgust', 'Sentabr']);
+    expect(aveDateFormat('uz-Cyrl').months[8]).toBe('Сентябр');
+    expect(aveDateFormat('en-US').months[11]).toBe('December');
+    expect(aveDateFormat('ru').months).toHaveLength(12);
+  });
+
   it('names the weekdays from Sunday, abbreviated with a capital, in Uzbek Latin from its own data', () => {
     expect(aveDateFormat('uz-Latn').weekdays[1]).toEqual({ long: 'dushanba', short: 'Dush' });
     expect(aveDateFormat('ru').weekdays[0]).toEqual({ long: 'воскресенье', short: 'Вс' });

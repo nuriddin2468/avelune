@@ -11,6 +11,7 @@ export interface AveDateFormat {
     readonly firstDayOfWeek: 1 | 2 | 3 | 4 | 5 | 6 | 7;
     readonly locale: string;
     long(date: AvePlainDate): string;
+    readonly months: readonly string[];
     monthYear(year: number, month: number): string;
     numeric(date: AvePlainDate): string;
     parse(text: string): AvePlainDate | null;
@@ -32,6 +33,8 @@ export interface AveMessages {
     readonly chooseDate: string;
     readonly chooseFile: string;
     readonly chooseFiles: string;
+    readonly chooseMonth: string;
+    readonly chooseYear: string;
     readonly clear: string;
     readonly dropFile: string;
     readonly dropFiles: string;
@@ -41,8 +44,12 @@ export interface AveMessages {
     readonly fileTypeRejected: string;
     readonly lowerValue: string;
     readonly nextMonth: string;
+    readonly nextYear: string;
+    readonly nextYears: string;
     readonly noResults: string;
     readonly previousMonth: string;
+    readonly previousYear: string;
+    readonly previousYears: string;
     readonly rangeEnd: string;
     readonly rangeStart: string;
     readonly removeFile: (name: string) => string;

@@ -46,8 +46,13 @@ export class AveDatePickerHarness extends ComponentHarness {
   private readonly clearButton = this.locatorForOptional('.clear');
   private readonly title = this.locatorForOptional('.popup .title');
   private readonly days = this.locatorForAll('.popup [data-date]');
-  private readonly previous = this.locatorFor('.popup .header button:first-child');
-  private readonly next = this.locatorFor('.popup .header button:last-child');
+  private readonly months = this.locatorForAll('.popup [data-month]');
+  private readonly years = this.locatorForAll('.popup [data-year]');
+  private readonly cells = this.locatorForAll('.popup [data-date], .popup [data-month], .popup [data-year]');
+  private readonly calendar = this.locatorForOptional('.popup ave-calendar');
+  private readonly headingButton = this.locatorForOptional('.popup button.title');
+  private readonly previous = this.locatorFor('.popup .header > button:first-child');
+  private readonly next = this.locatorFor('.popup .header > button:last-child');
 
   /** Gets a predicate that matches date fields by the given filters. */
   static with(options: AveDatePickerHarnessFilters = {}): HarnessPredicate<AveDatePickerHarness> {
@@ -84,18 +89,91 @@ export class AveDatePickerHarness extends ComponentHarness {
     if (!(await this.isOpen())) await (await this.opener()).click();
   }
 
-  /** Gets the heading of the open calendar: the month and year shown. */
+  /** Gets the heading of the open calendar: the month and year among the days, the year among the months, the years among the years. */
   async getMonth(): Promise<string | null> {
     const title = await this.title();
     return title === null ? null : (await title.text()).trim();
   }
 
-  /** Shows the month before. */
+  /** Gets what the open calendar shows: the days of a month, the months of a year, or twelve years; null when closed. */
+  async getView(): Promise<'days' | 'months' | 'years' | null> {
+    const calendar = await this.calendar();
+    if (calendar === null) return null;
+    const view = await calendar.getAttribute('data-view');
+    return view === 'months' || view === 'years' ? view : 'days';
+  }
+
+  /** Presses the calendar's heading: the days show the months of their year, the months twelve years (ADR 0053). */
+  async clickHeading(): Promise<void> {
+    const heading = await this.headingButton();
+    if (heading === null) throw new Error('AveDatePickerHarness: the calendar has no heading to press.');
+    await heading.click();
+  }
+
+  /** Gets the names of the months shown. */
+  async getMonths(): Promise<string[]> {
+    return Promise.all((await this.months()).map(async (month) => (await month.text()).trim()));
+  }
+
+  /** Gets the years shown. */
+  async getYears(): Promise<number[]> {
+    return Promise.all((await this.years()).map(async (year) => Number((await year.text()).trim())));
+  }
+
+  /** Chooses a month by its name, as a click does: the calendar shows its days. */
+  async chooseMonth(name: string | RegExp): Promise<void> {
+    for (const month of await this.months()) {
+      if (await HarnessPredicate.stringMatches((await month.text()).trim(), name)) {
+        await month.click();
+        return;
+      }
+    }
+    throw new Error(`AveDatePickerHarness: the calendar shows no month ${String(name)}.`);
+  }
+
+  /** Chooses a year, as a click does: the calendar shows its months. */
+  async chooseYear(year: number): Promise<void> {
+    for (const cell of await this.years()) {
+      if ((await cell.text()).trim() === String(year)) {
+        await cell.click();
+        return;
+      }
+    }
+    throw new Error(`AveDatePickerHarness: the calendar shows no year ${String(year)}.`);
+  }
+
+  /** Gets the month that has focus among the months (`2026-09`), or null. */
+  async getFocusedMonth(): Promise<string | null> {
+    for (const month of await this.months()) {
+      if (await month.isFocused()) return month.getAttribute('data-month');
+    }
+    return null;
+  }
+
+  /** Gets the year that has focus among the years, or null. */
+  async getFocusedYear(): Promise<number | null> {
+    for (const year of await this.years()) {
+      if (await year.isFocused()) return Number(await year.getAttribute('data-year'));
+    }
+    return null;
+  }
+
+  /** Gets the months (`2026-09`) and years (`2026`) shown that cannot be chosen: outside the bounds. */
+  async getDisabledPeriods(): Promise<string[]> {
+    const periods: string[] = [];
+    for (const cell of [...(await this.months()), ...(await this.years())]) {
+      if ((await cell.getAttribute('aria-disabled')) !== 'true') continue;
+      periods.push((await cell.getAttribute('data-month')) ?? (await cell.getAttribute('data-year')) ?? '');
+    }
+    return periods;
+  }
+
+  /** Presses the button before the heading: the month, the year or the twelve years before. */
   async previousMonth(): Promise<void> {
     await (await this.previous()).click();
   }
 
-  /** Shows the month after. */
+  /** Presses the button after the heading: the month, the year or the twelve years after. */
   async nextMonth(): Promise<void> {
     await (await this.next()).click();
   }
@@ -129,15 +207,15 @@ export class AveDatePickerHarness extends ComponentHarness {
     return this.datesWhere('aria-disabled');
   }
 
-  /** Presses a key on the day that has focus in the calendar. */
+  /** Presses a key on the day, month or year that has focus in the calendar. */
   async press(key: AveCalendarKey): Promise<void> {
-    for (const cell of await this.days()) {
+    for (const cell of await this.cells()) {
       if (await cell.isFocused()) {
         await cell.sendKeys(keys[key]);
         return;
       }
     }
-    throw new Error('AveDatePickerHarness: no day of the calendar has focus.');
+    throw new Error('AveDatePickerHarness: no day, month or year of the calendar has focus.');
   }
 
   /** Whether the clear button shows: a date that can be changed and is not required (ADR 0052). */

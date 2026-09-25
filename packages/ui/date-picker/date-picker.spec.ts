@@ -46,6 +46,7 @@ class OptionalHost {
 
 /** The tokens the layout of a date field reads. */
 const layout = [
+  'control.height.sm',
   'control.height.md',
   'control.padding-inline.md',
   'border-width.default',
@@ -53,6 +54,8 @@ const layout = [
   'space.2',
   'space.4',
   'font.body-md',
+  'font.label-md',
+  'font.label-sm',
 ] as const satisfies readonly TokenName[];
 
 /** The layout tokens and border-box sizing, as the kit's global stylesheet gives every page. */
@@ -163,7 +166,7 @@ describe('AveDatePicker', () => {
     element.querySelector('th')?.dispatchEvent(new KeyboardEvent('keydown', { key: 'PageDown', bubbles: true }));
     expect(await field.getMonth()).toBe('Октябрь 2026 г.');
     await field.press('escape');
-    await expect(field.press('enter')).rejects.toThrow('no day of the calendar has focus');
+    await expect(field.press('enter')).rejects.toThrow('no day, month or year of the calendar has focus');
   });
 
   it('closes on its button or a click outside, reads a date on Enter, and opens within its bounds', async () => {
@@ -193,6 +196,159 @@ describe('AveDatePicker', () => {
     expect(fixture.componentInstance.due.value).toBe('2026-09-15');
     fixture.componentInstance.due.setValue(42 as unknown as string);
     expect(await due.getText()).toBe('');
+  });
+
+  it('opens the months from the heading, then twelve years, and the days of the month chosen (ADR 0053)', async () => {
+    const fixture = mount(SignalHost, 'ru');
+    const field = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveDatePickerHarness);
+    await field.open();
+    expect(await field.getView()).toBe('days');
+    const element = fixture.nativeElement as HTMLElement;
+    const heading = element.querySelector('.popup button.title');
+    const hint = () => document.getElementById(heading?.getAttribute('aria-describedby') ?? '')?.textContent;
+    expect(hint()).toBe('Выбрать месяц');
+    expect(heading?.closest('[aria-live="polite"]')).not.toBeNull();
+    await field.clickHeading();
+    expect(await field.getView()).toBe('months');
+    expect(await field.getMonth()).toBe('2026');
+    expect((await field.getMonths()).slice(0, 3)).toEqual(['Январь', 'Февраль', 'Март']);
+    await expect.poll(() => field.getFocusedMonth()).toBe('2026-09');
+    const september = element.querySelector('[data-month="2026-09"]');
+    expect(september?.getAttribute('aria-label')).toBe('Сентябрь 2026 г.');
+    expect(september?.getAttribute('aria-selected')).toBe('true');
+    expect(element.querySelector('.popup .header button')?.getAttribute('aria-label')).toBe('Предыдущий год');
+    await field.clickHeading();
+    expect(await field.getView()).toBe('years');
+    expect(await field.getMonth()).toBe('2016–2027');
+    expect(await field.getYears()).toEqual([2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027]);
+    await expect.poll(() => field.getFocusedYear()).toBe(2026);
+    await expect(field.clickHeading()).rejects.toThrow('no heading to press');
+    await field.nextMonth();
+    expect(await field.getMonth()).toBe('2028–2039');
+    await field.previousMonth();
+    await field.previousMonth();
+    expect(await field.getYears()).toContain(2012);
+    await field.chooseYear(2012);
+    expect(await field.getView()).toBe('months');
+    expect(await field.getMonth()).toBe('2012');
+    await expect.poll(() => field.getFocusedMonth()).toBe('2012-09');
+    await field.nextMonth();
+    expect(await field.getMonth()).toBe('2013');
+    await field.previousMonth();
+    await field.chooseMonth('Февраль');
+    expect(await field.getView()).toBe('days');
+    expect(await field.getMonth()).toBe('Февраль 2012 г.');
+    await expect.poll(() => field.getFocusedDate()).toBe('2012-02-23');
+    await field.chooseDay(29);
+    expect(fixture.componentInstance.model().signedOn).toBe('2012-02-29');
+    await field.open();
+    await expect(field.chooseMonth('Май')).rejects.toThrow('shows no month Май');
+    await expect(field.chooseYear(1999)).rejects.toThrow('shows no year 1999');
+  });
+
+  it('closes when the chosen day is chosen again, and opens the days when the chosen month is', async () => {
+    const fixture = mount(SignalHost, 'ru');
+    const field = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveDatePickerHarness);
+    await field.open();
+    await field.chooseDay(23);
+    expect(await field.isOpen()).toBe(false);
+    expect(fixture.componentInstance.model().signedOn).toBe('2026-09-23');
+    await field.open();
+    await field.clickHeading();
+    await field.chooseMonth('Сентябрь');
+    expect(await field.getView()).toBe('days');
+    expect(await field.getChosenDates()).toEqual(['2026-09-23']);
+  });
+
+  it('moves among the months and years with the keys, past their edges, and back to the days with Escape', async () => {
+    const fixture = mount(SignalHost, 'en-US');
+    const field = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveDatePickerHarness);
+    fixture.componentInstance.model.update((model) => ({ ...model, signedOn: '2026-12-31' }));
+    await field.open();
+    await field.clickHeading();
+    await expect.poll(() => field.getFocusedMonth()).toBe('2026-12');
+    await field.press('right');
+    await expect.poll(() => field.getFocusedMonth()).toBe('2027-01');
+    expect(await field.getMonth()).toBe('2027');
+    await field.press('up');
+    await expect.poll(() => field.getFocusedMonth()).toBe('2026-10');
+    await field.press('pageDown');
+    await expect.poll(() => field.getFocusedMonth()).toBe('2027-10');
+    await field.press('left');
+    await expect.poll(() => field.getFocusedMonth()).toBe('2027-09');
+    await field.press('escape');
+    expect(await field.isOpen()).toBe(true);
+    expect(await field.getView()).toBe('days');
+    expect(await field.getMonth()).toBe('December 2026');
+    await expect.poll(() => field.getFocusedDate()).toBe('2026-12-31');
+    await field.clickHeading();
+    await field.clickHeading();
+    await expect.poll(() => field.getFocusedYear()).toBe(2026);
+    await field.press('right');
+    await expect.poll(() => field.getFocusedYear()).toBe(2027);
+    await field.press('right');
+    await expect.poll(() => field.getFocusedYear()).toBe(2028);
+    expect(await field.getMonth()).toBe('2028–2039');
+    await field.press('pageUp');
+    await expect.poll(() => field.getFocusedYear()).toBe(2016);
+    await field.press('down');
+    await expect.poll(() => field.getFocusedYear()).toBe(2019);
+    await field.press('enter');
+    expect(await field.getView()).toBe('months');
+    await expect.poll(() => field.getFocusedMonth()).toBe('2019-12');
+    await field.press('escape');
+    await expect.poll(() => field.getFocusedDate()).toBe('2026-12-31');
+    await field.press('escape');
+    expect(await field.isOpen()).toBe(false);
+  });
+
+  it('disables the months and years outside the bounds and never moves onto them', async () => {
+    const fixture = mount(ReactiveHost, 'ru');
+    const [due] = await TestbedHarnessEnvironment.loader(fixture).getAllHarnesses(AveDatePickerHarness);
+    if (due === undefined) throw new Error('No field');
+    fixture.componentInstance.due.setValue('2026-10-05');
+    await due.open();
+    await due.clickHeading();
+    const disabled = await due.getDisabledPeriods();
+    expect(disabled).toContain('2026-08');
+    expect(disabled).toContain('2026-11');
+    expect(disabled).not.toContain('2026-09');
+    expect(disabled).not.toContain('2026-10');
+    await expect.poll(() => due.getFocusedMonth()).toBe('2026-10');
+    await due.press('pageDown');
+    await expect.poll(() => due.getFocusedMonth()).toBe('2026-10');
+    await due.press('home');
+    expect(await due.getMonth()).toBe('2026');
+    await due.clickHeading();
+    expect((await due.getDisabledPeriods()).length).toBe(11);
+    await due.press('pageDown');
+    await expect.poll(() => due.getFocusedYear()).toBe(2026);
+    expect(await due.getMonth()).toBe('2016–2027');
+    await due.chooseYear(2026);
+    await due.chooseMonth('Сентябрь');
+    // The day of the month, 5, is before the first day allowed, 10: focus goes to the bound.
+    await expect.poll(() => due.getFocusedDate()).toBe('2026-09-10');
+    // A page into a month outside the bounds does not move.
+    await due.press('pageUp');
+    await expect.poll(() => due.getFocusedDate()).toBe('2026-09-10');
+  });
+
+  it('keeps the size of the calendar in every view', async () => {
+    withLayout(true);
+    const fixture = mount(SignalHost, 'ru');
+    const field = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveDatePickerHarness);
+    await field.open();
+    const calendar = (fixture.nativeElement as HTMLElement).querySelector('ave-calendar');
+    const size = () => {
+      const box = calendar?.getBoundingClientRect();
+      return [box?.width, box?.height];
+    };
+    const days = size();
+    await field.clickHeading();
+    expect(size()).toEqual(days);
+    await field.clickHeading();
+    expect(size()).toEqual(days);
+    withLayout(false);
   });
 
   it('clears an optional date with its button, before the calendar button, and keeps focus in it (ADR 0052)', async () => {
