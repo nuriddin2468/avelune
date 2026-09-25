@@ -15,6 +15,10 @@ for (const story of readStories().filter((entry) => entry.tags.includes(forcedCo
         .poll(() => page.evaluate(() => matchMedia('(forced-colors: active)').matches), 'forced colours are active')
         .toBe(true);
       await expectKitFonts(page);
+      // Forced colours force `caret-color`, so the screenshot's `caret: 'hide'` cannot hide a focused field's caret,
+      // and it blinked into one run's screenshot and not another's (Input States, 2026-09-25). A caret that does not
+      // blink is drawn in every run (ADR 0027, addendum).
+      await page.addStyleTag({ content: '* { caret-animation: manual; }' });
       await expect(page).toHaveScreenshot([story.id, 'forced-colors.png'], { fullPage: true });
     });
   });
