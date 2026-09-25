@@ -33,23 +33,31 @@ describe('visual suite', () => {
     assert.ok(found, `no test "${title}" in:\n${run.tests.map((test) => test.title).join('\n')}\n${run.log}`);
     return found;
   };
-  const fails = (title: string, pattern: RegExp) => {
+  const fails = (title: string, pattern: RegExp, not?: RegExp) => {
     const test = result(title);
     assert.equal(test.passed, false, `${title} passed`);
-    assert.match(test.errors.join('\n'), pattern);
+    const errors = test.errors.join('\n');
+    assert.match(errors, pattern);
+    if (not !== undefined) assert.doesNotMatch(errors, not);
   };
   const passes = (title: string) => {
     const test = result(title);
     assert.equal(test.passed, true, `${title} failed:\n${test.errors.join('\n')}`);
   };
 
+  /** The one test per story and project: the screenshot and the axe sweep on one load (ADR 0027, addendum). */
+  const story = (id: string) => `fixtures-visual--${id} › matches its baseline and has no axe violations`;
+  // The first line of each assertion's error. An error also quotes the test's source, which names both assertions,
+  // so only a line that starts with "Error:" says which one failed.
+  const screenshotFailed = /^Error: (expect\(page\)\.toHaveScreenshot\(expected\) failed|A snapshot doesn't exist)/m;
+  const axeFailed = /^Error: axe violations$/m;
+
   it('fails the run', () => {
     assert.notEqual(run.status, 0, run.log);
   });
 
   it('passes a story that matches its baseline and has no violation', () => {
-    passes('fixtures-visual--clean › matches its baseline');
-    passes('fixtures-visual--clean › has no axe violations');
+    passes(story('clean'));
   });
 
   it('compares a story tagged forced-colors in forced colours, and only that one', () => {
@@ -58,32 +66,26 @@ describe('visual suite', () => {
     assert.deepEqual(forced, ['fixtures-visual--clean › matches its forced-colors baseline']);
   });
 
-  it('fails a story whose screenshot differs from its baseline', () => {
-    fails('fixtures-visual--changed › matches its baseline', /Screenshot comparison failed|pixels .*different/);
-    passes('fixtures-visual--changed › has no axe violations');
+  it('fails a story whose screenshot differs from its baseline, and not on axe', () => {
+    fails(story('changed'), /Screenshot comparison failed|pixels .*different/, axeFailed);
   });
 
   it('fails a story without a baseline, and writes none', () => {
-    fails('fixtures-visual--unbaselined › matches its baseline', /A snapshot doesn't exist/);
+    fails(story('unbaselined'), /A snapshot doesn't exist/, axeFailed);
     assert.equal(existsSync(join(workspaceRoot, fixtures, 'baselines', 'fixtures-visual--unbaselined')), false);
   });
 
-  it('fails a story with an axe violation', () => {
-    passes('fixtures-visual--axe-violation › matches its baseline');
-    fails('fixtures-visual--axe-violation › has no axe violations', /button-name/);
+  it('fails a story with an axe violation, and not on its screenshot', () => {
+    fails(story('axe-violation'), axeFailed, screenshotFailed);
+    fails(story('axe-violation'), /button-name/);
   });
 
   it('fails a story whose text falls back from the kit font', () => {
-    fails('fixtures-visual--font-fallback › matches its baseline', /fonts\.css declares Avelune Sans/);
+    fails(story('font-fallback'), /fonts\.css declares Avelune Sans/);
   });
 
   it('fails a story whose play function fails', () => {
-    for (const check of ['matches its baseline', 'has no axe violations']) {
-      fails(
-        `fixtures-visual--play-failure › ${check}`,
-        /could not render the story cleanly:.*Fixture: the play function fails/s,
-      );
-    }
+    fails(story('play-failure'), /could not render the story cleanly:.*Fixture: the play function fails/s);
   });
 
   it('sweeps every docs page with axe: passes a clean page and fails one with a violation outside its stories', () => {
@@ -97,10 +99,10 @@ describe('visual suite', () => {
   });
 
   it('runs exactly these tests', () => {
-    assert.equal(run.tests.length, 16, run.tests.map((test) => test.title).join('\n'));
+    assert.equal(run.tests.length, 10, run.tests.map((test) => test.title).join('\n'));
     assert.equal(
       run.tests.filter((test) => !test.passed).length,
-      8,
+      7,
       run.tests
         .filter((test) => !test.passed)
         .map((test) => test.title)
