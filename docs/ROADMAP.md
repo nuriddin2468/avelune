@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below that is not marked **Deferred**, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 5, Wave 2 starting (2026-09-25). Wave 1 is closed: the product owner approved it on 2026-09-25 without the showcase review of its STOP. Before the first Wave 2 component, the Angular 22.2 upgrade and `lucide-static` 1.48, each on its own branch (product owner, 2026-09-25; "Tracked upgrades"). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-24.
+**Current position:** Phase 5, Wave 2 starting (2026-09-25). Wave 1 is closed: the product owner approved it on 2026-09-25 without the showcase review of its STOP. Angular 22.2 is in (2026-09-25; ng-packagr held at 22.1.1, see "Tracked upgrades"); next `lucide-static` 1.48 on its own branch, then Textarea. The release age is 16 hours since 2026-09-25 (ADR 0042). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-25.
 
 ## Parameters
 
@@ -259,6 +259,8 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 | `@angular-eslint/eslint-plugin` 22.5.0 crashes `reactive-context-must-read-signal` on a call named like an `Object.prototype` method (a destructured `valueOf` in a Signal Forms rule): it looks names up in a plain object (2026-09-24) | already reported upstream ([angular-eslint#3198](https://github.com/angular-eslint/angular-eslint/issues/3198)) and fixed ([#3201](https://github.com/angular-eslint/angular-eslint/pull/3201), merged 2026-09-17), in 22.5.1 alphas only; until a stable release has it, write `context.valueOf(…)` (the specs say why) | 0023 |
 | The visual baselines show rest, focus, disabled and loading states; hover and press need a real pointer, which a story's `play` function does not have | hover and press checked by script in each component's visual review (Wave 1: real pointer in both themes, both densities and forced colours, 2026-09-25); make that script a checked-in tool before Wave 2's review; a hover pass in the visual suite if a regression slips through | 0027 |
 | iOS Safari 17–18.2 implements `popover` without light dismiss (browser-compat-data 8.1.2; WebKit bug 267688), and the floor is iOS 17.5 | Wave 3: Popover and Menu close on an outside tap on iOS too, through CDK or Angular Aria behaviour where they provide it; otherwise raise the iOS floor to 18.3 (product owner, ADR 0014) | 0014, 0029 |
+| Angular 22.2's emulated shim scopes a nested `&` to the component's content, so `:host { &:hover {} }` never matches the host (2026-09-25); not reported upstream yet | `avelune/nesting-same-element` rejects nesting under `:host`, and `encapsulation.spec.ts` pins the output, so a change in either direction fails `lint-rules:test` | 0024 |
+| ng-packagr 22.2's `.d.ts` bundles export every declaration of a file without an export list (2026-09-25); not reported upstream yet | ng-packagr held at 22.1.1; `ui:api-report` fails on a leaked declaration without a release tag | 0007 |
 
 ## Tracked upgrades
 
