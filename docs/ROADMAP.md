@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below that is not marked **Deferred**, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 5, Wave 2: every component is built and experimental (2026-09-25). Still to run before the wave's STOP: the Slider's baselines, the changed Global styles baseline, the full visual suite and the invariants, which wait for Docker (Docker Desktop failed to start on 2026-09-25, with 5.7 GB free on the disk). Then, at the product owner's request (2026-09-25), the work stops for their corrections to several components; the wave's visual review of brief §8.1 comes after those. Wave 1 is closed: the product owner approved it on 2026-09-25 without the showcase review of its STOP. The release age is 16 hours since 2026-09-25 (ADR 0042). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-25.
+**Current position:** Phase 5, Wave 2: every component is built and experimental (2026-09-25). Still to run before the wave's STOP: the Slider's baselines, the changed Global styles baseline, the full visual suite and the invariants, which wait for Docker (Docker Desktop failed to start on 2026-09-25, with 5.7 GB free on the disk). Then the Wave 2 additions below (product owner, 2026-09-25), and only after them the wave's visual review of brief §8.1. Wave 1 is closed: the product owner approved it on 2026-09-25 without the showcase review of its STOP. The release age is 16 hours since 2026-09-25 (ADR 0042). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-25.
 
 ## Parameters
 
@@ -144,6 +144,15 @@ Wave 1 summary (2026-09-25):
 - **STOP passed** (2026-09-25): the product owner closed Wave 1 and started Wave 2 without reviewing the showcase form.
 
 Wave 2 decisions (product owner, 2026-09-25): Slider is needed and is built last in the wave, for one value and a range; Switch is a 40×24 track with a 16px thumb 4px from its edge; the visual review of brief §8.1 runs once, at the end of the wave, for all its components. Until that review a Wave 2 component is experimental (`@alpha`): baselines, tests and the showcase come with the component, beta after the review.
+
+Wave 2 additions (product owner, 2026-09-25), built before the wave's review, in this order:
+1. **Clearing:** every selection field (DatePicker, DateRangePicker, Select, Combobox, Multiselect) shows a clear button at its inline end while it has a value, is editable and is not required. It is not a Tab stop (the keyboard clears by deleting), is named in the four locales, and returns focus to the field.
+2. **DatePicker, quick month and year:** the calendar's heading opens a grid of months, then of years, for dates far away; within the bounds; the keyboard as in the day grid.
+3. **DateRangePicker presets:** a built-in, typed, translated set (today, yesterday, this and last week, this and last month, this quarter, this year, the last 7 and 30 days), weeks from the locale's first day; the application picks which to show and may add its own; a list beside the calendar on wide containers, above it on narrow ones; a preset sets the range and closes. Two months side by side: not now.
+4. **Rich options** in the select family: structured fields first (a second line, an icon or image at the start, meta text at the end), one row layout everywhere; `ng-template` for an option and for the chosen value as the escape hatch, inside the kit's row (height, padding, check mark); `label` stays required.
+5. **Large and remote lists:** asynchronous search (a debounced query, loading, an error with retry, no results), the options already chosen given apart from the current list (a new ADR over ADR 0046's "the value is always an option"), and "load more" at the end of the list. No virtual scrolling: Aria's `aria-activedescendant` needs the options in the DOM.
+6. **Multiselect with search:** an input as the trigger over a multi-select listbox, for long lists.
+Not taken: a Today button, "select all", option groups, chips in the multiselect (after Tag, Wave 5), creating a value from the search.
 
 Wave 2 build (2026-09-25), before the product owner's corrections and the wave's review:
 - DatePicker and DateRangePicker (ADR 0048), FileUpload (ADR 0050) and Slider with RangeSlider (ADR 0051) joined Textarea, RadioGroup, Switch and the select family. The product owner chose the FileUpload's drop zone with its button inside and the Slider's value in the label row (2026-09-25).
