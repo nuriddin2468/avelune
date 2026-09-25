@@ -73,15 +73,18 @@ const sendDelay = 1500;
           Уведомить контрагента по электронной почте, когда договор будет согласован
         </label>
         <label aveChoice>
-          <input type="checkbox" aveCheckbox [formField]="contract.confirm" />
+          <input type="checkbox" aveCheckbox aria-describedby="confirm-error" [formField]="contract.confirm" />
           Подтверждаю, что данные договора сверены с подписанным экземпляром
         </label>
-        @if (contract.confirm().invalid() && contract.confirm().touched()) {
-          <p class="error">
-            <ave-icon name="circle-alert" decorative />
-            Подтвердите сверку, чтобы отправить договор на согласование.
-          </p>
-        }
+        <!-- Always in the page, so the checkbox's description never points at a missing id; empty while valid. -->
+        <div id="confirm-error" class="message">
+          @if (contract.confirm().invalid() && contract.confirm().touched()) {
+            <p class="error">
+              <ave-icon name="circle-alert" decorative />
+              Подтвердите сверку, чтобы отправить договор на согласование.
+            </p>
+          }
+        </div>
       </div>
 
       <footer class="actions">

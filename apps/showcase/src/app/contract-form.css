@@ -44,6 +44,11 @@
     justify-items: start;
   }
 
+  /* The slot of the confirmation's error: no grid gap while it is empty. */
+  .message:empty {
+    display: none;
+  }
+
   .error {
     display: flex;
     align-items: start;
