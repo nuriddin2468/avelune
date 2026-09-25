@@ -43,23 +43,10 @@
     grid-column: 1 / -1;
   }
 
+  /* The groups of choices, 24px apart (GUIDELINES.md, "Spacing rhythm"). */
   .choices {
     display: grid;
-    gap: var(--ave-space-2);
-    justify-items: start;
-  }
-
-  /* The slot of the confirmation's error: no grid gap while it is empty. */
-  .message:empty {
-    display: none;
-  }
-
-  .error {
-    display: flex;
-    align-items: start;
-    gap: var(--ave-space-1);
-    color: var(--ave-color-danger-fg);
-    font: var(--ave-font-body-sm);
+    gap: var(--ave-space-6);
   }
 
   /* The actions: stacked at full width in a narrow card, in DOM order so the focus order is the visual one; in a

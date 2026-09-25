@@ -1,0 +1,81 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ChoiceGroupStories from './choice-group.stories';
+
+<Meta of={ChoiceGroupStories} />
+
+# ChoiceGroup
+
+`aveChoiceGroup` turns a native `<fieldset>` into the kit's group of choices: a question in its legend, the radios or checkboxes that answer it, and one hint and one error for all of them. The group is what a screen reader names and describes; a group of radios is a `radiogroup` that says "required" once (ADR 0044).
+
+```ts
+import { AveChoiceGroup, AveError, AveHint } from '@avelune/ui/form-field';
+```
+
+<Canvas of={ChoiceGroupStories.States} />
+
+## When to use
+
+- Around every set of radios: one question, 2 to 5 options.
+- Around checkboxes that answer one question together ("Notify by: email, SMS"), especially with a rule for the group ("choose at least one").
+- Around a single required checkbox, so its error has a place.
+
+## When not to use
+
+- Around a single text field: use `<ave-form-field>`.
+- To frame unrelated fields: use a heading or a section.
+
+## Anatomy
+
+The legend (label type, with an asterisk when every choice is required), 8px above the choices, which stand one under the other 8px apart; under them the hint, then the error with its icon, 4px apart. The fieldset's own frame is removed.
+
+```html
+<fieldset aveChoiceGroup legend="Delivery">
+  <label aveChoice><input type="radio" aveRadio value="courier" [formField]="order.delivery" /> Courier</label>
+  <label aveChoice><input type="radio" aveRadio value="pickup" [formField]="order.delivery" /> Pickup point</label>
+  <p aveHint>Pickup is free.</p>
+  @if (order.delivery().errors().length > 0) {
+  <p aveError>Choose how to deliver the order.</p>
+  }
+</fieldset>
+```
+
+## States
+
+- **Required:** the asterisk after the legend when every choice of the group is required: a group of radios, or of one required checkbox; a group of radios also says `aria-required`. In a group that mixes optional and required checkboxes, the required one says so in its own label ("I confirm…") and its error.
+- **Invalid:** the error under the choices, in words and with an icon. With a form binding it shows once a choice of the group has been touched, which sending the form does for all of them; without one, whenever it is in the template.
+- **Disabled:** the legend dims when every choice is disabled, or the fieldset is (`<fieldset disabled>` disables everything in it natively).
+
+## Forms
+
+<Canvas of={ChoiceGroupStories.SignalForms} />
+
+<Canvas of={ChoiceGroupStories.ReactiveForms} />
+
+- The controls bind as they always do; the group reads their state. A rule on the group's object ("choose at least one") goes into the template's `@if`, and the group shows it once a checkbox is touched.
+- The group, not each choice, is described by the hint and the error.
+
+## Content
+
+- Write the legend as the question: "Delivery", "How to sign the contract". It names the group for screen readers.
+- A hint says what helps choose; an error says what to do: "Choose how to deliver the order".
+
+<Canvas of={ChoiceGroupStories.LongText} />
+
+## Keyboard
+
+The choices keep their own keyboard: Tab enters a group of radios at its checked radio and the arrow keys move the choice; each checkbox is its own Tab stop.
+
+## Accessibility
+
+- The legend names the group; a group of radios is also labelled by it through `aria-labelledby`.
+- `aria-describedby` on the fieldset lists the application's own ids, then the hint, then the error while it shows.
+
+## Motion
+
+None.
+
+## Do and don't
+
+- Do give every group a legend that reads as a question.
+- Do keep one hint and one error per group.
+- Don't nest groups.

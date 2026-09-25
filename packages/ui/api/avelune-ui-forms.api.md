@@ -22,9 +22,9 @@ export interface AveControlState {
 
 // @beta
 export interface AveFieldContext {
-    readonly defaultId: string;
+    readonly defaultId: string | null;
     readonly describedBy: Signal<readonly string[]>;
-    register(id: string, state: AveControlState): void;
+    register(control: HTMLElement, state: AveControlState): void;
 }
 
 // @beta

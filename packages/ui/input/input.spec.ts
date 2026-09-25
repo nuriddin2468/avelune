@@ -65,8 +65,8 @@ class FakeField implements AveFieldContext {
   readonly describedBy = signal<readonly string[]>(['field-hint']);
   registered: { id: string; state: AveControlState } | null = null;
 
-  register(id: string, state: AveControlState): void {
-    this.registered = { id, state };
+  register(control: HTMLElement, state: AveControlState): void {
+    this.registered = { id: control.id, state };
   }
 }
 

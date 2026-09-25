@@ -77,9 +77,9 @@ Conventions:
 - Exported symbols start with `Ave` (`AveButton`, `AveButtonHarness`, `AveButtonVariant`) so they never collide with consumer or Angular Aria names. Selectors use the `ave` prefix (`button[aveButton]`, `<ave-form-field>`).
 - Every exported symbol carries an API Extractor release tag that mirrors its ROADMAP status: experimental → `@alpha`, beta → `@beta`, stable → `@public` (ADR 0007).
 
-A service without a component, such as `theme` or `forms`, has no harness and no `testing` entry point. Closely related components may share one entry point: `button` holds Button and IconButton (ADR 0038), `form-field` FormField with its hint and error, `checkbox` Checkbox with its `label[aveChoice]`.
+A service without a component, such as `theme` or `forms`, has no harness and no `testing` entry point. Closely related components may share one entry point: `button` holds Button and IconButton (ADR 0038), `form-field` FormField and ChoiceGroup with their hint and error, `checkbox` Checkbox with its `label[aveChoice]`, which Radio uses too.
 
-**Forms** (ADR 0039). Every control calls `injectControlState()` and `connectToField()` from `@avelune/ui/forms`: the same state signals for Signal Forms, Reactive Forms and a bare element, and the link to the `<ave-form-field>` around it (its label's id, `aria-describedby`, `aria-invalid`, `aria-required`). A control never adds a value accessor of its own where a native one binds the element.
+**Forms** (ADR 0039, 0044). Every control calls `injectControlState()` and `connectToField()` from `@avelune/ui/forms`: the same state signals for Signal Forms, Reactive Forms and a bare element, and the link to the `<ave-form-field>` or `fieldset[aveChoiceGroup]` around it (its label's id, `aria-describedby`, `aria-invalid`, `aria-required`). In a choice group the controls keep their own ids and the fieldset carries the description; a group of radios is a `radiogroup`. A control never adds a value accessor of its own where a native one binds the element.
 
 ### Adding an entry point
 

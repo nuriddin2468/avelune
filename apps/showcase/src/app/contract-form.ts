@@ -2,9 +2,10 @@ import { Component, signal } from '@angular/core';
 import { FormField, email, form, maxLength, minLength, pattern, required, submit } from '@angular/forms/signals';
 import { AveButton } from '@avelune/ui/button';
 import { AveCheckbox, AveChoice } from '@avelune/ui/checkbox';
-import { AveError, AveFormField, AveHint } from '@avelune/ui/form-field';
+import { AveChoiceGroup, AveError, AveFormField, AveHint } from '@avelune/ui/form-field';
 import { AveIcon } from '@avelune/ui/icon';
 import { AveInput } from '@avelune/ui/input';
+import { AveRadio } from '@avelune/ui/radio';
 import { AveTextarea } from '@avelune/ui/textarea';
 
 interface Contract {
@@ -13,6 +14,7 @@ interface Contract {
   subject: string;
   amount: string;
   email: string;
+  signing: string;
   notify: boolean;
   confirm: boolean;
 }
@@ -23,6 +25,7 @@ const empty: Contract = {
   subject: '',
   amount: '',
   email: '',
+  signing: '',
   notify: true,
   confirm: false,
 };
@@ -32,8 +35,8 @@ const sendDelay = 1500;
 
 /**
  * A realistic form of the kit's controls: every field in a FormField, required and optional, a hint on each, errors
- * once a field is left or the form is sent, a textarea across both columns, two checkboxes, and the form's actions,
- * primary last.
+ * once a field is left or the form is sent, a textarea across both columns, a group of radios and a group of
+ * checkboxes, and the form's actions, primary last.
  */
 @Component({
   selector: 'ave-showcase-contract-form',
@@ -41,11 +44,13 @@ const sendDelay = 1500;
     AveButton,
     AveCheckbox,
     AveChoice,
+    AveChoiceGroup,
     AveError,
     AveFormField,
     AveHint,
     AveIcon,
     AveInput,
+    AveRadio,
     AveTextarea,
     FormField,
   ],
@@ -98,23 +103,35 @@ const sendDelay = 1500;
       </div>
 
       <div class="choices">
-        <label aveChoice>
-          <input type="checkbox" aveCheckbox [formField]="contract.notify" />
-          Уведомить контрагента по электронной почте, когда договор будет согласован
-        </label>
-        <label aveChoice>
-          <input type="checkbox" aveCheckbox aria-describedby="confirm-error" [formField]="contract.confirm" />
-          Подтверждаю, что данные договора сверены с подписанным экземпляром
-        </label>
-        <!-- Always in the page, so the checkbox's description never points at a missing id; empty while valid. -->
-        <div id="confirm-error" class="message">
-          @if (contract.confirm().invalid() && contract.confirm().touched()) {
-            <p class="error">
-              <ave-icon name="circle-alert" decorative />
-              Подтвердите сверку, чтобы отправить договор на согласование.
-            </p>
+        <fieldset aveChoiceGroup legend="Форма подписания">
+          <label aveChoice>
+            <input type="radio" aveRadio value="digital" [formField]="contract.signing" />
+            Электронная цифровая подпись
+          </label>
+          <label aveChoice>
+            <input type="radio" aveRadio value="paper" [formField]="contract.signing" />
+            На бумаге, в офисе контрагента
+          </label>
+          <p aveHint>Бумажный экземпляр передайте в канцелярию в течение трёх рабочих дней.</p>
+          @if (contract.signing().errors().length > 0) {
+            <p aveError>Выберите, как будет подписан договор.</p>
           }
-        </div>
+        </fieldset>
+
+        <fieldset aveChoiceGroup legend="Перед отправкой">
+          <label aveChoice>
+            <input type="checkbox" aveCheckbox [formField]="contract.notify" />
+            Уведомить контрагента по электронной почте, когда договор будет согласован
+          </label>
+          <label aveChoice>
+            <input type="checkbox" aveCheckbox [formField]="contract.confirm" />
+            Подтверждаю, что данные договора сверены с подписанным экземпляром
+          </label>
+          <!-- The error belongs to the confirmation alone, so it waits until that checkbox is touched. -->
+          @if (contract.confirm().invalid() && contract.confirm().touched()) {
+            <p aveError>Подтвердите сверку, чтобы отправить договор на согласование.</p>
+          }
+        </fieldset>
       </div>
 
       <footer class="actions">
@@ -149,6 +166,7 @@ export class ContractForm {
     required(path.amount);
     pattern(path.amount, /^\d+$/);
     email(path.email);
+    required(path.signing);
     required(path.confirm);
   });
   protected readonly sending = signal(false);

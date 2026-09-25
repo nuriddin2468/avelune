@@ -8,6 +8,26 @@ import * as _angular_core from '@angular/core';
 import { AveControlState } from '@avelune/ui/forms';
 import { AveFieldContext } from '@avelune/ui/forms';
 
+// @alpha
+export class AveChoiceGroup implements AveFieldContext {
+    // @internal
+    add(kind: 'hint' | 'error', id: string): () => void;
+    readonly defaultId: null;
+    readonly describedBy: _angular_core.Signal<readonly string[]>;
+    protected readonly disabled: _angular_core.Signal<boolean>;
+    protected readonly errorShown: _angular_core.Signal<boolean>;
+    protected readonly groupDescribedBy: _angular_core.Signal<string | null>;
+    readonly legend: _angular_core.InputSignal<string>;
+    protected readonly legendId: string;
+    protected readonly radios: _angular_core.Signal<boolean>;
+    register(control: HTMLElement, state: AveControlState): void;
+    protected readonly required: _angular_core.Signal<boolean>;
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveChoiceGroup, "fieldset[aveChoiceGroup]", never, { "legend": { "alias": "legend"; "required": true; "isSignal": true; }; }, {}, never, ["*", "[aveHint]", "[aveError]"], true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveChoiceGroup, never>;
+}
+
 // @beta
 export class AveError {
     readonly id: string;
@@ -27,7 +47,7 @@ export class AveFormField implements AveFieldContext {
     protected readonly disabled: _angular_core.Signal<boolean>;
     protected readonly errorShown: _angular_core.Signal<boolean>;
     readonly label: _angular_core.InputSignal<string>;
-    register(id: string, state: AveControlState): void;
+    register(control: HTMLElement, state: AveControlState): void;
     protected readonly required: _angular_core.Signal<boolean>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveFormField, "ave-form-field", never, { "label": { "alias": "label"; "required": true; "isSignal": true; }; }, {}, never, ["*", "[aveHint]", "[aveError]"], true, never>;

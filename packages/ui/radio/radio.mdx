@@ -1,0 +1,77 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as RadioStories from './radio.stories';
+
+<Meta of={RadioStories} />
+
+# Radio
+
+`aveRadio` turns a native `<input type="radio">` into the kit's radio button, inside the `label[aveChoice]` of the checkbox. Radios of one `name` are one choice: both form APIs bind them, a click on a label chooses it, and the arrow keys move the choice (ADR 0044).
+
+```ts
+import { AveChoice } from '@avelune/ui/checkbox';
+import { AveRadio } from '@avelune/ui/radio';
+```
+
+<Canvas of={RadioStories.Default} />
+
+## When to use
+
+- For one choice among 2 to 5 options that people should see side by side: delivery, signing method, priority.
+- In a `fieldset[aveChoiceGroup]`, which asks the question and holds the hint and the error.
+
+## When not to use
+
+- For 6 to 15 options: use a select. For more, or an unknown number: a combobox with search (GUIDELINES.md).
+- For yes or no: a checkbox, or a switch for a setting that applies at once.
+- For several choices at once: checkboxes.
+
+## Anatomy
+
+A 16px circle with a 3:1 border, then the label, 8px apart, the circle on the middle of the first line. Checked, the circle fills with the accent and shows a white dot.
+
+```html
+<fieldset aveChoiceGroup legend="Delivery">
+  <label aveChoice><input type="radio" aveRadio value="courier" [formField]="order.delivery" /> Courier</label>
+  <label aveChoice><input type="radio" aveRadio value="pickup" [formField]="order.delivery" /> Pickup point</label>
+</fieldset>
+```
+
+## States
+
+<Canvas of={RadioStories.States} />
+
+- **Checked:** the accent fill with a dot. **Invalid:** a red border; the group's error says why, in words and with an icon.
+- **Disabled:** a flat fill without a border, a dimmed label. **Focus:** the kit's focus ring around the circle.
+
+## Forms
+
+<Canvas of={RadioStories.Forms} />
+
+- **Signal Forms:** `[formField]` on every radio of the field, each with its `value`; Signal Forms gives them their `name`.
+- **Reactive Forms:** `formControlName` (or `[formControl]` with a shared `name`) on every radio, each with its `value`.
+- Required is said once, by the group (`radiogroup`), never on each radio, where ARIA does not allow it.
+
+## Content
+
+Options are short and parallel: "Courier", "Pickup point", "Post". Put the likeliest first; don't preselect a choice people must make themselves. Labels wrap; they never truncate.
+
+<Canvas of={RadioStories.LongText} />
+
+## Keyboard
+
+Native, per the WAI-ARIA radio group pattern: Tab moves to the checked radio (or the first), the arrow keys move and choose, Space chooses the focused radio.
+
+## Accessibility
+
+- The label names each radio; the legend of its group names the question.
+- In forced colours the circle, the dot and the fill take system colours.
+
+## Motion
+
+Colour only: the fill changes in `duration.instant`. The dot appears at once.
+
+## Do and don't
+
+- Do keep the options of one question in one group, under one legend.
+- Do write each option so it reads well after the legend.
+- Don't use radios for more than 5 options, or to trigger an action.

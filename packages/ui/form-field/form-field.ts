@@ -87,9 +87,9 @@ export class AveFormField implements AveFieldContext {
     ...(this.errorShown() ? this.errors() : []),
   ]);
 
-  /** Called by the control inside the field, with its id and state. */
-  register(id: string, state: AveControlState): void {
-    this.control.set({ id, state });
+  /** Called by the control inside the field, with its element and state. */
+  register(control: HTMLElement, state: AveControlState): void {
+    this.control.set({ id: control.id, state });
   }
 
   /**

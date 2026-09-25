@@ -1,0 +1,90 @@
+@layer components {
+  /* A 16px circle (the small icon size) with a 3:1 border, drawn by the kit like the checkbox (ADR 0041, 0044): the
+     native one cannot be themed. The dot is the ::before. The circle sits on the middle of a 20px line. */
+  :host {
+    display: inline-grid;
+    flex-shrink: 0;
+    place-content: center;
+    inline-size: var(--ave-size-icon-sm);
+    block-size: var(--ave-size-icon-sm);
+    margin-block: calc(var(--ave-space-1) / 2);
+    margin-inline: 0;
+    border: var(--ave-border-width-default) solid var(--ave-color-border-strong);
+    border-radius: var(--ave-radius-full);
+    appearance: none;
+    background-color: var(--ave-color-bg-surface);
+    transition-property: background-color, border-color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+  }
+
+  /* The dot: 6px, in the middle of the circle. */
+  :host::before {
+    inline-size: calc(var(--ave-size-icon-sm) * 0.375);
+    block-size: calc(var(--ave-size-icon-sm) * 0.375);
+    border-radius: var(--ave-radius-full);
+    background-color: var(--ave-color-fg-on-accent);
+    content: '';
+    opacity: 0;
+  }
+
+  :host(:checked) {
+    border-color: transparent;
+    background-color: var(--ave-color-accent-bg);
+  }
+
+  :host(:checked)::before {
+    opacity: 1;
+  }
+
+  :host(:enabled:checked:hover) {
+    background-color: var(--ave-color-accent-bg-hover);
+  }
+
+  :host([aria-invalid='true']) {
+    border-color: var(--ave-color-danger-border);
+  }
+
+  :host(:disabled) {
+    border-color: transparent;
+    background-color: var(--ave-color-bg-disabled);
+  }
+
+  :host(:disabled)::before {
+    background-color: var(--ave-color-fg-disabled);
+  }
+
+  /* Forced colours would paint the circle and the dot in the canvas colour; they get system colours, as the
+     checkbox's do: invalid takes the plain border, and hover changes nothing. */
+  @media (forced-colors: active) {
+    :host,
+    :host([aria-invalid='true']) {
+      border-color: CanvasText;
+      background-color: Canvas;
+      forced-color-adjust: none;
+    }
+
+    :host(:checked),
+    :host(:enabled:checked:hover) {
+      border-color: Highlight;
+      background-color: Highlight;
+    }
+
+    :host::before {
+      background-color: HighlightText;
+    }
+
+    :host(:disabled) {
+      border-color: GrayText;
+      background-color: Canvas;
+    }
+
+    :host(:disabled:checked) {
+      background-color: GrayText;
+    }
+
+    :host(:disabled)::before {
+      background-color: Canvas;
+    }
+  }
+}

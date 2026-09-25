@@ -1,6 +1,6 @@
 # 0039. Forms and Input: one control state for both form APIs, a field context, a native input
 
-- Status: Accepted (2026-09-24; the input border and the required marker chosen by the product owner, the rest a technical decision within Wave 1)
+- Status: Accepted (2026-09-24; the input border and the required marker chosen by the product owner, the rest a technical decision within Wave 1); the field context's `defaultId` and `register` changed by 0044
 - Date: 2026-09-24
 - Related: 0002, 0004, 0023, 0037; brief §8.1, §8.2, §9.1
 

@@ -8,6 +8,23 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ContentContainerComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
+// @alpha
+export class AveChoiceGroupHarness extends ContentContainerComponentHarness {
+    getDescribedBy(): Promise<string[]>;
+    getError(): Promise<string | null>;
+    getHint(): Promise<string | null>;
+    getLegend(): Promise<string>;
+    getRole(): Promise<string | null>;
+    static hostSelector: string;
+    isRequired(): Promise<boolean>;
+    static with(options?: AveChoiceGroupHarnessFilters): HarnessPredicate<AveChoiceGroupHarness>;
+}
+
+// @alpha
+export interface AveChoiceGroupHarnessFilters extends BaseHarnessFilters {
+    legend?: string | RegExp;
+}
+
 // @beta
 export class AveFormFieldHarness extends ContentContainerComponentHarness {
     getControlId(): Promise<string | null>;

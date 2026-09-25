@@ -44,11 +44,12 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0036](0036-every-lucide-icon-registered-and-custom.md) | Every Lucide icon, registered with `provideAveIcons`, and an application's own SVG | Accepted |
 | [0037](0037-button.md) | Button: a native button or link, four variants, disabled that can stay focusable, a delayed spinner | Accepted |
 | [0038](0038-icon-button.md) | IconButton: a square Button with a required label, in the button entry point | Accepted |
-| [0039](0039-forms-and-input.md) | Forms and Input: one control state for both form APIs, a field context, a native input | Accepted |
+| [0039](0039-forms-and-input.md) | Forms and Input: one control state for both form APIs, a field context, a native input | Accepted; the field context's `defaultId` and `register` changed by 0044 |
 | [0040](0040-form-field.md) | FormField: a label, a projected control, a hint and an error that register themselves | Accepted |
 | [0041](0041-checkbox.md) | Checkbox: a drawn native checkbox and a choice label | Accepted |
 | [0042](0042-release-age-16-hours.md) | Release age: 16 hours | Accepted |
 | [0043](0043-textarea.md) | Textarea: a native textarea in the box of an input, a fixed number of rows | Accepted |
+| [0044](0044-radio-and-choice-group.md) | Radio and choice group: a drawn native radio, a fieldset that describes its choices | Accepted |
 
 ## Template
 

@@ -1,0 +1,51 @@
+@layer components {
+  /* The legend, the choices one under the other, then the hint and the error: the legend 8px above the choices, the
+     hint and the error 4px under them (GUIDELINES.md, "Spacing rhythm"). The fieldset's own frame is removed. The
+     legend is not a grid item of its fieldset, so its own margin keeps it 8px from the choices. */
+  :host {
+    display: grid;
+    gap: var(--ave-space-1);
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .legend {
+    margin-block-end: var(--ave-space-2);
+    padding: 0;
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-label-md);
+  }
+
+  .choices {
+    display: grid;
+    gap: var(--ave-space-2);
+    justify-items: start;
+  }
+
+  :host([data-disabled]) .legend,
+  :host(:disabled) .legend {
+    color: var(--ave-color-fg-disabled);
+  }
+
+  /* Forced colours replace the dimmed colour with the text colour; the legend dims with its controls, in GrayText. */
+  @media (forced-colors: active) {
+    :host([data-disabled]) .legend,
+    :host(:disabled) .legend {
+      color: GrayText;
+    }
+  }
+
+  .required {
+    color: var(--ave-color-danger-fg);
+  }
+
+  /* The icon and the first line of the error are both 16px tall, so they line up. */
+  .error {
+    display: flex;
+    align-items: start;
+    gap: var(--ave-space-1);
+    color: var(--ave-color-danger-fg);
+  }
+}
