@@ -51,7 +51,18 @@ export interface AveMessages {
     readonly previousYear: string;
     readonly previousYears: string;
     readonly rangeEnd: string;
+    readonly rangeLast30Days: string;
+    readonly rangeLast7Days: string;
+    readonly rangeLastMonth: string;
+    readonly rangeLastWeek: string;
+    readonly rangePresets: string;
     readonly rangeStart: string;
+    readonly rangeThisMonth: string;
+    readonly rangeThisQuarter: string;
+    readonly rangeThisWeek: string;
+    readonly rangeThisYear: string;
+    readonly rangeToday: string;
+    readonly rangeYesterday: string;
     readonly removeFile: (name: string) => string;
     readonly required: string;
     readonly tooManyFiles: (max: number) => string;

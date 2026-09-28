@@ -41,6 +41,50 @@ The start input, a dash, and the end input with the calendar button, in two equa
 
 <Canvas of={DateRangePickerStories.Choosing} />
 
+## Presets
+
+For the periods people ask for again and again, `presets` puts a list of them in the calendar's panel (ADR 0054): the kit's own, by name, in the application's language, and the application's own, with their label and dates. None are shown unless the application asks.
+
+```ts
+import type { AveDateRangePreset } from '@avelune/ui/date-picker';
+
+readonly periods: AveDateRangePreset[] = [
+  'today',
+  'thisWeek',
+  'lastMonth',
+  'last30Days',
+  { label: 'Первое полугодие', start: '2026-01-01', end: '2026-06-30' },
+];
+```
+
+```html
+<ave-date-range-picker [presets]="periods" [formField]="report.period" />
+```
+
+| Name          | Period (on Thursday 24.09.2026, weeks from Monday) |
+| ------------- | -------------------------------------------------- |
+| `today`       | 24.09.2026                                         |
+| `yesterday`   | 23.09.2026                                         |
+| `thisWeek`    | 21.09.2026 – 27.09.2026                            |
+| `lastWeek`    | 14.09.2026 – 20.09.2026                            |
+| `thisMonth`   | 01.09.2026 – 30.09.2026                            |
+| `lastMonth`   | 01.08.2026 – 31.08.2026                            |
+| `thisQuarter` | 01.07.2026 – 30.09.2026                            |
+| `thisYear`    | 01.01.2026 – 31.12.2026                            |
+| `last7Days`   | 18.09.2026 – 24.09.2026                            |
+| `last30Days`  | 26.08.2026 – 24.09.2026                            |
+
+- Weeks start on the locale's first day: Monday in Russian and Uzbek, Sunday in American English. Periods are whole: this month ends on its last day; the last 7 and 30 days end today.
+- Choosing a preset sets the range and closes the calendar. The preset whose period is the range chosen now has a check; when two presets have the same period (this year cut to this month's bounds), the one chosen keeps it.
+- `minDate` and `maxDate` cut a preset to them; one with no day inside them is shown, disabled.
+- From a window of 600px the list stands beside the calendar; in a narrower window it stands above it, four presets tall, and scrolls.
+
+<Canvas of={DateRangePickerStories.Presets} />
+
+Bounds cut a preset or disable it; here the bounds are this month, in Uzbek:
+
+<Canvas of={DateRangePickerStories.PresetsBounds} />
+
 ## States
 
 <Canvas of={DateRangePickerStories.States} />
@@ -81,12 +125,13 @@ Two dates side by side need 320px (`container.xs`), with or without the clear bu
 
 ## Keyboard
 
-As a DatePicker's, for each input and for the calendar.
+As a DatePicker's, for each input and for the calendar. In the presets, the arrow keys move, Home and End go to the first and last, typing a letter moves to the next preset that starts with it, and Enter or Space choose; the list is one Tab stop before the calendar.
 
 ## Accessibility
 
 - Each input is named by the field's label and its part: "Срок действия, Дата начала" and "…, Дата окончания" (`aria-labelledby`); both are described by the field's hint and error. Without an `<ave-form-field>`, the `label` input takes the field's place in the names.
 - The clear button is named "Clear" and the field's label ("Очистить Срок действия"); it is left out of the Tab order.
+- The presets are a listbox named "Периоды" in the locale; the checked preset is `aria-selected`, a preset outside the bounds `aria-disabled`.
 
 ## Motion
 

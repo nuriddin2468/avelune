@@ -13,19 +13,22 @@ import {
   output,
   signal,
   viewChild,
+  type Signal,
 } from '@angular/core';
+import { Listbox, Option } from '@angular/aria/listbox';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { NgControl, type ControlValueAccessor } from '@angular/forms';
 import { FORM_FIELD } from '@angular/forms/signals';
-import { lucideCalendar, lucideX } from '@avelune/icons/lucide';
+import { lucideCalendar, lucideCheck, lucideX } from '@avelune/icons/lucide';
 import { AVE_CONTROL_OWNER, AVE_FIELD, AveClearButton, AveControlTarget, injectControlState } from '@avelune/ui/forms';
 import { aveDateFormat, injectAveMessages, type AvePlainDate } from '@avelune/ui/i18n';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
 import { aveConnectedOverlay, aveOverlayPresence } from '@avelune/ui/overlay';
 import { AveCalendar } from './calendar';
 import { clamp, today, within } from './calendar-math';
-import type { AveDatePickerSize, AveDateRange } from './types';
+import { isChosen, showPreset } from './presets';
+import type { AveDatePickerSize, AveDateRange, AveDateRangePreset } from './types';
 
 /** Unique ids for the names of the two inputs. */
 let nextRange = 0;
@@ -49,9 +52,9 @@ type RangeEnd = 'start' | 'end';
  */
 @Component({
   selector: 'ave-date-range-picker',
-  imports: [AveCalendar, AveClearButton, AveControlTarget, AveIcon, CdkTrapFocus, OverlayModule],
+  imports: [AveCalendar, AveClearButton, AveControlTarget, AveIcon, CdkTrapFocus, Listbox, Option, OverlayModule],
   providers: [
-    provideAveIcons([lucideCalendar, lucideX]),
+    provideAveIcons([lucideCalendar, lucideCheck, lucideX]),
     { provide: AVE_CONTROL_OWNER, useExisting: AveDateRangePicker },
   ],
   host: {
@@ -131,8 +134,34 @@ type RangeEnd = 'start' | 'end';
         cdkTrapFocus
         [class.ave-motion-popover-exit]="presence.closing()"
         [attr.aria-label]="messages.chooseDate"
+        [attr.data-presets]="shownPresets().length > 0 ? '' : null"
         (keydown.escape)="close(true)"
       >
+        @if (shownPresets().length > 0) {
+          <div
+            class="presets"
+            ngListbox
+            focusMode="roving"
+            selectionMode="explicit"
+            [attr.aria-label]="messages.rangePresets"
+            [value]="markedPreset()"
+            (valueChange)="applyPreset($event)"
+          >
+            @for (preset of shownPresets(); track $index) {
+              <div
+                class="preset"
+                ngOption
+                data-focus-ring="inset"
+                [value]="$index"
+                [label]="preset.label"
+                [disabled]="preset.range === null"
+              >
+                <span class="label">{{ preset.label }}</span>
+                <ave-icon class="check" name="check" decorative />
+              </div>
+            }
+          </div>
+        }
         <ave-calendar
           [format]="format"
           [today]="today"
@@ -172,6 +201,13 @@ export class AveDateRangePicker implements ControlValueAccessor {
    */
   readonly label = input('');
 
+  /**
+   * Periods people choose with one press, in the calendar's panel (ADR 0054): the kit's own by name (`'thisMonth'`,
+   * `'last30Days'`, …), whole, from today, weeks from the locale's first day; and the application's own
+   * (`{ label, start, end }`). Cut to `minDate` and `maxDate`; none by default.
+   */
+  readonly presets = input<readonly AveDateRangePreset[]>([]);
+
   /** Emits when the person leaves the field, which marks a Signal Forms field touched. */
   readonly touch = output();
 
@@ -186,6 +222,30 @@ export class AveDateRangePicker implements ControlValueAccessor {
   protected readonly endNameId = `ave-range-${String(nextRange++)}-end`;
 
   private readonly field = inject(AVE_FIELD, { optional: true });
+
+  /** The presets as the list shows them: their labels, and their periods within the bounds (or `null`). */
+  protected readonly shownPresets: Signal<
+    readonly { readonly label: string; readonly range: { readonly start: string; readonly end: string } | null }[]
+  > = computed(() =>
+    this.presets().map((preset) =>
+      showPreset(preset, {
+        today: this.today,
+        firstDayOfWeek: this.format.firstDayOfWeek,
+        messages: this.messages,
+        min: this.earliest(),
+        max: this.latest(),
+      }),
+    ),
+  );
+
+  /**
+   * The preset whose period is the range chosen now, checked in the list. Aria's single selection toggles, so the
+   * checked preset chosen again takes its check away; the list is then given it back (see `applyPreset`).
+   */
+  protected readonly markedPreset = linkedSignal<number[]>(() => {
+    const index = this.shownPresets().findIndex((preset) => isChosen(preset, this.value()));
+    return index < 0 ? [] : [index];
+  });
 
   /** The range as the calendar marks it. */
   protected readonly current = computed<AveDateRange>(() => this.value() ?? { start: null, end: null });
@@ -268,7 +328,16 @@ export class AveDateRangePicker implements ControlValueAccessor {
     this.setting.set(start !== null && end === null ? 'end' : 'start');
     this.expanded.set(true);
     const focus = start ?? clamp(this.today, this.earliest(), this.latest());
-    afterNextRender(() => this.calendar()?.focus(focus), { injector: this.injector });
+    afterNextRender(
+      () => {
+        this.calendar()?.focus(focus);
+        // The checked preset is in view, in a list that scrolls; focus stays on the day.
+        this.popup()
+          ?.nativeElement.querySelector('.preset[aria-selected="true"]')
+          ?.scrollIntoView({ block: 'nearest' });
+      },
+      { injector: this.injector },
+    );
   }
 
   protected close(returnFocus: boolean): void {
@@ -288,6 +357,17 @@ export class AveDateRangePicker implements ControlValueAccessor {
     this.endText.set('');
     this.expanded.set(false);
     this.start().nativeElement.focus();
+  }
+
+  /** A preset chosen in the list: the range becomes its period, and the calendar closes, as after the end. */
+  protected applyPreset(chosen: number[]): void {
+    const index = chosen[0] ?? this.markedPreset()[0];
+    if (index === undefined) return;
+    const range = this.shownPresets()[index]?.range;
+    if (range === undefined || range === null) return;
+    this.set(range);
+    this.markedPreset.set([index]);
+    this.close(true);
   }
 
   /** A date chosen in the calendar: the start first, then the end, which closes the calendar. */

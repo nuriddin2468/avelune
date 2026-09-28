@@ -27,6 +27,96 @@
     color: var(--ave-color-fg-muted);
   }
 
+  /* Presets (ADR 0054): above the calendar in a narrow window, four options tall, then scrolling (product owner); the
+     rows are the select's (ADR 0046), with a check on the preset whose period is the range chosen now. */
+  .popup[data-presets] {
+    display: grid;
+    gap: var(--ave-space-2);
+  }
+
+  .presets {
+    display: grid;
+    align-content: start;
+    max-block-size: calc(var(--ave-control-height-md) * 4 + var(--ave-space-2));
+    padding-block-end: var(--ave-space-2);
+    border-block-end: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    overflow-y: auto;
+  }
+
+  .preset {
+    display: flex;
+    align-items: center;
+    gap: var(--ave-space-2);
+    min-block-size: var(--ave-control-height-md);
+    padding-block: var(--ave-space-2);
+    padding-inline: calc(var(--ave-control-padding-inline-md) - var(--ave-space-1));
+    border-radius: var(--ave-radius-md);
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-body-md);
+    cursor: pointer;
+    transition-property: background-color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+
+    &:hover {
+      background-color: var(--ave-color-bg-hover);
+    }
+
+    &[aria-disabled='true'] {
+      color: var(--ave-color-fg-disabled);
+      cursor: not-allowed;
+    }
+  }
+
+  .preset > .label {
+    flex: 1;
+    min-inline-size: 0;
+  }
+
+  .check {
+    visibility: hidden;
+    color: var(--ave-color-accent-fg);
+  }
+
+  .preset[aria-selected='true'] > .check {
+    visibility: visible;
+  }
+
+  /* From a window of breakpoint.sm, the list stands at the calendar's inline start, as tall as the calendar: it adds no
+     height to their row (a block size of 0) and fills it (a minimum of 100%), scrolling past it. */
+  @media (width >= 600px) {
+    .popup[data-presets] {
+      grid-template-columns: auto auto;
+    }
+
+    .presets {
+      block-size: 0;
+      min-block-size: 100%;
+      max-block-size: none;
+      max-inline-size: calc(var(--ave-space-16) * 3);
+      padding-block-end: 0;
+      padding-inline-end: var(--ave-space-2);
+      border-block-end: 0;
+      border-inline-end: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .preset:hover {
+      background-color: Highlight;
+      color: HighlightText;
+      forced-color-adjust: none;
+    }
+
+    .preset:hover > .check {
+      color: HighlightText;
+    }
+
+    .preset[aria-disabled='true'] {
+      color: GrayText;
+    }
+  }
+
   /* Narrower than the smallest container, two dates side by side no longer fit their inputs: the end input goes
      under the start input, and the dash, which only reads side by side, is left out. */
   @container (inline-size < 320px) {

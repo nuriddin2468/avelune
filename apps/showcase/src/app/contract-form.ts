@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { FormField, email, form, maxLength, minLength, pattern, required, submit } from '@angular/forms/signals';
 import { AveButton } from '@avelune/ui/button';
 import { AveCheckbox, AveChoice } from '@avelune/ui/checkbox';
-import { AveDatePicker, AveDateRangePicker, type AveDateRange } from '@avelune/ui/date-picker';
+import { AveDatePicker, AveDateRangePicker, type AveDateRange, type AveDateRangePreset } from '@avelune/ui/date-picker';
 import { AveFileUpload } from '@avelune/ui/file-upload';
 import { AveChoiceGroup, AveError, AveFormField, AveHint } from '@avelune/ui/form-field';
 import { AveIcon } from '@avelune/ui/icon';
@@ -46,6 +46,17 @@ const empty: Contract = {
   notify: true,
   confirm: false,
 };
+
+/** The next calendar year, as a contract's term often is. */
+const nextYear = new Date().getFullYear() + 1;
+
+/** Terms people give contracts again and again: the kit's periods, and the next year, the application's own. */
+const termPresets: readonly AveDateRangePreset[] = [
+  'thisMonth',
+  'thisQuarter',
+  'thisYear',
+  { label: `${String(nextYear)} год`, start: `${String(nextYear)}-01-01`, end: `${String(nextYear)}-12-31` },
+];
 
 /** How long the showcase pretends the server takes to accept a contract. */
 const sendDelay = 1500;
@@ -121,7 +132,7 @@ const sendDelay = 1500;
         </ave-form-field>
 
         <ave-form-field label="Срок действия">
-          <ave-date-range-picker [formField]="contract.term" />
+          <ave-date-range-picker [presets]="termPresets" [formField]="contract.term" />
           <p aveHint>С даты вступления в силу до окончания обязательств.</p>
         </ave-form-field>
 
@@ -231,6 +242,7 @@ export class ContractForm {
   protected readonly counterparties = counterparties;
   protected readonly approvers = approvers;
   protected readonly attachmentLimit = 20 * 1024 * 1024;
+  protected readonly termPresets = termPresets;
   protected readonly percent: Intl.NumberFormatOptions = { style: 'unit', unit: 'percent' };
   protected readonly model = signal<Contract>({ ...empty });
   protected readonly contract = form(this.model, (path) => {

@@ -3,7 +3,7 @@ import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { FormField, form, required } from '@angular/forms/signals';
-import { AveDateRangePicker, type AveDateRange } from '@avelune/ui/date-picker';
+import { AveDateRangePicker, type AveDateRange, type AveDateRangePreset } from '@avelune/ui/date-picker';
 import { AveDateRangePickerHarness } from '@avelune/ui/date-picker/testing';
 import { AveFormField, AveHint } from '@avelune/ui/form-field';
 import { tokens, type TokenName } from '@avelune/tokens';
@@ -53,6 +53,25 @@ class LabelledHost {}
 })
 class OptionalHost {
   readonly leave = signal<AveDateRange | null>({ start: '2026-09-10', end: '2026-09-20' });
+}
+
+@Component({
+  selector: 'ave-range-presets',
+  imports: [AveDateRangePicker, AveFormField],
+  template: `
+    <ave-form-field label="Период отчёта">
+      <ave-date-range-picker minDate="2020-01-01" maxDate="2026-12-31" [presets]="presets" [(value)]="period" />
+    </ave-form-field>
+  `,
+})
+class PresetsHost {
+  readonly presets: readonly AveDateRangePreset[] = [
+    'today',
+    { label: 'Первое полугодие', start: '2026-01-01', end: '2026-06-30' },
+    { label: 'Прошлое десятилетие', start: '2010-01-01', end: '2019-12-31' },
+    { label: 'Со старта проекта', start: '2019-06-01', end: '2021-12-31' },
+  ];
+  readonly period = signal<AveDateRange | null>(null);
 }
 
 const layout = [
@@ -259,5 +278,64 @@ describe('AveDateRangePicker', () => {
     expect(await range.getMonth()).toBe('Октябрь 2026 г.');
     expect(fixture.componentInstance.period.value).toEqual({ start: '2026-09-10', end: '2026-11-02' });
     expect(await range.getRangeDates()).toContain('2026-10-15');
+  });
+  it('lists its presets, cut to the bounds, and a choice sets the range and closes (ADR 0054)', async () => {
+    const fixture = mount(PresetsHost);
+    const range = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveDateRangePickerHarness);
+    await range.open();
+    expect(await range.getPresets()).toEqual([
+      'Сегодня',
+      'Первое полугодие',
+      'Прошлое десятилетие',
+      'Со старта проекта',
+    ]);
+    expect(await range.getDisabledPresets()).toEqual(['Прошлое десятилетие']);
+    expect(await range.getCheckedPreset()).toBeNull();
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('.presets')?.getAttribute('aria-label')).toBe('Периоды');
+    await range.choosePreset('Со старта проекта');
+    expect(fixture.componentInstance.period()).toEqual({ start: '2020-01-01', end: '2021-12-31' });
+    expect(await range.isOpen()).toBe(false);
+    expect(document.activeElement).toBe(element.querySelector('.open'));
+    expect([await range.getText(), await range.getEndText()]).toEqual(['01.01.2020', '31.12.2021']);
+    await range.open();
+    expect(await range.getCheckedPreset()).toBe('Со старта проекта');
+    // The list scrolls the checked preset into view when the calendar opens.
+    const list = element.querySelector<HTMLElement>('.presets');
+    const checked = element.querySelector('.preset[aria-selected="true"]');
+    if (list === null || checked === null) throw new Error('No list');
+    expect(checked.getBoundingClientRect().bottom).toBeLessThanOrEqual(list.getBoundingClientRect().bottom + 1);
+    await range.choosePreset('Со старта проекта');
+    expect(fixture.componentInstance.period()).toEqual({ start: '2020-01-01', end: '2021-12-31' });
+    expect(await range.isOpen()).toBe(false);
+    await range.open();
+    expect(await range.getCheckedPreset()).toBe('Со старта проекта');
+    await range.choosePreset('Прошлое десятилетие');
+    expect(await range.isOpen()).toBe(true);
+    await range.choosePreset('Сегодня');
+    const today = fixture.componentInstance.period()?.start;
+    expect(fixture.componentInstance.period()?.end).toBe(today);
+    await expect(range.choosePreset('Завтра')).rejects.toThrow('shows no preset Завтра');
+  });
+
+  it('chooses a preset with the keys, and stands the list beside the calendar in a wide window', async () => {
+    const fixture = mount(PresetsHost);
+    const range = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveDateRangePickerHarness);
+    await range.open();
+    const element = fixture.nativeElement as HTMLElement;
+    const options = [...element.querySelectorAll<HTMLElement>('.presets [role="option"]')];
+    options[0]?.focus();
+    options[0]?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    fixture.detectChanges();
+    await expect.poll(() => document.activeElement).toBe(options[1]);
+    document.activeElement?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    fixture.detectChanges();
+    await expect.poll(() => fixture.componentInstance.period()).toEqual({ start: '2026-01-01', end: '2026-06-30' });
+    await range.open();
+    const list = element.querySelector('.presets')?.getBoundingClientRect();
+    const calendar = element.querySelector('ave-calendar')?.getBoundingClientRect();
+    if (list === undefined || calendar === undefined) throw new Error('No panel');
+    if (window.innerWidth >= 600) expect(list.right).toBeLessThanOrEqual(calendar.left);
+    else expect(list.bottom).toBeLessThanOrEqual(calendar.top);
   });
 });

@@ -20,3 +20,43 @@ export interface AveDateRange {
   /** The last date of the range, never before the first. */
   readonly end: AvePlainDate | null;
 }
+
+/**
+ * The date range presets the kit names itself, in the application's language (ADR 0054). Periods are whole, from
+ * today in the browser's time zone: a week from the locale's first day, a month, a quarter (from January, April, July,
+ * October) or a year; the last 7 and 30 days end today.
+ *
+ * @alpha
+ */
+export type AveDateRangePresetName =
+  | 'today'
+  | 'yesterday'
+  | 'thisWeek'
+  | 'lastWeek'
+  | 'thisMonth'
+  | 'lastMonth'
+  | 'thisQuarter'
+  | 'thisYear'
+  | 'last7Days'
+  | 'last30Days';
+
+/**
+ * A date range preset of the application's own: its label and its dates.
+ *
+ * @alpha
+ */
+export interface AveDateRangeCustomPreset {
+  /** What the preset says, in the application's language ("Первое полугодие"). */
+  readonly label: string;
+  /** The first date of the period, as an ISO date. */
+  readonly start: AvePlainDate;
+  /** The last date of the period, never before the first. */
+  readonly end: AvePlainDate;
+}
+
+/**
+ * A preset of a date range field: one the kit names, or one of the application's own.
+ *
+ * @alpha
+ */
+export type AveDateRangePreset = AveDateRangePresetName | AveDateRangeCustomPreset;

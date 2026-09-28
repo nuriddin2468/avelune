@@ -31,6 +31,28 @@ export interface AveMessages {
   readonly rangeStart: string;
   /** The last date of a date range field. */
   readonly rangeEnd: string;
+  /** The name of a date range field's list of presets. */
+  readonly rangePresets: string;
+  /** A date range preset: today. */
+  readonly rangeToday: string;
+  /** A date range preset: yesterday. */
+  readonly rangeYesterday: string;
+  /** A date range preset: this week, from the locale's first day. */
+  readonly rangeThisWeek: string;
+  /** A date range preset: the week before this one. */
+  readonly rangeLastWeek: string;
+  /** A date range preset: this month, whole. */
+  readonly rangeThisMonth: string;
+  /** A date range preset: the month before this one. */
+  readonly rangeLastMonth: string;
+  /** A date range preset: this quarter, whole. */
+  readonly rangeThisQuarter: string;
+  /** A date range preset: this year, whole. */
+  readonly rangeThisYear: string;
+  /** A date range preset: the last 7 days, today among them. */
+  readonly rangeLast7Days: string;
+  /** A date range preset: the last 30 days, today among them. */
+  readonly rangeLast30Days: string;
   /** The button of a file upload that takes one file. */
   readonly chooseFile: string;
   /** The button of a file upload that takes several files. */
@@ -79,6 +101,17 @@ export const aveMessagesEn: AveMessages = {
   chooseYear: 'Choose a year',
   rangeStart: 'Start date',
   rangeEnd: 'End date',
+  rangePresets: 'Periods',
+  rangeToday: 'Today',
+  rangeYesterday: 'Yesterday',
+  rangeThisWeek: 'This week',
+  rangeLastWeek: 'Last week',
+  rangeThisMonth: 'This month',
+  rangeLastMonth: 'Last month',
+  rangeThisQuarter: 'This quarter',
+  rangeThisYear: 'This year',
+  rangeLast7Days: 'Last 7 days',
+  rangeLast30Days: 'Last 30 days',
   chooseFile: 'Choose a file',
   chooseFiles: 'Choose files',
   dropFile: 'or drag it here',
@@ -113,6 +146,17 @@ export const aveMessagesRu: AveMessages = {
   chooseYear: 'Выбрать год',
   rangeStart: 'Дата начала',
   rangeEnd: 'Дата окончания',
+  rangePresets: 'Периоды',
+  rangeToday: 'Сегодня',
+  rangeYesterday: 'Вчера',
+  rangeThisWeek: 'Эта неделя',
+  rangeLastWeek: 'Прошлая неделя',
+  rangeThisMonth: 'Этот месяц',
+  rangeLastMonth: 'Прошлый месяц',
+  rangeThisQuarter: 'Этот квартал',
+  rangeThisYear: 'Этот год',
+  rangeLast7Days: 'Последние 7 дней',
+  rangeLast30Days: 'Последние 30 дней',
   chooseFile: 'Выбрать файл',
   chooseFiles: 'Выбрать файлы',
   dropFile: 'или перетащите его сюда',
@@ -149,6 +193,17 @@ export const aveMessagesUzLatn: AveMessages = {
   chooseYear: 'Yilni tanlash',
   rangeStart: 'Boshlanish sanasi',
   rangeEnd: 'Tugash sanasi',
+  rangePresets: 'Davrlar',
+  rangeToday: 'Bugun',
+  rangeYesterday: 'Kecha',
+  rangeThisWeek: 'Shu hafta',
+  rangeLastWeek: 'Oʻtgan hafta',
+  rangeThisMonth: 'Shu oy',
+  rangeLastMonth: 'Oʻtgan oy',
+  rangeThisQuarter: 'Shu chorak',
+  rangeThisYear: 'Shu yil',
+  rangeLast7Days: 'Oxirgi 7 kun',
+  rangeLast30Days: 'Oxirgi 30 kun',
   chooseFile: 'Faylni tanlash',
   chooseFiles: 'Fayllarni tanlash',
   dropFile: 'yoki uni shu yerga torting',
@@ -183,6 +238,17 @@ export const aveMessagesUzCyrl: AveMessages = {
   chooseYear: 'Йилни танлаш',
   rangeStart: 'Бошланиш санаси',
   rangeEnd: 'Тугаш санаси',
+  rangePresets: 'Даврлар',
+  rangeToday: 'Бугун',
+  rangeYesterday: 'Кеча',
+  rangeThisWeek: 'Шу ҳафта',
+  rangeLastWeek: 'Ўтган ҳафта',
+  rangeThisMonth: 'Шу ой',
+  rangeLastMonth: 'Ўтган ой',
+  rangeThisQuarter: 'Шу чорак',
+  rangeThisYear: 'Шу йил',
+  rangeLast7Days: 'Охирги 7 кун',
+  rangeLast30Days: 'Охирги 30 кун',
   chooseFile: 'Файлни танлаш',
   chooseFiles: 'Файлларни танлаш',
   dropFile: 'ёки уни шу ерга тортинг',

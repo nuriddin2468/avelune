@@ -59,8 +59,12 @@ export interface AveDatePickerHarnessFilters extends BaseHarnessFilters {
 
 // @alpha
 export class AveDateRangePickerHarness extends AveDatePickerHarness {
+    choosePreset(label: string | RegExp): Promise<void>;
+    getCheckedPreset(): Promise<string | null>;
+    getDisabledPresets(): Promise<string[]>;
     getEndText(): Promise<string>;
     getInputNames(): Promise<string[]>;
+    getPresets(): Promise<string[]>;
     getRangeDates(): Promise<string[]>;
     static hostSelector: string;
     typeEnd(text: string): Promise<void>;

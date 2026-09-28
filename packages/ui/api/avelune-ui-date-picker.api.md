@@ -11,6 +11,7 @@ import * as _avelune_ui_i18n from '@avelune/ui/i18n';
 import * as _avelune_ui_overlay from '@avelune/ui/overlay';
 import { AvePlainDate } from '@avelune/ui/i18n';
 import { ControlValueAccessor } from '@angular/forms';
+import { Signal } from '@angular/core';
 
 // @alpha
 export class AveDatePicker implements ControlValueAccessor {
@@ -77,21 +78,29 @@ export interface AveDateRange {
 }
 
 // @alpha
+export interface AveDateRangeCustomPreset {
+    readonly end: AvePlainDate;
+    readonly label: string;
+    readonly start: AvePlainDate;
+}
+
+// @alpha
 export class AveDateRangePicker implements ControlValueAccessor {
     constructor();
-    protected readonly canClear: _angular_core.Signal<boolean>;
+    protected applyPreset(chosen: number[]): void;
+    protected readonly canClear: Signal<boolean>;
     protected choose(date: AvePlainDate): void;
     // (undocumented)
-    protected readonly chosen: _angular_core.Signal<string[]>;
+    protected readonly chosen: Signal<string[]>;
     protected clear(): void;
-    protected readonly clearable: _angular_core.Signal<boolean>;
+    protected readonly clearable: Signal<boolean>;
     // (undocumented)
     protected close(returnFocus: boolean): void;
     protected commit(): void;
     // @internal
-    readonly controlDisabled: _angular_core.Signal<boolean>;
-    protected readonly current: _angular_core.Signal<AveDateRange>;
-    protected readonly describedBy: _angular_core.Signal<string | null>;
+    readonly controlDisabled: Signal<boolean>;
+    protected readonly current: Signal<AveDateRange>;
+    protected readonly describedBy: Signal<string | null>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     protected readonly earliest: _angular_core.InputSignal<string | null>;
@@ -103,7 +112,7 @@ export class AveDateRangePicker implements ControlValueAccessor {
     // (undocumented)
     protected readonly format: _avelune_ui_i18n.AveDateFormat;
     // (undocumented)
-    protected readonly isDisabled: _angular_core.Signal<boolean>;
+    protected readonly isDisabled: Signal<boolean>;
     readonly label: _angular_core.InputSignal<string>;
     // (undocumented)
     protected readonly labelId: string;
@@ -112,6 +121,7 @@ export class AveDateRangePicker implements ControlValueAccessor {
     protected readonly latest: _angular_core.InputSignal<string | null>;
     // (undocumented)
     protected left(event: FocusEvent): void;
+    protected readonly markedPreset: _angular_core.WritableSignal<number[]>;
     readonly maxDate: _angular_core.InputSignal<string | null>;
     // (undocumented)
     protected readonly messages: _avelune_ui_i18n.AveMessages;
@@ -119,8 +129,9 @@ export class AveDateRangePicker implements ControlValueAccessor {
     // (undocumented)
     protected outside(event: MouseEvent): void;
     // (undocumented)
-    protected readonly overlay: _angular_core.Signal<_angular_cdk_overlay.CdkConnectedOverlayConfig>;
+    protected readonly overlay: Signal<_angular_cdk_overlay.CdkConnectedOverlayConfig>;
     protected readonly presence: _avelune_ui_overlay.AveOverlayPresence;
+    readonly presets: _angular_core.InputSignal<readonly AveDateRangePreset[]>;
     readonly readonly: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // @internal (undocumented)
     registerOnChange(callback: (value: AveDateRange | null) => void): void;
@@ -128,6 +139,13 @@ export class AveDateRangePicker implements ControlValueAccessor {
     registerOnTouched(callback: () => void): void;
     // @internal (undocumented)
     setDisabledState(disabled: boolean): void;
+    protected readonly shownPresets: Signal<readonly {
+        readonly label: string;
+        readonly range: {
+            readonly start: string;
+            readonly end: string;
+        } | null;
+    }[]>;
     readonly size: _angular_core.InputSignal<AveDatePickerSize>;
     // (undocumented)
     protected readonly startNameId: string;
@@ -144,10 +162,16 @@ export class AveDateRangePicker implements ControlValueAccessor {
     // @internal (undocumented)
     writeValue(value: unknown): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveDateRangePicker, "ave-date-range-picker", never, { "value": { "alias": "value"; "required": false; "isSignal": true; }; "minDate": { "alias": "minDate"; "required": false; "isSignal": true; }; "maxDate": { "alias": "maxDate"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; "touch": "touch"; }, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveDateRangePicker, "ave-date-range-picker", never, { "value": { "alias": "value"; "required": false; "isSignal": true; }; "minDate": { "alias": "minDate"; "required": false; "isSignal": true; }; "maxDate": { "alias": "maxDate"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; "presets": { "alias": "presets"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; "touch": "touch"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveDateRangePicker, never>;
 }
+
+// @alpha
+export type AveDateRangePreset = AveDateRangePresetName | AveDateRangeCustomPreset;
+
+// @alpha
+export type AveDateRangePresetName = 'today' | 'yesterday' | 'thisWeek' | 'lastWeek' | 'thisMonth' | 'lastMonth' | 'thisQuarter' | 'thisYear' | 'last7Days' | 'last30Days';
 
 // (No @packageDocumentation comment for this package)
 

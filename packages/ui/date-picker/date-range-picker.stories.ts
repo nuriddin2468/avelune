@@ -9,9 +9,16 @@ import {
   type StoryObj,
 } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
-import { AveDateRangePicker, type AveDatePickerSize, type AveDateRange } from '@avelune/ui/date-picker';
+import {
+  AveDateRangePicker,
+  type AveDatePickerSize,
+  type AveDateRange,
+  type AveDateRangePreset,
+} from '@avelune/ui/date-picker';
 import { AveError, AveFormField, AveHint } from '@avelune/ui/form-field';
 import { AveInput } from '@avelune/ui/input';
+import { today } from './calendar-math';
+import { presetPeriod } from './presets';
 
 const sizes = ['sm', 'md', 'lg'] as const satisfies readonly AveDatePickerSize[];
 
@@ -405,5 +412,81 @@ export const Clearing: Story = {
     await userEvent.type(end, '24.07.2026{Enter}');
     (document.activeElement as HTMLElement | null)?.blur();
     await expect(canvas.getByRole('button', { name: 'Очистить Отпуск' })).toBeVisible();
+  },
+};
+
+/** Every preset the kit names, and one of the application's own (ADR 0054). */
+const presets: readonly AveDateRangePreset[] = [
+  'today',
+  'yesterday',
+  'thisWeek',
+  'lastWeek',
+  'thisMonth',
+  'lastMonth',
+  'thisQuarter',
+  'thisYear',
+  'last7Days',
+  'last30Days',
+  { label: 'Первое полугодие 2026 г.', start: '2026-01-01', end: '2026-06-30' },
+];
+
+/**
+ * Presets beside the calendar from a window of 600px, above it in a narrower one: a choice sets the range and closes
+ * the calendar; the preset of the range chosen now has a check.
+ */
+export const Presets: Story = {
+  decorators: [locale('ru'), componentWrapperDecorator(DateRangeStoryFrame)],
+  render: () => ({
+    props: { presets },
+    template: `<ave-date-range-picker label="Период отчёта" [presets]="presets" />`,
+  }),
+  parameters: source(
+    "<ave-date-range-picker [presets]=\"['today', 'thisWeek', 'lastMonth', 'last30Days', …]\" [formField]=\"report.period\" />",
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Выбрать дату' }));
+    const dialog = await canvas.findByRole('dialog');
+    const list = within(dialog).getByRole('listbox', { name: 'Периоды' });
+    await expect(within(list).getAllByRole('option')).toHaveLength(presets.length);
+    await userEvent.click(within(list).getByRole('option', { name: 'Этот месяц' }));
+    await waitFor(() => expect(canvas.queryByRole('dialog')).toBeNull());
+    const month = presetPeriod('thisMonth', today(), 1);
+    const [start, end] = canvas.getAllByRole('textbox');
+    const written = (date: string) => date.split('-').reverse().join('.');
+    await expect(start).toHaveValue(written(month.start));
+    await expect(end).toHaveValue(written(month.end));
+    await userEvent.click(canvas.getByRole('button', { name: 'Выбрать дату' }));
+    const again = await canvas.findByRole('dialog');
+    await expect(within(again).getByRole('option', { name: 'Этот месяц' })).toHaveAttribute('aria-selected', 'true');
+  },
+};
+
+/** Bounds of this month, in Uzbek: the presets outside them are disabled, the rest cut to them. */
+export const PresetsBounds: Story = {
+  name: 'Presets and bounds',
+  decorators: [locale('uz-Latn'), componentWrapperDecorator(DateRangeStoryFrame)],
+  render: () => {
+    const month = presetPeriod('thisMonth', today(), 1);
+    return {
+      props: { presets, minDate: month.start, maxDate: month.end },
+      template: `<ave-date-range-picker label="Hisobot davri" [minDate]="minDate" [maxDate]="maxDate" [presets]="presets" />`,
+    };
+  },
+  parameters: source('<ave-date-range-picker [minDate]="…" [maxDate]="…" [presets]="presets" />'),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Sanani tanlash' }));
+    const dialog = await canvas.findByRole('dialog');
+    const list = within(dialog).getByRole('listbox', { name: 'Davrlar' });
+    await expect(within(list).getByRole('option', { name: 'Oʻtgan oy' })).toHaveAttribute('aria-disabled', 'true');
+    await expect(within(list).getByRole('option', { name: 'Shu oy' })).not.toHaveAttribute('aria-disabled', 'true');
+    await userEvent.click(within(list).getByRole('option', { name: 'Shu yil' }));
+    await waitFor(() => expect(canvas.queryByRole('dialog')).toBeNull());
+    await userEvent.click(canvas.getByRole('button', { name: 'Sanani tanlash' }));
+    const again = await canvas.findByRole('dialog');
+    // This year, cut to this month, has this month's period: the preset chosen keeps the check.
+    await expect(within(again).getByRole('option', { name: 'Shu yil' })).toHaveAttribute('aria-selected', 'true');
+    await expect(within(again).getByRole('option', { name: 'Shu oy' })).toHaveAttribute('aria-selected', 'false');
   },
 };
