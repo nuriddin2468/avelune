@@ -464,6 +464,11 @@ export const RichOptions: Story = {
     await expect(getComputedStyle(image).backgroundImage).toMatch(/^url\("data:image\/svg\+xml,/);
     const long = canvas.getByRole('option', { name: /^Соединённое Королевство/ });
     await expect(long.offsetHeight).toBeGreaterThan(option.offsetHeight);
+    // The longest word breaks in its row: the list never scrolls sideways, and the check stays inside it.
+    const listbox = canvas.getByRole('listbox');
+    await expect(listbox.scrollWidth).toBe(listbox.clientWidth);
+    const check = option.querySelector('.check')?.getBoundingClientRect().right ?? Infinity;
+    await expect(check).toBeLessThanOrEqual(listbox.getBoundingClientRect().right);
   },
 };
 

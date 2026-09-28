@@ -30,9 +30,12 @@
     background-size: contain;
   }
 
+  /* One column as wide as the room left: an auto column would be as wide as the longest word and run it into the meta;
+     here the word breaks (overflow-wrap from the reset). */
   .text {
     display: grid;
     flex: 1;
+    grid-template-columns: minmax(0, 1fr);
     min-inline-size: 0;
   }
 

@@ -19,9 +19,12 @@
   /* The listbox scrolls, not the popup: it is the element that takes focus (tabindex -1) and keeps its active option in
      view, so the scrolling region is reachable by keyboard (axe scrollable-region-focusable). Its rows are as tall as
      their options: past the list's height, grid rows would stop at an option's minimum, and a second line would
-     overflow its row. */
+     overflow its row. Its column is as wide as the list: an auto column would grow to the longest word of any option
+     ("Великобритании"), and the list would scroll sideways with every check past its edge; within the column the word
+     breaks (overflow-wrap from the reset). */
   .listbox {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     grid-auto-rows: max-content;
     max-block-size: calc(var(--ave-control-height-md) * 8);
     overflow-y: auto;
