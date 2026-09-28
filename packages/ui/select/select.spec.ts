@@ -114,6 +114,17 @@ class TemplatesHost {
   readonly valueTemplate = viewChild.required<AveSelectValueTemplate<Account>>(AveSelectValueTemplate);
 }
 
+@Component({
+  selector: 'ave-select-chosen',
+  imports: [AveSelect],
+  template: `<ave-select label="Kind" [options]="options()" [chosenOptions]="saved" [(value)]="kind" />`,
+})
+class ChosenHost {
+  readonly options = signal<readonly AveOption<Kind>[]>(kinds.slice(0, 2));
+  readonly saved: readonly AveOption<Kind>[] = [{ value: 'loan', label: 'Заём (архив)' }];
+  readonly kind = signal<Kind | null>('loan');
+}
+
 /** A stand-in for `<ave-form-field>`. */
 class FakeField implements AveFieldContext {
   readonly defaultId = 'field-control';
@@ -381,6 +392,17 @@ describe('AveSelect', () => {
     const { optionTemplate, valueTemplate } = fixture.componentInstance;
     expect(AveOptionTemplate.ngTemplateContextGuard(optionTemplate(), { $implicit: accounts[0] })).toBe(true);
     expect(AveSelectValueTemplate.ngTemplateContextGuard(valueTemplate(), null)).toBe(false);
+  });
+
+  it('names a value the options do not hold from chosenOptions or from the choice made (ADR 0056)', async () => {
+    const { fixture } = mount(ChosenHost);
+    const select = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveSelectHarness);
+    expect(await select.getText()).toBe('Заём (архив)');
+    await select.choose('Оказание услуг');
+    fixture.componentInstance.options.set(kinds.slice(0, 1));
+    fixture.detectChanges();
+    expect(await select.getText()).toBe('Оказание услуг');
+    expect(fixture.componentInstance.kind()).toBe('services');
   });
 
   it('keeps focus on the trigger when an option is pressed', async () => {

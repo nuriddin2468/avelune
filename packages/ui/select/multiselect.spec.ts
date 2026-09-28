@@ -59,6 +59,21 @@ class RichHost {
   readonly employees = employees;
 }
 
+@Component({
+  selector: 'ave-multiselect-chosen',
+  imports: [AveMultiselect],
+  template: `<ave-multiselect
+    label="Approvers"
+    [options]="approvers"
+    [chosenOptions]="saved"
+    [value]="['accounting', 'legal']"
+  />`,
+})
+class ChosenHost {
+  readonly approvers = approvers;
+  readonly saved: readonly AveOption<string>[] = [{ value: 'accounting', label: 'Бухгалтерия (архив)' }];
+}
+
 function mount<T>(type: new () => T): { fixture: ComponentFixture<T>; element: HTMLElement } {
   const fixture = TestBed.createComponent(type);
   const element = fixture.nativeElement as HTMLElement;
@@ -146,8 +161,17 @@ describe('AveMultiselect', () => {
     expect(fixture.componentInstance.chosen.value).toEqual(['security']);
     await select.toggle('Юридический отдел');
     expect(fixture.componentInstance.chosen.value).toEqual(['legal', 'security']);
+    await select.close();
+    // The hidden value is named from the choice made before the options changed.
+    expect(await select.getText()).toBe('Юридический отдел, Служба безопасности');
     await select.toggle('Юридический отдел');
     expect(fixture.componentInstance.chosen.value).toEqual(['security']);
+  });
+
+  it('names chosen values the options do not hold from chosenOptions (ADR 0056)', async () => {
+    const { fixture } = mount(ChosenHost);
+    const select = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveMultiselectHarness);
+    expect(await select.getText()).toBe('Юридический отдел, Бухгалтерия (архив)');
   });
 
   it('keeps focus on the trigger when an option is pressed', async () => {

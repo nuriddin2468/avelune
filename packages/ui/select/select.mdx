@@ -105,6 +105,10 @@ A select that is not required shows a clear button before the chevron while it h
 - **Reactive Forms:** `[formControl]` or `formControlName`; `Validators.required` counts as required.
 - The value is the option's `value`, compared with `Object.is`: use strings or numbers, or the same object instances.
 
+## Chosen options outside the list
+
+When the options change and no longer hold the value (a list the application loads anew), the value stays chosen (ADR 0056). `chosenOptions` gives the options of a value the application sets, so the trigger can name them; the options people choose are remembered.
+
 ## Content
 
 - Labels are short and parallel, in a meaningful order (alphabetical, by frequency, or natural: "Low, Medium, High").

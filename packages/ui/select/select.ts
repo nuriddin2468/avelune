@@ -168,6 +168,12 @@ export class AveSelect<V> implements ControlValueAccessor {
   /** The accessible name when the select has no visible label; an `<ave-form-field>` gives it one instead. */
   readonly label = input('');
 
+  /**
+   * The options of a value set from outside (a saved form) that the options may not hold, so the trigger can name
+   * it; the options people choose are remembered (ADR 0056).
+   */
+  readonly chosenOptions = input<readonly AveOption<V>[]>([]);
+
   /** Emits when the person leaves the select, which marks a Signal Forms field touched. */
   readonly touch = output();
 
@@ -186,7 +192,18 @@ export class AveSelect<V> implements ControlValueAccessor {
   /** Whether the list is open. */
   protected readonly expanded = signal(false);
 
-  protected readonly selected = computed(() => this.options().find((option) => Object.is(option.value, this.value())));
+  /** The option people chose last, which the options may no longer hold. */
+  private readonly remembered = signal<AveOption<V> | undefined>(undefined);
+
+  /** The chosen option: among the options, among `chosenOptions`, or remembered from the person's choice. */
+  protected readonly selected = computed(() => {
+    const value = this.value();
+    if (value === null) return undefined;
+    const remembered = this.remembered();
+    return [...this.options(), ...this.chosenOptions(), ...(remembered === undefined ? [] : [remembered])].find(
+      (option) => Object.is(option.value, value),
+    );
+  });
   /**
    * The list's selection: the value. Aria's single selection toggles, so choosing the chosen option again takes it
    * away in the list; the list is then given the value back (see `choose`).
@@ -239,6 +256,8 @@ export class AveSelect<V> implements ControlValueAccessor {
     if (pruned(this.selectedValues(), values, this.options())) return;
     const value = values[0] ?? this.value();
     this.selectedValues.set(value === null ? [] : [value]);
+    const option = this.options().find((listed) => Object.is(listed.value, value));
+    if (option !== undefined) this.remembered.set(option);
     this.value.set(value);
     this.changed(value);
     this.expanded.set(false);

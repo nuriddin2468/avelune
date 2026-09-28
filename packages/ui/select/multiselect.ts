@@ -157,6 +157,12 @@ export class AveMultiselect<V> implements ControlValueAccessor {
   /** The accessible name when the multiselect has no visible label; an `<ave-form-field>` gives it one instead. */
   readonly label = input('');
 
+  /**
+   * The options of a value set from outside (a saved form) that the options may not hold, so the trigger can name
+   * them; the options people choose are remembered (ADR 0056).
+   */
+  readonly chosenOptions = input<readonly AveOption<V>[]>([]);
+
   /** Emits when the person leaves the multiselect, which marks a Signal Forms field touched. */
   readonly touch = output();
 
@@ -175,8 +181,19 @@ export class AveMultiselect<V> implements ControlValueAccessor {
   /** The chosen options, in the order of the list. */
   protected readonly chosen = computed(() => {
     const value = this.value();
-    return this.options().filter((option) => value.some((chosen) => Object.is(chosen, option.value)));
+    const options = this.options();
+    const listed = options.filter((option) => value.some((chosen) => Object.is(chosen, option.value)));
+    // Chosen values the options do not hold, named from `chosenOptions` or the person's choice, after the listed.
+    const known = [...this.chosenOptions(), ...this.remembered()];
+    const hidden = value
+      .filter((chosen) => !options.some((option) => Object.is(option.value, chosen)))
+      .map((chosen) => known.find((option) => Object.is(option.value, chosen)))
+      .filter((option) => option !== undefined);
+    return [...listed, ...hidden];
   });
+
+  /** The options people chose, which the options may no longer hold. */
+  private readonly remembered = signal<readonly AveOption<V>[]>([]);
 
   /** What the trigger says: the chosen labels, comma-separated, or the placeholder. */
   protected readonly text = computed(() => {
@@ -235,6 +252,10 @@ export class AveMultiselect<V> implements ControlValueAccessor {
       .filter((value) => values.some((chosen) => Object.is(chosen, value)));
     const hidden = this.value().filter((value) => !options.some((option) => Object.is(option.value, value)));
     const next = [...listed, ...hidden];
+    this.remembered.update((remembered) => [
+      ...remembered.filter((option) => !listed.some((value) => Object.is(value, option.value))),
+      ...options.filter((option) => listed.some((value) => Object.is(value, option.value))),
+    ]);
     this.value.set(next);
     this.changed(next);
   }

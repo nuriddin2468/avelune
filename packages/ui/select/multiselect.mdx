@@ -59,6 +59,10 @@ A multiselect that is not required shows a clear button before the chevron while
 
 The value is an array (`V[]`), empty while nothing is chosen, always in the order of the options. To ask for at least one, Signal Forms need `minLength(path.approvers, 1)`: their `required` accepts an empty array. The field then shows as required too (ADR 0049). Reactive Forms' `Validators.required` already fails on an empty array.
 
+## Chosen options outside the list
+
+When the options change and no longer hold the value (a list the application loads anew), the value stays chosen (ADR 0056). `chosenOptions` gives the options of a value the application sets, so the trigger can name them; the options people choose are remembered.
+
 ## Content
 
 When the chosen labels do not fit, the trigger truncates them on one line; the list shows which are chosen.

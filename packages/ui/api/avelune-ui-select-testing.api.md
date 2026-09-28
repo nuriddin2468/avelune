@@ -17,6 +17,7 @@ export class AveComboboxHarness extends ComponentHarness {
     clear(): Promise<void>;
     focus(): Promise<void>;
     getEmptyMessage(): Promise<string | null>;
+    getListState(): Promise<'loading' | 'failed' | 'empty' | null>;
     getOptionDescriptions(): Promise<(string | null)[]>;
     getOptions(): Promise<string[]>;
     getText(): Promise<string>;
@@ -27,6 +28,8 @@ export class AveComboboxHarness extends ComponentHarness {
     isReadonly(): Promise<boolean>;
     isRequired(): Promise<boolean>;
     press(key: 'down' | 'up' | 'enter' | 'escape'): Promise<void>;
+    retry(): Promise<void>;
+    scrollToEnd(): Promise<void>;
     type(text: string): Promise<void>;
     static with(options?: AveComboboxHarnessFilters): HarnessPredicate<AveComboboxHarness>;
 }

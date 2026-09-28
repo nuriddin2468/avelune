@@ -42,11 +42,14 @@ export interface AveMessages {
     readonly filesAdded: (count: number) => string;
     readonly fileTooLarge: (limit: string) => string;
     readonly fileTypeRejected: string;
+    readonly loadFailed: string;
+    readonly loading: string;
     readonly lowerValue: string;
     readonly nextMonth: string;
     readonly nextYear: string;
     readonly nextYears: string;
     readonly noResults: string;
+    readonly optionsFound: (count: number) => string;
     readonly previousMonth: string;
     readonly previousYear: string;
     readonly previousYears: string;
@@ -65,6 +68,8 @@ export interface AveMessages {
     readonly rangeYesterday: string;
     readonly removeFile: (name: string) => string;
     readonly required: string;
+    readonly retry: string;
+    readonly retryWithEnter: string;
     readonly tooManyFiles: (max: number) => string;
     readonly upperValue: string;
 }

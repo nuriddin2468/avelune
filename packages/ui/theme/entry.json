@@ -1,5 +1,5 @@
 {
   "$schema": "../entry.schema.json",
   "layer": "foundations",
-  "sizeLimit": "1.5 kB"
+  "sizeLimit": "1.8 kB"
 }

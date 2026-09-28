@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormField, email, form, maxLength, minLength, pattern, required, submit } from '@angular/forms/signals';
 import { AveButton } from '@avelune/ui/button';
 import { AveCheckbox, AveChoice } from '@avelune/ui/checkbox';
@@ -11,7 +11,8 @@ import { AveRadio } from '@avelune/ui/radio';
 import { AveCombobox, AveMultiselect, AveSelect } from '@avelune/ui/select';
 import { AveSlider } from '@avelune/ui/slider';
 import { AveTextarea } from '@avelune/ui/textarea';
-import { approvers, contractKinds, counterparties } from './data';
+import { CounterpartyDirectory } from './counterparty-directory';
+import { approvers, contractKinds } from './data';
 
 interface Contract {
   number: string;
@@ -114,11 +115,16 @@ const sendDelay = 1500;
 
         <ave-form-field label="Контрагент">
           <ave-combobox
-            [options]="counterparties"
-            placeholder="Начните вводить название"
+            search="server"
+            placeholder="Название или ИНН"
+            [options]="directory.options()"
+            [loading]="directory.loading()"
+            [hasMore]="directory.hasMore()"
             [formField]="contract.counterparty"
+            (query)="directory.search($event)"
+            (loadMore)="directory.more()"
           />
-          <p aveHint>Организации из справочника контрагентов.</p>
+          <p aveHint>Организации из справочника контрагентов, по названию или ИНН.</p>
           @if (contract.counterparty().errors().length > 0) {
             <p aveError>Выберите контрагента из справочника.</p>
           }
@@ -239,7 +245,7 @@ const sendDelay = 1500;
 })
 export class ContractForm {
   protected readonly contractKinds = contractKinds;
-  protected readonly counterparties = counterparties;
+  protected readonly directory = inject(CounterpartyDirectory);
   protected readonly approvers = approvers;
   protected readonly attachmentLimit = 20 * 1024 * 1024;
   protected readonly termPresets = termPresets;

@@ -51,7 +51,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0043](0043-textarea.md) | Textarea: a native textarea in the box of an input, a fixed number of rows | Accepted |
 | [0044](0044-radio-and-choice-group.md) | Radio and choice group: a drawn native radio, a fieldset that describes its choices | Accepted |
 | [0045](0045-switch.md) | Switch: a drawn native checkbox with the switch role, a thumb that slides on its own timing | Accepted |
-| [0046](0046-select-combobox-multiselect.md) | Select, Combobox and Multiselect: Angular Aria in a CDK overlay, options as data, both form APIs | Accepted |
+| [0046](0046-select-combobox-multiselect.md) | Select, Combobox and Multiselect: Angular Aria in a CDK overlay, options as data, both form APIs | Accepted; "the value is always an option" superseded by 0056 |
 | [0047](0047-kit-messages.md) | Kit messages: the words components say themselves, per locale, replaceable | Accepted |
 | [0048](0048-date-picker-and-uzbek-dates.md) | DatePicker and DateRangePicker: ISO dates, a calendar on Angular Aria's grid, Uzbek dates written by the kit | Accepted; the range's equal columns changed by 0052 for a range that may be cleared |
 | [0049](0049-list-values-need-min-length.md) | A list that must hold an item: `minLength(path, 1)`, shown as required | Accepted |
@@ -61,6 +61,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0053](0053-calendar-months-and-years.md) | The calendar's months and years: its heading opens a grid of months, then of years, on Angular Aria's grid | Accepted |
 | [0054](0054-date-range-presets.md) | DateRangePicker presets: a typed, translated set and the application's own, a listbox beside or above the calendar | Accepted |
 | [0055](0055-rich-options.md) | Rich options in the select family: fields of an option in one row layout, and templates inside the kit's row | Accepted |
+| [0056](0056-remote-lists.md) | Remote lists: a server's search, pages that load at the end, and chosen options the list no longer holds | Accepted |
 
 ## Template
 

@@ -71,6 +71,7 @@ One primary button per view region (a form, a dialog, a toolbar, a card): the on
 | 2–5 | Radio group: every option visible at once |
 | 6–15 | Select |
 | More than 15, or unknown | Combobox with search |
+| Thousands, on the server | Combobox with `search="server"`: the server searches, a page at a time (ADR 0056) |
 
 ## States
 

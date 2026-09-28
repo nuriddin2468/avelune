@@ -1,6 +1,6 @@
 # 0046. Select, Combobox and Multiselect: Angular Aria in a CDK overlay, options as data, both form APIs
 
-- Status: Accepted (2026-09-25, technical decision within Wave 2)
+- Status: Accepted (2026-09-25, technical decision within Wave 2); "the value is always one of the options" superseded by 0056
 - Date: 2026-09-25
 - Related: 0002, 0031, 0039, 0040, 0044, 0047; brief §6.3, §8.2, §9.1; GUIDELINES.md "Radio, select or combobox"
 

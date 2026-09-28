@@ -1,7 +1,7 @@
 import { Component, ElementRef, booleanAttribute, computed, inject, input } from '@angular/core';
 import { lucideLoaderCircle } from '@avelune/icons/lucide';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
-import { delayedSpinner } from './delayed-spinner';
+import { aveDelayedSpinner } from '@avelune/ui/theme';
 import type { AveButtonSize, AveButtonVariant } from './types';
 
 /**
@@ -73,7 +73,7 @@ export class AveButton {
   protected readonly link = this.host.localName === 'a';
 
   /** Whether the spinner shows: after the spinner delay, for at least its minimum time. */
-  protected readonly spinner = delayedSpinner(computed(() => this.loading() && !this.disabled()));
+  protected readonly spinner = aveDelayedSpinner(computed(() => this.loading() && !this.disabled()));
 
   /** `disabled`, `busy` (loading, or its spinner still showing) or `enabled`; the CSS reads it as `data-state`. */
   protected readonly state = computed(() => {

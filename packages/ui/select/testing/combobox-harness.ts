@@ -90,6 +90,38 @@ export class AveComboboxHarness extends ComponentHarness {
     return message === null ? null : (await message.text()).trim();
   }
 
+  /**
+   * Gets what the end of a server's list says (ADR 0056): `loading` while its spinner shows, `failed` after a request
+   * failed, `empty` when nothing matched, or null.
+   */
+  async getListState(): Promise<'loading' | 'failed' | 'empty' | null> {
+    const id = (await (await this.input()).getAttribute('aria-controls')) ?? '';
+    const root = this.documentRootLocatorFactory();
+    const popup = `.popup:has([id="${id}"])`;
+    if ((await root.locatorForOptional(`${popup} .state.failed`)()) !== null) return 'failed';
+    if ((await root.locatorForOptional(`${popup} .state`)()) !== null) return 'loading';
+    if ((await root.locatorForOptional(`${popup} .empty`)()) !== null) return 'empty';
+    return null;
+  }
+
+  /** Presses the list's Try again button, after a request failed. */
+  async retry(): Promise<void> {
+    const id = (await (await this.input()).getAttribute('aria-controls')) ?? '';
+    const button = await this.documentRootLocatorFactory().locatorForOptional(
+      `.popup:has([id="${id}"]) .failed button`,
+    )();
+    if (button === null) throw new Error('AveComboboxHarness: the list offers no retry.');
+    await button.click();
+  }
+
+  /**
+   * Moves to the list's last option with End, which scrolls it to its end, as a person scrolling does; a server's list
+   * then asks for its next page.
+   */
+  async scrollToEnd(): Promise<void> {
+    await (await this.input()).sendKeys(TestKey.END);
+  }
+
   /** Chooses the shown option with this label, as a click does. */
   async choose(label: string | RegExp): Promise<void> {
     for (const option of await this.optionElements()) {

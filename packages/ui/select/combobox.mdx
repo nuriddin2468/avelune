@@ -46,6 +46,36 @@ An input with the box of an Input of its size. The list opens 4px under it as pe
 
 <Canvas of={ComboboxStories.UzbekApostrophes} />
 
+## Server search
+
+For thousands of options that live on the server (ADR 0056), `search="server"` hands the search to the application: the combobox shows `options` as the server gave them, without filtering, and emits `query` with the text once typing has paused for `timing.search-delay` (300ms), and at once when the list first opens (with `''`). The application answers through its inputs:
+
+- `loading`: a request is in flight; the list shows "Загрузка…" with a spinner at its end, only after 300ms of waiting, and for at least 500ms.
+- `error`: the request failed; the list says so and offers "Повторить", which sends the last request again, as Enter in the input does.
+- `hasMore`: the server has more; `loadMore` is emitted when the list is scrolled to its end, when Down is pressed on the last option, or when the options do not fill the list.
+- `chosenOptions`: the options of a value set from outside, such as a saved form, which the current page may not hold; the combobox remembers the options people choose itself.
+
+```html
+<ave-combobox
+  search="server"
+  [options]="page().options"
+  [loading]="page().loading"
+  [error]="page().failed"
+  [hasMore]="page().hasMore"
+  [chosenOptions]="savedCounterparty()"
+  (query)="find($event)"
+  (loadMore)="next()"
+  [formField]="contract.counterparty"
+/>
+```
+
+<Canvas of={ComboboxStories.ServerSearch} />
+
+<Canvas of={ComboboxStories.ServerStates} />
+
+- Screen readers hear how many options the list holds once it loads, that nothing matched, or that it failed and that Enter tries again.
+- The list grows a page at a time; there is no virtual scrolling, because the active option must be in the page (`aria-activedescendant`). Narrow the search rather than page through thousands.
+
 ## Rich options
 
 Options take the same fields and templates as a select's (ADR 0055): a description, an icon or an image, meta text, or `<ng-template aveOption let-option>`. The search reads the label only; the input shows the chosen label, as text.
@@ -79,7 +109,7 @@ The kit's words ("Ничего не найдено") follow the application's `L
 
 ## Keyboard
 
-Per the WAI-ARIA combobox pattern: typing filters and opens the list; Down and Up move through the matches; Enter chooses and closes; Escape closes; Tab leaves.
+Per the WAI-ARIA combobox pattern: typing filters and opens the list; Down and Up move through the matches; Enter chooses and closes; Escape closes; Tab leaves. With a server's list, Down on the last option loads the next page while there is one, and Enter tries a failed request again.
 
 ## Accessibility
 

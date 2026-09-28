@@ -61,6 +61,73 @@ class OptionalHost {
 }
 
 /** Border-box sizing, as the kit's reset gives every page (the global stylesheet is not loaded here). */
+@Component({
+  selector: 'ave-combobox-server',
+  imports: [AveCombobox],
+  template: `
+    <ave-combobox
+      label="Counterparty"
+      search="server"
+      [options]="page()"
+      [loading]="loading()"
+      [error]="failed()"
+      [hasMore]="more()"
+      [chosenOptions]="saved"
+      [(value)]="counterparty"
+      (query)="asked.push($event)"
+      (loadMore)="nextPage()"
+    />
+  `,
+})
+class ServerHost {
+  readonly page = signal<readonly AveOption<number>[]>([]);
+  readonly loading = signal(false);
+  readonly failed = signal(false);
+  readonly more = signal(false);
+  readonly saved: readonly AveOption<number>[] = [{ value: 99, label: 'АО «Сохранённый контрагент»' }];
+  readonly counterparty = signal<number | null>(99);
+  readonly asked: string[] = [];
+  pages = 0;
+
+  /** As an application does: counts the request and marks the list loading. */
+  nextPage(): void {
+    this.pages++;
+    this.loading.set(true);
+  }
+}
+
+/** Thirty counterparties from the server, from a number. */
+function serverPage(from: number): AveOption<number>[] {
+  return Array.from({ length: 30 }, (_, index) => ({
+    value: from + index,
+    label: `Контрагент ${String(from + index)}`,
+  }));
+}
+
+/**
+ * Every token, as the kit's stylesheet gives them, with the timings the server's list reads (ADR 0056): a short
+ * search delay and an immediate spinner. The list then has its height and scrolls.
+ */
+function withTimings(set: boolean): void {
+  const root = document.documentElement.style;
+  for (const token of Object.values(tokens)) {
+    if (set) root.setProperty(token.cssVar, token.css);
+    else root.removeProperty(token.cssVar);
+  }
+  withReset(set);
+  const timings = [
+    ['--ave-timing-search-delay', '200ms'],
+    ['--ave-timing-spinner-delay', '0ms'],
+    ['--ave-timing-spinner-min-visible', '0ms'],
+  ] as const;
+  for (const [name, value] of timings) {
+    if (set) root.setProperty(name, value);
+    else root.removeProperty(name);
+  }
+}
+
+const pause = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 function withReset(set: boolean): void {
   const id = 'ave-spec-reset';
   document.getElementById(id)?.remove();
@@ -243,6 +310,160 @@ describe('AveCombobox', () => {
     await combobox.blur();
     expect(await combobox.getText()).toBe('ООО «Альфа Технологии»');
     expect(fixture.componentInstance.payer()).toBe(1);
+  });
+
+  it('asks a server when its list opens and once typing pauses, and names a saved value (ADR 0056)', async () => {
+    withTimings(true);
+    const { fixture } = mount(ServerHost);
+    const host = fixture.componentInstance;
+    const combobox = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveComboboxHarness);
+    expect(await combobox.getText()).toBe('АО «Сохранённый контрагент»');
+    await combobox.focus();
+    await combobox.press('down');
+    expect(host.asked).toEqual(['']);
+    host.page.set(serverPage(1));
+    await combobox.type('Контр');
+    expect(host.asked).toEqual(['']);
+    await pause(250);
+    expect(host.asked).toEqual(['', 'Контр']);
+    // The server's page does not hold the chosen value: it stays, and so does the typed text.
+    host.page.set(serverPage(100));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(await combobox.getText()).toBe('Контр');
+    expect(host.counterparty()).toBe(99);
+    expect(await combobox.getOptions()).toHaveLength(30);
+    await combobox.choose('Контрагент 105');
+    expect(host.counterparty()).toBe(105);
+    host.page.set(serverPage(1));
+    fixture.detectChanges();
+    expect(await combobox.getText()).toBe('Контрагент 105');
+    withTimings(false);
+  });
+
+  it('shows loading, a failure with a retry, and no results, and says what came of a request', async () => {
+    withTimings(true);
+    const { fixture } = mount(ServerHost);
+    const host = fixture.componentInstance;
+    const combobox = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveComboboxHarness);
+    await combobox.focus();
+    await combobox.press('down');
+    host.loading.set(true);
+    fixture.detectChanges();
+    await expect.poll(() => combobox.getListState()).toBe('loading');
+    host.loading.set(false);
+    host.failed.set(true);
+    fixture.detectChanges();
+    expect(await combobox.getListState()).toBe('failed');
+    const live = () => document.querySelector('.cdk-live-announcer-element')?.textContent ?? '';
+    await expect.poll(live).toBe('The list did not load. Press Enter to try again.');
+    await combobox.retry();
+    expect(host.asked).toEqual(['', '']);
+    await combobox.press('enter');
+    expect(host.asked).toEqual(['', '', '']);
+    host.failed.set(false);
+    host.loading.set(true);
+    fixture.detectChanges();
+    host.loading.set(false);
+    fixture.detectChanges();
+    expect(await combobox.getListState()).toBe('empty');
+    await expect.poll(live).toBe('No results');
+    host.loading.set(true);
+    fixture.detectChanges();
+    host.page.set(serverPage(1));
+    host.loading.set(false);
+    fixture.detectChanges();
+    await expect.poll(live).toBe('Options: 30');
+    expect(await combobox.getListState()).toBeNull();
+    withTimings(false);
+  });
+
+  it('asks for the next page at the end of the list and on Down from its last option', async () => {
+    withTimings(true);
+    const { fixture } = mount(ServerHost);
+    const host = fixture.componentInstance;
+    host.page.set(serverPage(1));
+    const combobox = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveComboboxHarness);
+    await combobox.focus();
+    await combobox.press('down');
+    const active = () => document.querySelector('[role="option"][data-active="true"]')?.getAttribute('aria-label');
+    // Without more, End goes to the last option and nothing is asked.
+    await combobox.scrollToEnd();
+    expect(active()).toBe('Контрагент 30');
+    expect(host.pages).toBe(0);
+    // Down on the last option asks for the next page and does not wrap; the keyboard goes on to its first option.
+    host.more.set(true);
+    fixture.detectChanges();
+    await combobox.press('down');
+    expect(host.pages).toBe(1);
+    expect(active()).toBe('Контрагент 30');
+    await combobox.press('down');
+    expect(host.pages).toBe(1);
+    host.page.set([...serverPage(1), ...serverPage(31)]);
+    host.loading.set(false);
+    fixture.detectChanges();
+    await expect.poll(active).toBe('Контрагент 31');
+    // Scrolling to the end asks for the page after; without more, nothing.
+    await combobox.scrollToEnd();
+    await expect.poll(() => host.pages).toBe(2);
+    host.page.set([...serverPage(1), ...serverPage(31), ...serverPage(61)]);
+    host.loading.set(false);
+    host.more.set(false);
+    fixture.detectChanges();
+    await combobox.scrollToEnd();
+    await combobox.press('down');
+    expect(host.pages).toBe(2);
+    expect(active()).toBe('Контрагент 1');
+    withTimings(false);
+  });
+
+  it('asks nothing again for the same text, says nothing while closed, and retries only what it asked', async () => {
+    withTimings(true);
+    const { fixture, element } = mount(ServerHost);
+    const host = fixture.componentInstance;
+    const combobox = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveComboboxHarness);
+    // An error before anything was asked: Enter and the button have nothing to send again.
+    host.failed.set(true);
+    fixture.detectChanges();
+    await combobox.focus();
+    await combobox.press('enter');
+    expect(host.asked).toEqual([]);
+    host.failed.set(false);
+    fixture.detectChanges();
+    await expect(combobox.retry()).rejects.toThrow('offers no retry');
+    await combobox.press('down');
+    expect(host.asked).toEqual(['']);
+    // An empty list that scrolls asks for nothing.
+    document.querySelector('.listbox')?.dispatchEvent(new Event('scroll'));
+    expect(host.pages).toBe(0);
+    await combobox.press('escape');
+    await combobox.press('down');
+    expect(host.asked).toEqual(['']);
+    await combobox.press('escape');
+    // A request that ends while the list is closed is not announced.
+    host.loading.set(true);
+    fixture.detectChanges();
+    const live = () => document.querySelector('.cdk-live-announcer-element')?.textContent ?? '';
+    const before = live();
+    host.loading.set(false);
+    fixture.detectChanges();
+    await pause(150);
+    expect(live()).toBe(before);
+    expect(element.querySelector('input')?.value).toBe('АО «Сохранённый контрагент»');
+    withTimings(false);
+  });
+
+  it('asks for the next page itself while its options do not fill the list', async () => {
+    withTimings(true);
+    const { fixture } = mount(ServerHost);
+    const host = fixture.componentInstance;
+    host.page.set(serverPage(1).slice(0, 3));
+    host.more.set(true);
+    const combobox = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveComboboxHarness);
+    await combobox.focus();
+    await combobox.press('down');
+    await expect.poll(() => host.pages).toBe(1);
+    withTimings(false);
   });
 
   it('keeps focus in the input when an option is pressed', async () => {

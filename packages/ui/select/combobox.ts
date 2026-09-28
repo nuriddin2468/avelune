@@ -1,6 +1,9 @@
 import {
   Component,
+  DestroyRef,
   ElementRef,
+  Injector,
+  afterNextRender,
   afterRenderEffect,
   booleanAttribute,
   computed,
@@ -11,6 +14,7 @@ import {
   model,
   output,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { Combobox, ComboboxPopup, ComboboxWidget } from '@angular/aria/combobox';
@@ -18,12 +22,14 @@ import { Listbox, Option } from '@angular/aria/listbox';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { NgControl, type ControlValueAccessor } from '@angular/forms';
 import { FORM_FIELD } from '@angular/forms/signals';
-import { lucideCheck, lucideX } from '@avelune/icons/lucide';
+import { lucideCheck, lucideCircleAlert, lucideLoaderCircle, lucideX } from '@avelune/icons/lucide';
+import { AveButton } from '@avelune/ui/button';
 import { AVE_CONTROL_OWNER, AveClearButton, AveControlTarget, injectControlState } from '@avelune/ui/forms';
 import { injectAveMessages } from '@avelune/ui/i18n';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
 import { pruned } from './choice';
 import { matches } from './match';
+import { remoteList, type AveSearchMode } from './remote';
 import { aveConnectedOverlay, aveOverlayPresence } from '@avelune/ui/overlay';
 import { AveOptionContent, describedBy, optionIds } from './option-content';
 import { AveOptionTemplate } from './templates';
@@ -32,8 +38,9 @@ import type { AveOption, AveSelectSize } from './types';
 /**
  * The kit's combobox (brief §9.1, ADR 0046): one choice from a long list, found by typing. An input with the box of
  * an Input filters the options by their labels as people type; the list opens under it. Built on Angular Aria's
- * combobox and listbox (the WAI-ARIA combobox with list autocomplete), in CDK's overlay. The value is always one of
- * the options: text that matches none is put back when the person leaves. Signal Forms bind its `value` model
+ * combobox and listbox (the WAI-ARIA combobox with list autocomplete), in CDK's overlay. With `search="server"` the
+ * application searches: the combobox emits `query` and shows the server's answer, a page at a time (ADR 0056). Text
+ * that matches no option is put back when the person leaves. Signal Forms bind its `value` model
  * (`[formField]`), Reactive Forms its value accessor. Put it in an `<ave-form-field>` for its label, hint and error.
  *
  * ```html
@@ -45,6 +52,7 @@ import type { AveOption, AveSelectSize } from './types';
 @Component({
   selector: 'ave-combobox',
   imports: [
+    AveButton,
     AveClearButton,
     AveControlTarget,
     AveIcon,
@@ -56,7 +64,10 @@ import type { AveOption, AveSelectSize } from './types';
     Option,
     OverlayModule,
   ],
-  providers: [provideAveIcons([lucideCheck, lucideX]), { provide: AVE_CONTROL_OWNER, useExisting: AveCombobox }],
+  providers: [
+    provideAveIcons([lucideCheck, lucideCircleAlert, lucideLoaderCircle, lucideX]),
+    { provide: AVE_CONTROL_OWNER, useExisting: AveCombobox },
+  ],
   host: {
     '[attr.data-size]': 'size()',
   },
@@ -75,9 +86,11 @@ import type { AveOption, AveSelectSize } from './types';
       [attr.aria-label]="label() || null"
       [attr.placeholder]="placeholder() || null"
       [attr.data-clear]="clearable() ? '' : null"
-      [(value)]="query"
+      [(value)]="text"
       [(expanded)]="expanded"
       (focusout)="left($event)"
+      (input)="typed()"
+      (keydown.enter)="enter()"
     />
     @if (clearable()) {
       <button aveClearButton type="button" class="clear" [label]="label()" (click)="clear()">
@@ -102,9 +115,11 @@ import type { AveOption, AveSelectSize } from './types';
             focusMode="activedescendant"
             selectionMode="explicit"
             [tabindex]="-1"
+            [wrap]="!hasMore()"
             [value]="selectedValues()"
             [activeDescendant]="listbox.activeDescendant()"
             (valueChange)="choose($event)"
+            (scroll)="scrolled()"
           >
             @for (option of shown(); track $index) {
               <div
@@ -125,8 +140,21 @@ import type { AveOption, AveSelectSize } from './types';
               </div>
             }
           </div>
-          @if (shown().length === 0) {
-            <p class="empty" role="status">{{ messages.noResults }}</p>
+          @if (spinner()) {
+            <p class="state">
+              <ave-icon class="ave-motion-spin" name="loader-circle" decorative />{{ messages.loading }}
+            </p>
+          } @else if (error()) {
+            <div class="state failed">
+              <ave-icon class="alert" name="circle-alert" decorative />
+              <span class="text">{{ messages.loadFailed }}</span>
+              <button aveButton type="button" variant="ghost" size="sm" (click)="retry()">
+                {{ messages.retry }}
+              </button>
+            </div>
+          } @else if (shown().length === 0 && !loading()) {
+            <!-- A local list says it here; a server's list says it through the announcer, once it has loaded. -->
+            <p class="empty" [attr.role]="search() === 'local' ? 'status' : null">{{ messages.noResults }}</p>
           }
         </div>
       </ng-template>
@@ -156,8 +184,38 @@ export class AveCombobox<V> implements ControlValueAccessor {
   /** The accessible name when the combobox has no visible label; an `<ave-form-field>` gives it one instead. */
   readonly label = input('');
 
+  /**
+   * Where the options come from (ADR 0056): `local`, every option given, filtered by label as people type; `server`,
+   * the server's answer to `query`, shown as given.
+   */
+  readonly search = input<AveSearchMode>('local');
+
+  /** Whether the server is sending options: the list shows a spinner at its end, after a moment. */
+  readonly loading = input(false, { transform: booleanAttribute });
+
+  /** Whether the last request failed: the list says so and offers to try again, as Enter in the input does. */
+  readonly error = input(false, { transform: booleanAttribute });
+
+  /** Whether the server has more options than the list: its end, or Down on its last option, asks for them. */
+  readonly hasMore = input(false, { transform: booleanAttribute });
+
+  /**
+   * The options of a value set from outside (a saved form) that the list may not hold, so the input can name it; the
+   * options people choose are remembered (ADR 0056).
+   */
+  readonly chosenOptions = input<readonly AveOption<V>[]>([]);
+
   /** Emits when the person leaves the combobox, which marks a Signal Forms field touched. */
   readonly touch = output();
+
+  /**
+   * With `search="server"`: the text to search for, once typing has paused for `timing.search-delay`, and at once when
+   * the list opens on text not asked for yet.
+   */
+  readonly query = output<string>();
+
+  /** With `search="server"` and `hasMore`: the list wants its next page. */
+  readonly loadMore = output();
 
   /** The form state, read on the host, where the form binding is. */
   readonly state = injectControlState();
@@ -170,21 +228,42 @@ export class AveCombobox<V> implements ControlValueAccessor {
 
   protected readonly messages = injectAveMessages();
 
-  private readonly selected = computed(() => this.options().find((option) => Object.is(option.value, this.value())));
+  /** The option people chose last, which a server's later page may not hold. */
+  private readonly remembered = signal<AveOption<V> | undefined>(undefined);
 
-  /** What the input says: the chosen option's label, reset whenever the value changes, or what the person types. */
-  protected readonly query = linkedSignal(() => this.selected()?.label ?? '');
+  /** The chosen option: in the list, among `chosenOptions`, or remembered from the person's choice. */
+  private readonly selected = computed(() => {
+    const value = this.value();
+    if (value === null) return undefined;
+    const find = (options: readonly AveOption<V>[] | undefined) =>
+      options?.find((option) => Object.is(option.value, value));
+    const remembered = this.remembered();
+    return find(this.options()) ?? find(this.chosenOptions()) ?? find(remembered === undefined ? [] : [remembered]);
+  });
+
+  private readonly selectedLabel = computed(() => this.selected()?.label ?? '');
+
+  /**
+   * What the input says: the chosen option's label, or what the person types. It is the label again when the value
+   * changes, and when the label changes (a server's page, a saved option) while the text is not being edited.
+   */
+  protected readonly text = linkedSignal<{ value: V | null; label: string }, string>({
+    source: () => ({ value: this.value(), label: this.selectedLabel() }),
+    computation: (source, previous) => {
+      if (previous === undefined || !Object.is(previous.source.value, source.value)) return source.label;
+      return previous.value === previous.source.label ? source.label : previous.value;
+    },
+  });
 
   /** Whether the list is open. */
   protected readonly expanded = signal(false);
 
   /** The options the list shows: every one while the input shows the chosen label, the matches while typing. */
   protected readonly shown = computed(() => {
-    const query = this.query();
     const options = this.options();
-    return query === (this.selected()?.label ?? '')
-      ? options
-      : options.filter((option) => matches(option.label, query));
+    if (this.search() === 'server') return options;
+    const text = this.text();
+    return text === this.selectedLabel() ? options : options.filter((option) => matches(option.label, text));
   });
 
   /**
@@ -220,6 +299,25 @@ export class AveCombobox<V> implements ControlValueAccessor {
 
   protected readonly overlay = computed(() => aveConnectedOverlay(this.input().element));
 
+  /** The server's side of the list (ADR 0056). */
+  private readonly remote = remoteList({
+    search: this.search,
+    // The chosen label is not a search: the list asks for everything, as a local list shows every option.
+    text: computed(() => (this.text() === this.selectedLabel() ? '' : this.text())),
+    expanded: this.expanded,
+    loading: this.loading,
+    error: this.error,
+    hasMore: this.hasMore,
+    count: computed(() => this.shown().length),
+    list: computed(() => this.popup()?.nativeElement.querySelector<HTMLElement>('.listbox') ?? undefined),
+    query: this.query,
+    loadMore: this.loadMore,
+  });
+
+  /** After Down on the last option asked for the next page: the index its first option will have. */
+  private pending: number | null = null;
+
+  private readonly injector = inject(Injector);
   private readonly disabledByForm = signal(false);
   private changed: (value: V | null) => void = () => undefined;
   private touched: () => void = () => undefined;
@@ -234,6 +332,62 @@ export class AveCombobox<V> implements ControlValueAccessor {
     afterRenderEffect(() => {
       this.list()?.scrollActiveItemIntoView({ block: 'nearest' });
     });
+    // Down on the last option, while the server has more, asks for the next page; it is read before Aria's own
+    // handler, in the capture phase, while the last option is still the active one.
+    const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+    const down = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowDown') this.downOnLast();
+    };
+    host.addEventListener('keydown', down, { capture: true });
+    inject(DestroyRef).onDestroy(() => {
+      host.removeEventListener('keydown', down, { capture: true });
+    });
+    // Once the next page has come, the keyboard goes on to its first option.
+    afterRenderEffect(() => {
+      const count = this.shown().length;
+      const loading = this.loading();
+      untracked(() => {
+        const index = this.pending;
+        if (index === null) return;
+        if (count > index) {
+          this.pending = null;
+          afterNextRender(() => this.list()?.gotoIndex(index), { injector: this.injector });
+        } else if (!loading) {
+          this.pending = null;
+        }
+      });
+    });
+  }
+
+  /** Whether the list shows its spinner, on the spinner's timings (ADR 0056). */
+  protected readonly spinner = this.remote.spinner;
+
+  /** The person typed: a server's list searches once typing pauses. */
+  protected typed(): void {
+    this.remote.typed();
+  }
+
+  /** The list scrolled: at its end, a server's list asks for its next page. */
+  protected scrolled(): void {
+    this.remote.scrolled();
+  }
+
+  /** The Try again button: the last request goes again. */
+  protected retry(): void {
+    this.remote.retry();
+  }
+
+  /** Enter with no option active, after a request failed, asks the server again (ADR 0056). */
+  protected enter(): void {
+    if (this.error() && this.list()?.activeDescendant() === undefined) this.remote.retry();
+  }
+
+  private downOnLast(): void {
+    if (!this.expanded() || !this.hasMore()) return;
+    const last = this.popup()?.nativeElement.querySelector('.option:last-child');
+    if (last?.getAttribute('data-active') !== 'true') return;
+    this.pending = this.shown().length;
+    this.remote.more();
   }
 
   /**
@@ -245,8 +399,10 @@ export class AveCombobox<V> implements ControlValueAccessor {
     if (pruned(this.selectedValues(), values, this.shown())) return;
     const value = values[0] ?? this.value();
     this.selectedValues.set(value === null ? [] : [value]);
+    const option = this.shown().find((shown) => Object.is(shown.value, value));
+    if (option !== undefined) this.remembered.set(option);
     this.value.set(value);
-    this.query.set(this.selected()?.label ?? '');
+    this.text.set(this.selectedLabel());
     this.changed(value);
     this.expanded.set(false);
   }
@@ -254,7 +410,7 @@ export class AveCombobox<V> implements ControlValueAccessor {
   /** The clear button: the input empties, the value goes, the list closes, and focus is in the input (ADR 0052). */
   protected clear(): void {
     this.value.set(null);
-    this.query.set('');
+    this.text.set('');
     this.changed(null);
     this.expanded.set(false);
     this.input().element.focus();
@@ -267,11 +423,11 @@ export class AveCombobox<V> implements ControlValueAccessor {
   protected left(event: FocusEvent): void {
     const next = event.relatedTarget;
     if (next instanceof Node && this.input().element.parentElement?.contains(next) === true) return;
-    if (this.query().trim() === '' && this.value() !== null) {
+    if (this.text().trim() === '' && this.value() !== null) {
       this.value.set(null);
       this.changed(null);
     }
-    this.query.set(this.selected()?.label ?? '');
+    this.text.set(this.selectedLabel());
     this.touch.emit();
     this.touched();
   }

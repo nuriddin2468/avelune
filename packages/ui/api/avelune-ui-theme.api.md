@@ -9,7 +9,13 @@ import * as i0 from '@angular/core';
 import { Signal } from '@angular/core';
 
 // @alpha
+export function aveDelayedSpinner(waiting: Signal<boolean>): Signal<boolean>;
+
+// @alpha
 export type AveDensity = 'comfortable' | 'compact';
+
+// @alpha
+export function aveDurationToken(element: Element, name: `--ave-${string}`): number;
 
 // @alpha
 export type AveMotionPreference = 'system' | 'reduced';

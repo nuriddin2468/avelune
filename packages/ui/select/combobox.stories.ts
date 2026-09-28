@@ -1,4 +1,4 @@
-import { Component, LOCALE_ID, input, signal } from '@angular/core';
+import { Component, LOCALE_ID, computed, input, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormField, form, required } from '@angular/forms/signals';
 import {
@@ -12,6 +12,7 @@ import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { AveCombobox, type AveSelectSize } from '@avelune/ui/select';
 import { counterparties } from './fixtures/options';
 import { countries, countriesUz } from './fixtures/rich';
+import { counterpartyServer } from './fixtures/server';
 
 type View = 'states' | 'long';
 
@@ -143,6 +144,42 @@ class ComboboxClearing {
 class ComboboxRich {
   protected readonly countries = countries;
   protected readonly countriesUz = countriesUz;
+}
+
+/** A combobox that searches a pretend server (ADR 0056): pages of twenty, after a delay, failing first if asked. */
+@Component({
+  selector: 'ave-combobox-server',
+  imports: [AveCombobox],
+  template: `
+    <div class="narrow room" lang="ru">
+      <div class="field">
+        <span class="label">Контрагент</span>
+        <ave-combobox
+          label="Контрагент"
+          placeholder="Название или ИНН"
+          search="server"
+          [options]="server().options()"
+          [loading]="server().loading()"
+          [error]="server().failed()"
+          [hasMore]="server().hasMore()"
+          [(value)]="counterparty"
+          (query)="server().query($event)"
+          (loadMore)="server().loadMore()"
+        />
+      </div>
+      <p class="status" role="status">Контрагент: {{ counterparty() ?? 'не выбран' }}</p>
+    </div>
+  `,
+  styleUrl: './select.stories.css',
+})
+class ComboboxServer {
+  readonly fails = input<'first' | 'always'>();
+  protected readonly counterparty = signal<number | null>(null);
+  // Made once the input is set, when the template first reads it.
+  protected readonly server = computed(() => {
+    const fails = this.fails();
+    return counterpartyServer(fails === undefined ? { latency: 400 } : { latency: 400, fails });
+  });
 }
 
 /** Pads the single-combobox stories. */
@@ -355,5 +392,76 @@ export const RichOptions: Story = {
     await expect(await canvas.findByRole('status')).toBeInTheDocument();
     await userEvent.clear(input);
     await userEvent.type(input, 'стан');
+  },
+};
+
+/**
+ * Server search (ADR 0056): the first page when the list opens, a search once typing pauses, the next page at the
+ * list's end; the server matches on the tax number, which the label does not hold.
+ */
+export const ServerSearch: Story = {
+  name: 'Server search',
+  decorators: [locale('ru')],
+  render: () => ({ template: '<ave-combobox-server />', moduleMetadata: { imports: [ComboboxServer] } }),
+  parameters: source(
+    '<ave-combobox search="server" [options]="page.options()" [loading]="page.loading()" [error]="page.failed()"',
+    '  [hasMore]="page.hasMore()" (query)="find($event)" (loadMore)="next()" [formField]="contract.counterparty" />',
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole('combobox', { name: 'Контрагент' });
+    input.focus();
+    await userEvent.keyboard('{ArrowDown}');
+    await waitFor(() => expect(canvas.getAllByRole('option')).toHaveLength(20), { timeout: 3000 });
+    await userEvent.keyboard('{End}');
+    await waitFor(() => expect(canvas.getAllByRole('option')).toHaveLength(40), { timeout: 3000 });
+    await userEvent.type(input, '300 047');
+    await waitFor(() => expect(canvas.getAllByRole('option')).toHaveLength(1), { timeout: 3000 });
+    await expect(canvas.getByRole('option')).toHaveAccessibleDescription(/300 047 514/);
+    await userEvent.clear(input);
+    await userEvent.type(input, 'Альфа');
+    await waitFor(() => expect(canvas.getAllByRole('option')).toHaveLength(10), { timeout: 3000 });
+  },
+};
+
+/** A request that failed: the list says so and offers to try again, which Enter does too; the second request answers. */
+export const ServerStates: Story = {
+  name: 'Server states',
+  decorators: [locale('ru')],
+  render: () => ({
+    template: '<ave-combobox-server fails="first" />',
+    moduleMetadata: { imports: [ComboboxServer] },
+  }),
+  parameters: source('<ave-combobox search="server" [loading]="…" [error]="…" (query)="find($event)" />'),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole('combobox', { name: 'Контрагент' });
+    input.focus();
+    await userEvent.keyboard('{ArrowDown}');
+    const retry = await canvas.findByRole('button', { name: 'Повторить' }, { timeout: 3000 });
+    await expect(canvas.getByText('Список не загрузился.')).toBeInTheDocument();
+    await userEvent.click(retry);
+    await waitFor(() => expect(canvas.getAllByRole('option')).toHaveLength(20), { timeout: 3000 });
+    await userEvent.type(input, 'Нет такого');
+    await waitFor(() => expect(canvas.getByText('Ничего не найдено')).toBeInTheDocument(), { timeout: 3000 });
+  },
+};
+
+/** A server that does not answer: the list says so and offers to try again; screen readers hear that Enter does. */
+export const ServerFailed: Story = {
+  name: 'Server failed',
+  decorators: [locale('ru')],
+  render: () => ({ template: '<ave-combobox-server fails="always" />', moduleMetadata: { imports: [ComboboxServer] } }),
+  parameters: source('<ave-combobox search="server" [error]="page.failed()" (query)="find($event)" />'),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    canvas.getByRole('combobox', { name: 'Контрагент' }).focus();
+    await userEvent.keyboard('{ArrowDown}');
+    await canvas.findByRole('button', { name: 'Повторить' }, { timeout: 3000 });
+    await waitFor(() =>
+      expect(document.querySelector('.cdk-live-announcer-element')).toHaveTextContent(
+        'Список не загрузился. Нажмите Enter, чтобы повторить.',
+      ),
+    );
   },
 };

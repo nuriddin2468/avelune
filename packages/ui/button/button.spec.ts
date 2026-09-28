@@ -8,7 +8,7 @@ import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
 import { lucideDownload } from '@avelune/icons/lucide';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
-import { durationToken } from './delayed-spinner';
+import { aveDurationToken } from '@avelune/ui/theme';
 
 const variants = ['primary', 'secondary', 'ghost', 'danger'] as const satisfies readonly AveButtonVariant[];
 const sizes = ['sm', 'md', 'lg'] as const satisfies readonly AveButtonSize[];
@@ -388,9 +388,9 @@ describe('AveButton', () => {
 
   it('reads duration tokens in ms and s, and 0 when a token is missing', () => {
     root.style.setProperty('--ave-spec-seconds', '0.25s');
-    expect(durationToken(root, '--ave-spec-seconds')).toBe(250);
-    expect(durationToken(root, '--ave-timing-spinner-delay')).toBe(tokens['timing.spinner-delay'].value);
-    expect(durationToken(root, '--ave-spec-missing')).toBe(0);
+    expect(aveDurationToken(root, '--ave-spec-seconds')).toBe(250);
+    expect(aveDurationToken(root, '--ave-timing-spinner-delay')).toBe(tokens['timing.spinner-delay'].value);
+    expect(aveDurationToken(root, '--ave-spec-missing')).toBe(0);
     root.style.removeProperty('--ave-spec-seconds');
   });
 });

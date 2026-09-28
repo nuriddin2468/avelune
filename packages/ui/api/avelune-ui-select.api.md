@@ -17,17 +17,23 @@ import { TemplateRef } from '@angular/core';
 export class AveCombobox<V> implements ControlValueAccessor {
     constructor();
     protected choose(values: V[]): void;
+    readonly chosenOptions: _angular_core.InputSignal<readonly AveOption<V>[]>;
     protected clear(): void;
     protected readonly clearable: _angular_core.Signal<boolean>;
     // @internal
     readonly controlDisabled: _angular_core.Signal<boolean>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    protected enter(): void;
+    readonly error: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected readonly expanded: _angular_core.WritableSignal<boolean>;
+    readonly hasMore: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     protected readonly isDisabled: _angular_core.Signal<boolean>;
     protected keepFocus(event: MouseEvent): void;
     readonly label: _angular_core.InputSignal<string>;
     protected left(event: FocusEvent): void;
+    readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly loadMore: _angular_core.OutputEmitterRef<void>;
     // (undocumented)
     protected readonly messages: _avelune_ui_i18n.AveMessages;
     protected optionDescription(option: AveOption<V>, index: number): string | null;
@@ -38,24 +44,30 @@ export class AveCombobox<V> implements ControlValueAccessor {
     protected readonly overlay: _angular_core.Signal<_angular_cdk_overlay.CdkConnectedOverlayConfig>;
     readonly placeholder: _angular_core.InputSignal<string>;
     protected readonly presence: _avelune_ui_overlay.AveOverlayPresence;
-    protected readonly query: _angular_core.WritableSignal<string>;
+    readonly query: _angular_core.OutputEmitterRef<string>;
     readonly readonly: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // @internal (undocumented)
     registerOnChange(callback: (value: V | null) => void): void;
     // @internal (undocumented)
     registerOnTouched(callback: () => void): void;
+    protected retry(): void;
+    protected scrolled(): void;
+    readonly search: _angular_core.InputSignal<AveSearchMode>;
     protected readonly selectedValues: _angular_core.WritableSignal<V[]>;
     // @internal (undocumented)
     setDisabledState(disabled: boolean): void;
     protected readonly shown: _angular_core.Signal<readonly AveOption<V>[]>;
     readonly size: _angular_core.InputSignal<AveSelectSize>;
+    protected readonly spinner: _angular_core.Signal<boolean>;
     readonly state: _avelune_ui_forms.AveControlState;
+    protected readonly text: _angular_core.WritableSignal<string>;
     readonly touch: _angular_core.OutputEmitterRef<void>;
+    protected typed(): void;
     readonly value: _angular_core.ModelSignal<V | null>;
     // @internal (undocumented)
     writeValue(value: unknown): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveCombobox<any>, "ave-combobox", never, { "options": { "alias": "options"; "required": true; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; "touch": "touch"; }, ["optionTemplate"], never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveCombobox<any>, "ave-combobox", never, { "options": { "alias": "options"; "required": true; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; "search": { "alias": "search"; "required": false; "isSignal": true; }; "loading": { "alias": "loading"; "required": false; "isSignal": true; }; "error": { "alias": "error"; "required": false; "isSignal": true; }; "hasMore": { "alias": "hasMore"; "required": false; "isSignal": true; }; "chosenOptions": { "alias": "chosenOptions"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; "touch": "touch"; "query": "query"; "loadMore": "loadMore"; }, ["optionTemplate"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveCombobox<any>, never>;
 }
@@ -65,6 +77,7 @@ export class AveMultiselect<V> implements ControlValueAccessor {
     constructor();
     protected choose(values: V[]): void;
     protected readonly chosen: _angular_core.Signal<AveOption<V>[]>;
+    readonly chosenOptions: _angular_core.InputSignal<readonly AveOption<V>[]>;
     protected clear(): void;
     protected readonly clearable: _angular_core.Signal<boolean>;
     protected clearByKey(event: Event): void;
@@ -100,7 +113,7 @@ export class AveMultiselect<V> implements ControlValueAccessor {
     // @internal (undocumented)
     writeValue(value: unknown): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveMultiselect<any>, "ave-multiselect", never, { "options": { "alias": "options"; "required": true; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; "touch": "touch"; }, ["optionTemplate"], never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveMultiselect<any>, "ave-multiselect", never, { "options": { "alias": "options"; "required": true; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; "chosenOptions": { "alias": "chosenOptions"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; "touch": "touch"; }, ["optionTemplate"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveMultiselect<any>, never>;
 }
@@ -138,9 +151,13 @@ export class AveOptionTemplate<V> {
 }
 
 // @alpha
+export type AveSearchMode = 'local' | 'server';
+
+// @alpha
 export class AveSelect<V> implements ControlValueAccessor {
     constructor();
     protected choose(values: V[]): void;
+    readonly chosenOptions: _angular_core.InputSignal<readonly AveOption<V>[]>;
     protected clear(): void;
     protected readonly clearable: _angular_core.Signal<boolean>;
     protected clearByKey(event: Event): void;
@@ -166,7 +183,6 @@ export class AveSelect<V> implements ControlValueAccessor {
     registerOnChange(callback: (value: V | null) => void): void;
     // @internal (undocumented)
     registerOnTouched(callback: () => void): void;
-    // (undocumented)
     protected readonly selected: _angular_core.Signal<AveOption<V> | undefined>;
     protected readonly selectedValues: _angular_core.WritableSignal<V[]>;
     // @internal (undocumented)
@@ -179,7 +195,7 @@ export class AveSelect<V> implements ControlValueAccessor {
     // @internal (undocumented)
     writeValue(value: unknown): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveSelect<any>, "ave-select", never, { "options": { "alias": "options"; "required": true; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; "touch": "touch"; }, ["optionTemplate", "valueTemplate"], never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveSelect<any>, "ave-select", never, { "options": { "alias": "options"; "required": true; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; "chosenOptions": { "alias": "chosenOptions"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; "touch": "touch"; }, ["optionTemplate", "valueTemplate"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveSelect<any>, never>;
 }

@@ -67,6 +67,27 @@
     color: var(--ave-color-fg-muted);
   }
 
+  /* A server's list at its end (ADR 0056): loading, with the catalog's spin; failed, with a way to try again. The
+     height of one option, in muted text; the failure's icon in the danger colour, its button at the end. */
+  .state {
+    display: flex;
+    align-items: center;
+    gap: var(--ave-space-2);
+    min-block-size: var(--ave-control-height-md);
+    margin: 0;
+    padding-inline: calc(var(--ave-control-padding-inline-md) - var(--ave-space-1));
+    color: var(--ave-color-fg-muted);
+  }
+
+  .state > .text {
+    flex: 1;
+    min-inline-size: 0;
+  }
+
+  .alert {
+    color: var(--ave-color-danger-fg);
+  }
+
   .check {
     flex: none;
     margin-block: calc((var(--ave-font-body-md-line-height) - var(--ave-size-icon-sm)) / 2);

@@ -9,6 +9,16 @@ import { InjectionToken, LOCALE_ID, inject, type Provider } from '@angular/core'
 export interface AveMessages {
   /** A combobox's list when no option matches what was typed. */
   readonly noResults: string;
+  /** A list whose options a server is sending (ADR 0056). */
+  readonly loading: string;
+  /** A list whose options did not come from the server. */
+  readonly loadFailed: string;
+  /** The button that asks the server for a list's options again. */
+  readonly retry: string;
+  /** Said to screen readers after a list failed: Enter in its input asks again. */
+  readonly retryWithEnter: string;
+  /** Said to screen readers once a list has loaded, with the number of its options. */
+  readonly optionsFound: (count: number) => string;
   /** The button of a date field that opens its calendar. */
   readonly chooseDate: string;
   /** The calendar's button to the month before. */
@@ -90,6 +100,11 @@ export interface AveMessages {
  */
 export const aveMessagesEn: AveMessages = {
   noResults: 'No results',
+  loading: 'Loading…',
+  loadFailed: 'The list did not load.',
+  retry: 'Try again',
+  retryWithEnter: 'Press Enter to try again.',
+  optionsFound: (count) => `Options: ${String(count)}`,
   chooseDate: 'Choose a date',
   previousMonth: 'Previous month',
   nextMonth: 'Next month',
@@ -135,6 +150,11 @@ export const aveMessagesEn: AveMessages = {
  */
 export const aveMessagesRu: AveMessages = {
   noResults: 'Ничего не найдено',
+  loading: 'Загрузка…',
+  loadFailed: 'Список не загрузился.',
+  retry: 'Повторить',
+  retryWithEnter: 'Нажмите Enter, чтобы повторить.',
+  optionsFound: (count) => `Найдено вариантов: ${String(count)}`,
   chooseDate: 'Выбрать дату',
   previousMonth: 'Предыдущий месяц',
   nextMonth: 'Следующий месяц',
@@ -182,6 +202,11 @@ export const aveMessagesRu: AveMessages = {
  */
 export const aveMessagesUzLatn: AveMessages = {
   noResults: 'Hech narsa topilmadi',
+  loading: 'Yuklanmoqda…',
+  loadFailed: 'Roʻyxat yuklanmadi.',
+  retry: 'Qayta urinish',
+  retryWithEnter: 'Qayta urinish uchun Enter tugmasini bosing.',
+  optionsFound: (count) => `Topilgan variantlar: ${String(count)}`,
   chooseDate: 'Sanani tanlash',
   previousMonth: 'Oldingi oy',
   nextMonth: 'Keyingi oy',
@@ -227,6 +252,11 @@ export const aveMessagesUzLatn: AveMessages = {
  */
 export const aveMessagesUzCyrl: AveMessages = {
   noResults: 'Ҳеч нарса топилмади',
+  loading: 'Юкланмоқда…',
+  loadFailed: 'Рўйхат юкланмади.',
+  retry: 'Қайта уриниш',
+  retryWithEnter: 'Қайта уриниш учун Enter тугмасини босинг.',
+  optionsFound: (count) => `Топилган вариантлар: ${String(count)}`,
   chooseDate: 'Санани танлаш',
   previousMonth: 'Олдинги ой',
   nextMonth: 'Кейинги ой',
