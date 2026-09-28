@@ -45,6 +45,10 @@
       "placeholder-highlight": {
         "$value": "{color.neutral.50}",
         "$description": "The band of light that sweeps across color.bg.placeholder while it waits (ave-motion-shimmer); lighter than the fill in both themes. Under reduced motion the band stays out of sight."
+      },
+      "tooltip": {
+        "$value": "{color.neutral.800}",
+        "$description": "The small dark surface of a tooltip, which stands apart from every surface and popover under it: darker than all of them in light, lighter than all of them in dark."
       }
     },
     "fg": {
@@ -83,6 +87,10 @@
       "on-danger": {
         "$value": "{color.white}",
         "$description": "Text and icons on color.danger.bg."
+      },
+      "on-tooltip": {
+        "$value": "{color.white}",
+        "$description": "Text of a tooltip, on color.bg.tooltip."
       },
       "link": {
         "$value": "{color.orange.600}",

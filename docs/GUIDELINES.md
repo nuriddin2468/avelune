@@ -46,7 +46,7 @@ One primary button per view region (a form, a dialog, a toolbar, a card): the on
 
 - Order in a row: the primary action last (at the inline end), "Cancel" before it.
 - A button that navigates is a link styled as a button (`a[aveButton]`); a button that acts is a `<button>`.
-- A clickable icon without a visible label is an IconButton, with a label for assistive technology.
+- A clickable icon without a visible label is an IconButton, with a label for assistive technology and the same words in its tooltip (`aveTooltip`), so everyone can read its name.
 
 ### Dialog, drawer or page
 

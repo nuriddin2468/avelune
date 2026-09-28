@@ -30,6 +30,17 @@ const config: StorybookConfig = {
   },
   // Storybook collects telemetry by default; nothing leaves the machine.
   core: { disableTelemetry: true },
+  // CDK's overlay and portal entry points share their portal classes through a chunk of CDK's own. Pre-bundled in
+  // separate passes, each got its copy, and an overlay rejected a ComponentPortal made from @angular/cdk/portal
+  // ("unknown Portal type"; the tooltip, ADR 0063). Pre-bundled together, they share it, as an application's bundle
+  // does.
+  viteFinal: (config) => ({
+    ...config,
+    optimizeDeps: {
+      ...config.optimizeDeps,
+      include: [...(config.optimizeDeps?.include ?? []), '@angular/cdk/overlay', '@angular/cdk/portal'],
+    },
+  }),
 };
 
 export default config;

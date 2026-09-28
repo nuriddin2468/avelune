@@ -51,6 +51,12 @@
       "background": ["color.danger.bg", "color.danger.bg-hover", "color.danger.bg-active"]
     },
     {
+      "reason": "Text of a tooltip",
+      "minimum": 4.5,
+      "foreground": ["color.fg.on-tooltip"],
+      "background": ["color.bg.tooltip"]
+    },
+    {
       "reason": "Role-coloured text on surfaces",
       "minimum": 4.5,
       "foreground": ["color.accent.fg", "color.info.fg", "color.success.fg", "color.warning.fg", "color.danger.fg"],

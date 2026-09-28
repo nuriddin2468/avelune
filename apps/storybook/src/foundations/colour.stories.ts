@@ -52,6 +52,14 @@ const groups: readonly Group[] = [
     ],
   },
   {
+    title: 'Tooltips',
+    note: 'A small surface that stands apart from everything under it: darker than every surface in light, lighter in dark.',
+    swatches: [
+      { name: 'color.bg.tooltip', kind: 'fill', partner: 'color.fg.on-tooltip' },
+      { name: 'color.fg.on-tooltip', kind: 'text', partner: 'color.bg.tooltip' },
+    ],
+  },
+  {
     title: 'Text',
     note: 'Solid colours, never opacity, so every pair is computable. Disabled text is exempt from contrast minimums.',
     swatches: [

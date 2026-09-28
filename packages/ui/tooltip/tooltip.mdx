@@ -1,0 +1,82 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as TooltipStories from './tooltip.stories';
+
+<Meta of={TooltipStories} />
+
+# Tooltip
+
+`aveTooltip` shows a short text next to an element: the name of an icon button, the full text of a cut-off cell, a word about what a control does. It appears after the pointer has rested on the element for 500ms, or at once when the element takes keyboard focus, and it goes at once (ADR 0063).
+
+```ts
+import { AveTooltip } from '@avelune/ui/tooltip';
+```
+
+<Canvas of={TooltipStories.Default} />
+
+## When to use
+
+- On every icon button, with the same words as its label, so people who see the icon also read its name.
+- On a truncated value (a table cell), with the whole value.
+- For a few words that help but are not needed to use the control.
+
+## When not to use
+
+- For anything people must read to go on: put it on the page, in a hint or a description.
+- For links, buttons or fields: a tooltip holds text only. Use a popover.
+- On a disabled button: it cannot take focus. Use `disabledInteractive` and say why next to the button.
+- On touch screens alone: a touch never shows a tooltip.
+
+## Anatomy
+
+A small bubble in `color.bg.tooltip` (dark in light, lighter than every surface in dark) with 12/16 text in `color.fg.on-tooltip`, `radius.md`, the popover elevation, 8px from the element (clear of its focus ring), at most 320px wide, wrapping. It is centred on the element's side, aligned with its start or end when the text is wider than the room there, and kept 8px inside the viewport.
+
+```html
+<button aveIconButton type="button" variant="ghost" icon="download" label="Выгрузить" aveTooltip="Выгрузить в Excel"></button>
+```
+
+## Sides
+
+<Canvas of={TooltipStories.Sides} />
+
+`aveTooltipSide`: `top` (default), `bottom`, `start` or `end`. Without room there, the tooltip shows on the opposite side.
+
+<Canvas of={TooltipStories.Flip} />
+
+## Behaviour
+
+| When                                             | The tooltip                                       |
+| ------------------------------------------------ | ------------------------------------------------- |
+| The pointer rests on the element for 500ms       | shows                                             |
+| The element takes keyboard focus                 | shows at once                                     |
+| Another tooltip hid less than 500ms ago          | shows at once (moving along a toolbar)            |
+| The pointer moves onto the tooltip's text        | stays, so the text can be read (WCAG 1.4.13)      |
+| The pointer leaves both, focus leaves, a press   | hides at once                                     |
+| Escape                                           | hides, and nothing else hears that Escape          |
+| The element scrolls out of sight                 | hides                                             |
+
+The delay is `timing.tooltip-delay`. An empty text shows no tooltip.
+
+## Content
+
+- A few words, sentence case, no full stop for a name ("Выгрузить в Excel").
+- Long text wraps at 320px; keep it to one sentence.
+
+<Canvas of={TooltipStories.LongText} />
+
+## Accessibility
+
+- The element is described by the tooltip's text (`aria-describedby`, through CDK's `AriaDescriber`), so screen readers read it whether or not it shows. When the text is the element's name already, as on an icon button, it is not repeated.
+- The bubble itself is hidden from assistive technology.
+- Keyboard focus shows the tooltip at once; Escape dismisses it without closing the dialog around it.
+- The text keeps 7:1 and more on its bubble in both themes; in forced colours the bubble takes an outline.
+
+## Motion
+
+The tooltip entry of the motion catalog: `ave-motion-tooltip-enter` fades in while moving 4px away from the element on its side, in `duration.fast` with `easing.enter`; `ave-motion-tooltip-exit` fades out in `duration.fast`. Under reduced motion it fades without moving.
+
+## Do and don't
+
+- Do give every icon button a tooltip with its label.
+- Do keep it short.
+- Don't put a link or a button in a tooltip.
+- Don't hide information people need in a tooltip.

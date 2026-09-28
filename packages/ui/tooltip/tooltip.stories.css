@@ -1,0 +1,31 @@
+/* The frame of the Tooltip stories. Stories only; the tooltip's own styles are panel.css. */
+@layer components {
+  :host {
+    display: block;
+    padding: var(--ave-space-12) var(--ave-space-6);
+  }
+
+  /* Room above for a tooltip of two lines. */
+  .long {
+    padding-block-start: var(--ave-space-6);
+  }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ave-space-1);
+  }
+
+  /* Room on every side for each side's tooltip. */
+  .sides {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ave-space-16);
+    padding-inline: var(--ave-space-16);
+  }
+
+  /* An element at the very top of the page, with no room above it. */
+  .edge {
+    margin-block-start: calc(-1 * var(--ave-space-12));
+  }
+}

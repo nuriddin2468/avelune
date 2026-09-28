@@ -1,0 +1,39 @@
+@layer components {
+  /* The tooltip (ADR 0063): a transparent frame whose padding is the 8px gap to its element, clear of the element's
+     focus ring (4px outside it), on the element's side, so moving the pointer onto the text keeps it; the bubble inside in the tooltip colours, the small body type,
+     `radius.md` and the popover elevation, at most a small container wide, wrapping. */
+  :host {
+    display: block;
+    max-inline-size: var(--ave-container-xs);
+  }
+
+  :host([data-side='top']) {
+    padding-block-end: var(--ave-space-2);
+  }
+
+  :host([data-side='bottom']) {
+    padding-block-start: var(--ave-space-2);
+  }
+
+  :host([data-side='start']) {
+    padding-inline-end: var(--ave-space-2);
+  }
+
+  :host([data-side='end']) {
+    padding-inline-start: var(--ave-space-2);
+  }
+
+  /* The border is transparent; forced colours paint it, where the fill is dropped. */
+  .bubble {
+    display: block;
+    padding: calc(var(--ave-space-1) - var(--ave-border-width-default))
+      calc(var(--ave-space-2) - var(--ave-border-width-default));
+    border: var(--ave-border-width-default) solid transparent;
+    border-radius: var(--ave-radius-md);
+    background-color: var(--ave-color-bg-tooltip);
+    box-shadow: var(--ave-elevation-popover);
+    color: var(--ave-color-fg-on-tooltip);
+    font: var(--ave-font-body-sm);
+    overflow-wrap: anywhere;
+  }
+}

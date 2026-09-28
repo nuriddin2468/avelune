@@ -214,7 +214,7 @@ Wave 2 build (2026-09-25), before the product owner's corrections and the wave's
 | ConfirmDialog | 3 | composites | planned | | names the action |
 | Drawer | 3 | composites | planned | | slide 100% from its edge; decide how it stops moving under reduced motion, maybe a token (product owner, ADR 0005, 0031) |
 | Popover | 3 | composites | planned | | |
-| Tooltip | 3 | components | planned | | 500ms show delay |
+| Tooltip | 3 | components | experimental | | `@avelune/ui/tooltip` (ADR 0063): `[aveTooltip]` and `aveTooltipSide` on any element; 500ms on hover, at once on keyboard focus and right after another hid; hoverable, Escape first; CDK's connected overlay in the top layer, CDK's `AriaDescriber`; new `color.bg.tooltip` and `color.fg.on-tooltip`; the showcase bar's theme and density buttons; 2.73 kB of 3.1 kB; beta after the Wave 3 visual review |
 | Menu | 3 | composites | planned | | Aria Menu |
 | Toast | 3 | composites | planned | | queue, pause on hover/focus, live region |
 | Alert | 3 | components | experimental | | `@avelune/ui/alert` (ADR 0061): `<ave-alert>`, `info`, `success`, `warning`, `danger` on the subtle fills, an icon of its own shape named in the locale, `alert` or `status` by variant, an optional heading; links and the focus ring declared on the fills; above the showcase's contracts list, naming the expired ones; 2.11 kB of 2.4 kB with Banner; beta after the Wave 3 visual review |

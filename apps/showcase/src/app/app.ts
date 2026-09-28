@@ -3,6 +3,7 @@ import { AveBanner } from '@avelune/ui/alert';
 import { AveIconButton } from '@avelune/ui/button';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AveTheme } from '@avelune/ui/theme';
+import { AveTooltip } from '@avelune/ui/tooltip';
 
 /**
  * The showcase shell: the application bar, with the screens and the theme and density switches the reviews need, a
@@ -10,7 +11,7 @@ import { AveTheme } from '@avelune/ui/theme';
  */
 @Component({
   selector: 'ave-showcase-root',
-  imports: [AveBanner, AveIconButton, RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [AveBanner, AveIconButton, AveTooltip, RouterLink, RouterLinkActive, RouterOutlet],
   template: `
     <header class="bar" lang="ru">
       <p class="product">Avelune · Документооборот</p>
@@ -32,6 +33,8 @@ import { AveTheme } from '@avelune/ui/theme';
           variant="ghost"
           [icon]="dark() ? 'sun' : 'moon'"
           [label]="dark() ? 'Светлая тема' : 'Тёмная тема'"
+          [aveTooltip]="dark() ? 'Светлая тема' : 'Тёмная тема'"
+          aveTooltipSide="bottom"
           (click)="toggleTheme()"
         ></button>
         <button
@@ -40,6 +43,8 @@ import { AveTheme } from '@avelune/ui/theme';
           variant="ghost"
           [icon]="compact() ? 'rows-2' : 'rows-3'"
           [label]="compact() ? 'Обычная плотность' : 'Компактная плотность'"
+          [aveTooltip]="compact() ? 'Обычная плотность' : 'Компактная плотность'"
+          aveTooltipSide="bottom"
           (click)="toggleDensity()"
         ></button>
       </div>
