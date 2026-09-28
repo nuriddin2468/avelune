@@ -259,7 +259,10 @@ export const UzbekLatin: Story = {
   },
 };
 
-/** Compact density: the slider keeps its 24px target; the field's spacing tightens around it. */
+/**
+ * Compact density: nothing changes. Density sets the controls' heights and padding, and the slider has neither: it
+ * keeps its 24px target, and the field keeps its spacing.
+ */
 export const Compact: Story = {
   decorators: [
     locale('ru'),
