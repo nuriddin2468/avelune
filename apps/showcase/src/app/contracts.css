@@ -100,10 +100,27 @@
     container-type: inline-size;
   }
 
+  /* A row: the contract, then its facts, and its menu at the end; on a phone the facts go under the contract and the
+     menu stays at the top of the row's end. */
   .row {
     display: grid;
+    grid-template-areas: 'main actions' 'facts facts';
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: var(--ave-space-2) var(--ave-space-6);
-    padding: var(--ave-space-3) var(--ave-space-4);
+    padding: var(--ave-space-3) var(--ave-space-2) var(--ave-space-3) var(--ave-space-4);
+  }
+
+  .main {
+    grid-area: main;
+  }
+
+  .facts {
+    grid-area: facts;
+  }
+
+  .row-actions {
+    grid-area: actions;
+    align-self: start;
   }
 
   .row + .row {
@@ -112,7 +129,8 @@
 
   @container (min-width: 640px) {
     .row {
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas: 'main facts actions';
+      grid-template-columns: minmax(0, 1fr) auto auto;
     }
 
     .facts {

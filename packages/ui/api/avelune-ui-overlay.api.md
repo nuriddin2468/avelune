@@ -11,6 +11,7 @@ import { Signal } from '@angular/core';
 export function aveConnectedOverlay(origin: HTMLElement, options?: {
     readonly matchWidth?: boolean;
     readonly transformOrigin?: string;
+    readonly align?: 'start' | 'either';
 }): CdkConnectedOverlayConfig;
 
 // @alpha

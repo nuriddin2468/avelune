@@ -1,0 +1,91 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as MenuStories from './menu.stories';
+
+<Meta of={MenuStories} />
+
+# Menu
+
+`<ave-menu>` is a button that opens a list of actions: the actions of a row, of a document, or those that do not fit in a toolbar. It is Angular Aria's menu (the WAI-ARIA menu button) in the kit's popup (ADR 0064).
+
+```ts
+import { AveMenu, type AveMenuEntry } from '@avelune/ui/menu';
+```
+
+<Canvas of={MenuStories.Default} />
+
+## When to use
+
+- For a few actions on one thing, when showing them all as buttons would crowd the screen: a row of a table, a card, a page's secondary actions.
+
+## When not to use
+
+- For choosing a value: use a select, or radios.
+- For navigation between pages: use links, or the navigation of the page.
+- For one or two actions: show them as buttons.
+- For content with fields or links: use a popover.
+
+## Anatomy
+
+The button, as a Button of its variant and size with a `chevron-down` after its words, or as an IconButton (`icon`) whose `label` is its name and its tooltip. The menu: the raised surface of every popup, `radius.lg`, the popover elevation, 4px under the button, at least 192px and at most 320px wide; items of the control height with an optional icon, separators between groups. It opens from the button's start, or ends at the button's end when there is no room.
+
+```html
+<ave-menu label="Действия с договором" icon="ellipsis" variant="ghost" size="sm" [items]="actions" (itemSelected)="run($event)" />
+```
+
+Items are data (`AveMenuEntry<V>`): `{ value, label, icon?, danger?, disabled? }`, or `{ separator: true }`. Register their icons with `provideAveIcons`.
+
+## Variants
+
+<Canvas of={MenuStories.Variants} />
+
+The button takes Button's `variant` (`secondary` by default, `ghost` in rows and toolbars, `primary` for a region's main action with choices), `size` and `disabled`.
+
+<Canvas of={MenuStories.IconOnly} />
+
+<Canvas of={MenuStories.RowActions} />
+
+## States
+
+- **Items:** hover and keyboard focus take the hover fill, and keyboard focus the kit's ring inside the item. `danger` draws a destructive action in the danger colour; confirm it before it runs. `disabled` shows an item that cannot be chosen; focus still reaches it, and screen readers say it is unavailable.
+- **Button:** disabled, a menu that cannot open.
+
+## Content
+
+- Items are verbs, as buttons are: "Дублировать", "Выгрузить в PDF", "Удалить договор".
+- Group related items; put destructive actions last, after a separator.
+- Long items wrap within 320px; nothing truncates.
+
+<Canvas of={MenuStories.LongText} />
+
+## Keyboard
+
+Per the WAI-ARIA menu button pattern, from Angular Aria:
+
+| Key                 | On the button                           | In the menu                                  |
+| ------------------- | --------------------------------------- | -------------------------------------------- |
+| Enter, Space, Down  | opens the menu on its first item        | chooses the item, closes, focus on the button |
+| Up                  | opens the menu on its last item         | moves to the item before                     |
+| Down                |                                         | moves to the item after (wraps)              |
+| Home, End           |                                         | the first, the last item                     |
+| A letter            |                                         | the next item that starts with it            |
+| Escape              |                                         | closes, focus on the button                  |
+| Tab                 | moves on                                | closes the menu and moves on                 |
+
+A press outside the menu closes it, on touch screens too.
+
+## Accessibility
+
+- The button has `aria-haspopup` and `aria-expanded`; the menu is a `menu` named by the button, its items `menuitem`s.
+- An icon alone is named by `label` and shows it as a tooltip.
+- Text in the menu keeps its contrast in both themes, the danger colour too; in forced colours the item with focus takes the system highlight.
+
+## Motion
+
+The menu entry of the motion catalog: `ave-motion-popover-enter` fades in from `motion.scale.enter` at the button, in `duration.normal`; `ave-motion-popover-exit` fades out in `duration.fast`. Under reduced motion it fades without scaling.
+
+## Do and don't
+
+- Do keep menus short: up to about seven items.
+- Do say what an item does to what: "Удалить договор".
+- Don't nest menus; show a dialog for a choice with more steps.
+- Don't put the only way to do something important in a menu.

@@ -1,15 +1,19 @@
 import { Component, DestroyRef, type ElementRef, computed, inject, signal, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AveAlert } from '@avelune/ui/alert';
-import { lucideSearch } from '@avelune/icons/lucide';
+import { lucideCopy, lucideEllipsis, lucideSearch, lucideTrash } from '@avelune/icons/lucide';
 import { AveButton } from '@avelune/ui/button';
 import { AveEmptyState, AveEmptyStateActions } from '@avelune/ui/empty-state';
 import { aveDateFormat, aveNumberFormat } from '@avelune/ui/i18n';
 import { provideAveIcons } from '@avelune/ui/icon';
 import { AveInput } from '@avelune/ui/input';
+import { AveMenu, type AveMenuEntry } from '@avelune/ui/menu';
 import { AveProgress } from '@avelune/ui/progress';
 import { AveSkeleton } from '@avelune/ui/skeleton';
 import { contractStatuses, contracts, type ContractRecord } from './data';
+
+/** What a row's menu does to its contract. */
+type RowAction = 'copy' | 'delete';
 
 /** How long the pretend server takes to send the register. */
 const loadDelay = 800;
@@ -24,8 +28,18 @@ const exportInterval = 400;
  */
 @Component({
   selector: 'ave-showcase-contracts',
-  imports: [AveAlert, AveButton, AveEmptyState, AveEmptyStateActions, AveInput, AveProgress, AveSkeleton, RouterLink],
-  providers: [provideAveIcons([lucideSearch])],
+  imports: [
+    AveAlert,
+    AveButton,
+    AveEmptyState,
+    AveEmptyStateActions,
+    AveInput,
+    AveMenu,
+    AveProgress,
+    AveSkeleton,
+    RouterLink,
+  ],
+  providers: [provideAveIcons([lucideCopy, lucideEllipsis, lucideSearch, lucideTrash])],
   template: `
     <div class="page" lang="ru">
       <header class="header">
@@ -113,6 +127,15 @@ const exportInterval = 400;
                 <span class="status" [attr.data-status]="contract.status">{{ statuses[contract.status] }}</span>
                 <span class="ends">до {{ dates.numeric(contract.endsOn) }}</span>
               </div>
+              <ave-menu
+                class="row-actions"
+                icon="ellipsis"
+                variant="ghost"
+                size="sm"
+                [label]="'Действия с договором ' + contract.number"
+                [items]="rowActions"
+                (itemSelected)="act(contract, $event)"
+              />
             </li>
           }
         </ul>
@@ -131,6 +154,14 @@ export class ContractsPage {
   protected readonly loading = signal(true);
   protected readonly rows = signal<readonly ContractRecord[]>([]);
   protected readonly placeholders = [1, 2, 3];
+
+  /** The actions of every row: a copy as a new draft, and deleting it. */
+  protected readonly rowActions: readonly AveMenuEntry<RowAction>[] = [
+    { value: 'copy', label: 'Дублировать', icon: 'copy' },
+    { separator: true },
+    { value: 'delete', label: 'Удалить договор', icon: 'trash', danger: true },
+  ];
+  private nextId = 115;
 
   /** What the person searches for: part of a number, a subject or a counterparty. */
   protected readonly query = signal('');
@@ -186,6 +217,23 @@ export class ContractsPage {
   protected resetSearch(): void {
     this.query.set('');
     this.searchBox().nativeElement.focus();
+  }
+
+  /** A row's menu chose an action for its contract. */
+  protected act(contract: ContractRecord, action: RowAction): void {
+    if (action === 'copy') {
+      const id = this.nextId++;
+      const copy: ContractRecord = {
+        ...contract,
+        id,
+        number: `ДК-2026/${String(id)}`,
+        status: 'draft',
+        signedOn: null,
+      };
+      this.rows.set([copy, ...this.rows()]);
+    } else {
+      this.rows.set(this.rows().filter((row) => row.id !== contract.id));
+    }
   }
 
   protected search(event: Event): void {

@@ -69,6 +69,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0061](0061-alert-and-banner.md) | Alert and Banner: a tinted notice in place and a strip across the page, one set of icons and roles | Accepted |
 | [0062](0062-empty-state.md) | EmptyState: a centred column that says why and offers the next action | Accepted |
 | [0063](0063-tooltip.md) | Tooltip: a directive on any element, a CDK overlay in the top layer, CDK's describer, dark tooltip colours | Accepted |
+| [0064](0064-menu.md) | Menu: a menu button that draws its own trigger, Angular Aria's menu in the kit's popup, items as data | Accepted |
 
 ## Template
 
