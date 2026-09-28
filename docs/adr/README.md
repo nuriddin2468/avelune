@@ -36,7 +36,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0028](0028-size-budget-per-entry-point.md) | Size budgets: one per entry point, declared in its manifest | Accepted |
 | [0029](0029-repository-guardrails-proven.md) | Repository guardrails: project tags, browser floor, commits, formatting, dependency policy | Accepted; the pinned release age changed by 0042 |
 | [0030](0030-global-stylesheet.md) | Global stylesheet: one entry, layered files, loaded through the consumer's bundler; one focus ring | Accepted |
-| [0031](0031-motion-catalog.md) | Motion catalog: motion.css classes, reduced motion from tokens, linear only on loops | Accepted |
+| [0031](0031-motion-catalog.md) | Motion catalog: motion.css classes, reduced motion from tokens, linear only on loops | Accepted; the drawer's reduced motion settled by 0067, top-layer overlays by 0066 |
 | [0032](0032-runtime-theme-api.md) | Runtime API: provideAvelune() and AveTheme in @avelune/ui/theme | Accepted |
 | [0033](0033-icon-set-and-ave-icon.md) | Icon set and `<ave-icon>`: typed Lucide data, frozen strokes, a label or decorative | Accepted; decisions 1, 3 and 6 superseded by 0036 |
 | [0034](0034-docs-pages-follow-the-theme.md) | Storybook docs pages: the Theme toolbar, GFM tables, written snippets | Accepted; docs sweep, surface and props table in addendum |
@@ -72,6 +72,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0064](0064-menu.md) | Menu: a menu button that draws its own trigger, Angular Aria's menu in the kit's popup, items as data | Accepted |
 | [0065](0065-popover.md) | Popover: a non-modal dialog under its own button, focus in and back, closed by Escape, a press or focus leaving | Accepted |
 | [0066](0066-dialog-and-confirm-dialog.md) | Dialog and ConfirmDialog: a native modal dialog that is its own backdrop, the catalog's classes, an announcer inside | Accepted |
+| [0067](0067-drawer.md) | Drawer: the kit's dialog against an edge, and a token that turns its slide into a fade under reduced motion | Accepted |
 
 ## Template
 

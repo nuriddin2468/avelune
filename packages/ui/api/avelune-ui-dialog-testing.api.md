@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AveDrawerSide } from '@avelune/ui/dialog';
 import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessLoader } from '@angular/cdk/testing';
@@ -46,6 +47,16 @@ export class AveDialogHarness extends ComponentHarness {
 export interface AveDialogHarnessFilters extends BaseHarnessFilters {
     heading?: string | RegExp;
 }
+
+// @alpha
+export class AveDrawerHarness extends AveDialogHarness {
+    getSide(): Promise<AveDrawerSide>;
+    static hostSelector: string;
+    static with(options?: AveDrawerHarnessFilters): HarnessPredicate<AveDrawerHarness>;
+}
+
+// @alpha
+export type AveDrawerHarnessFilters = AveDialogHarnessFilters;
 
 // (No @packageDocumentation comment for this package)
 

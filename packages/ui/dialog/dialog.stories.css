@@ -21,4 +21,20 @@
     display: grid;
     gap: var(--ave-space-4);
   }
+
+  .facts {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--ave-space-1);
+    margin: 0;
+  }
+
+  .facts dt {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+
+  .facts dd {
+    margin: 0 0 var(--ave-space-3);
+  }
 }

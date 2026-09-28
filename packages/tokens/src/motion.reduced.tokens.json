@@ -35,6 +35,13 @@
         "$value": 1,
         "$description": "Nothing scales."
       }
+    },
+    "travel": {
+      "$type": "number",
+      "edge": {
+        "$value": 0,
+        "$description": "Nothing slides in from an edge: it fades in place."
+      }
     }
   },
   "timing": {

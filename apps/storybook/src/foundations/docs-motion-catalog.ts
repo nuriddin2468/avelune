@@ -16,6 +16,11 @@ export interface CatalogMotion {
   readonly offset?: DistanceName;
   /** Whether the pose away from rest is at motion.scale.enter. */
   readonly scales?: true;
+  /**
+   * Whether it slides its whole width in from the inline end (motion.travel.edge of 100%), opaque; under reduced
+   * motion it travels 0 and fades instead.
+   */
+  readonly travels?: true;
 }
 
 /** An element that enters and leaves with animate.enter and animate.leave (brief §6.3). */
@@ -98,6 +103,25 @@ export const catalog: readonly CatalogEntry[] = [
       keyframes: 'ave-motion-fade-out',
       duration: 'duration.normal',
       easing: 'easing.exit',
+    },
+  },
+  {
+    id: 'drawer',
+    label: 'Drawer',
+    sample: 'Карточка договора',
+    enter: {
+      className: 'ave-motion-drawer-enter',
+      keyframes: 'ave-motion-slide-in',
+      duration: 'duration.slow',
+      easing: 'easing.enter',
+      travels: true,
+    },
+    exit: {
+      className: 'ave-motion-drawer-exit',
+      keyframes: 'ave-motion-slide-out',
+      duration: 'duration.normal',
+      easing: 'easing.exit',
+      travels: true,
     },
   },
   {

@@ -13,3 +13,17 @@ export type AveDialogSize = 'sm' | 'md' | 'lg';
  * @alpha
  */
 export type AveConfirmVariant = 'danger' | 'primary';
+
+/**
+ * The edge a drawer slides in from: `end` (default), the inline end, or `start`.
+ *
+ * @alpha
+ */
+export type AveDrawerSide = 'end' | 'start';
+
+/**
+ * The width of a drawer: at most `sm` 320px, `md` 480px (default) or `lg` 640px, and never wider than the viewport.
+ *
+ * @alpha
+ */
+export type AveDrawerSize = 'sm' | 'md' | 'lg';

@@ -47,6 +47,23 @@
     }
   }
 
+  /* A drawer slides its whole width in from its edge (--ave-motion-from-x, a share of its own size) and stays opaque;
+     under reduced motion it travels nothing and fades instead (--ave-motion-from-opacity), from the one token
+     motion.travel.edge (ADR 0067). */
+  @keyframes ave-motion-slide-in {
+    from {
+      opacity: var(--ave-motion-from-opacity);
+      translate: var(--ave-motion-from-x) 0;
+    }
+  }
+
+  @keyframes ave-motion-slide-out {
+    to {
+      opacity: var(--ave-motion-from-opacity);
+      translate: var(--ave-motion-from-x) 0;
+    }
+  }
+
   @keyframes ave-motion-shimmer {
     from {
       translate: -100% 0;
@@ -158,6 +175,31 @@
   .ave-motion-toast-exit {
     animation-name: ave-motion-shift-out;
     animation-duration: var(--ave-duration-fast);
+    animation-timing-function: var(--ave-easing-exit);
+    animation-fill-mode: forwards;
+  }
+
+  /* Drawers: slide in from their edge, the inline end unless data-side is start, in the time of a dialog; leave the
+     same way. Under reduced motion motion.travel.edge is 0: no slide, a fade. */
+  .ave-motion-drawer-enter,
+  .ave-motion-drawer-exit {
+    --ave-motion-from-x: calc(100% * var(--ave-motion-travel-edge));
+    --ave-motion-from-opacity: var(--ave-motion-travel-edge);
+
+    &[data-side='start'] {
+      --ave-motion-from-x: calc(-100% * var(--ave-motion-travel-edge));
+    }
+  }
+
+  .ave-motion-drawer-enter {
+    animation-name: ave-motion-slide-in;
+    animation-duration: var(--ave-duration-slow);
+    animation-timing-function: var(--ave-easing-enter);
+  }
+
+  .ave-motion-drawer-exit {
+    animation-name: ave-motion-slide-out;
+    animation-duration: var(--ave-duration-normal);
     animation-timing-function: var(--ave-easing-exit);
     animation-fill-mode: forwards;
   }

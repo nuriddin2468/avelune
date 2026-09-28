@@ -1,3 +1,4 @@
 export { AveConfirmDialog } from './confirm-dialog';
 export { AveDialog, AveDialogActions } from './dialog';
-export type { AveConfirmVariant, AveDialogSize } from './types';
+export { AveDrawer } from './drawer';
+export type { AveConfirmVariant, AveDialogSize, AveDrawerSide, AveDrawerSize } from './types';

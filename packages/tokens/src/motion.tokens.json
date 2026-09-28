@@ -87,6 +87,13 @@
         "$value": 0.97,
         "$description": "Initial scale of popping elements: menus, popovers, dialogs."
       }
+    },
+    "travel": {
+      "$type": "number",
+      "edge": {
+        "$value": 1,
+        "$description": "The share of its own size an element slides in from a screen edge: a drawer travels its whole width (1). Under reduced motion 0, and the drawer fades in where it stands (ADR 0067)."
+      }
     }
   },
   "timing": {

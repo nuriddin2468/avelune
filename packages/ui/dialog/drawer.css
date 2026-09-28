@@ -1,0 +1,39 @@
+@layer components {
+  /* A drawer (ADR 0067): the dialog's backdrop and panel (dialog.css), the panel against the inline end (or the
+     start) of the viewport, the screen's full height, its inner corners rounded, its inner edge subtle. */
+  :host([open]) {
+    place-items: stretch end;
+    padding: 0;
+  }
+
+  :host([open][data-side='start']) {
+    place-items: stretch start;
+  }
+
+  .panel {
+    inline-size: min(100%, var(--ave-container-sm));
+    block-size: 100%;
+    max-block-size: none;
+    border-block: 0;
+    border-inline-end: 0;
+    border-radius: 0;
+    border-start-start-radius: var(--ave-radius-lg);
+    border-end-start-radius: var(--ave-radius-lg);
+  }
+
+  :host([data-side='start']) .panel {
+    border-inline-start: 0;
+    border-inline-end: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: 0;
+    border-start-end-radius: var(--ave-radius-lg);
+    border-end-end-radius: var(--ave-radius-lg);
+  }
+
+  :host([data-size='sm']) .panel {
+    inline-size: min(100%, var(--ave-container-xs));
+  }
+
+  :host([data-size='lg']) .panel {
+    inline-size: min(100%, var(--ave-container-md));
+  }
+}

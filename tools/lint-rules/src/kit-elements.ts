@@ -9,5 +9,5 @@ export const kitElements = {
   select: [],
   textarea: ['aveTextarea'],
   progress: ['aveProgress'],
-  dialog: ['aveDialog', 'aveConfirmDialog'],
+  dialog: ['aveDialog', 'aveConfirmDialog', 'aveDrawer'],
 } as const satisfies RawElementMarkers;

@@ -1,0 +1,69 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as DrawerStories from './drawer.stories';
+
+<Meta of={DrawerStories} />
+
+# Drawer
+
+`aveDrawer` turns a native `<dialog>` into a panel that slides in from the edge of the screen and takes its full height: the details of a row, or a form, next to the list they belong to. It behaves as the kit's dialog (ADR 0067).
+
+```ts
+import { AveDialogActions, AveDrawer } from '@avelune/ui/dialog';
+```
+
+<Canvas of={DrawerStories.Default} />
+
+## When to use
+
+- For details or a form that belong to a list, where seeing the list behind helps: a contract's card, a new counterparty (`docs/GUIDELINES.md`, "Dialog, drawer or page").
+
+## When not to use
+
+- For a short question or a confirmation: use a dialog or a confirmation.
+- For anything people bookmark, share or come back to: use a page.
+- For navigation: use the page's navigation (Wave 4).
+
+## Anatomy
+
+The `<dialog>` is the backdrop, as the dialog's is. The panel lies against the inline end (`side="end"`, default) or the start, the screen's full height, its two inner corners rounded; in it, the `heading` and a close button at the top, the content, and the actions at its foot under a rule. On a phone the panel takes the whole width.
+
+```html
+<dialog aveDrawer heading="Договор ДК-2026/114" [(open)]="viewing">
+  <dl>…</dl>
+  <div aveDialogActions><button aveButton type="button" variant="primary">Изменить договор</button></div>
+</dialog>
+```
+
+## Sides and sizes
+
+<Canvas of={DrawerStories.FormFromStart} />
+
+| Size           | At most | For                            |
+| -------------- | ------- | ------------------------------ |
+| `sm`           | 320px   | a few facts or fields          |
+| `md` (default) | 480px   | a card, a short form           |
+| `lg`           | 640px   | a longer form, a table of rows |
+
+`side="start"` suits navigation-like content; details and forms come from the end.
+
+## Behaviour
+
+As the dialog: `open` shows it modally and focus goes to its first field or control; Escape, the close button and a click on the backdrop close it; focus returns to where it was; the page behind is inert and does not scroll. Long content scrolls between the heading and the actions.
+
+<Canvas of={DrawerStories.LongContent} />
+
+## Accessibility
+
+- A native modal `dialog`, named by its heading; its content can announce, as the dialog's can.
+- The close button is named "Close" in the locale and shows it as a tooltip.
+
+## Motion
+
+The drawer entry of the motion catalog: the panel slides its whole width in from its edge (`ave-motion-drawer-enter`, `duration.slow`, `easing.enter`) while the backdrop fades in, and slides back out (`duration.normal`). Under reduced motion `motion.travel.edge` is 0: the panel does not move, it fades in where it stands, in 150ms.
+
+## Do and don't
+
+- Do keep the list behind meaningful: the drawer is about one of its rows.
+- Do put the primary action at the foot, last.
+- Don't open a drawer from a drawer.
+- Don't use a drawer for a whole workflow; give it a page.

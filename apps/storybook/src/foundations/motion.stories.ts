@@ -203,9 +203,12 @@ function pose(element: Element): Pose {
 /** The pose of `motion` away from rest (its start when entering, its end when leaving) in the current mode. */
 function expectedPose(motion: CatalogMotion): Pose {
   const scale = reducedMotion() ? tokens['motion.scale.enter'].reduced.value : tokens['motion.scale.enter'].value;
+  const travel = reducedMotion() ? tokens['motion.travel.edge'].reduced.value : tokens['motion.travel.edge'].value;
   return {
-    opacity: 0,
-    x: 0,
+    // A drawer stays opaque while it slides, and fades where it stands when it travels 0.
+    opacity: motion.travels === true ? travel : 0,
+    // Its offset is a share of its own width: translate reads 100% at the edge.
+    x: motion.travels === true ? 100 * travel : 0,
     y: motion.offset === undefined ? 0 : distance(motion.offset),
     scale: motion.scales === true ? scale : 1,
   };

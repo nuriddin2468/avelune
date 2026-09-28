@@ -64,6 +64,31 @@ export class AveDialogActions {
 // @alpha
 export type AveDialogSize = 'sm' | 'md' | 'lg';
 
+// @alpha
+export class AveDrawer {
+    readonly heading: _angular_core.InputSignal<string>;
+    // (undocumented)
+    protected readonly headingId: string;
+    // (undocumented)
+    protected readonly messages: _avelune_ui_i18n.AveMessages;
+    // (undocumented)
+    protected readonly modal: AveModal;
+    readonly open: _angular_core.ModelSignal<boolean>;
+    protected readonly overflows: _angular_core.Signal<boolean>;
+    readonly side: _angular_core.InputSignal<AveDrawerSide>;
+    readonly size: _angular_core.InputSignal<AveDrawerSize>;
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveDrawer, "dialog[aveDrawer]", never, { "heading": { "alias": "heading"; "required": true; "isSignal": true; }; "open": { "alias": "open"; "required": false; "isSignal": true; }; "side": { "alias": "side"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; }, { "open": "openChange"; }, never, ["*", "[aveDialogActions]"], true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveDrawer, never>;
+}
+
+// @alpha
+export type AveDrawerSide = 'end' | 'start';
+
+// @alpha
+export type AveDrawerSize = 'sm' | 'md' | 'lg';
+
 // (No @packageDocumentation comment for this package)
 
 ```

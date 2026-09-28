@@ -1,10 +1,10 @@
 import { Component, DestroyRef, type ElementRef, computed, inject, signal, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AveAlert } from '@avelune/ui/alert';
-import { lucideCopy, lucideEllipsis, lucideSearch, lucideTrash } from '@avelune/icons/lucide';
+import { lucideCopy, lucideEllipsis, lucideFileText, lucideSearch, lucideTrash } from '@avelune/icons/lucide';
 import { AveButton } from '@avelune/ui/button';
 import { AveCheckbox, AveChoice } from '@avelune/ui/checkbox';
-import { AveConfirmDialog, AveDialog, AveDialogActions } from '@avelune/ui/dialog';
+import { AveConfirmDialog, AveDialog, AveDialogActions, AveDrawer } from '@avelune/ui/dialog';
 import { AveEmptyState, AveEmptyStateActions } from '@avelune/ui/empty-state';
 import { aveDateFormat, aveNumberFormat } from '@avelune/ui/i18n';
 import { provideAveIcons } from '@avelune/ui/icon';
@@ -18,7 +18,7 @@ import { AveSkeleton } from '@avelune/ui/skeleton';
 import { contractStatuses, contracts, type ContractRecord, type ContractStatus } from './data';
 
 /** What a row's menu does to its contract. */
-type RowAction = 'copy' | 'delete';
+type RowAction = 'open' | 'copy' | 'delete';
 
 /** How long the pretend server takes to send the register. */
 const loadDelay = 800;
@@ -42,6 +42,7 @@ const exportInterval = 400;
     AveConfirmDialog,
     AveDialog,
     AveDialogActions,
+    AveDrawer,
     AveEmptyState,
     AveEmptyStateActions,
     AveInput,
@@ -52,7 +53,7 @@ const exportInterval = 400;
     AveSkeleton,
     RouterLink,
   ],
-  providers: [provideAveIcons([lucideCopy, lucideEllipsis, lucideSearch, lucideTrash])],
+  providers: [provideAveIcons([lucideCopy, lucideEllipsis, lucideFileText, lucideSearch, lucideTrash])],
   template: `
     <div class="page" lang="ru">
       <header class="header">
@@ -193,6 +194,28 @@ const exportInterval = 400;
       </div>
     </dialog>
 
+    <dialog aveDrawer [heading]="'Договор ' + (viewed()?.number ?? '')" [(open)]="viewing" lang="ru">
+      @if (viewed(); as contract) {
+        <dl class="card">
+          <dt>Предмет</dt>
+          <dd>{{ contract.subject }}</dd>
+          <dt>Контрагент</dt>
+          <dd>{{ contract.counterparty }}</dd>
+          <dt>Сумма без НДС</dt>
+          <dd>{{ amount(contract) }}</dd>
+          <dt>Статус</dt>
+          <dd>{{ statuses[contract.status] }}</dd>
+          <dt>Подписан</dt>
+          <dd>{{ contract.signedOn === null ? 'Ещё не подписан' : dates.numeric(contract.signedOn) }}</dd>
+          <dt>Действует до</dt>
+          <dd>{{ dates.numeric(contract.endsOn) }}</dd>
+        </dl>
+      }
+      <div aveDialogActions>
+        <a aveButton variant="primary" routerLink="/">Изменить договор</a>
+      </div>
+    </dialog>
+
     <dialog
       aveConfirmDialog
       action="Удалить договор"
@@ -217,8 +240,9 @@ export class ContractsPage {
   protected readonly rows = signal<readonly ContractRecord[]>([]);
   protected readonly placeholders = [1, 2, 3];
 
-  /** The actions of every row: a copy as a new draft, and deleting it. */
+  /** The actions of every row: its card in a drawer, a copy as a new draft, and deleting it. */
   protected readonly rowActions: readonly AveMenuEntry<RowAction>[] = [
+    { value: 'open', label: 'Открыть', icon: 'file-text' },
     { value: 'copy', label: 'Дублировать', icon: 'copy' },
     { separator: true },
     { value: 'delete', label: 'Удалить договор', icon: 'trash', danger: true },
@@ -302,7 +326,10 @@ export class ContractsPage {
 
   /** A row's menu chose an action for its contract. */
   protected act(contract: ContractRecord, action: RowAction): void {
-    if (action === 'copy') {
+    if (action === 'open') {
+      this.viewed.set(contract);
+      this.viewing.set(true);
+    } else if (action === 'copy') {
       const id = this.nextId++;
       const copy: ContractRecord = {
         ...contract,
@@ -317,6 +344,10 @@ export class ContractsPage {
       this.asking.set(true);
     }
   }
+
+  /** The contract whose card the drawer shows; kept while the drawer leaves. */
+  protected readonly viewed = signal<ContractRecord | null>(null);
+  protected readonly viewing = signal(false);
 
   /** The contract whose deletion the confirmation asks about; kept while the confirmation leaves. */
   protected readonly deleting = signal<ContractRecord | null>(null);
