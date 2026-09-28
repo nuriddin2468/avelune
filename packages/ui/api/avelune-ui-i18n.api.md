@@ -34,6 +34,7 @@ export interface AveMessages {
     readonly alertInfo: string;
     readonly alertSuccess: string;
     readonly alertWarning: string;
+    readonly cancel: string;
     readonly chooseDate: string;
     readonly chooseFile: string;
     readonly chooseFiles: string;

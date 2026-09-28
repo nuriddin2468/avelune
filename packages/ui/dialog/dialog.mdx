@@ -1,0 +1,93 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as DialogStories from './dialog.stories';
+
+<Meta of={DialogStories} />
+
+# Dialog
+
+`aveDialog` turns a native `<dialog>` into the kit's modal dialog: a short, focused task that blocks the page until it is done or dismissed. The browser makes the page inert, moves focus in and brings it back; the kit draws the backdrop and the panel, plays the catalog's motion and keeps the page still behind it (ADR 0066).
+
+```ts
+import { AveDialog, AveDialogActions } from '@avelune/ui/dialog';
+```
+
+<Canvas of={DialogStories.Default} />
+
+## When to use
+
+- For a short task or a decision that must be finished before going on: edit a few fields, choose export options (`docs/GUIDELINES.md`, "Dialog, drawer or page").
+
+## When not to use
+
+- To confirm a destructive action: use a confirmation, `dialog[aveConfirmDialog]`.
+- For details or a form next to the list it belongs to: use a drawer.
+- For anything long, anything people bookmark or share: use a page.
+- For a notice: use an alert, a banner or a toast.
+
+## Anatomy
+
+The `<dialog>` is the backdrop itself, over the whole viewport in `color.bg.backdrop`. The panel sits in its middle, 16px from its edges at least: the raised surface with the dialog elevation, `radius.lg` and a subtle edge. In it, the `heading` (20/28) and a close button at the top, the content, and the actions (`aveDialogActions`) at the end under a rule, the primary one last. The content scrolls between the heading and the actions, which stay in view.
+
+```html
+<dialog aveDialog heading="Изменить контрагента" [(open)]="editing">
+  <form id="counterparty" (submit)="save($event)">…</form>
+  <div aveDialogActions>
+    <button aveButton type="button" (click)="editing.set(false)">Отмена</button>
+    <button aveButton type="submit" variant="primary" form="counterparty">Сохранить изменения</button>
+  </div>
+</dialog>
+```
+
+`open` is a model: set it to true to show the dialog, and to false to close it after an action.
+
+## Sizes
+
+<Canvas of={DialogStories.Small} />
+
+| Size           | At most | For                                  |
+| -------------- | ------- | ------------------------------------ |
+| `sm`           | 480px   | a question with one or two fields    |
+| `md` (default) | 640px   | a short form                         |
+| `lg`           | 960px   | a form in two columns, a small table |
+
+On a phone the panel takes the width of the screen less 16px on each side.
+
+## Behaviour
+
+| When                                   | The dialog                                                                        |
+| -------------------------------------- | --------------------------------------------------------------------------------- |
+| `open` becomes true                    | shows modally; focus goes to its first field, or to its content when that scrolls |
+| Escape, the close button, the backdrop | plays its exit and closes; `open` becomes false                                   |
+| It closes                              | focus returns to where it was before, usually the button that opened it           |
+| It is open                             | the page behind is inert and does not scroll                                      |
+
+The close button comes last in the focus order, after the actions, and is drawn at the top.
+
+<Canvas of={DialogStories.LongContent} />
+
+## Content
+
+- The heading says what the task is, as a verb and its object: "Изменить контрагента".
+- Keep it short; a dialog that needs to scroll is often a page.
+- The actions name their result: "Сохранить изменения", never "OK".
+- Long headings wrap beside the close button.
+
+<Canvas of={DialogStories.LongText} />
+
+## Accessibility
+
+- A native modal `dialog`, named by its heading; the page outside it is inert, so neither Tab nor a screen reader's virtual cursor leaves it.
+- Controls inside that announce (a file upload, a searched list) are heard: the dialog gives them an announcer inside itself.
+- The close button is named "Close" in the locale and shows it as a tooltip.
+- The panel keeps an outline in forced colours.
+
+## Motion
+
+The dialog entry of the motion catalog: the backdrop fades in (`ave-motion-backdrop-enter`) and the panel fades in from `motion.scale.enter` (`ave-motion-dialog-enter`), in `duration.slow`; both reverse in `duration.normal` before the dialog closes. Under reduced motion they fade without scaling, in 150ms.
+
+## Do and don't
+
+- Do open a dialog only from what people just did.
+- Do put the primary action last and name it.
+- Don't open a dialog from a dialog; a confirmation is the one exception.
+- Don't use a dialog for a long form or for content people come back to.

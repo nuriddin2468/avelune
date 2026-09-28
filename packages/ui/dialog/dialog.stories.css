@@ -1,0 +1,24 @@
+/* The frame of the Dialog and ConfirmDialog stories: a page with the button that opens one. Stories only; the
+   dialogs' own styles are dialog.css and confirm-dialog.css. */
+@layer components {
+  :host {
+    display: block;
+    min-block-size: calc(var(--ave-space-16) * 8);
+    padding: var(--ave-space-6);
+  }
+
+  .page {
+    display: grid;
+    gap: var(--ave-space-4);
+    justify-items: start;
+  }
+
+  .muted {
+    color: var(--ave-color-fg-muted);
+  }
+
+  .fields {
+    display: grid;
+    gap: var(--ave-space-4);
+  }
+}

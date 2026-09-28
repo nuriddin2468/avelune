@@ -1,0 +1,14 @@
+@layer components {
+  /* The actions of a dialog or a drawer (ADR 0066): a row at the end of the panel that wraps, the primary one last,
+     8px apart, under a subtle rule that stays in view while the content scrolls above it. */
+  :host {
+    display: flex;
+    grid-area: actions;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--ave-space-2);
+    padding: var(--ave-space-4) calc(var(--ave-space-6) - var(--ave-border-width-default))
+      calc(var(--ave-space-6) - var(--ave-border-width-default));
+    border-block-start: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  }
+}

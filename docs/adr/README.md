@@ -71,6 +71,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0063](0063-tooltip.md) | Tooltip: a directive on any element, a CDK overlay in the top layer, CDK's describer, dark tooltip colours | Accepted |
 | [0064](0064-menu.md) | Menu: a menu button that draws its own trigger, Angular Aria's menu in the kit's popup, items as data | Accepted |
 | [0065](0065-popover.md) | Popover: a non-modal dialog under its own button, focus in and back, closed by Escape, a press or focus leaving | Accepted |
+| [0066](0066-dialog-and-confirm-dialog.md) | Dialog and ConfirmDialog: a native modal dialog that is its own backdrop, the catalog's classes, an announcer inside | Accepted |
 
 ## Template
 

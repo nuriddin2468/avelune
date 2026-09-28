@@ -81,6 +81,11 @@
     inline-size: min(100%, var(--ave-container-xs));
   }
 
+  .export-form {
+    display: grid;
+    gap: var(--ave-space-4);
+  }
+
   .filter-actions {
     display: flex;
     flex-wrap: wrap;

@@ -1,0 +1,79 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ConfirmDialogStories from './confirm-dialog.stories';
+
+<Meta of={ConfirmDialogStories} />
+
+# Confirm dialog
+
+`aveConfirmDialog` asks before an action that cannot be undone. The question names the action, the confirming button repeats it, and Cancel has focus, so nothing is destroyed by a reflex (ADR 0066).
+
+```ts
+import { AveConfirmDialog } from '@avelune/ui/dialog';
+```
+
+<Canvas of={ConfirmDialogStories.Default} />
+
+## When to use
+
+- Before deleting, sending for approval, or anything else that cannot be taken back or is costly to undo.
+
+## When not to use
+
+- For an action that can be undone: do it, and offer Undo in a toast.
+- For a task with fields: use a dialog.
+- For information: use an alert.
+
+## Anatomy
+
+The dialog's panel, 480px at most: the question as its heading, the message under it, and two buttons that share the last row, Cancel then the action; when their words do not fit side by side, each takes a row. No close button: Cancel is the way out.
+
+```html
+<dialog
+  aveConfirmDialog
+  heading="Удалить договор ДК-2026/114?"
+  action="Удалить договор"
+  [(open)]="asking"
+  (confirm)="remove()"
+>
+  Договор и его приложения будут удалены без возможности восстановления.
+</dialog>
+```
+
+## Variants
+
+<Canvas of={ConfirmDialogStories.Primary} />
+
+| Variant            | For                                |
+| ------------------ | ---------------------------------- |
+| `danger` (default) | what destroys or cannot be undone  |
+| `primary`          | what matters but can be taken back |
+
+## Behaviour
+
+- Cancel has focus when it opens. Enter presses it; Tab reaches the action.
+- The action emits `confirm` and closes the confirmation. Cancel, Escape and the backdrop only close it.
+- Focus returns to the button that asked.
+
+## Content
+
+- The question names the action and its object: "Удалить договор ДК-2026/114?", "Отправить договор на согласование?".
+- The message says what will happen, plainly: "Договор и его приложения будут удалены без возможности восстановления."
+- The action repeats the verb: "Удалить договор", never "Да" or "OK". The cancel button says "Отмена" in the locale, or what keeps things as they are.
+- Keep links out of the message: the first control takes focus.
+
+<Canvas of={ConfirmDialogStories.LongText} />
+
+## Accessibility
+
+- An `alertdialog`, named by the question and described by the message, so screen readers read both when it opens.
+- Everything outside is inert until it is answered.
+
+## Motion
+
+As the dialog: the backdrop fades and the panel fades in from `motion.scale.enter` in `duration.slow`, and both reverse in `duration.normal`.
+
+## Do and don't
+
+- Do say exactly what will be lost.
+- Do use the same verb on the button that asked, in the question and on the action.
+- Don't confirm what can be undone; offer Undo instead.

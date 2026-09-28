@@ -101,6 +101,8 @@ export interface AveMessages {
   readonly alertWarning: string;
   /** Names the icon of a message that reports an error. */
   readonly alertDanger: string;
+  /** The button of a confirmation that keeps things as they are. */
+  readonly cancel: string;
 }
 
 /**
@@ -156,6 +158,7 @@ export const aveMessagesEn: AveMessages = {
   alertSuccess: 'Success',
   alertWarning: 'Warning',
   alertDanger: 'Error',
+  cancel: 'Cancel',
 };
 
 /**
@@ -213,6 +216,7 @@ export const aveMessagesRu: AveMessages = {
   alertSuccess: 'Успешно',
   alertWarning: 'Предупреждение',
   alertDanger: 'Ошибка',
+  cancel: 'Отмена',
 };
 
 /**
@@ -268,6 +272,7 @@ export const aveMessagesUzLatn: AveMessages = {
   alertSuccess: 'Muvaffaqiyatli',
   alertWarning: 'Ogohlantirish',
   alertDanger: 'Xato',
+  cancel: 'Bekor qilish',
 };
 
 /**
@@ -323,6 +328,7 @@ export const aveMessagesUzCyrl: AveMessages = {
   alertSuccess: 'Муваффақиятли',
   alertWarning: 'Огоҳлантириш',
   alertDanger: 'Хато',
+  cancel: 'Бекор қилиш',
 };
 
 /**

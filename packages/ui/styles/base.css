@@ -63,4 +63,14 @@
   a {
     color: var(--ave-color-fg-link);
   }
+
+  /* While a kit dialog or drawer is open (ADR 0066), the page behind it does not scroll. The dialog says whether the
+     page had a scrollbar; then its gutter stays, so nothing behind the backdrop moves sideways. */
+  :root:has(dialog[data-ave-scroll-lock]:modal) {
+    overflow: hidden;
+  }
+
+  :root:has(dialog[data-ave-scroll-lock='gutter']:modal) {
+    scrollbar-gutter: stable;
+  }
 }

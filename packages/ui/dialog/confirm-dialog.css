@@ -1,0 +1,22 @@
+@layer components {
+  /* A confirmation (ADR 0066): the dialog's panel, a small one, with its two buttons under the message sharing the
+     row, Cancel then the action, as a message dialog draws them; when their words do not fit side by side, each
+     takes a row of its own. The message needs no rule above the buttons. */
+  .actions {
+    display: flex;
+    grid-area: actions;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--ave-space-2);
+    padding: 0 calc(var(--ave-space-6) - var(--ave-border-width-default))
+      calc(var(--ave-space-6) - var(--ave-border-width-default));
+  }
+
+  .actions > button {
+    flex: 1 1 auto;
+  }
+
+  .body {
+    color: var(--ave-color-fg-muted);
+  }
+}

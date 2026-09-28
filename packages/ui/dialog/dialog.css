@@ -1,0 +1,97 @@
+@layer components {
+  /* A kit dialog (ADR 0066): the native <dialog>, shown modally, is the backdrop itself, a fixed layer over the whole
+     viewport in color.bg.backdrop, with the panel centred in its one cell (so the panel's height can be capped by the
+     viewport's) and 16px around it. ::backdrop inherits no custom
+     property before Chrome 122, below the browser floor, so it stays transparent and the element draws the scrim.
+     Closed, the element is not displayed at all (the browser's own rule). */
+  :host([open]) {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+    place-items: center;
+    inline-size: 100%;
+    block-size: 100%;
+    max-inline-size: none;
+    max-block-size: none;
+    margin: 0;
+    padding: var(--ave-space-4);
+    border: 0;
+    overflow: hidden;
+    background-color: var(--ave-color-bg-backdrop);
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-body-md);
+  }
+
+  :host::backdrop {
+    background-color: transparent;
+  }
+
+  /* The panel: the raised surface with the dialog elevation and radius.lg, a subtle edge that dark themes need
+     (brief §4.2) and forced colours paint. The heading and the close button share the first row; the content scrolls
+     between them and the actions, which stay in view. The close button comes last in the DOM, so focus starts in the
+     content, and is drawn at the top. */
+  .panel {
+    display: grid;
+    grid-template:
+      'heading close' auto
+      'body body' minmax(0, 1fr)
+      'actions actions' auto / minmax(0, 1fr) auto;
+    inline-size: min(100%, var(--ave-container-md));
+    max-block-size: 100%;
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface-raised);
+    box-shadow: var(--ave-elevation-dialog);
+  }
+
+  :host([data-size='sm']) .panel {
+    inline-size: min(100%, var(--ave-container-sm));
+  }
+
+  :host([data-size='lg']) .panel {
+    inline-size: min(100%, var(--ave-container-lg));
+  }
+
+  .heading {
+    grid-area: heading;
+    padding: calc(var(--ave-space-6) - var(--ave-border-width-default)) var(--ave-space-4) var(--ave-space-4)
+      calc(var(--ave-space-6) - var(--ave-border-width-default));
+    font: var(--ave-font-heading-lg);
+  }
+
+  /* The close button 16px from the panel's corner, on the middle of the heading's first line. */
+  .close {
+    grid-area: close;
+    align-self: start;
+    margin-block-start: calc(
+      var(--ave-space-6) - var(--ave-border-width-default) +
+        (var(--ave-font-heading-lg-line-height) - var(--ave-control-height-sm)) / 2
+    );
+    margin-inline-end: calc(var(--ave-space-4) - var(--ave-border-width-default));
+  }
+
+  /* The content scrolls, inside the panel's padding; the focus rings of its fields keep their room. */
+  .body {
+    display: grid;
+    grid-area: body;
+    gap: var(--ave-space-4);
+    align-content: start;
+    padding: 0 calc(var(--ave-space-6) - var(--ave-border-width-default)) var(--ave-space-6);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  /* Forced colours paint the scrim as the canvas and hide the page; the backdrop keeps its own colour, and only the
+     panel and what is in it take the system colours. */
+  @media (forced-colors: active) {
+    :host([open]) {
+      forced-color-adjust: none;
+    }
+
+    .panel {
+      forced-color-adjust: auto;
+      border-color: CanvasText;
+    }
+  }
+}

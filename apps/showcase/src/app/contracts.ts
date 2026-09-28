@@ -4,6 +4,7 @@ import { AveAlert } from '@avelune/ui/alert';
 import { lucideCopy, lucideEllipsis, lucideSearch, lucideTrash } from '@avelune/icons/lucide';
 import { AveButton } from '@avelune/ui/button';
 import { AveCheckbox, AveChoice } from '@avelune/ui/checkbox';
+import { AveConfirmDialog, AveDialog, AveDialogActions } from '@avelune/ui/dialog';
 import { AveEmptyState, AveEmptyStateActions } from '@avelune/ui/empty-state';
 import { aveDateFormat, aveNumberFormat } from '@avelune/ui/i18n';
 import { provideAveIcons } from '@avelune/ui/icon';
@@ -11,6 +12,7 @@ import { AveChoiceGroup } from '@avelune/ui/form-field';
 import { AveInput } from '@avelune/ui/input';
 import { AveMenu, type AveMenuEntry } from '@avelune/ui/menu';
 import { AvePopover } from '@avelune/ui/popover';
+import { AveRadio } from '@avelune/ui/radio';
 import { AveProgress } from '@avelune/ui/progress';
 import { AveSkeleton } from '@avelune/ui/skeleton';
 import { contractStatuses, contracts, type ContractRecord, type ContractStatus } from './data';
@@ -37,12 +39,16 @@ const exportInterval = 400;
     AveCheckbox,
     AveChoice,
     AveChoiceGroup,
+    AveConfirmDialog,
+    AveDialog,
+    AveDialogActions,
     AveEmptyState,
     AveEmptyStateActions,
     AveInput,
     AveMenu,
     AvePopover,
     AveProgress,
+    AveRadio,
     AveSkeleton,
     RouterLink,
   ],
@@ -55,7 +61,15 @@ const exportInterval = 400;
           <p class="count" role="status">{{ loading() ? 'Загрузка договоров…' : count() }}</p>
         </div>
         <div class="actions">
-          <button aveButton type="button" [disabled]="exporting()" (click)="startExport()">Выгрузить в Excel</button>
+          <button
+            aveButton
+            type="button"
+            aria-haspopup="dialog"
+            [disabled]="exporting()"
+            (click)="exportOpen.set(true)"
+          >
+            Выгрузить в Excel
+          </button>
           <a aveButton variant="primary" routerLink="/">Новый договор</a>
         </div>
       </header>
@@ -164,6 +178,31 @@ const exportInterval = 400;
         </ul>
       }
     </div>
+
+    <dialog aveDialog size="sm" heading="Выгрузка реестра" [(open)]="exportOpen" lang="ru">
+      <form class="export-form" id="export-form" (submit)="startExport($event)">
+        <fieldset aveChoiceGroup legend="Формат файла">
+          <label aveChoice><input type="radio" aveRadio name="format" value="xlsx" checked /> Excel (XLSX)</label>
+          <label aveChoice><input type="radio" aveRadio name="format" value="csv" /> Таблица CSV</label>
+        </fieldset>
+        <label aveChoice><input type="checkbox" aveCheckbox checked /> Добавить суммы по контрагентам</label>
+      </form>
+      <div aveDialogActions>
+        <button aveButton type="button" (click)="exportOpen.set(false)">Отмена</button>
+        <button aveButton type="submit" variant="primary" form="export-form">Выгрузить</button>
+      </div>
+    </dialog>
+
+    <dialog
+      aveConfirmDialog
+      action="Удалить договор"
+      [heading]="'Удалить договор ' + (deleting()?.number ?? '') + '?'"
+      [(open)]="asking"
+      (confirm)="remove()"
+      lang="ru"
+    >
+      Договор и его приложения будут удалены без возможности восстановления.
+    </dialog>
   `,
   styleUrl: './contracts.css',
 })
@@ -274,8 +313,20 @@ export class ContractsPage {
       };
       this.rows.set([copy, ...this.rows()]);
     } else {
-      this.rows.set(this.rows().filter((row) => row.id !== contract.id));
+      this.deleting.set(contract);
+      this.asking.set(true);
     }
+  }
+
+  /** The contract whose deletion the confirmation asks about; kept while the confirmation leaves. */
+  protected readonly deleting = signal<ContractRecord | null>(null);
+  protected readonly asking = signal(false);
+
+  /** The confirmation said yes: the contract goes. */
+  protected remove(): void {
+    const contract = this.deleting();
+    if (contract === null) return;
+    this.rows.set(this.rows().filter((row) => row.id !== contract.id));
   }
 
   protected search(event: Event): void {
@@ -286,8 +337,13 @@ export class ContractsPage {
     return `${this.sums.format(contract.amount)} сум`;
   }
 
-  /** The pretend server exports the register a share at a time. */
-  protected startExport(): void {
+  /** Whether the export's options are asked. */
+  protected readonly exportOpen = signal(false);
+
+  /** The pretend server exports the register a share at a time, once its options are chosen. */
+  protected startExport(event: Event): void {
+    event.preventDefault();
+    this.exportOpen.set(false);
     clearInterval(this.timer);
     this.exported.set(0);
     this.timer = setInterval(() => {
