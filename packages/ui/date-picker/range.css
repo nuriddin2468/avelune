@@ -36,6 +36,7 @@
 
   .presets {
     display: grid;
+    grid-auto-rows: max-content;
     align-content: start;
     max-block-size: calc(var(--ave-control-height-md) * 4 + var(--ave-space-2));
     padding-block-end: var(--ave-space-2);

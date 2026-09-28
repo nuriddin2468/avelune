@@ -47,6 +47,20 @@
     font: var(--ave-font-label-md);
   }
 
+  /* The Templates story's accounts, drawn by the application: the number, and the bank with the balance under it. */
+  .account {
+    display: grid;
+  }
+
+  .number {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .bank {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+
   .status {
     margin-block-start: var(--ave-space-2);
     font: var(--ave-font-body-sm);

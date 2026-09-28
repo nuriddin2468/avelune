@@ -6,10 +6,12 @@
 
 import * as _angular_cdk_overlay from '@angular/cdk/overlay';
 import * as _angular_core from '@angular/core';
+import { AveIconName } from '@avelune/ui/icon';
 import * as _avelune_ui_forms from '@avelune/ui/forms';
 import * as _avelune_ui_i18n from '@avelune/ui/i18n';
 import * as _avelune_ui_overlay from '@avelune/ui/overlay';
 import { ControlValueAccessor } from '@angular/forms';
+import { TemplateRef } from '@angular/core';
 
 // @alpha
 export class AveCombobox<V> implements ControlValueAccessor {
@@ -28,7 +30,10 @@ export class AveCombobox<V> implements ControlValueAccessor {
     protected left(event: FocusEvent): void;
     // (undocumented)
     protected readonly messages: _avelune_ui_i18n.AveMessages;
+    protected optionDescription(option: AveOption<V>, index: number): string | null;
+    protected readonly optionIds: string;
     readonly options: _angular_core.InputSignal<readonly AveOption<V>[]>;
+    protected readonly optionTemplate: _angular_core.Signal<AveOptionTemplate<V> | undefined>;
     // (undocumented)
     protected readonly overlay: _angular_core.Signal<_angular_cdk_overlay.CdkConnectedOverlayConfig>;
     readonly placeholder: _angular_core.InputSignal<string>;
@@ -50,7 +55,7 @@ export class AveCombobox<V> implements ControlValueAccessor {
     // @internal (undocumented)
     writeValue(value: unknown): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveCombobox<any>, "ave-combobox", never, { "options": { "alias": "options"; "required": true; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; "touch": "touch"; }, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveCombobox<any>, "ave-combobox", never, { "options": { "alias": "options"; "required": true; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; "touch": "touch"; }, ["optionTemplate"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveCombobox<any>, never>;
 }
@@ -72,7 +77,10 @@ export class AveMultiselect<V> implements ControlValueAccessor {
     protected keepFocus(event: MouseEvent): void;
     readonly label: _angular_core.InputSignal<string>;
     protected left(event: FocusEvent): void;
+    protected optionDescription(option: AveOption<V>, index: number): string | null;
+    protected readonly optionIds: string;
     readonly options: _angular_core.InputSignal<readonly AveOption<V>[]>;
+    protected readonly optionTemplate: _angular_core.Signal<AveOptionTemplate<V> | undefined>;
     // (undocumented)
     protected readonly overlay: _angular_core.Signal<_angular_cdk_overlay.CdkConnectedOverlayConfig>;
     readonly placeholder: _angular_core.InputSignal<string>;
@@ -92,16 +100,41 @@ export class AveMultiselect<V> implements ControlValueAccessor {
     // @internal (undocumented)
     writeValue(value: unknown): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveMultiselect<any>, "ave-multiselect", never, { "options": { "alias": "options"; "required": true; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; "touch": "touch"; }, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveMultiselect<any>, "ave-multiselect", never, { "options": { "alias": "options"; "required": true; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; "touch": "touch"; }, ["optionTemplate"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveMultiselect<any>, never>;
 }
 
 // @alpha
-export interface AveOption<V> {
-    readonly disabled?: boolean;
-    readonly label: string;
+export type AveOption<V> = {
     readonly value: V;
+    readonly label: string;
+    readonly disabled?: boolean;
+    readonly description?: string;
+    readonly meta?: string;
+} & ({
+    readonly icon?: AveIconName;
+    readonly image?: never;
+} | {
+    readonly image?: string;
+    readonly icon?: never;
+});
+
+// @alpha
+export interface AveOptionContext<V> {
+    readonly $implicit: AveOption<V>;
+}
+
+// @alpha
+export class AveOptionTemplate<V> {
+    readonly aveOptionOf: _angular_core.InputSignal<readonly AveOption<V>[] | undefined>;
+    static ngTemplateContextGuard<V>(_directive: AveOptionTemplate<V>, context: unknown): context is AveOptionContext<V>;
+    // @internal (undocumented)
+    readonly template: TemplateRef<AveOptionContext<V>>;
+    // (undocumented)
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AveOptionTemplate<any>, "ng-template[aveOption]", never, { "aveOptionOf": { "alias": "aveOptionOf"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveOptionTemplate<any>, never>;
 }
 
 // @alpha
@@ -120,7 +153,10 @@ export class AveSelect<V> implements ControlValueAccessor {
     protected keepFocus(event: MouseEvent): void;
     readonly label: _angular_core.InputSignal<string>;
     protected left(event: FocusEvent): void;
+    protected optionDescription(option: AveOption<V>, index: number): string | null;
+    protected readonly optionIds: string;
     readonly options: _angular_core.InputSignal<readonly AveOption<V>[]>;
+    protected readonly optionTemplate: _angular_core.Signal<AveOptionTemplate<V> | undefined>;
     // (undocumented)
     protected readonly overlay: _angular_core.Signal<_angular_cdk_overlay.CdkConnectedOverlayConfig>;
     readonly placeholder: _angular_core.InputSignal<string>;
@@ -139,16 +175,29 @@ export class AveSelect<V> implements ControlValueAccessor {
     readonly state: _avelune_ui_forms.AveControlState;
     readonly touch: _angular_core.OutputEmitterRef<void>;
     readonly value: _angular_core.ModelSignal<V | null>;
+    protected readonly valueTemplate: _angular_core.Signal<AveSelectValueTemplate<V> | undefined>;
     // @internal (undocumented)
     writeValue(value: unknown): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveSelect<any>, "ave-select", never, { "options": { "alias": "options"; "required": true; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; "touch": "touch"; }, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveSelect<any>, "ave-select", never, { "options": { "alias": "options"; "required": true; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; "touch": "touch"; }, ["optionTemplate", "valueTemplate"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveSelect<any>, never>;
 }
 
 // @alpha
 export type AveSelectSize = 'sm' | 'md' | 'lg';
+
+// @alpha
+export class AveSelectValueTemplate<V> {
+    readonly aveSelectValueOf: _angular_core.InputSignal<readonly AveOption<V>[] | undefined>;
+    static ngTemplateContextGuard<V>(_directive: AveSelectValueTemplate<V>, context: unknown): context is AveOptionContext<V>;
+    // @internal (undocumented)
+    readonly template: TemplateRef<AveOptionContext<V>>;
+    // (undocumented)
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AveSelectValueTemplate<any>, "ng-template[aveSelectValue]", never, { "aveSelectValueOf": { "alias": "aveSelectValueOf"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveSelectValueTemplate<any>, never>;
+}
 
 // (No @packageDocumentation comment for this package)
 

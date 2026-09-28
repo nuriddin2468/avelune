@@ -5,6 +5,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormField, disabled, form, required } from '@angular/forms/signals';
 import { AveCombobox, type AveOption } from '@avelune/ui/select';
 import { AveComboboxHarness } from '@avelune/ui/select/testing';
+import { countries } from './fixtures/rich';
 import { tokens, type TokenName } from '@avelune/tokens';
 import { describe, expect, it } from 'vitest';
 
@@ -70,6 +71,15 @@ function withReset(set: boolean): void {
   document.head.append(style);
 }
 
+@Component({
+  selector: 'ave-combobox-rich',
+  imports: [AveCombobox],
+  template: `<ave-combobox label="Country" [options]="countries" value="kz" />`,
+})
+class RichHost {
+  readonly countries = countries;
+}
+
 function mount<T>(type: new () => T): { fixture: ComponentFixture<T>; element: HTMLElement } {
   const fixture = TestBed.createComponent(type);
   const element = fixture.nativeElement as HTMLElement;
@@ -88,6 +98,7 @@ describe('AveCombobox', () => {
     expect(await combobox.getOptions()).toEqual(['Oʻzbekiston temir yoʻllari']);
     await combobox.type('ооо');
     expect(await combobox.getOptions()).toEqual(['ООО «Альфа Технологии»', 'ООО «Бета Логистик»']);
+    expect(await combobox.getOptionDescriptions()).toEqual([null, null]);
     await combobox.choose('ООО «Альфа Технологии»');
     expect(fixture.componentInstance.model().counterparty).toBe(1);
     expect(await combobox.getText()).toBe('ООО «Альфа Технологии»');
@@ -203,6 +214,35 @@ describe('AveCombobox', () => {
     await combobox.press('down');
     const chosen = document.querySelector('[role="option"][aria-selected="true"]');
     expect(chosen?.textContent.trim()).toBe('ООО «Альфа Технологии»');
+  });
+
+  it('searches rich options by their label only, and holds the chosen label as text (ADR 0055)', async () => {
+    const { fixture } = mount(RichHost);
+    const combobox = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveComboboxHarness);
+    expect(await combobox.getText()).toBe('Казахстан');
+    await combobox.focus();
+    await combobox.type('Таш');
+    expect(await combobox.getOptions()).toEqual([]);
+    await combobox.type('кир');
+    expect(await combobox.getOptions()).toEqual(['Киргизия']);
+    expect(await combobox.getOptionDescriptions()).toEqual(['Бишкек KG']);
+  });
+
+  it('keeps the value and what is typed while the search hides the chosen option', async () => {
+    const { fixture } = mount(OptionalHost);
+    const combobox = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveComboboxHarness);
+    await combobox.focus();
+    await combobox.type('Узбек');
+    expect(await combobox.getText()).toBe('Узбек');
+    expect(await combobox.getOptions()).toEqual(['АО «Узбекнефтегаз»']);
+    expect(fixture.componentInstance.payer()).toBe(1);
+    await combobox.type('Альфа');
+    const chosen = document.querySelector('[role="option"][aria-selected="true"]');
+    expect(chosen?.getAttribute('aria-label')).toBe('ООО «Альфа Технологии»');
+    await combobox.type('Узбек');
+    await combobox.blur();
+    expect(await combobox.getText()).toBe('ООО «Альфа Технологии»');
+    expect(fixture.componentInstance.payer()).toBe(1);
   });
 
   it('keeps focus in the input when an option is pressed', async () => {

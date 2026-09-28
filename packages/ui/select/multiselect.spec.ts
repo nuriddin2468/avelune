@@ -5,6 +5,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { FormField, form, minLength } from '@angular/forms/signals';
 import { AveMultiselect, type AveOption } from '@avelune/ui/select';
 import { AveMultiselectHarness } from '@avelune/ui/select/testing';
+import { AveOptionTemplate } from '@avelune/ui/select';
+import { employees } from './fixtures/rich';
 import { describe, expect, it } from 'vitest';
 
 const approvers: readonly AveOption<string>[] = [
@@ -37,8 +39,24 @@ class SignalHost {
   template: `<ave-multiselect label="Approvers" [options]="approvers" [formControl]="chosen" />`,
 })
 class ReactiveHost {
-  readonly approvers = approvers;
+  approvers = approvers;
   readonly chosen = new FormControl<string[] | null>(['security']);
+}
+
+@Component({
+  selector: 'ave-multiselect-rich',
+  imports: [AveMultiselect, AveOptionTemplate],
+  template: `
+    <ave-multiselect label="People" [options]="employees" [value]="[1, 3]" />
+    <ave-multiselect label="Drawn" [options]="employees">
+      <ng-template aveOption [aveOptionOf]="employees" let-option
+        ><b class="drawn">{{ option.value }}</b></ng-template
+      >
+    </ave-multiselect>
+  `,
+})
+class RichHost {
+  readonly employees = employees;
 }
 
 function mount<T>(type: new () => T): { fixture: ComponentFixture<T>; element: HTMLElement } {
@@ -104,6 +122,32 @@ describe('AveMultiselect', () => {
     await needed.close();
     await needed.press('delete');
     expect(required.componentInstance.model().approvers).toEqual(['legal']);
+  });
+
+  it('draws rich options and templates, and names the chosen labels in the trigger (ADR 0055)', async () => {
+    const { fixture } = mount(RichHost);
+    const [people, drawn] = await TestbedHarnessEnvironment.loader(fixture).getAllHarnesses(AveMultiselectHarness);
+    if (people === undefined || drawn === undefined) throw new Error('No multiselects');
+    expect(await people.getText()).toBe('Каримов Алишер, Рахимов Бахтиёр');
+    expect(await people.getChosen()).toEqual(['Каримов Алишер', 'Рахимов Бахтиёр']);
+    expect((await people.getOptionDescriptions())[1]).toBe('Финансовый отдел');
+    await people.close();
+    expect(await drawn.getOptions()).toEqual(employees.map((employee) => employee.label));
+    expect([...document.querySelectorAll('.drawn')].map((cell) => cell.textContent)).toEqual(['1', '2', '3', '4']);
+  });
+
+  it('keeps the chosen values when the options change without them', async () => {
+    const { fixture } = mount(ReactiveHost);
+    const select = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveMultiselectHarness);
+    await select.open();
+    fixture.componentInstance.approvers = approvers.slice(0, 2);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.chosen.value).toEqual(['security']);
+    await select.toggle('Юридический отдел');
+    expect(fixture.componentInstance.chosen.value).toEqual(['legal', 'security']);
+    await select.toggle('Юридический отдел');
+    expect(fixture.componentInstance.chosen.value).toEqual(['security']);
   });
 
   it('keeps focus on the trigger when an option is pressed', async () => {

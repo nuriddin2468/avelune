@@ -11,6 +11,7 @@ import {
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { AveCombobox, type AveSelectSize } from '@avelune/ui/select';
 import { counterparties } from './fixtures/options';
+import { countries, countriesUz } from './fixtures/rich';
 
 type View = 'states' | 'long';
 
@@ -125,6 +126,23 @@ class ComboboxClearing {
   protected readonly contract = form(this.model, (path) => {
     required(path.counterparty);
   });
+}
+
+/** Rich options (ADR 0055): countries in Russian and in Uzbek, Latin script. */
+@Component({
+  selector: 'ave-combobox-rich',
+  imports: [AveCombobox],
+  template: `
+    <div class="stack narrow room">
+      <ave-combobox label="Страна" lang="ru" [options]="countries" />
+      <ave-combobox label="Mamlakat" lang="uz-Latn" [options]="countriesUz" value="uz" />
+    </div>
+  `,
+  styleUrl: './select.stories.css',
+})
+class ComboboxRich {
+  protected readonly countries = countries;
+  protected readonly countriesUz = countriesUz;
 }
 
 /** Pads the single-combobox stories. */
@@ -309,5 +327,33 @@ export const Clearing: Story = {
     await userEvent.click(await canvas.findByRole('option', { name: /документооборота/ }));
     input.blur();
     await expect(canvas.getByRole('button', { name: 'Очистить Плательщик' })).toBeVisible();
+  },
+};
+
+/**
+ * Rich options (ADR 0055): countries with flags, capitals and codes; the search reads the label, and the input holds
+ * the chosen label as text. Uzbek in Latin script beside it.
+ */
+export const RichOptions: Story = {
+  name: 'Rich options',
+  render: () => ({ template: '<ave-combobox-rich />', moduleMetadata: { imports: [ComboboxRich] } }),
+  parameters: source('<ave-combobox [options]="countries" [formField]="company.country" />'),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole('combobox', { name: 'Mamlakat' })).toHaveValue('Oʻzbekiston Respublikasi');
+    const input = canvas.getByRole('combobox', { name: 'Страна' });
+    await userEvent.type(input, 'стан');
+    const options = await canvas.findAllByRole('option');
+    await expect(options.map((option) => option.getAttribute('aria-label'))).toEqual([
+      'Узбекистан',
+      'Казахстан',
+      'Таджикистан',
+      'Туркменистан',
+    ]);
+    await expect(options[0]).toHaveAccessibleDescription('Ташкент UZ');
+    await userEvent.type(input, '{Backspace}{Backspace}{Backspace}{Backspace}Ташкент');
+    await expect(await canvas.findByRole('status')).toBeInTheDocument();
+    await userEvent.clear(input);
+    await userEvent.type(input, 'стан');
   },
 };

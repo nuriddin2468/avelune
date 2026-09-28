@@ -60,6 +60,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0052](0052-clearing-a-selection-field.md) | Clearing a selection field: a clear button while the value may be taken away, deleting on the keyboard | Accepted |
 | [0053](0053-calendar-months-and-years.md) | The calendar's months and years: its heading opens a grid of months, then of years, on Angular Aria's grid | Accepted |
 | [0054](0054-date-range-presets.md) | DateRangePicker presets: a typed, translated set and the application's own, a listbox beside or above the calendar | Accepted |
+| [0055](0055-rich-options.md) | Rich options in the select family: fields of an option in one row layout, and templates inside the kit's row | Accepted |
 
 ## Template
 

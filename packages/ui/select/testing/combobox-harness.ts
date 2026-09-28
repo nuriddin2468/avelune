@@ -1,3 +1,4 @@
+import { optionName } from './option-name';
 import { ComponentHarness, HarnessPredicate, TestKey, type BaseHarnessFilters } from '@angular/cdk/testing';
 
 /**
@@ -61,7 +62,25 @@ export class AveComboboxHarness extends ComponentHarness {
   /** Gets the labels of the options the list shows. */
   async getOptions(): Promise<string[]> {
     const options = await this.optionElements();
-    return Promise.all(options.map(async (option) => (await option.text()).trim()));
+    return Promise.all(options.map((option) => optionName(option)));
+  }
+
+  /**
+   * Gets what describes each option, in the order of the list: its description and its meta, joined by a space, or
+   * null (ADR 0055).
+   */
+  async getOptionDescriptions(): Promise<(string | null)[]> {
+    const root = this.documentRootLocatorFactory();
+    return Promise.all(
+      (await this.optionElements()).map(async (option) => {
+        const ids = ((await option.getAttribute('aria-describedby')) ?? '').split(' ').filter((id) => id !== '');
+        if (ids.length === 0) return null;
+        const texts = await Promise.all(
+          ids.map(async (id) => (await (await root.locatorFor(`[id="${id}"]`)()).text()).trim()),
+        );
+        return texts.join(' ');
+      }),
+    );
   }
 
   /** Gets the message the list shows when nothing matches, or null. */
@@ -74,7 +93,7 @@ export class AveComboboxHarness extends ComponentHarness {
   /** Chooses the shown option with this label, as a click does. */
   async choose(label: string | RegExp): Promise<void> {
     for (const option of await this.optionElements()) {
-      if (await HarnessPredicate.stringMatches((await option.text()).trim(), label)) {
+      if (await HarnessPredicate.stringMatches(await optionName(option), label)) {
         await option.click();
         return;
       }

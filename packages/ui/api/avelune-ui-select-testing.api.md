@@ -17,6 +17,7 @@ export class AveComboboxHarness extends ComponentHarness {
     clear(): Promise<void>;
     focus(): Promise<void>;
     getEmptyMessage(): Promise<string | null>;
+    getOptionDescriptions(): Promise<(string | null)[]>;
     getOptions(): Promise<string[]>;
     getText(): Promise<string>;
     static hostSelector: string;
@@ -53,6 +54,7 @@ export class AveSelectHarness extends ComponentHarness {
     focus(): Promise<void>;
     getActiveOption(): Promise<string | null>;
     getDescribedBy(): Promise<string[]>;
+    getOptionDescriptions(): Promise<(string | null)[]>;
     getOptions(): Promise<string[]>;
     getText(): Promise<string>;
     static hostSelector: string;

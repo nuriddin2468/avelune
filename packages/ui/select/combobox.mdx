@@ -46,6 +46,12 @@ An input with the box of an Input of its size. The list opens 4px under it as pe
 
 <Canvas of={ComboboxStories.UzbekApostrophes} />
 
+## Rich options
+
+Options take the same fields and templates as a select's (ADR 0055): a description, an icon or an image, meta text, or `<ng-template aveOption let-option>`. The search reads the label only; the input shows the chosen label, as text.
+
+<Canvas of={ComboboxStories.RichOptions} />
+
 ## States
 
 <Canvas of={ComboboxStories.States} />

@@ -1,0 +1,76 @@
+@layer components {
+  /* The inside of an option's row (ADR 0055): the start box, the label and the description, the meta; the start box
+     and the meta are level with the first line. The image is the start box's background (the host binds it); the
+     muted colour is the row's to change. */
+  :host {
+    --ave-option-image: none;
+    --ave-option-muted: var(--ave-color-fg-muted);
+
+    display: flex;
+    flex: 1;
+    align-items: flex-start;
+    gap: var(--ave-space-2);
+    min-inline-size: 0;
+  }
+
+  /* An icon or an image in a 20px box, as tall as the first line; an icon at its own size, centred. */
+  .lead {
+    display: grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--ave-size-icon-md);
+    block-size: var(--ave-font-body-md-line-height);
+  }
+
+  .image {
+    border-radius: var(--ave-radius-sm);
+    background-image: var(--ave-option-image);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  .text {
+    display: grid;
+    flex: 1;
+    min-inline-size: 0;
+  }
+
+  /* Muted, or dimmed with the rest of a disabled row (the row sets --ave-option-muted). */
+  .description,
+  .meta {
+    color: var(--ave-option-muted);
+    font: var(--ave-font-body-sm);
+  }
+
+  /* The meta's smaller line sits level with the label's. */
+  .meta {
+    flex: none;
+    padding-block-start: calc((var(--ave-font-body-md-line-height) - var(--ave-font-body-sm-line-height)) / 2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .custom {
+    flex: 1;
+    min-inline-size: 0;
+  }
+
+  /* In a trigger: one line, the label cut with an ellipsis. */
+  :host([data-lines='one']) {
+    align-items: center;
+  }
+
+  :host([data-lines='one']) .label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Forced colours keep the row's colours on the active option (Highlight): the muted text takes them too. */
+  @media (forced-colors: active) {
+    .description,
+    .meta {
+      color: inherit;
+    }
+  }
+}

@@ -10,8 +10,15 @@ import {
 } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { AveInput } from '@avelune/ui/input';
-import { AveSelect, type AveOption, type AveSelectSize } from '@avelune/ui/select';
+import {
+  AveOptionTemplate,
+  AveSelect,
+  AveSelectValueTemplate,
+  type AveOption,
+  type AveSelectSize,
+} from '@avelune/ui/select';
 import { kinds } from './fixtures/options';
+import { accounts, countries, employees, type Account } from './fixtures/rich';
 
 const sizes = ['sm', 'md', 'lg'] as const satisfies readonly AveSelectSize[];
 
@@ -159,6 +166,58 @@ class SelectClearing {
   protected readonly contract = form(this.model, (path) => {
     required(path.kind);
   });
+}
+
+/** Rich options (ADR 0055): countries with flags, capitals and codes; people with avatars and departments. */
+@Component({
+  selector: 'ave-select-rich',
+  imports: [AveSelect],
+  template: `
+    <div class="grid room" lang="ru">
+      <div class="field">
+        <span class="label">Страна</span>
+        <ave-select label="Страна" [options]="countries" value="uz" />
+      </div>
+      <div class="field">
+        <span class="label">Исполнитель</span>
+        <ave-select label="Исполнитель" [options]="employees" [value]="2" />
+      </div>
+    </div>
+  `,
+  styleUrl: './select.stories.css',
+})
+class SelectRich {
+  protected readonly countries = countries;
+  protected readonly employees = employees;
+}
+
+/** Templates (ADR 0055): accounts drawn in the application's markup, inside the kit's rows and trigger. */
+@Component({
+  selector: 'ave-select-templates',
+  imports: [AveOptionTemplate, AveSelect, AveSelectValueTemplate],
+  template: `
+    <div class="narrow room" lang="ru">
+      <div class="field">
+        <span class="label">Счёт списания</span>
+        <ave-select label="Счёт списания" placeholder="Выберите счёт" [options]="accounts" [(value)]="account">
+          <ng-template aveOption [aveOptionOf]="accounts" let-option>
+            <span class="account">
+              <span class="number">{{ option.value.number }}</span>
+              <span class="bank">{{ option.value.bank }} · {{ option.value.balance }} сум</span>
+            </span>
+          </ng-template>
+          <ng-template aveSelectValue [aveSelectValueOf]="accounts" let-option>
+            {{ option.value.bank }}, …{{ option.value.number.slice(-4) }}
+          </ng-template>
+        </ave-select>
+      </div>
+    </div>
+  `,
+  styleUrl: './select.stories.css',
+})
+class SelectTemplates {
+  protected readonly accounts = accounts;
+  protected readonly account = signal<Account | null>(accounts[0]?.value ?? null);
 }
 
 /** Pads the Default and Open stories; styled with tokens only. */
@@ -374,5 +433,65 @@ export const Clearing: Story = {
     await userEvent.click(await canvas.findByRole('option', { name: 'Оказание услуг' }));
     await expect(canvas.getByRole('button', { name: 'Очистить Вид договора' })).toBeVisible();
     trigger.blur();
+  },
+};
+
+/**
+ * Rich options (ADR 0055): a flag in a 20px square, the capital under the label, the code at the end; an avatar and a
+ * department. Each option is named by its label and described by the rest; the trigger shows the flag and the label.
+ */
+export const RichOptions: Story = {
+  name: 'Rich options',
+  render: () => ({ template: '<ave-select-rich />', moduleMetadata: { imports: [SelectRich] } }),
+  parameters: source(
+    "{ value: 'uz', label: 'Узбекистан', description: 'Ташкент', meta: 'UZ', image: 'assets/flags/uz.svg' }",
+    '<ave-select [options]="countries" [formField]="company.country" />',
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('combobox', { name: 'Страна' });
+    await expect(trigger).toHaveTextContent('Узбекистан');
+    await expect(trigger.querySelector('.image')).not.toBeNull();
+    trigger.focus();
+    await userEvent.keyboard('{ArrowDown}');
+    const option = await canvas.findByRole('option', { name: 'Узбекистан' });
+    await expect(option).toHaveAccessibleDescription('Ташкент UZ');
+    await expect(option).toHaveAttribute('aria-selected', 'true');
+    const image = option.querySelector<HTMLElement>('.image');
+    if (image === null) throw new Error('No image');
+    // The layout's size: the list scales in as it enters.
+    await expect([image.offsetWidth, image.offsetHeight]).toEqual([20, 20]);
+    await expect(getComputedStyle(image).backgroundImage).toMatch(/^url\("data:image\/svg\+xml,/);
+    const long = canvas.getByRole('option', { name: /^Соединённое Королевство/ });
+    await expect(long.offsetHeight).toBeGreaterThan(option.offsetHeight);
+  },
+};
+
+/**
+ * Templates (ADR 0055): the application draws an option's inside and the chosen value; the row keeps its height,
+ * padding and check, the trigger its box and chevron. Options are still named by their labels.
+ */
+export const Templates: Story = {
+  render: () => ({ template: '<ave-select-templates />', moduleMetadata: { imports: [SelectTemplates] } }),
+  parameters: source(
+    '<ave-select [options]="accounts" [formField]="payment.account">',
+    '  <ng-template aveOption [aveOptionOf]="accounts" let-option>…</ng-template>',
+    '  <ng-template aveSelectValue [aveSelectValueOf]="accounts" let-option>…</ng-template>',
+    '</ave-select>',
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('combobox', { name: 'Счёт списания' });
+    await expect(trigger).toHaveTextContent('Oʻzmilliybank, …9012');
+    await userEvent.click(trigger);
+    const options = await canvas.findAllByRole('option');
+    await expect(options.map((option) => option.getAttribute('aria-label'))).toEqual(
+      accounts.map((account) => account.label),
+    );
+    await expect(options[0]?.querySelector('.check')).not.toBeNull();
+    await userEvent.click(options[1] ?? trigger);
+    await expect(trigger).toHaveTextContent('Kapitalbank, …1098');
+    await userEvent.click(trigger);
+    await canvas.findAllByRole('option');
   },
 };

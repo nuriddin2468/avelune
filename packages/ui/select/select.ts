@@ -4,6 +4,7 @@ import {
   afterRenderEffect,
   booleanAttribute,
   computed,
+  contentChild,
   inject,
   input,
   linkedSignal,
@@ -12,6 +13,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { Combobox, ComboboxPopup, ComboboxWidget } from '@angular/aria/combobox';
 import { Listbox, Option } from '@angular/aria/listbox';
 import { OverlayModule } from '@angular/cdk/overlay';
@@ -21,6 +23,9 @@ import { lucideCheck, lucideChevronDown, lucideX } from '@avelune/icons/lucide';
 import { AVE_CONTROL_OWNER, AveClearButton, AveControlTarget, injectControlState } from '@avelune/ui/forms';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
 import { aveConnectedOverlay, aveOverlayPresence } from '@avelune/ui/overlay';
+import { pruned } from './choice';
+import { AveOptionContent, describedBy, optionIds } from './option-content';
+import { AveOptionTemplate, AveSelectValueTemplate } from './templates';
 import type { AveOption, AveSelectSize } from './types';
 
 /**
@@ -41,7 +46,9 @@ import type { AveOption, AveSelectSize } from './types';
     AveClearButton,
     AveControlTarget,
     AveIcon,
+    AveOptionContent,
     Combobox,
+    NgTemplateOutlet,
     ComboboxPopup,
     ComboboxWidget,
     Listbox,
@@ -74,7 +81,17 @@ import type { AveOption, AveSelectSize } from './types';
       (keydown.delete)="clearByKey($event)"
       (keydown.backspace)="clearByKey($event)"
     >
-      <span class="value">{{ selected()?.label ?? placeholder() }}</span>
+      <span class="value">
+        @if (selected(); as option) {
+          @if (valueTemplate(); as custom) {
+            <ng-container [ngTemplateOutlet]="custom.template" [ngTemplateOutletContext]="{ $implicit: option }" />
+          } @else {
+            <ave-option-content [option]="option" lines="one" />
+          }
+        } @else {
+          {{ placeholder() }}
+        }
+      </span>
       <ave-icon class="chevron" name="chevron-down" decorative />
     </button>
     @if (clearable()) {
@@ -111,8 +128,14 @@ import type { AveOption, AveSelectSize } from './types';
                 [value]="option.value"
                 [label]="option.label"
                 [disabled]="option.disabled ?? false"
+                [attr.aria-label]="option.label"
+                [attr.aria-describedby]="optionDescription(option, $index)"
               >
-                <span class="label">{{ option.label }}</span>
+                <ave-option-content
+                  [option]="option"
+                  [template]="optionTemplate()?.template"
+                  [idPrefix]="optionIds + '-' + $index"
+                />
                 <ave-icon class="check" name="check" decorative />
               </div>
             }
@@ -150,6 +173,15 @@ export class AveSelect<V> implements ControlValueAccessor {
 
   /** The form state, read on the host, where the form binding is. */
   readonly state = injectControlState();
+
+  /** The application's template for the inside of every option, if it gives one (ADR 0055). */
+  protected readonly optionTemplate = contentChild<AveOptionTemplate<V>>(AveOptionTemplate);
+
+  /** The application's template for the chosen value in the trigger, if it gives one (ADR 0055). */
+  protected readonly valueTemplate = contentChild<AveSelectValueTemplate<V>>(AveSelectValueTemplate);
+
+  /** The ids of the options' descriptions and meta. */
+  protected readonly optionIds = optionIds();
 
   /** Whether the list is open. */
   protected readonly expanded = signal(false);
@@ -203,6 +235,8 @@ export class AveSelect<V> implements ControlValueAccessor {
 
   /** The person chose an option: the value changes and the list closes. The chosen option chosen again keeps it. */
   protected choose(values: V[]): void {
+    // Options that no longer hold the value make Aria's listbox drop it: the value stays.
+    if (pruned(this.selectedValues(), values, this.options())) return;
     const value = values[0] ?? this.value();
     this.selectedValues.set(value === null ? [] : [value]);
     this.value.set(value);
@@ -239,6 +273,11 @@ export class AveSelect<V> implements ControlValueAccessor {
    */
   protected keepFocus(event: MouseEvent): void {
     event.preventDefault();
+  }
+
+  /** The ids that describe an option: its description and meta, unless a template draws it (ADR 0055). */
+  protected optionDescription(option: AveOption<V>, index: number): string | null {
+    return describedBy(option, `${this.optionIds}-${String(index)}`, this.optionTemplate() !== undefined);
   }
 
   /** @internal */

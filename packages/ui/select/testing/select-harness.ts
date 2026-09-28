@@ -1,3 +1,4 @@
+import { optionName } from './option-name';
 import { ComponentHarness, HarnessPredicate, TestKey, type BaseHarnessFilters } from '@angular/cdk/testing';
 
 /**
@@ -76,13 +77,31 @@ export class AveSelectHarness extends ComponentHarness {
   /** Gets the labels of the options, opening the list if needed. */
   async getOptions(): Promise<string[]> {
     const options = await this.optionElements();
-    return Promise.all(options.map(async (option) => (await option.text()).trim()));
+    return Promise.all(options.map((option) => optionName(option)));
+  }
+
+  /**
+   * Gets what describes each option, in the order of the list: its description and its meta, joined by a space, or
+   * null (ADR 0055).
+   */
+  async getOptionDescriptions(): Promise<(string | null)[]> {
+    const root = this.documentRootLocatorFactory();
+    return Promise.all(
+      (await this.optionElements()).map(async (option) => {
+        const ids = ((await option.getAttribute('aria-describedby')) ?? '').split(' ').filter((id) => id !== '');
+        if (ids.length === 0) return null;
+        const texts = await Promise.all(
+          ids.map(async (id) => (await (await root.locatorFor(`[id="${id}"]`)()).text()).trim()),
+        );
+        return texts.join(' ');
+      }),
+    );
   }
 
   /** Gets the label of the option the keyboard is on, or null. */
   async getActiveOption(): Promise<string | null> {
     for (const option of await this.optionElements()) {
-      if ((await option.getAttribute('data-active')) === 'true') return (await option.text()).trim();
+      if ((await option.getAttribute('data-active')) === 'true') return optionName(option);
     }
     return null;
   }
@@ -90,7 +109,7 @@ export class AveSelectHarness extends ComponentHarness {
   /** Chooses the option with this label, as a click does, opening the list if needed. */
   async choose(label: string | RegExp): Promise<void> {
     for (const option of await this.optionElements()) {
-      if (await HarnessPredicate.stringMatches((await option.text()).trim(), label)) {
+      if (await HarnessPredicate.stringMatches(await optionName(option), label)) {
         await option.click();
         return;
       }

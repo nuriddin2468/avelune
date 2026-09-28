@@ -1,4 +1,5 @@
 import { HarnessPredicate } from '@angular/cdk/testing';
+import { optionName } from './option-name';
 import { AveSelectHarness, type AveSelectHarnessFilters } from './select-harness';
 
 /**
@@ -22,7 +23,7 @@ export class AveMultiselectHarness extends AveSelectHarness {
   async getChosen(): Promise<string[]> {
     const chosen: string[] = [];
     for (const option of await this.optionElements()) {
-      if ((await option.getAttribute('aria-selected')) === 'true') chosen.push((await option.text()).trim());
+      if ((await option.getAttribute('aria-selected')) === 'true') chosen.push(await optionName(option));
     }
     return chosen;
   }

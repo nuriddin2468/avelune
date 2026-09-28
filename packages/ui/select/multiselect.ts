@@ -4,6 +4,7 @@ import {
   afterRenderEffect,
   booleanAttribute,
   computed,
+  contentChild,
   inject,
   input,
   model,
@@ -20,6 +21,9 @@ import { lucideCheck, lucideChevronDown, lucideX } from '@avelune/icons/lucide';
 import { AVE_CONTROL_OWNER, AveClearButton, AveControlTarget, injectControlState } from '@avelune/ui/forms';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
 import { aveConnectedOverlay, aveOverlayPresence } from '@avelune/ui/overlay';
+import { pruned } from './choice';
+import { AveOptionContent, describedBy, optionIds } from './option-content';
+import { AveOptionTemplate } from './templates';
 import type { AveOption, AveSelectSize } from './types';
 
 /**
@@ -41,6 +45,7 @@ import type { AveOption, AveSelectSize } from './types';
     AveClearButton,
     AveControlTarget,
     AveIcon,
+    AveOptionContent,
     Combobox,
     ComboboxPopup,
     ComboboxWidget,
@@ -112,8 +117,14 @@ import type { AveOption, AveSelectSize } from './types';
                 [value]="option.value"
                 [label]="option.label"
                 [disabled]="option.disabled ?? false"
+                [attr.aria-label]="option.label"
+                [attr.aria-describedby]="optionDescription(option, $index)"
               >
-                <span class="label">{{ option.label }}</span>
+                <ave-option-content
+                  [option]="option"
+                  [template]="optionTemplate()?.template"
+                  [idPrefix]="optionIds + '-' + $index"
+                />
                 <ave-icon class="check" name="check" decorative />
               </div>
             }
@@ -151,6 +162,12 @@ export class AveMultiselect<V> implements ControlValueAccessor {
 
   /** The form state, read on the host, where the form binding is. */
   readonly state = injectControlState();
+
+  /** The application's template for the inside of every option, if it gives one (ADR 0055). */
+  protected readonly optionTemplate = contentChild<AveOptionTemplate<V>>(AveOptionTemplate);
+
+  /** The ids of the options' descriptions and meta. */
+  protected readonly optionIds = optionIds();
 
   /** Whether the list is open. */
   protected readonly expanded = signal(false);
@@ -205,13 +222,21 @@ export class AveMultiselect<V> implements ControlValueAccessor {
     });
   }
 
-  /** The person checked or unchecked an option: the values change in the order of the list; the list stays open. */
+  /**
+   * The person checked or unchecked an option: the values change in the order of the list, and those it does not show
+   * stay after them; the list stays open.
+   */
   protected choose(values: V[]): void {
-    const ordered = this.options()
+    // Chosen values no option holds, which Aria's listbox dropped, stay chosen, after those the list shows.
+    if (pruned(this.value(), values, this.options())) return;
+    const options = this.options();
+    const listed = options
       .map((option) => option.value)
       .filter((value) => values.some((chosen) => Object.is(chosen, value)));
-    this.value.set(ordered);
-    this.changed(ordered);
+    const hidden = this.value().filter((value) => !options.some((option) => Object.is(option.value, value)));
+    const next = [...listed, ...hidden];
+    this.value.set(next);
+    this.changed(next);
   }
 
   /** The clear button, or Delete: every option is unchecked, the list closes, focus stays on the trigger (ADR 0052). */
@@ -243,6 +268,11 @@ export class AveMultiselect<V> implements ControlValueAccessor {
    */
   protected keepFocus(event: MouseEvent): void {
     event.preventDefault();
+  }
+
+  /** The ids that describe an option: its description and meta, unless a template draws it (ADR 0055). */
+  protected optionDescription(option: AveOption<V>, index: number): string | null {
+    return describedBy(option, `${this.optionIds}-${String(index)}`, this.optionTemplate() !== undefined);
   }
 
   /** @internal */

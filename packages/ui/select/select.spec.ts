@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, viewChild } from '@angular/core';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -6,7 +6,16 @@ import { FormField, disabled, form, readonly, required } from '@angular/forms/si
 import { tokens, type TokenName } from '@avelune/tokens';
 import { AVE_FIELD, type AveControlState, type AveFieldContext } from '@avelune/ui/forms';
 import { AveInput } from '@avelune/ui/input';
-import { AveSelect, type AveOption, type AveSelectSize } from '@avelune/ui/select';
+import {
+  AveOptionTemplate,
+  AveSelect,
+  AveSelectValueTemplate,
+  type AveOption,
+  type AveSelectSize,
+} from '@avelune/ui/select';
+import { lucideFileText } from '@avelune/icons/lucide';
+import { provideAveIcons } from '@avelune/ui/icon';
+import { accounts, countries, type Account } from './fixtures/rich';
 import { AveSelectHarness } from '@avelune/ui/select/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
@@ -65,6 +74,44 @@ class PlainHost {
   readonly kinds = kinds;
   readonly size = signal<AveSelectSize>('md');
   readonly kind = signal<Kind | null>(null);
+}
+
+@Component({
+  selector: 'ave-select-rich',
+  imports: [AveSelect],
+  providers: [provideAveIcons([lucideFileText])],
+  template: `
+    <ave-select label="Country" [options]="countries" value="uz" />
+    <ave-select label="Kind" [options]="documents" value="odd" />
+  `,
+})
+class RichHost {
+  readonly countries = countries;
+  readonly documents: readonly AveOption<string>[] = [
+    { value: 'contract', label: 'Договоры', icon: 'file-text', meta: '128' },
+    { value: 'odd', label: 'Странный путь', image: 'img/a"b\\c\nd.svg' },
+  ];
+}
+
+@Component({
+  selector: 'ave-select-templates',
+  imports: [AveOptionTemplate, AveSelect, AveSelectValueTemplate],
+  template: `
+    <ave-select label="Account" [options]="accounts" [(value)]="account">
+      <ng-template aveOption [aveOptionOf]="accounts" let-option>
+        <span class="drawn">{{ option.value.number }}</span>
+      </ng-template>
+      <ng-template aveSelectValue [aveSelectValueOf]="accounts" let-option>
+        <span class="chosen">{{ option.value.bank }}</span>
+      </ng-template>
+    </ave-select>
+  `,
+})
+class TemplatesHost {
+  readonly accounts = accounts;
+  readonly account = signal<Account | null>(accounts[1]?.value ?? null);
+  readonly optionTemplate = viewChild.required<AveOptionTemplate<Account>>(AveOptionTemplate);
+  readonly valueTemplate = viewChild.required<AveSelectValueTemplate<Account>>(AveSelectValueTemplate);
 }
 
 /** A stand-in for `<ave-form-field>`. */
@@ -297,6 +344,43 @@ describe('AveSelect', () => {
     await select.press('enter');
     expect(fixture.componentInstance.kind()).toBe('supply');
     expect(await select.isOpen()).toBe(false);
+  });
+
+  it('draws rich options: an image or an icon, a description and meta that describe the option (ADR 0055)', async () => {
+    const { fixture, element } = mount(RichHost);
+    const [country, kind] = await TestbedHarnessEnvironment.loader(fixture).getAllHarnesses(AveSelectHarness);
+    if (country === undefined || kind === undefined) throw new Error('No selects');
+    expect(await country.getText()).toBe('Узбекистан');
+    expect(element.querySelector('.trigger .image')).not.toBeNull();
+    expect((await country.getOptions()).slice(0, 2)).toEqual(['Узбекистан', 'Казахстан']);
+    expect((await country.getOptionDescriptions()).slice(0, 2)).toEqual(['Ташкент UZ', 'Астана KZ']);
+    const option = document.querySelector<HTMLElement>('[role="option"][aria-label="Узбекистан"]');
+    const image = option?.querySelector<HTMLElement>('.image');
+    expect(getComputedStyle(image ?? document.body).backgroundImage).toMatch(/^url\("data:image\/svg\+xml,/);
+    await country.close();
+    expect(await kind.getOptionDescriptions()).toEqual(['128', null]);
+    expect(document.querySelector('[role="option"][aria-label="Договоры"] ave-icon')).not.toBeNull();
+    // A URL's quotes and backslashes are escaped and its line breaks dropped, so it stays one CSS string.
+    const odd = document.querySelector<HTMLElement>('[role="option"][aria-label="Странный путь"] ave-option-content');
+    expect(odd?.style.getPropertyValue('--ave-option-image')).toBe('url("img/a\\"b\\\\cd.svg")');
+  });
+
+  it('draws the application templates inside the kit row and trigger, and names options by their label', async () => {
+    const { fixture, element } = mount(TemplatesHost);
+    const select = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveSelectHarness);
+    expect(element.querySelector('.trigger .chosen')?.textContent).toBe('Kapitalbank');
+    expect(await select.getOptions()).toEqual(accounts.map((account) => account.label));
+    expect(await select.getOptionDescriptions()).toEqual([null, null]);
+    const drawn = [...document.querySelectorAll('[role="option"] .drawn')].map((cell) => cell.textContent);
+    expect(drawn).toEqual(accounts.map((account) => account.value.number));
+    expect(document.querySelectorAll('[role="option"] > .check')).toHaveLength(2);
+    await select.choose(accounts[0]?.label ?? '');
+    expect(fixture.componentInstance.account()).toBe(accounts[0]?.value);
+    expect(element.querySelector('.trigger .chosen')?.textContent).toBe('Oʻzmilliybank');
+    // The guards type `let-option` for the compiler; they accept an option's context and nothing else.
+    const { optionTemplate, valueTemplate } = fixture.componentInstance;
+    expect(AveOptionTemplate.ngTemplateContextGuard(optionTemplate(), { $implicit: accounts[0] })).toBe(true);
+    expect(AveSelectValueTemplate.ngTemplateContextGuard(valueTemplate(), null)).toBe(false);
   });
 
   it('keeps focus on the trigger when an option is pressed', async () => {

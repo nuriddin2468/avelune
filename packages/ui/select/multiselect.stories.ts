@@ -10,7 +10,10 @@ import {
 } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { AveMultiselect, type AveSelectSize } from '@avelune/ui/select';
+import { lucideFileArchive, lucideFileImage, lucideFileSpreadsheet, lucideFileText } from '@avelune/icons/lucide';
+import { provideAveIcons } from '@avelune/ui/icon';
 import { approvers } from './fixtures/options';
+import { documentTypes } from './fixtures/rich';
 
 type View = 'states' | 'long';
 
@@ -268,5 +271,37 @@ export const Clearing: Story = {
     await userEvent.keyboard('{Escape}');
     trigger.blur();
     await expect(canvas.getByRole('button', { name: 'Очистить Наблюдатели' })).toBeVisible();
+  },
+};
+
+/**
+ * Rich options (ADR 0055): document types with icons, the application registers (`provideAveIcons`), and counts at
+ * the end; the trigger names the chosen labels.
+ */
+export const RichOptions: Story = {
+  name: 'Rich options',
+  decorators: [
+    applicationConfig({
+      providers: [provideAveIcons([lucideFileArchive, lucideFileImage, lucideFileSpreadsheet, lucideFileText])],
+    }),
+    componentWrapperDecorator(MultiselectStoryFrame),
+  ],
+  render: () => ({
+    props: { documentTypes },
+    template: `<ave-multiselect label="Типы документов" lang="ru" [options]="documentTypes" [value]="['contract', 'scan']" />`,
+  }),
+  parameters: source(
+    "{ value: 'contract', label: 'Договоры', icon: 'file-text', meta: '128' }",
+    '<ave-multiselect [options]="documentTypes" [formField]="filter.types" />',
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('combobox', { name: 'Типы документов' });
+    await expect(trigger).toHaveTextContent('Договоры, Сканы');
+    await userEvent.click(trigger);
+    const option = await canvas.findByRole('option', { name: 'Сметы' });
+    await expect(option).toHaveAccessibleDescription('42');
+    await expect(option.querySelector('ave-icon')).not.toBeNull();
+    await expect(canvas.getByRole('option', { name: 'Сканы' })).toHaveAttribute('aria-selected', 'true');
   },
 };

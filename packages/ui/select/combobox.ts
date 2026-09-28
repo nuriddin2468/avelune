@@ -4,6 +4,7 @@ import {
   afterRenderEffect,
   booleanAttribute,
   computed,
+  contentChild,
   inject,
   input,
   linkedSignal,
@@ -21,8 +22,11 @@ import { lucideCheck, lucideX } from '@avelune/icons/lucide';
 import { AVE_CONTROL_OWNER, AveClearButton, AveControlTarget, injectControlState } from '@avelune/ui/forms';
 import { injectAveMessages } from '@avelune/ui/i18n';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
+import { pruned } from './choice';
 import { matches } from './match';
 import { aveConnectedOverlay, aveOverlayPresence } from '@avelune/ui/overlay';
+import { AveOptionContent, describedBy, optionIds } from './option-content';
+import { AveOptionTemplate } from './templates';
 import type { AveOption, AveSelectSize } from './types';
 
 /**
@@ -44,6 +48,7 @@ import type { AveOption, AveSelectSize } from './types';
     AveClearButton,
     AveControlTarget,
     AveIcon,
+    AveOptionContent,
     Combobox,
     ComboboxPopup,
     ComboboxWidget,
@@ -108,8 +113,14 @@ import type { AveOption, AveSelectSize } from './types';
                 [value]="option.value"
                 [label]="option.label"
                 [disabled]="option.disabled ?? false"
+                [attr.aria-label]="option.label"
+                [attr.aria-describedby]="optionDescription(option, $index)"
               >
-                <span class="label">{{ option.label }}</span>
+                <ave-option-content
+                  [option]="option"
+                  [template]="optionTemplate()?.template"
+                  [idPrefix]="optionIds + '-' + $index"
+                />
                 <ave-icon class="check" name="check" decorative />
               </div>
             }
@@ -151,6 +162,12 @@ export class AveCombobox<V> implements ControlValueAccessor {
   /** The form state, read on the host, where the form binding is. */
   readonly state = injectControlState();
 
+  /** The application's template for the inside of every option, if it gives one (ADR 0055). */
+  protected readonly optionTemplate = contentChild<AveOptionTemplate<V>>(AveOptionTemplate);
+
+  /** The ids of the options' descriptions and meta. */
+  protected readonly optionIds = optionIds();
+
   protected readonly messages = injectAveMessages();
 
   private readonly selected = computed(() => this.options().find((option) => Object.is(option.value, this.value())));
@@ -175,6 +192,8 @@ export class AveCombobox<V> implements ControlValueAccessor {
    * away in the list; the list is then given the value back (see `choose`).
    */
   protected readonly selectedValues = linkedSignal<V[]>(() => {
+    // Given anew whenever the list changes, so an option the search hid and shows again has its check back.
+    this.shown();
     const value = this.value();
     return value === null ? [] : [value];
   });
@@ -222,6 +241,8 @@ export class AveCombobox<V> implements ControlValueAccessor {
    * chosen again keeps it.
    */
   protected choose(values: V[]): void {
+    // The search hid the chosen option, and Aria's listbox dropped it: the value and the typed text stay.
+    if (pruned(this.selectedValues(), values, this.shown())) return;
     const value = values[0] ?? this.value();
     this.selectedValues.set(value === null ? [] : [value]);
     this.value.set(value);
@@ -261,6 +282,11 @@ export class AveCombobox<V> implements ControlValueAccessor {
    */
   protected keepFocus(event: MouseEvent): void {
     event.preventDefault();
+  }
+
+  /** The ids that describe an option: its description and meta, unless a template draws it (ADR 0055). */
+  protected optionDescription(option: AveOption<V>, index: number): string | null {
+    return describedBy(option, `${this.optionIds}-${String(index)}`, this.optionTemplate() !== undefined);
   }
 
   /** @internal */

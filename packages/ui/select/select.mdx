@@ -46,6 +46,38 @@ readonly kinds: AveOption<string>[] = [
 
 <Canvas of={SelectStories.Open} />
 
+## Rich options
+
+An option can say more than its label (ADR 0055): a second line (`description`), an icon or an image at the start (`icon`, the name of a registered icon, or `image`, a URL), and a short text at the end (`meta`: a code, a count). Every option of the family draws them in one row: the image in a 20px square, whole, level with the first line; the description in smaller, muted text; the meta at the end, then the check. The trigger shows the chosen option's icon or image and its label.
+
+```ts
+readonly countries: AveOption<string>[] = [
+  { value: 'uz', label: 'Узбекистан', description: 'Ташкент', meta: 'UZ', image: 'assets/flags/uz.svg' },
+  { value: 'kz', label: 'Казахстан', description: 'Астана', meta: 'KZ', image: 'assets/flags/kz.svg' },
+];
+```
+
+<Canvas of={SelectStories.RichOptions} />
+
+- `label` stays required: it names the option for screen readers, typeahead and the combobox's search. The description and the meta describe it.
+- An icon must be registered (`provideAveIcons`), as for `<ave-icon>`. An image is decorative; say in the label what it shows.
+- `icon` and `image` do not go together; the type refuses both.
+
+### Templates
+
+When the fields are not enough, `<ng-template aveOption let-option>` draws the inside of every option, and `<ng-template aveSelectValue let-option>` the chosen value in the trigger. The kit keeps its row around them: the height, the padding, the check, the chevron and the clear button. `[aveOptionOf]` types `option` with the options' value.
+
+```html
+<ave-select [options]="accounts" [formField]="payment.account">
+  <ng-template aveOption [aveOptionOf]="accounts" let-option>
+    <span class="account">{{ option.label }} <b>{{ option.value.balance }}</b></span>
+  </ng-template>
+  <ng-template aveSelectValue [aveSelectValueOf]="accounts" let-option>{{ option.value.number }}</ng-template>
+</ave-select>
+```
+
+<Canvas of={SelectStories.Templates} />
+
 ## Sizes
 
 <Canvas of={SelectStories.Sizes} />
@@ -90,6 +122,7 @@ Per the WAI-ARIA select-only combobox pattern: Tab moves to the trigger; Down, E
 ## Accessibility
 
 - The trigger is a `combobox` named by the field's label (`<label for>`), or by `label` when there is none; its text is the chosen option.
+- Each option is named by its label; its description and meta describe it, also when a template draws it.
 - `aria-activedescendant` tells screen readers which option is active while focus stays on the trigger.
 - Required, invalid and the field's hint and error are on the trigger.
 - The clear button is named "Clear" in the locale and the field's label ("Очистить Вид договора"), for a screen reader's virtual cursor; it is left out of the Tab order.

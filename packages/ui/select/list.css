@@ -17,16 +17,20 @@
   }
 
   /* The listbox scrolls, not the popup: it is the element that takes focus (tabindex -1) and keeps its active option in
-     view, so the scrolling region is reachable by keyboard (axe scrollable-region-focusable). */
+     view, so the scrolling region is reachable by keyboard (axe scrollable-region-focusable). Its rows are as tall as
+     their options: past the list's height, grid rows would stop at an option's minimum, and a second line would
+     overflow its row. */
   .listbox {
     display: grid;
+    grid-auto-rows: max-content;
     max-block-size: calc(var(--ave-control-height-md) * 8);
     overflow-y: auto;
   }
 
+  /* The row's parts are level with its first line (ADR 0055): the check, like the start box and the meta inside. */
   .option {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--ave-space-2);
     min-block-size: var(--ave-control-height-md);
     padding-block: var(--ave-space-2);
@@ -48,9 +52,9 @@
     }
   }
 
-  .option > .label {
-    flex: 1;
-    min-inline-size: 0;
+  /* A disabled option dims its second line and meta too (the content's own muted colour, ADR 0055). */
+  .option[aria-disabled='true'] > ave-option-content {
+    --ave-option-muted: var(--ave-color-fg-disabled);
   }
 
   /* A combobox's list when nothing matches: the height of one option, in muted text. */
@@ -64,6 +68,8 @@
   }
 
   .check {
+    flex: none;
+    margin-block: calc((var(--ave-font-body-md-line-height) - var(--ave-size-icon-sm)) / 2);
     visibility: hidden;
     color: var(--ave-color-accent-fg);
   }
