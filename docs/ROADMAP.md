@@ -220,7 +220,7 @@ Wave 2 build (2026-09-25), before the product owner's corrections and the wave's
 | Alert | 3 | components | planned | | |
 | Banner | 3 | components | planned | | |
 | Progress | 3 | components | planned | | |
-| Spinner | 3 | components | planned | | 300ms show delay, ≥ 500ms visible |
+| Spinner | 3 | components | experimental | | `@avelune/ui/spinner` (ADR 0058): `<ave-spinner>`, `aveDelayedSpinner`'s 300ms delay and 500ms minimum, a named `progressbar` while shown, its icon box kept before and after; sizes 16/20/24; in the showcase's settings, while a change saves; 1.33 kB of 1.5 kB; beta after the Wave 3 visual review |
 | Skeleton | 3 | components | planned | | `ave-motion-shimmer`, static under reduced motion (ADR 0031); in dark, `bg.surface-sunken` equals the canvas, so the fill needs another role |
 | EmptyState | 3 | composites | planned | | |
 | Tabs | 4 | composites | planned | | Aria Tabs |

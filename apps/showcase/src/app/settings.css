@@ -42,7 +42,11 @@
     max-inline-size: var(--ave-container-sm);
   }
 
+  /* The spinner keeps its box whether or not it shows, so the words never move. */
   .status {
+    display: flex;
+    align-items: center;
+    gap: var(--ave-space-2);
     min-block-size: var(--ave-font-body-md-line-height);
     color: var(--ave-color-success-fg);
     font: var(--ave-font-body-md);

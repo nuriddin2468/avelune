@@ -1,0 +1,73 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as SpinnerStories from './spinner.stories';
+
+<Meta of={SpinnerStories} />
+
+# Spinner
+
+`<ave-spinner>` says that something the person asked for is on its way: a search, a save, a part of the page that loads. It appears only after 300ms of waiting and then stays at least 500ms, so a quick answer never flashes it and a spinner never blinks (ADR 0058).
+
+```ts
+import { AveSpinner } from '@avelune/ui/spinner';
+```
+
+<Canvas of={SpinnerStories.Default} />
+
+## When to use
+
+- While an action runs or a small part of the page loads and its duration is unknown.
+- Next to the words that say what is loading, or inside the region that is busy.
+
+## When not to use
+
+- For content that is on its way and whose shape is known: use a skeleton, so the page does not jump when it arrives.
+- For a button's own action: set the button's `loading`; it shows the same spinner in its place.
+- For work whose progress is known (an upload): use a progress bar.
+- For a whole page: show its skeleton.
+
+## Anatomy
+
+Lucide's `loader-circle`, turning, in the colour of the text around it. The spinner's box keeps its size before it shows and after it has gone, so nothing moves.
+
+## Sizes
+
+<Canvas of={SpinnerStories.Sizes} />
+
+| Size           | Box | With                      |
+| -------------- | --- | ------------------------- |
+| `sm`           | 16  | 12 and 14px text, in rows |
+| `md` (default) | 20  | 14px text on its own      |
+| `lg`           | 24  | a panel that loads        |
+
+## States
+
+<Canvas of={SpinnerStories.Delay} />
+
+- **Waiting, first 300ms:** nothing shows; the box is empty.
+- **Shown:** the icon turns. Once shown, it stays at least 500ms, even if the wait ends sooner.
+- **Done:** the box is empty again. Remove the spinner, or leave it with `loading` false.
+
+Bind `loading` to the wait; its default is `true`, for a spinner that is removed when the wait ends. The delays are `timing.spinner-delay` and `timing.spinner-min-visible`, the same as Button's.
+
+## In context
+
+<Canvas of={SpinnerStories.InContext} />
+
+Put the spinner at the start of the words that say what is loading, 8px before them. Mark the region that loads `aria-busy="true"` until its content is in.
+
+## Accessibility
+
+- While it shows, the spinner is a `progressbar` named by `label` ("Загрузка договоров"), or by "Loading…" in the application's locale (uz-Latn, uz-Cyrl, ru, en). Name what is loading when the words next to it do not.
+- Before it shows and after it has gone, it is hidden from assistive technology.
+- It takes the text colour, so in forced colours it is the system's text colour.
+
+## Motion
+
+The icon turns with `ave-motion-spin` (`timing.spin-period`, `linear`), the spinner entry of the motion catalog. It keeps turning under reduced motion: rotation is not movement (ADR 0031).
+
+## Do and don't
+
+- Do say what is loading, in the words next to the spinner or in its `label`.
+- Do keep the spinner where the content will appear.
+- Don't show more than one spinner for one wait.
+- Don't use a spinner for a wait shorter than its delay; it never shows.

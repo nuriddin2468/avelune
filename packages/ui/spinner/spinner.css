@@ -1,0 +1,25 @@
+@layer components {
+  /* An icon box that keeps its size whether or not the spinner shows, so nothing moves when it appears after its
+     delay or leaves after its minimum time (ADR 0058). It takes the colour of the text around it, as Button's does. */
+  :host {
+    display: inline-block;
+    flex-shrink: 0;
+    inline-size: var(--ave-size-icon-md);
+    block-size: var(--ave-size-icon-md);
+    vertical-align: middle;
+  }
+
+  :host([data-size='sm']) {
+    inline-size: var(--ave-size-icon-sm);
+    block-size: var(--ave-size-icon-sm);
+  }
+
+  :host([data-size='lg']) {
+    inline-size: var(--ave-size-icon-lg);
+    block-size: var(--ave-size-icon-lg);
+  }
+
+  ave-icon {
+    display: block;
+  }
+}

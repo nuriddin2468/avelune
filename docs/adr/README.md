@@ -63,6 +63,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0055](0055-rich-options.md) | Rich options in the select family: fields of an option in one row layout, and templates inside the kit's row | Accepted |
 | [0056](0056-remote-lists.md) | Remote lists: a server's search, pages that load at the end, and chosen options the list no longer holds | Accepted |
 | [0057](0057-searchable-multiselect.md) | A multiselect that searches: an input as its trigger over the same multi-select listbox | Accepted |
+| [0058](0058-spinner.md) | Spinner: the delayed spinner as a component, a named progress bar that keeps its box | Accepted |
 
 ## Template
 
