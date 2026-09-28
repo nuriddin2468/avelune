@@ -21,6 +21,7 @@ import { AveTheme } from '@avelune/ui/theme';
           [routerLinkActiveOptions]="{ exact: true }"
           >Новый договор</a
         >
+        <a routerLink="/contracts" routerLinkActive="current" ariaCurrentWhenActive="page">Договоры</a>
         <a routerLink="/settings" routerLinkActive="current" ariaCurrentWhenActive="page">Настройки</a>
       </nav>
       <div class="settings" role="group" aria-label="Вид">

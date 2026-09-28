@@ -8,5 +8,6 @@ export const kitElements = {
   input: ['aveInput', 'aveCheckbox', 'aveRadio', 'aveSwitch'],
   select: [],
   textarea: ['aveTextarea'],
+  progress: ['aveProgress'],
   dialog: [],
 } as const satisfies RawElementMarkers;

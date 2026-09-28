@@ -33,6 +33,10 @@
       "disabled": {
         "$value": "{color.neutral.100}",
         "$description": "Fill of a disabled control that has a fill when enabled."
+      },
+      "track": {
+        "$value": "{color.neutral.200}",
+        "$description": "The empty part of a bar that fills to show an amount: a progress bar's track. Visible on every surface; the accent, success and danger fills on it keep 3:1 (WCAG 1.4.11)."
       }
     },
     "fg": {

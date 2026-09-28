@@ -1,0 +1,137 @@
+/* The register of contracts: the page's heading and actions, the export under way, and the list. Tokens only. */
+@layer app {
+  :host {
+    display: block;
+  }
+
+  .page {
+    display: grid;
+    gap: var(--ave-space-6);
+    max-inline-size: var(--ave-container-lg);
+    margin-inline: auto;
+  }
+
+  /* The heading and the page's actions in one row; on a phone the actions wrap under it, the primary one last. */
+  .header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ave-space-4);
+  }
+
+  .title {
+    font: var(--ave-font-heading-xl);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ave-space-2);
+  }
+
+  /* The export: its name and state in a row over the bar. */
+  .export {
+    display: grid;
+    gap: var(--ave-space-2);
+    padding: var(--ave-space-4);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface);
+  }
+
+  .export-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--ave-space-4);
+    font: var(--ave-font-label-md);
+  }
+
+  .export-value {
+    flex: none;
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-md);
+    font-variant-numeric: tabular-nums;
+
+    &[data-done] {
+      color: var(--ave-color-success-fg);
+    }
+  }
+
+  /* The list: one bordered surface, a row per contract; the facts under the subject on a phone, beside it from the
+     medium container width. */
+  .list {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface);
+    list-style: none;
+    container-type: inline-size;
+  }
+
+  .row {
+    display: grid;
+    gap: var(--ave-space-2) var(--ave-space-6);
+    padding: var(--ave-space-3) var(--ave-space-4);
+  }
+
+  .row + .row {
+    border-block-start: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  }
+
+  @container (min-width: 640px) {
+    .row {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .facts {
+      justify-items: end;
+    }
+  }
+
+  .main,
+  .facts {
+    display: grid;
+    gap: var(--ave-space-1);
+    align-content: start;
+  }
+
+  .number {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+
+  .subject {
+    font: var(--ave-font-label-md);
+  }
+
+  .counterparty,
+  .ends {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+
+  .amount {
+    font: var(--ave-font-body-md);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .status {
+    font: var(--ave-font-label-sm);
+
+    &[data-status='approval'] {
+      color: var(--ave-color-info-fg);
+    }
+
+    &[data-status='signed'] {
+      color: var(--ave-color-success-fg);
+    }
+
+    &[data-status='expired'] {
+      color: var(--ave-color-danger-fg);
+    }
+  }
+}

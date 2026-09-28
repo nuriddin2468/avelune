@@ -78,7 +78,7 @@ One primary button per view region (a form, a dialog, a toolbar, a card): the on
 - **Disabled** controls are dimmed and cannot be used. When people need to know why, keep the control focusable (a button's `disabledInteractive`) and say why next to it or in its description.
 - **Readonly** fields show a value that cannot be changed here; they stay readable and focusable.
 - **Invalid** fields show the error under the field, in words, with an icon, not by colour alone.
-- **Loading:** skeletons for content that is on its way, a spinner for an action in progress. A spinner appears only after 300ms of waiting and then stays at least 500ms (`timing.spinner-delay`, `timing.spinner-min-visible`), so fast actions never flash. A loading button keeps its size.
+- **Loading:** skeletons for content that is on its way, a spinner for an action in progress. A spinner appears only after 300ms of waiting and then stays at least 500ms (`timing.spinner-delay`, `timing.spinner-min-visible`), so fast actions never flash. A loading button keeps its size. A progress bar shows work whose share done is known (an upload, an import), with the share in words beside it; it never stands for a wait of unknown length.
 
 ## Writing
 

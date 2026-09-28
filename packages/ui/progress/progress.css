@@ -1,0 +1,79 @@
+@layer components {
+  /* A native progress bar drawn by the kit (ADR 0059): a rounded track in `bg.track` as wide as its container, and
+     the fill in the variant's solid colour, which keeps 3:1 against the track in both themes. The fill's width is
+     the browser's; it never animates (brief §6.4). Each vendor's part has a rule of its own: a browser drops a whole
+     rule whose selectors it does not all know. */
+  :host {
+    --ave-progress-fill: var(--ave-color-accent-bg);
+
+    display: block;
+    inline-size: 100%;
+    block-size: var(--ave-space-2);
+    border: 0;
+    border-radius: var(--ave-radius-full);
+    overflow: hidden;
+    appearance: none;
+    background-color: var(--ave-color-bg-track);
+    color: var(--ave-progress-fill);
+    vertical-align: middle;
+  }
+
+  :host([data-size='sm']) {
+    block-size: var(--ave-space-1);
+  }
+
+  :host([data-variant='success']) {
+    --ave-progress-fill: var(--ave-color-success-bg);
+  }
+
+  :host([data-variant='danger']) {
+    --ave-progress-fill: var(--ave-color-danger-bg);
+  }
+
+  /* Chromium draws the value inside an inner element of its own, so each part takes the radius itself. */
+  :host::-webkit-progress-bar {
+    border-radius: var(--ave-radius-full);
+    background-color: var(--ave-color-bg-track);
+  }
+
+  :host::-webkit-progress-value {
+    border-radius: var(--ave-radius-full);
+    background-color: var(--ave-progress-fill);
+  }
+
+  :host::-moz-progress-bar {
+    border-radius: var(--ave-radius-full);
+    background-color: var(--ave-progress-fill);
+  }
+
+  /* Without a value the work has no known progress: the track stays empty, never a moving stripe (use a spinner). */
+  :host(:indeterminate)::-webkit-progress-bar {
+    background-color: var(--ave-color-bg-track);
+  }
+
+  :host(:indeterminate)::-moz-progress-bar {
+    background-color: transparent;
+  }
+
+  /* Forced colours would paint the track and the fill in the canvas colour: the track takes an outline in the text
+     colour, the fill the highlight. */
+  @media (forced-colors: active) {
+    :host {
+      border: var(--ave-border-width-default) solid CanvasText;
+      background-color: Canvas;
+      forced-color-adjust: none;
+    }
+
+    :host::-webkit-progress-bar {
+      background-color: Canvas;
+    }
+
+    :host::-webkit-progress-value {
+      background-color: Highlight;
+    }
+
+    :host::-moz-progress-bar {
+      background-color: Highlight;
+    }
+  }
+}

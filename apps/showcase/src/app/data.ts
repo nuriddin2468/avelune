@@ -63,3 +63,92 @@ export const regions: readonly AveOption<string>[] = [
   { value: 'khorezm', label: 'Хорезмская область' },
   { value: 'tashkent', label: 'город Ташкент' },
 ];
+
+/** Where a contract is in its life. */
+export type ContractStatus = 'draft' | 'approval' | 'signed' | 'expired';
+
+/** The words for each status. */
+export const contractStatuses: Readonly<Record<ContractStatus, string>> = {
+  draft: 'Черновик',
+  approval: 'На согласовании',
+  signed: 'Подписан',
+  expired: 'Истёк',
+};
+
+/** A contract of the department's register, as the list shows it. */
+export interface ContractRecord {
+  readonly id: number;
+  readonly number: string;
+  readonly subject: string;
+  readonly counterparty: string;
+  /** In sums, without VAT. */
+  readonly amount: number;
+  readonly status: ContractStatus;
+  /** ISO dates. */
+  readonly signedOn: string | null;
+  readonly endsOn: string;
+}
+
+/** The department's register of contracts. */
+export const contracts: readonly ContractRecord[] = [
+  {
+    id: 114,
+    number: 'ДК-2026/114',
+    subject: 'Поставка серверного оборудования для центра обработки данных',
+    counterparty: 'ООО «Альфа Технологии»',
+    amount: 1_250_000_000,
+    status: 'approval',
+    signedOn: null,
+    endsOn: '2026-12-31',
+  },
+  {
+    id: 113,
+    number: 'ДК-2026/113',
+    subject: 'Перевозка грузов по железной дороге',
+    counterparty: 'Oʻzbekiston temir yoʻllari',
+    amount: 480_000_000,
+    status: 'signed',
+    signedOn: '2026-03-02',
+    endsOn: '2027-03-01',
+  },
+  {
+    id: 112,
+    number: 'ДК-2026/112',
+    subject: 'Аренда складского помещения в Самарканде',
+    counterparty: 'ООО «Бета Логистик»',
+    amount: 96_000_000,
+    status: 'signed',
+    signedOn: '2026-02-14',
+    endsOn: '2026-03-26',
+  },
+  {
+    id: 111,
+    number: 'ДК-2026/111',
+    subject: 'Консультационные услуги по внедрению электронного документооборота',
+    counterparty: 'ГУП «Центр электронного документооборота»',
+    amount: 215_500_000,
+    status: 'draft',
+    signedOn: null,
+    endsOn: '2026-09-30',
+  },
+  {
+    id: 109,
+    number: 'ДК-2025/109',
+    subject: 'Ремонт кровли административного здания',
+    counterparty: 'ООО «Дельта Строй»',
+    amount: 312_000_000,
+    status: 'expired',
+    signedOn: '2025-04-10',
+    endsOn: '2025-12-31',
+  },
+  {
+    id: 108,
+    number: 'ДК-2025/108',
+    subject: 'Sogʻliqni saqlash muassasalari uchun tibbiy jihozlar yetkazib berish',
+    counterparty: 'Samarqand viloyati sogʻliqni saqlash boshqarmasi',
+    amount: 2_040_000_000,
+    status: 'signed',
+    signedOn: '2025-11-20',
+    endsOn: '2026-11-19',
+  },
+];

@@ -1,0 +1,87 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ProgressStories from './progress.stories';
+
+<Meta of={ProgressStories} />
+
+# Progress
+
+`aveProgress` draws a native `<progress>` as the kit's progress bar: for work whose progress is known, such as an upload, an import or a check of many documents. The element stays native, so assistive technology reads its value as a percentage (ADR 0059).
+
+```ts
+import { AveProgress } from '@avelune/ui/progress';
+```
+
+<Canvas of={ProgressStories.Default} />
+
+## When to use
+
+- For work that takes more than a few seconds and whose share done is known: bytes sent, rows imported, documents checked.
+
+## When not to use
+
+- For a wait of unknown length: use a spinner. A `<progress>` without a value draws an empty track, never a moving stripe.
+- For a value that people set: use a slider.
+- For a score or a level that is not work in progress (disk space used, a rating): use text, or a meter in a later wave.
+
+## Anatomy
+
+A rounded track as wide as its container in `bg.track`, and the fill from the start in the variant's colour. Put its name and its value in words in a row above it: the name at the start, the value at the end.
+
+```html
+<label for="upload">Договор поставки.pdf</label> <span>45 %</span>
+<progress aveProgress id="upload" [value]="sent()" [max]="size()"></progress>
+```
+
+## Variants
+
+<Canvas of={ProgressStories.Variants} />
+
+| Variant            | Use for                                |
+| ------------------ | -------------------------------------- |
+| `accent` (default) | Work under way                         |
+| `success`          | Work that finished, with "Done" beside |
+| `danger`           | Work that failed, with the reason      |
+
+The colour is never the only sign: the words next to the bar say whether the work is under way, done or failed.
+
+## Sizes
+
+<Canvas of={ProgressStories.Sizes} />
+
+`md` (8px, default) on its own; `sm` (4px) in lists and table rows.
+
+## States
+
+<Canvas of={ProgressStories.Running} />
+
+- **Under way:** `value` between 0 and `max` (1 by default). Update it as the work advances; the fill jumps to each value, it does not animate its width.
+- **Nothing yet, or all done:** `value="0"` shows the empty track; `value` equal to `max` fills it.
+- **Finished or failed:** switch the variant, and say it in words.
+
+<Canvas of={ProgressStories.Edges} />
+
+## Content
+
+- Name what is being done: the file, the import, the check. Russian and Uzbek names wrap above the bar.
+- Give the value in words at the end of the label row, formatted for the locale: `aveNumberFormat(locale, { style: 'percent' })` writes "45 %" in Russian and Uzbek.
+
+<Canvas of={ProgressStories.List} />
+
+<Canvas of={ProgressStories.LongText} />
+
+## Accessibility
+
+- A native `progressbar`: name it with `<label for>`, `aria-labelledby` or `aria-label`. Screen readers read its value as a percentage.
+- Announce the end of long work (done, failed) in a `role="status"` region, such as the value in the label row.
+- The fills keep 3:1 against the track in both themes (declared in `contrast-pairs.json`, checked by `tokens-check`). In forced colours the track takes an outline in the text colour and the fill the highlight colour.
+
+## Motion
+
+None. The fill changes width, which the kit never animates (brief §6.4).
+
+## Do and don't
+
+- Do show the value in words beside the bar.
+- Do switch to `success` or `danger` when the work ends, and say which.
+- Don't use a progress bar without a value; use a spinner.
+- Don't put a progress bar where the work takes less than a second or two.

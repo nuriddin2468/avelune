@@ -111,6 +111,12 @@
       "background": ["color.bg.canvas", "color.bg.surface", "color.bg.surface-raised", "color.bg.surface-sunken"]
     },
     {
+      "reason": "A progress bar's fill against its track, which shows how much is left (WCAG 1.4.11)",
+      "minimum": 3,
+      "foreground": ["color.accent.bg", "color.success.bg", "color.danger.bg"],
+      "background": ["color.bg.track"]
+    },
+    {
       "reason": "Solid fills that show a state on their own: checked checkbox, switch track, selected radio (WCAG 1.4.11)",
       "minimum": 3,
       "foreground": ["color.accent.bg", "color.info.bg", "color.success.bg", "color.warning.bg", "color.danger.bg"],

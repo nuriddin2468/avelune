@@ -43,6 +43,11 @@ const groups: readonly Group[] = [
     ],
   },
   {
+    title: 'Tracks',
+    note: 'The empty part of a bar that fills to show an amount. The accent, success and danger fills keep 3:1 against it.',
+    swatches: [{ name: 'color.bg.track', kind: 'fill' }],
+  },
+  {
     title: 'Text',
     note: 'Solid colours, never opacity, so every pair is computable. Disabled text is exempt from contrast minimums.',
     swatches: [

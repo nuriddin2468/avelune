@@ -1,0 +1,57 @@
+/* The frame of the Progress stories: a label row over each bar, the value at its end. Stories only; the component's
+   own styles are progress.css. */
+@layer components {
+  :host {
+    display: grid;
+    gap: var(--ave-space-6);
+    max-inline-size: var(--ave-container-sm);
+    padding: var(--ave-space-6);
+  }
+
+  .bar {
+    display: grid;
+    gap: var(--ave-space-2);
+  }
+
+  .head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--ave-space-4);
+    font: var(--ave-font-label-md);
+  }
+
+  .value {
+    flex: none;
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-md);
+    font-variant-numeric: tabular-nums;
+
+    &[data-variant='success'] {
+      color: var(--ave-color-success-fg);
+    }
+
+    &[data-variant='danger'] {
+      color: var(--ave-color-danger-fg);
+    }
+  }
+
+  .list {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    list-style: none;
+  }
+
+  .row {
+    display: grid;
+    gap: var(--ave-space-2);
+    padding: var(--ave-space-3) var(--ave-space-4);
+  }
+
+  .row + .row {
+    border-block-start: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  }
+}
