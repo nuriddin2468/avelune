@@ -29,7 +29,14 @@ import { AveMenu, type AveMenuEntry } from '@avelune/ui/menu';
 The button, as a Button of its variant and size with a `chevron-down` after its words, or as an IconButton (`icon`) whose `label` is its name and its tooltip. The menu: the raised surface of every popup, `radius.lg`, the popover elevation, 4px under the button, at least 192px and at most 320px wide; items of the control height with an optional icon, separators between groups. It opens from the button's start, or ends at the button's end when there is no room.
 
 ```html
-<ave-menu label="Действия с договором" icon="ellipsis" variant="ghost" size="sm" [items]="actions" (itemSelected)="run($event)" />
+<ave-menu
+  label="Действия с договором"
+  icon="ellipsis"
+  variant="ghost"
+  size="sm"
+  [items]="actions"
+  (itemSelected)="run($event)"
+/>
 ```
 
 Items are data (`AveMenuEntry<V>`): `{ value, label, icon?, danger?, disabled? }`, or `{ separator: true }`. Register their icons with `provideAveIcons`.
@@ -61,15 +68,15 @@ The button takes Button's `variant` (`secondary` by default, `ghost` in rows and
 
 Per the WAI-ARIA menu button pattern, from Angular Aria:
 
-| Key                 | On the button                           | In the menu                                  |
-| ------------------- | --------------------------------------- | -------------------------------------------- |
-| Enter, Space, Down  | opens the menu on its first item        | chooses the item, closes, focus on the button |
-| Up                  | opens the menu on its last item         | moves to the item before                     |
-| Down                |                                         | moves to the item after (wraps)              |
-| Home, End           |                                         | the first, the last item                     |
-| A letter            |                                         | the next item that starts with it            |
-| Escape              |                                         | closes, focus on the button                  |
-| Tab                 | moves on                                | closes the menu and moves on                 |
+| Key                | On the button                    | In the menu                                   |
+| ------------------ | -------------------------------- | --------------------------------------------- |
+| Enter, Space, Down | opens the menu on its first item | chooses the item, closes, focus on the button |
+| Up                 | opens the menu on its last item  | moves to the item before                      |
+| Down               |                                  | moves to the item after (wraps)               |
+| Home, End          |                                  | the first, the last item                      |
+| A letter           |                                  | the next item that starts with it             |
+| Escape             |                                  | closes, focus on the button                   |
+| Tab                | moves on                         | closes the menu and moves on                  |
 
 A press outside the menu closes it, on touch screens too.
 

@@ -1,0 +1,34 @@
+@layer components {
+  :host {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  /* The chevron after the words of a text button, 8px from them. */
+  ave-icon {
+    margin-inline-start: var(--ave-space-2);
+  }
+
+  /* The panel (ADR 0065): the raised surface of every popup (ADR 0046) with the popover elevation and radius.lg,
+     4px from its button, 16px of padding, at least 256px and at most a small container wide, never wider than the
+     viewport less 16px on each side; its content lays itself out. A panel without a field takes focus itself and
+     shows the kit's ring around it after a key. */
+  .panel {
+    display: grid;
+    gap: var(--ave-space-3);
+    min-inline-size: calc(var(--ave-space-16) * 4);
+    max-inline-size: min(var(--ave-container-sm), 100vi - var(--ave-space-4) * 2);
+    margin-block: var(--ave-space-1);
+    padding: var(--ave-space-4);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface-raised);
+    box-shadow: var(--ave-elevation-popover);
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-body-md);
+  }
+
+  .heading {
+    font: var(--ave-font-heading-sm);
+  }
+}

@@ -1,0 +1,81 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as PopoverStories from './popover.stories';
+
+<Meta of={PopoverStories} />
+
+# Popover
+
+`<ave-popover>` is a button that opens a small panel of content beside it: filters, a person's card, a short form of one or two fields. The panel is a non-modal dialog; the page stays usable around it (ADR 0065).
+
+```ts
+import { AvePopover } from '@avelune/ui/popover';
+```
+
+<Canvas of={PopoverStories.Default} />
+
+## When to use
+
+- For a few controls or facts that belong to one place on the screen and are needed now and then: filters of a list, a rename, the details behind a name.
+
+## When not to use
+
+- For a list of actions: use a menu.
+- For a few words about a control: use a tooltip.
+- For a task that must be finished or cancelled before going on: use a dialog.
+- For a long form or anything with its own navigation: use a drawer or a page.
+
+## Anatomy
+
+The button, drawn as the Menu's: a Button of its variant and size with a `chevron-down`, or an IconButton (`icon`) named and titled by `label`. The panel: the raised surface of every popup, `radius.lg`, the popover elevation, 4px under the button, 16px of padding, at least 256px and at most 480px wide, never wider than the viewport. An optional `heading` at its top names it; without one the button does. It opens from the button's start, or ends at its end without room, and is pushed inside the viewport when neither fits.
+
+```html
+<ave-popover label="Фильтры" heading="Фильтры" [(open)]="filtersOpen">
+  <fieldset aveChoiceGroup legend="Статус">…</fieldset>
+  <div><button aveButton type="button" variant="primary" (click)="apply()">Применить</button></div>
+</ave-popover>
+```
+
+`open` is a model: bind it to close the panel from its content, after Apply or Save.
+
+## Kinds
+
+<Canvas of={PopoverStories.IconOnly} />
+
+<Canvas of={PopoverStories.Form} />
+
+## Behaviour
+
+| When                                       | The panel                                                                                             |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
+| The button is pressed                      | opens, and focus goes to its first field (or `cdkFocusInitial`); to the panel itself when it has none |
+| The button is pressed again                | closes                                                                                                |
+| Escape                                     | closes, focus back on the button; a dialog around it stays                                            |
+| A press outside, or focus moves on past it | closes, and focus stays where the person went                                                         |
+| Its content sets `open` to false           | closes, focus back on the button                                                                      |
+
+The panel follows its button in the focus order, so Tab moves from the button into it and on past it.
+
+## Content
+
+- Keep it short: a handful of fields or facts. Actions at the end, the primary one last.
+- Long text wraps inside the panel; nothing truncates.
+
+<Canvas of={PopoverStories.LongText} />
+
+## Accessibility
+
+- The button has `aria-haspopup="dialog"` and `aria-expanded`, and controls the panel while it is open.
+- The panel is a non-modal `dialog`, named by its heading or by the button.
+- The kit's focus ring shows on its fields, and around the panel when the panel itself has focus.
+- Text keeps its contrast in both themes; in forced colours the panel keeps its edge.
+
+## Motion
+
+The popover entry of the motion catalog: `ave-motion-popover-enter` fades in from `motion.scale.enter` at the button, in `duration.normal`; `ave-motion-popover-exit` fades out in `duration.fast`. Under reduced motion it fades without scaling.
+
+## Do and don't
+
+- Do give a panel of controls a clear end: Apply, or Save and Cancel.
+- Do put the popover's button next to what it changes.
+- Don't open a popover from inside another popover.
+- Don't put a whole form in a popover; use a drawer.

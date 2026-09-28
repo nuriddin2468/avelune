@@ -81,6 +81,13 @@
     inline-size: min(100%, var(--ave-container-xs));
   }
 
+  .filter-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--ave-space-2);
+  }
+
   .empty {
     border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
     border-radius: var(--ave-radius-lg);

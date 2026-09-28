@@ -3,14 +3,17 @@ import { RouterLink } from '@angular/router';
 import { AveAlert } from '@avelune/ui/alert';
 import { lucideCopy, lucideEllipsis, lucideSearch, lucideTrash } from '@avelune/icons/lucide';
 import { AveButton } from '@avelune/ui/button';
+import { AveCheckbox, AveChoice } from '@avelune/ui/checkbox';
 import { AveEmptyState, AveEmptyStateActions } from '@avelune/ui/empty-state';
 import { aveDateFormat, aveNumberFormat } from '@avelune/ui/i18n';
 import { provideAveIcons } from '@avelune/ui/icon';
+import { AveChoiceGroup } from '@avelune/ui/form-field';
 import { AveInput } from '@avelune/ui/input';
 import { AveMenu, type AveMenuEntry } from '@avelune/ui/menu';
+import { AvePopover } from '@avelune/ui/popover';
 import { AveProgress } from '@avelune/ui/progress';
 import { AveSkeleton } from '@avelune/ui/skeleton';
-import { contractStatuses, contracts, type ContractRecord } from './data';
+import { contractStatuses, contracts, type ContractRecord, type ContractStatus } from './data';
 
 /** What a row's menu does to its contract. */
 type RowAction = 'copy' | 'delete';
@@ -31,10 +34,14 @@ const exportInterval = 400;
   imports: [
     AveAlert,
     AveButton,
+    AveCheckbox,
+    AveChoice,
+    AveChoiceGroup,
     AveEmptyState,
     AveEmptyStateActions,
     AveInput,
     AveMenu,
+    AvePopover,
     AveProgress,
     AveSkeleton,
     RouterLink,
@@ -88,14 +95,30 @@ const exportInterval = 400;
           [value]="query()"
           (input)="search($event)"
         />
+        <ave-popover label="Статус" heading="Статус договора" [(open)]="filtering">
+          <fieldset aveChoiceGroup legend="Показывать договоры">
+            @for (status of statusList; track status) {
+              <label aveChoice>
+                <input type="checkbox" aveCheckbox [checked]="shownStatuses().has(status)" (change)="toggle(status)" />
+                {{ statuses[status] }}
+              </label>
+            }
+          </fieldset>
+          <div class="filter-actions">
+            <button aveButton type="button" variant="ghost" (click)="shownStatuses.set(allStatuses())">
+              Все статусы
+            </button>
+            <button aveButton type="button" variant="primary" (click)="filtering.set(false)">Готово</button>
+          </div>
+        </ave-popover>
       </div>
 
       @if (!loading() && shown().length === 0) {
         <section class="empty" aria-label="Договоры подразделения">
           <ave-empty-state icon="search" heading="Ничего не найдено">
-            <p>Нет договоров с «{{ query() }}» в номере, предмете или названии контрагента.</p>
+            <p>Ни один договор не подходит под поиск и выбранные статусы.</p>
             <div aveEmptyStateActions>
-              <button aveButton type="button" (click)="resetSearch()">Сбросить поиск</button>
+              <button aveButton type="button" (click)="resetSearch()">Сбросить поиск и фильтры</button>
             </div>
           </ave-empty-state>
         </section>
@@ -163,12 +186,19 @@ export class ContractsPage {
   ];
   private nextId = 115;
 
+  /** The statuses the list shows, chosen in the Status popover; all of them at first. */
+  protected readonly statusList = Object.keys(contractStatuses) as ContractStatus[];
+  protected readonly shownStatuses = signal<ReadonlySet<ContractStatus>>(this.allStatuses());
+  protected readonly filtering = signal(false);
+
   /** What the person searches for: part of a number, a subject or a counterparty. */
   protected readonly query = signal('');
   protected readonly shown = computed(() => {
     const query = this.query().trim().toLocaleLowerCase('ru');
-    if (query === '') return this.rows();
-    return this.rows().filter((contract) =>
+    const statuses = this.shownStatuses();
+    const rows = this.rows().filter((contract) => statuses.has(contract.status));
+    if (query === '') return rows;
+    return rows.filter((contract) =>
       [contract.number, contract.subject, contract.counterparty].some((text) =>
         text.toLocaleLowerCase('ru').includes(query),
       ),
@@ -213,9 +243,21 @@ export class ContractsPage {
 
   private readonly searchBox = viewChild.required<ElementRef<HTMLInputElement>>('searchBox');
 
-  /** The empty state's action: the search empties, and focus goes back to it, since the button goes away. */
+  protected allStatuses(): ReadonlySet<ContractStatus> {
+    return new Set(this.statusList);
+  }
+
+  protected toggle(status: ContractStatus): void {
+    const next = new Set(this.shownStatuses());
+    if (next.has(status)) next.delete(status);
+    else next.add(status);
+    this.shownStatuses.set(next);
+  }
+
+  /** The empty state's action: the search and the filters empty, and focus goes to the search. */
   protected resetSearch(): void {
     this.query.set('');
+    this.shownStatuses.set(this.allStatuses());
     this.searchBox().nativeElement.focus();
   }
 

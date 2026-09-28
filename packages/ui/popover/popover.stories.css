@@ -1,0 +1,35 @@
+/* The frame of the Popover stories: room under the button for the panel. Stories only; the popover's own styles
+   are popover.css. */
+@layer components {
+  :host {
+    display: block;
+    min-block-size: calc(var(--ave-space-16) * 6);
+    padding: var(--ave-space-6);
+  }
+
+  .line {
+    display: flex;
+    align-items: center;
+    gap: var(--ave-space-2);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--ave-space-2);
+  }
+
+  .person {
+    display: grid;
+    gap: var(--ave-space-1);
+  }
+
+  .name {
+    font: var(--ave-font-label-md);
+  }
+
+  .muted {
+    color: var(--ave-color-fg-muted);
+  }
+}

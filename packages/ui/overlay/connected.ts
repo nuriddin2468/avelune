@@ -21,7 +21,7 @@ const eitherEdge: ConnectedPosition[] = [
  * the control or over it, and scaled from the control's edge (the panel's element matches `transformOrigin`). A list
  * is as wide as its control (`matchWidth`); a calendar keeps its own width. A menu or a popover wider than its button
  * may end at the button's end instead (`align: 'either'`), when a button at the end of a row leaves no room after its
- * start (ADR 0064).
+ * start (ADR 0064); when neither fits, it is pushed inside the viewport, `space.2` from its edge (ADR 0065).
  *
  * @alpha
  */
@@ -33,11 +33,15 @@ export function aveConnectedOverlay(
     readonly align?: 'start' | 'either';
   } = {},
 ): CdkConnectedOverlayConfig {
-  return {
+  const config: CdkConnectedOverlayConfig = {
     origin,
-    positions: options.align === 'either' ? eitherEdge : positions,
+    positions,
     usePopover: 'inline',
     matchWidth: options.matchWidth ?? true,
     transformOriginSelector: options.transformOrigin ?? '.popup',
   };
+  if (options.align !== 'either') return config;
+  // The margin is a token, read from the control as the kit reads its timings.
+  const margin = Number.parseFloat(getComputedStyle(origin).getPropertyValue('--ave-space-2')) || 0;
+  return { ...config, positions: eitherEdge, push: true, viewportMargin: margin };
 }

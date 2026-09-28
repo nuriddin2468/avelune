@@ -70,7 +70,7 @@ const root = document.documentElement;
 const reset = document.createElement('style');
 // The kit's reset (ADR 0030); the second menu at the end of a row as wide as the page.
 reset.textContent =
-  '*, ::before, ::after { box-sizing: border-box; } .row { display: flex; justify-content: space-between; padding: 8px; }';
+  '*, ::before, ::after { box-sizing: border-box; } .row { display: flex; justify-content: space-between; padding: 16px; }';
 
 beforeEach(() => {
   for (const name of used) root.style.setProperty(tokens[name].cssVar, tokens[name].css);
