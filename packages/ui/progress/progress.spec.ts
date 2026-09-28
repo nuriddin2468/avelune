@@ -103,4 +103,17 @@ describe('AveProgress', () => {
     fixture.detectChanges();
     expect(fill()).toBe(tokens['color.danger.bg'].css);
   });
+
+  it('reads an unnamed bar as an empty label, and rejects a variant or size it does not know', async () => {
+    const { fixture, bar } = mount();
+    const loader = TestbedHarnessEnvironment.loader(fixture);
+    const waiting = await loader.getHarness(AveProgressHarness.with({ label: 'Waiting' }));
+    (fixture.nativeElement as HTMLElement).querySelector('[aria-label="Waiting"]')?.removeAttribute('aria-label');
+    expect(await waiting.getLabel()).toBe('');
+    const harness = await loader.getHarness(AveProgressHarness.with({ label: 'Договор.pdf' }));
+    bar.setAttribute('data-variant', 'fancy');
+    await expect(harness.getVariant()).rejects.toThrow('unexpected data-variant "fancy"');
+    bar.setAttribute('data-size', 'xl');
+    await expect(harness.getSize()).rejects.toThrow('unexpected data-size "xl"');
+  });
 });

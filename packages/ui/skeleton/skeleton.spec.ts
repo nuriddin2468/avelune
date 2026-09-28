@@ -102,4 +102,11 @@ describe('AveSkeleton', () => {
     expect(await loader.getAllHarnesses(AveSkeletonHarness.with({ shape: 'block' }))).toHaveLength(2);
     expect(element.querySelector('ave-skeleton')?.querySelectorAll('.part')).toHaveLength(1);
   });
+
+  it('rejects a shape it does not know', async () => {
+    const { fixture, element } = mount();
+    const [harness] = await TestbedHarnessEnvironment.loader(fixture).getAllHarnesses(AveSkeletonHarness);
+    element.querySelector('ave-skeleton')?.setAttribute('data-shape', 'circle');
+    await expect(harness?.getShape()).rejects.toThrow('unexpected data-shape "circle"');
+  });
 });

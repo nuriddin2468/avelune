@@ -154,3 +154,21 @@ describe('AveBanner', () => {
     ).toHaveLength(1);
   });
 });
+
+describe('AveAlertHarness and AveBannerHarness', () => {
+  it('filter by variant and text, and reject a variant they do not know', async () => {
+    const { fixture, element } = mount();
+    const loader = TestbedHarnessEnvironment.loader(fixture);
+    expect(await loader.getAllHarnesses(AveAlertHarness.with({ variant: 'info' }))).toHaveLength(1);
+    expect(await loader.getAllHarnesses(AveBannerHarness.with({ text: /недоступна/ }))).toHaveLength(1);
+    expect(await loader.getAllHarnesses(AveBannerHarness.with({ text: 'Нет такого' }))).toHaveLength(0);
+    const alert = await loader.getHarness(AveAlertHarness.with({ variant: 'warning' }));
+    const banner = await loader.getHarness(AveBannerHarness);
+    element.querySelector('ave-alert .icon')?.removeAttribute('aria-label');
+    expect(await alert.getKind()).toBe('');
+    element.querySelector('ave-alert')?.setAttribute('data-variant', 'fancy');
+    await expect(alert.getVariant()).rejects.toThrow('AveAlertHarness: unexpected data-variant "fancy"');
+    element.querySelector('ave-banner')?.setAttribute('data-variant', 'fancy');
+    await expect(banner.getVariant()).rejects.toThrow('AveBannerHarness: unexpected data-variant "fancy"');
+  });
+});

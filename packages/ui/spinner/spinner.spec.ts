@@ -139,4 +139,13 @@ describe('AveSpinner', () => {
     expect(await bound?.getLabel()).toBe('Загрузка договоров');
     expect(await loader.getAllHarnesses(AveSpinnerHarness.with({ shown: true }))).toHaveLength(2);
   });
+
+  it('rejects a size it does not know', async () => {
+    const { fixture, spinner } = setup();
+    const harness = await TestbedHarnessEnvironment.loader(fixture).getHarness(
+      AveSpinnerHarness.with({ shown: false }),
+    );
+    spinner.setAttribute('data-size', 'xl');
+    await expect(harness.getSize()).rejects.toThrow('unexpected data-size "xl"');
+  });
 });
