@@ -1,8 +1,12 @@
-import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, type ElementRef, computed, inject, signal, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AveAlert } from '@avelune/ui/alert';
+import { lucideSearch } from '@avelune/icons/lucide';
 import { AveButton } from '@avelune/ui/button';
+import { AveEmptyState, AveEmptyStateActions } from '@avelune/ui/empty-state';
 import { aveDateFormat, aveNumberFormat } from '@avelune/ui/i18n';
+import { provideAveIcons } from '@avelune/ui/icon';
+import { AveInput } from '@avelune/ui/input';
 import { AveProgress } from '@avelune/ui/progress';
 import { AveSkeleton } from '@avelune/ui/skeleton';
 import { contractStatuses, contracts, type ContractRecord } from './data';
@@ -20,7 +24,8 @@ const exportInterval = 400;
  */
 @Component({
   selector: 'ave-showcase-contracts',
-  imports: [AveAlert, AveButton, AveProgress, AveSkeleton, RouterLink],
+  imports: [AveAlert, AveButton, AveEmptyState, AveEmptyStateActions, AveInput, AveProgress, AveSkeleton, RouterLink],
+  providers: [provideAveIcons([lucideSearch])],
   template: `
     <div class="page" lang="ru">
       <header class="header">
@@ -57,36 +62,61 @@ const exportInterval = 400;
         </ave-alert>
       }
 
-      <ul class="list" aria-label="Договоры подразделения" [attr.aria-busy]="loading() ? 'true' : null">
-        @if (loading()) {
-          @for (row of placeholders; track row) {
-            <li class="row" data-placeholder>
+      <div class="toolbar">
+        <input
+          #searchBox
+          aveInput
+          class="search"
+          type="search"
+          autocomplete="off"
+          aria-label="Поиск договоров"
+          placeholder="Номер, предмет или контрагент"
+          [value]="query()"
+          (input)="search($event)"
+        />
+      </div>
+
+      @if (!loading() && shown().length === 0) {
+        <section class="empty" aria-label="Договоры подразделения">
+          <ave-empty-state icon="search" heading="Ничего не найдено">
+            <p>Нет договоров с «{{ query() }}» в номере, предмете или названии контрагента.</p>
+            <div aveEmptyStateActions>
+              <button aveButton type="button" (click)="resetSearch()">Сбросить поиск</button>
+            </div>
+          </ave-empty-state>
+        </section>
+      } @else {
+        <ul class="list" aria-label="Договоры подразделения" [attr.aria-busy]="loading() ? 'true' : null">
+          @if (loading()) {
+            @for (row of placeholders; track row) {
+              <li class="row" data-placeholder>
+                <div class="main">
+                  <ave-skeleton class="short" />
+                  <ave-skeleton lines="2" />
+                </div>
+                <div class="facts">
+                  <ave-skeleton class="long" />
+                  <ave-skeleton class="short" />
+                </div>
+              </li>
+            }
+          }
+          @for (contract of shown(); track contract.id) {
+            <li class="row">
               <div class="main">
-                <ave-skeleton class="short" />
-                <ave-skeleton lines="2" />
+                <span class="number">{{ contract.number }}</span>
+                <span class="subject">{{ contract.subject }}</span>
+                <span class="counterparty">{{ contract.counterparty }}</span>
               </div>
               <div class="facts">
-                <ave-skeleton class="long" />
-                <ave-skeleton class="short" />
+                <span class="amount">{{ amount(contract) }}</span>
+                <span class="status" [attr.data-status]="contract.status">{{ statuses[contract.status] }}</span>
+                <span class="ends">до {{ dates.numeric(contract.endsOn) }}</span>
               </div>
             </li>
           }
-        }
-        @for (contract of rows(); track contract.id) {
-          <li class="row">
-            <div class="main">
-              <span class="number">{{ contract.number }}</span>
-              <span class="subject">{{ contract.subject }}</span>
-              <span class="counterparty">{{ contract.counterparty }}</span>
-            </div>
-            <div class="facts">
-              <span class="amount">{{ amount(contract) }}</span>
-              <span class="status" [attr.data-status]="contract.status">{{ statuses[contract.status] }}</span>
-              <span class="ends">до {{ dates.numeric(contract.endsOn) }}</span>
-            </div>
-          </li>
-        }
-      </ul>
+        </ul>
+      }
     </div>
   `,
   styleUrl: './contracts.css',
@@ -102,6 +132,18 @@ export class ContractsPage {
   protected readonly rows = signal<readonly ContractRecord[]>([]);
   protected readonly placeholders = [1, 2, 3];
 
+  /** What the person searches for: part of a number, a subject or a counterparty. */
+  protected readonly query = signal('');
+  protected readonly shown = computed(() => {
+    const query = this.query().trim().toLocaleLowerCase('ru');
+    if (query === '') return this.rows();
+    return this.rows().filter((contract) =>
+      [contract.number, contract.subject, contract.counterparty].some((text) =>
+        text.toLocaleLowerCase('ru').includes(query),
+      ),
+    );
+  });
+
   /** Contracts whose term has ended: the alert above the list names them. */
   protected readonly expired = computed(() => this.rows().filter((contract) => contract.status === 'expired'));
   protected readonly expiredText = computed(() =>
@@ -110,9 +152,9 @@ export class ContractsPage {
       .join(' '),
   );
 
-  /** How many contracts the list holds, in Russian: 1 договор, 2 договора, 5 договоров. */
+  /** How many contracts the list shows, in Russian: 1 договор, 2 договора, 5 договоров. */
   protected readonly count = computed(() => {
-    const count = this.rows().length;
+    const count = this.shown().length;
     const noun = { one: 'договор', few: 'договора', many: 'договоров', other: 'договора' } as const;
     const form = new Intl.PluralRules('ru').select(count);
     return `${String(count)} ${form === 'zero' || form === 'two' ? noun.many : noun[form]}`;
@@ -136,6 +178,18 @@ export class ContractsPage {
       clearTimeout(load);
       clearInterval(this.timer);
     });
+  }
+
+  private readonly searchBox = viewChild.required<ElementRef<HTMLInputElement>>('searchBox');
+
+  /** The empty state's action: the search empties, and focus goes back to it, since the button goes away. */
+  protected resetSearch(): void {
+    this.query.set('');
+    this.searchBox().nativeElement.focus();
+  }
+
+  protected search(event: Event): void {
+    if (event.target instanceof HTMLInputElement) this.query.set(event.target.value);
   }
 
   protected amount(contract: ContractRecord): string {

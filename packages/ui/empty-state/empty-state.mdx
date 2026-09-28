@@ -1,0 +1,78 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as EmptyStateStories from './empty-state.stories';
+
+<Meta of={EmptyStateStories} />
+
+# Empty state
+
+`<ave-empty-state>` fills the place of a list, a table or a panel that holds nothing: it says why the place is empty and offers the next action (ADR 0062).
+
+```ts
+import { AveEmptyState, AveEmptyStateActions } from '@avelune/ui/empty-state';
+```
+
+<Canvas of={EmptyStateStories.Default} />
+
+## When to use
+
+- A list or a panel with nothing in it yet: the first contract, an empty inbox.
+- A search or filters that match nothing.
+- A place whose content could not be reached, when the rest of the screen still works.
+
+## When not to use
+
+- While the content loads: use a skeleton.
+- For an error of one field or one action: use the field's error or an alert.
+- For a whole page that does not exist: a page of its own (Wave 6).
+
+## Anatomy
+
+A centred column, at most 480px wide, in the space the content would take: an optional icon in a 48px circle, the heading (16/24, semibold), the message in muted text, and the actions in a row under it (`aveEmptyStateActions`), 8px apart, the primary one last. The icon is decorative; the heading says it.
+
+```html
+<ave-empty-state icon="search" heading="Ничего не найдено">
+  <p>Нет контрагентов с «Гамма» в названии или ИНН.</p>
+  <div aveEmptyStateActions><button aveButton type="button" (click)="reset()">Сбросить поиск</button></div>
+</ave-empty-state>
+```
+
+Register the icon with `provideAveIcons`.
+
+## Kinds
+
+<Canvas of={EmptyStateStories.NoResults} />
+
+<Canvas of={EmptyStateStories.Kinds} />
+
+| Kind                  | Heading                     | Action                              |
+| --------------------- | --------------------------- | ----------------------------------- |
+| Nothing yet           | "Договоров пока нет"        | the way to add the first one        |
+| No results            | "Ничего не найдено"         | reset the search or the filters     |
+| Done                  | "Все документы рассмотрены" | none, or where to go next           |
+| Could not be reached  | "Архив недоступен"          | try again                           |
+
+## Content
+
+- The heading says what is empty, or why, in a few words.
+- The message says why the place is empty and what will fill it; name what was searched for.
+- One or two actions: the most likely next step as the primary button, if there is one.
+- Long text wraps in short, centred lines; the actions wrap under each other.
+
+<Canvas of={EmptyStateStories.LongText} />
+
+## Accessibility
+
+- The heading and the message are plain text in reading order; the icon is hidden from assistive technology.
+- When a search empties a list, say how many results there are in a status message near the search, as for any result.
+- Text keeps its contrast in both themes; in forced colours the circle keeps its edge.
+
+## Motion
+
+None: the empty state replaces the content in place.
+
+## Do and don't
+
+- Do explain why the place is empty and offer the next action.
+- Do keep the words calm; an empty inbox is good news.
+- Don't show an empty state before the content has loaded.
+- Don't put more than two actions in it.

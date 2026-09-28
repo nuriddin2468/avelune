@@ -1,0 +1,10 @@
+@layer components {
+  /* The actions of an empty state in a centred row that wraps, 8px apart, 16px under the message. */
+  :host {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--ave-space-2);
+    margin-block-start: var(--ave-space-2);
+  }
+}

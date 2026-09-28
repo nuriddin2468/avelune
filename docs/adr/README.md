@@ -67,6 +67,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0059](0059-progress.md) | Progress: a native progress bar with a value, on a new track colour | Accepted |
 | [0060](0060-skeleton.md) | Skeleton: lines and blocks on a placeholder colour of their own, the catalog's shimmer | Accepted |
 | [0061](0061-alert-and-banner.md) | Alert and Banner: a tinted notice in place and a strip across the page, one set of icons and roles | Accepted |
+| [0062](0062-empty-state.md) | EmptyState: a centred column that says why and offers the next action | Accepted |
 
 ## Template
 

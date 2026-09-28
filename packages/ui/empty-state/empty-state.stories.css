@@ -1,0 +1,32 @@
+/* The frame of the Empty state stories. Stories only; the component's own styles are empty-state.css. */
+@layer components {
+  :host {
+    display: block;
+    padding: var(--ave-space-6);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--ave-container-xs)), 1fr));
+    gap: var(--ave-space-6);
+  }
+
+  .panel {
+    display: grid;
+    gap: var(--ave-space-4);
+    align-content: start;
+    max-inline-size: var(--ave-container-md);
+    padding: var(--ave-space-4);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface);
+  }
+
+  .rows {
+    display: grid;
+    gap: var(--ave-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}

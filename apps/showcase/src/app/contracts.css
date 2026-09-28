@@ -70,6 +70,23 @@
     }
   }
 
+  /* The search over the list, as wide as a field. */
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ave-space-2);
+  }
+
+  .search {
+    inline-size: min(100%, var(--ave-container-xs));
+  }
+
+  .empty {
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface);
+  }
+
   /* The list: one bordered surface, a row per contract; the facts under the subject on a phone, beside it from the
      medium container width. */
   .list {

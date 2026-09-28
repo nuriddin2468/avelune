@@ -1,0 +1,39 @@
+@layer components {
+  /* An empty state (ADR 0062): a centred column in the space the content would take, at most as wide as a small
+     container so its lines stay short. The icon sits in a 48px circle of the sunken surface with a subtle edge, 16px
+     over the heading; the message follows 8px under it, the actions 16px under that. */
+  :host {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: var(--ave-space-2);
+    max-inline-size: var(--ave-container-sm);
+    margin-inline: auto;
+    padding: var(--ave-space-8) var(--ave-space-4);
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-body-md);
+    text-align: center;
+  }
+
+  .badge {
+    display: grid;
+    place-items: center;
+    inline-size: var(--ave-space-12);
+    block-size: var(--ave-space-12);
+    margin-block-end: var(--ave-space-2);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-full);
+    background-color: var(--ave-color-bg-surface-sunken);
+    color: var(--ave-color-fg-muted);
+  }
+
+  .heading {
+    font: var(--ave-font-heading-md);
+  }
+
+  .message {
+    display: grid;
+    gap: var(--ave-space-2);
+    color: var(--ave-color-fg-muted);
+  }
+}
