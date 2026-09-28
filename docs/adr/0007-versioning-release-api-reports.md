@@ -44,3 +44,7 @@ Findings that shape the implementation:
 5. **ES2024 lib.** The analysis tsconfig uses `lib: ES2024` because TypeScript 5.9 does not know ES2025, as the context above anticipated.
 
 CI wiring (merge-request diff, stage order) is Phase 3.
+
+## Addendum (2026-09-25): the report's cache follows the built types
+
+`ui:api-report` hashed the `.d.ts` of the tasks it depends on, `dependentTasksOutputFiles: **/types/**/*.d.ts`, but only of `build`, whose outputs are the schematics; `build-lib` writes the types. An API change left the hash as it was, so the check could pass from Nx's cache on a stale report, and `--update` could leave one stale (found on 2026-09-25, when a combobox's new inputs were missing from its report). The input is now `transitive`, so the hash follows `build-lib`'s types; a changed public declaration runs the check again (proven by a probe comment on a public input).

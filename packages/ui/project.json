@@ -61,7 +61,8 @@
       "dependsOn": ["build"],
       "inputs": [
         {
-          "dependentTasksOutputFiles": "**/types/**/*.d.ts"
+          "dependentTasksOutputFiles": "**/types/**/*.d.ts",
+          "transitive": true
         },
         "{projectRoot}/api/**/*",
         "{projectRoot}/scripts/api-report.mjs",
