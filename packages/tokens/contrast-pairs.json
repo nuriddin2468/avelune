@@ -87,6 +87,30 @@
       "background": ["color.danger.bg-subtle"]
     },
     {
+      "reason": "Links inside a tinted area: an alert's or a banner's message",
+      "minimum": 4.5,
+      "foreground": ["color.fg.link"],
+      "background": [
+        "color.accent.bg-subtle",
+        "color.info.bg-subtle",
+        "color.success.bg-subtle",
+        "color.warning.bg-subtle",
+        "color.danger.bg-subtle"
+      ]
+    },
+    {
+      "reason": "The focus ring on a link or a button inside a tinted area (WCAG 1.4.11)",
+      "minimum": 3,
+      "foreground": ["color.border.focus"],
+      "background": [
+        "color.accent.bg-subtle",
+        "color.info.bg-subtle",
+        "color.success.bg-subtle",
+        "color.warning.bg-subtle",
+        "color.danger.bg-subtle"
+      ]
+    },
+    {
       "reason": "Boundaries a user needs to find a control (WCAG 1.4.11)",
       "minimum": 3,
       "foreground": ["color.border.strong"],

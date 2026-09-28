@@ -1,0 +1,70 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as BannerStories from './banner.stories';
+
+<Meta of={BannerStories} />
+
+# Banner
+
+`<ave-banner>` is a state of the whole product or page, in a strip across the top: planned maintenance, a licence about to expire, a server that does not answer (ADR 0061).
+
+```ts
+import { AveBanner } from '@avelune/ui/alert';
+```
+
+<Canvas of={BannerStories.Default} />
+
+## When to use
+
+- For something that concerns every screen or the whole page, until it is resolved or dismissed (`docs/GUIDELINES.md`, "Toast, inline alert or banner").
+
+## When not to use
+
+- For a notice about one part of the screen: use an alert, next to it.
+- For the result of an action people just took: use a toast.
+- For marketing or news: the product's own space for them, never a banner.
+
+## Anatomy
+
+A strip in the variant's subtle fill, as wide as its container, under the application bar or at the top of a page. The variant's icon, the message and an optional link after it, and, with `dismissible`, a small close button at the end. One row is 40px tall with or without the button (36px in compact density); a long message wraps and the icon and the button stay on its first line.
+
+```html
+<ave-banner variant="warning" dismissible (dismiss)="maintenanceSeen.set(true)">
+  В субботу с 22:00 до 02:00 система будет недоступна. <a href="…">Подробнее о работах</a>
+</ave-banner>
+```
+
+## Variants
+
+<Canvas of={BannerStories.Variants} />
+
+The same four as Alert, with the same icons and roles: `info` (default) and `success` are a `status`, `warning` and `danger` an `alert`.
+
+## Dismissing
+
+<Canvas of={BannerStories.Dismiss} />
+
+`dismissible` adds a close button named "Закрыть" in the locale. It emits `dismiss`; the page removes the banner and remembers the choice, so it does not come back on the next screen. A banner about an error that is still there is never dismissible.
+
+## Content
+
+- One or two sentences: what is going on and when. End with a link when there is more to read or do.
+- Long messages wrap; nothing truncates.
+
+<Canvas of={BannerStories.LongText} />
+
+## Accessibility
+
+- A warning or an error is an `alert`, the rest a `status`, so a banner that appears is announced.
+- The icon is named by its kind in the locale; the close button by "Close" in the locale.
+- After the close button removes the banner, the browser's next Tab continues from where the banner was.
+- Text, links and the focus ring keep their contrast on every subtle fill; forced colours draw the strip's bottom edge.
+
+## Motion
+
+None: the banner is part of the page when it loads, and leaves at once.
+
+## Do and don't
+
+- Do show one banner at a time, the most important.
+- Do let people close a banner that has nothing left for them to do.
+- Don't use a banner for the result of a single action.

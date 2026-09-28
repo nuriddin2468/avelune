@@ -30,12 +30,17 @@ export function aveFileSize(bytes: number, locale: string): string;
 
 // @alpha
 export interface AveMessages {
+    readonly alertDanger: string;
+    readonly alertInfo: string;
+    readonly alertSuccess: string;
+    readonly alertWarning: string;
     readonly chooseDate: string;
     readonly chooseFile: string;
     readonly chooseFiles: string;
     readonly chooseMonth: string;
     readonly chooseYear: string;
     readonly clear: string;
+    readonly close: string;
     readonly dropFile: string;
     readonly dropFiles: string;
     readonly files: string;

@@ -1,0 +1,79 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as AlertStories from './alert.stories';
+
+<Meta of={AlertStories} />
+
+# Alert
+
+`<ave-alert>` is a notice about one part of the screen, placed next to that part: a field that failed a check, a document about to expire, a form that did not send (ADR 0061).
+
+```ts
+import { AveAlert } from '@avelune/ui/alert';
+```
+
+<Canvas of={AlertStories.Default} />
+
+## When to use
+
+- For a problem or a notice about one part of the screen, where people are looking when they need it (`docs/GUIDELINES.md`, "Toast, inline alert or banner").
+- For the error of an action that failed, next to its button, so it stays until people act on it.
+
+## When not to use
+
+- For the error of one field: use the field's own error (`aveError` in a form field).
+- For a state of the whole product or page (maintenance, an expiring licence): use a banner.
+- For the result of an action that went well ("Документ сохранён"): use a toast.
+
+## Anatomy
+
+A box in the variant's subtle fill, `radius.lg`, 12px and 16px of padding. At the start, the variant's icon (20px, in the variant's colour), level with the first line; then an optional heading in bold and the message, which may hold paragraphs, a link or a small button, 8px apart.
+
+```html
+<ave-alert variant="warning" heading="Контрагент не прошёл проверку">
+  Налоговый номер не найден в реестре. <a href="…">Проверьте ИНН</a> или выберите другого контрагента.
+</ave-alert>
+```
+
+## Variants
+
+<Canvas of={AlertStories.Variants} />
+
+| Variant          | Icon             | Use for                                        | Role     |
+| ---------------- | ---------------- | ---------------------------------------------- | -------- |
+| `info` (default) | `info`           | Something people should know                   | `status` |
+| `success`        | `circle-check`   | A result that went well and needs to stay seen | `status` |
+| `warning`        | `triangle-alert` | A risk to check before going on                | `alert`  |
+| `danger`         | `circle-alert`   | An error, and how to fix it                    | `alert`  |
+
+Each variant has an icon of its own shape, and the text says the rest, so the kind never rests on colour.
+
+## Content
+
+- The heading says what happened, in a few words: "Договор не отправлен". The message says why and what to do: "Сервер не ответил. Отправьте договор ещё раз." Never apologise; never "Что-то пошло не так" alone.
+- Without a heading, the message alone.
+- Put the action in the message: a link to where the fix is, or a small secondary button to try again.
+
+<Canvas of={AlertStories.WithoutHeading} />
+
+<Canvas of={AlertStories.WithActions} />
+
+<Canvas of={AlertStories.LongText} />
+
+## Accessibility
+
+- A warning or an error is an `alert`, information or a success a `status`: an alert that appears is announced, an interrupting one at once. One that is on the page when it loads is read in its place.
+- The icon is named by its kind in the application's locale ("Предупреждение", "Ogohlantirish"), so screen readers hear it before the text.
+- Text in the default colour keeps 4.5:1 on every subtle fill, links too, and the focus ring 3:1 (declared in `contrast-pairs.json`). In forced colours the box keeps its outline.
+
+<Canvas of={AlertStories.Appearing} />
+
+## Motion
+
+None: an alert appears in place. Put it where it does not move content that people are reading.
+
+## Do and don't
+
+- Do place the alert next to what it is about.
+- Do say how to fix it.
+- Don't stack several alerts for one problem; say it once.
+- Don't use a warning or an error for good news: its announcement interrupts.

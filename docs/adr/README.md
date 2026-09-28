@@ -66,6 +66,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0058](0058-spinner.md) | Spinner: the delayed spinner as a component, a named progress bar that keeps its box | Accepted |
 | [0059](0059-progress.md) | Progress: a native progress bar with a value, on a new track colour | Accepted |
 | [0060](0060-skeleton.md) | Skeleton: lines and blocks on a placeholder colour of their own, the catalog's shimmer | Accepted |
+| [0061](0061-alert-and-banner.md) | Alert and Banner: a tinted notice in place and a strip across the page, one set of icons and roles | Accepted |
 
 ## Template
 

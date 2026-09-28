@@ -1,0 +1,57 @@
+@layer components {
+  /* An inline alert (ADR 0061): a tinted box of the variant's subtle fill with its icon beside the text, level with
+     the first line; the text in the default colour, which keeps 4.5:1 on every subtle fill. The border is transparent
+     and only forced colours paint it, where the fill is dropped. */
+  :host {
+    --ave-alert-fill: var(--ave-color-info-bg-subtle);
+    --ave-alert-icon: var(--ave-color-info-fg);
+
+    display: flex;
+    align-items: flex-start;
+    gap: var(--ave-space-3);
+    padding: calc(var(--ave-space-3) - var(--ave-border-width-default))
+      calc(var(--ave-space-4) - var(--ave-border-width-default));
+    border: var(--ave-border-width-default) solid transparent;
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-alert-fill);
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-body-md);
+  }
+
+  :host([data-variant='success']) {
+    --ave-alert-fill: var(--ave-color-success-bg-subtle);
+    --ave-alert-icon: var(--ave-color-success-fg);
+  }
+
+  :host([data-variant='warning']) {
+    --ave-alert-fill: var(--ave-color-warning-bg-subtle);
+    --ave-alert-icon: var(--ave-color-warning-fg);
+  }
+
+  :host([data-variant='danger']) {
+    --ave-alert-fill: var(--ave-color-danger-bg-subtle);
+    --ave-alert-icon: var(--ave-color-danger-fg);
+  }
+
+  .icon {
+    color: var(--ave-alert-icon);
+  }
+
+  .content {
+    display: grid;
+    flex: 1;
+    gap: var(--ave-space-1);
+    min-inline-size: 0;
+  }
+
+  .heading {
+    font: var(--ave-font-label-md);
+  }
+
+  /* The message's own paragraphs and actions, 8px apart. */
+  .message {
+    display: grid;
+    gap: var(--ave-space-2);
+    justify-items: start;
+  }
+}

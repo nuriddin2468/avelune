@@ -1,5 +1,6 @@
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AveAlert } from '@avelune/ui/alert';
 import { AveButton } from '@avelune/ui/button';
 import { aveDateFormat, aveNumberFormat } from '@avelune/ui/i18n';
 import { AveProgress } from '@avelune/ui/progress';
@@ -19,7 +20,7 @@ const exportInterval = 400;
  */
 @Component({
   selector: 'ave-showcase-contracts',
-  imports: [AveButton, AveProgress, AveSkeleton, RouterLink],
+  imports: [AveAlert, AveButton, AveProgress, AveSkeleton, RouterLink],
   template: `
     <div class="page" lang="ru">
       <header class="header">
@@ -48,6 +49,12 @@ const exportInterval = 400;
             [variant]="exported() === 1 ? 'success' : 'accent'"
           ></progress>
         </section>
+      }
+
+      @if (expired().length > 0) {
+        <ave-alert variant="warning" heading="Есть истёкшие договоры">
+          {{ expiredText() }} Продлите или закройте истёкшие договоры, чтобы они не попадали в отчёты.
+        </ave-alert>
       }
 
       <ul class="list" aria-label="Договоры подразделения" [attr.aria-busy]="loading() ? 'true' : null">
@@ -94,6 +101,14 @@ export class ContractsPage {
   protected readonly loading = signal(true);
   protected readonly rows = signal<readonly ContractRecord[]>([]);
   protected readonly placeholders = [1, 2, 3];
+
+  /** Contracts whose term has ended: the alert above the list names them. */
+  protected readonly expired = computed(() => this.rows().filter((contract) => contract.status === 'expired'));
+  protected readonly expiredText = computed(() =>
+    this.expired()
+      .map((contract) => `Договор ${contract.number} истёк ${this.dates.numeric(contract.endsOn)}.`)
+      .join(' '),
+  );
 
   /** How many contracts the list holds, in Russian: 1 договор, 2 договора, 5 договоров. */
   protected readonly count = computed(() => {

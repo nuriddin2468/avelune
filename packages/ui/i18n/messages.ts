@@ -91,6 +91,16 @@ export interface AveMessages {
   readonly upperValue: string;
   /** The button that takes a selection field's value away; screen readers hear the field's label after it. */
   readonly clear: string;
+  /** The button that closes or dismisses a banner, a dialog or a notification. */
+  readonly close: string;
+  /** Names the icon of a message that informs: an alert, a banner or a notification. */
+  readonly alertInfo: string;
+  /** Names the icon of a message that confirms a success. */
+  readonly alertSuccess: string;
+  /** Names the icon of a message that warns. */
+  readonly alertWarning: string;
+  /** Names the icon of a message that reports an error. */
+  readonly alertDanger: string;
 }
 
 /**
@@ -141,6 +151,11 @@ export const aveMessagesEn: AveMessages = {
   lowerValue: 'Minimum',
   upperValue: 'Maximum',
   clear: 'Clear',
+  close: 'Close',
+  alertInfo: 'Information',
+  alertSuccess: 'Success',
+  alertWarning: 'Warning',
+  alertDanger: 'Error',
 };
 
 /**
@@ -193,6 +208,11 @@ export const aveMessagesRu: AveMessages = {
   lowerValue: 'Минимум',
   upperValue: 'Максимум',
   clear: 'Очистить',
+  close: 'Закрыть',
+  alertInfo: 'Информация',
+  alertSuccess: 'Успешно',
+  alertWarning: 'Предупреждение',
+  alertDanger: 'Ошибка',
 };
 
 /**
@@ -243,6 +263,11 @@ export const aveMessagesUzLatn: AveMessages = {
   lowerValue: 'Eng kam',
   upperValue: 'Eng koʻp',
   clear: 'Tozalash',
+  close: 'Yopish',
+  alertInfo: 'Maʼlumot',
+  alertSuccess: 'Muvaffaqiyatli',
+  alertWarning: 'Ogohlantirish',
+  alertDanger: 'Xato',
 };
 
 /**
@@ -293,6 +318,11 @@ export const aveMessagesUzCyrl: AveMessages = {
   lowerValue: 'Энг кам',
   upperValue: 'Энг кўп',
   clear: 'Тозалаш',
+  close: 'Ёпиш',
+  alertInfo: 'Маълумот',
+  alertSuccess: 'Муваффақиятли',
+  alertWarning: 'Огоҳлантириш',
+  alertDanger: 'Хато',
 };
 
 /**

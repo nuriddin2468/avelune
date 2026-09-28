@@ -1,15 +1,16 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { AveBanner } from '@avelune/ui/alert';
 import { AveIconButton } from '@avelune/ui/button';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AveTheme } from '@avelune/ui/theme';
 
 /**
- * The showcase shell: the application bar, with the screens and the theme and density switches the reviews need,
- * and the screen below it.
+ * The showcase shell: the application bar, with the screens and the theme and density switches the reviews need, a
+ * banner about planned maintenance that people may close, and the screen below it.
  */
 @Component({
   selector: 'ave-showcase-root',
-  imports: [AveIconButton, RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [AveBanner, AveIconButton, RouterLink, RouterLinkActive, RouterOutlet],
   template: `
     <header class="bar" lang="ru">
       <p class="product">Avelune · Документооборот</p>
@@ -43,6 +44,11 @@ import { AveTheme } from '@avelune/ui/theme';
         ></button>
       </div>
     </header>
+    @if (!maintenanceSeen()) {
+      <ave-banner variant="warning" dismissible lang="ru" (dismiss)="maintenanceSeen.set(true)">
+        В субботу с 22:00 до 02:00 система будет недоступна: плановые работы.
+      </ave-banner>
+    }
     <main class="main">
       <router-outlet />
     </main>
@@ -55,6 +61,9 @@ export class App {
   /** The showcase starts light; a choice follows the switch, not the system. */
   protected readonly dark = computed(() => this.appearance.theme() === 'dark');
   protected readonly compact = computed(() => this.appearance.density() === 'compact');
+
+  /** Whether the person closed the maintenance banner; a real application would remember it. */
+  protected readonly maintenanceSeen = signal(false);
 
   protected toggleTheme(): void {
     this.appearance.setTheme(this.dark() ? 'light' : 'dark');

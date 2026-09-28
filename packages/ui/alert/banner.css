@@ -1,0 +1,57 @@
+@layer components {
+  /* A banner (ADR 0061): a strip across its container in the variant's subtle fill, the icon, the message and the
+     close button in one row of the small control height, so a banner is 40px tall with or without its button (36px
+     in compact density), and grows as the message wraps. The bottom border is transparent and only forced colours
+     paint it, where the fill is dropped. */
+  :host {
+    --ave-banner-fill: var(--ave-color-info-bg-subtle);
+    --ave-banner-icon: var(--ave-color-info-fg);
+
+    display: flex;
+    align-items: flex-start;
+    gap: var(--ave-space-3);
+    padding-block: var(--ave-space-1) calc(var(--ave-space-1) - var(--ave-border-width-default));
+    padding-inline: var(--ave-space-4) var(--ave-space-2);
+    border-block-end: var(--ave-border-width-default) solid transparent;
+    background-color: var(--ave-banner-fill);
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-body-md);
+  }
+
+  :host([data-variant='success']) {
+    --ave-banner-fill: var(--ave-color-success-bg-subtle);
+    --ave-banner-icon: var(--ave-color-success-fg);
+  }
+
+  :host([data-variant='warning']) {
+    --ave-banner-fill: var(--ave-color-warning-bg-subtle);
+    --ave-banner-icon: var(--ave-color-warning-fg);
+  }
+
+  :host([data-variant='danger']) {
+    --ave-banner-fill: var(--ave-color-danger-bg-subtle);
+    --ave-banner-icon: var(--ave-color-danger-fg);
+  }
+
+  /* The icon and the first line of the message sit on the middle of the row. */
+  .icon {
+    margin-block: calc((var(--ave-control-height-sm) - var(--ave-size-icon-md)) / 2);
+    color: var(--ave-banner-icon);
+  }
+
+  /* The message and a link or a small button after it, wrapping as one line of words. */
+  .message {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 var(--ave-space-4);
+    min-inline-size: 0;
+    min-block-size: var(--ave-control-height-sm);
+    padding-block: calc((var(--ave-control-height-sm) - var(--ave-font-body-md-line-height)) / 2);
+  }
+
+  .close {
+    flex: none;
+  }
+}
