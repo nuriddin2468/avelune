@@ -1,7 +1,10 @@
 @layer components {
   /* A range: the two inputs in equal columns, 8px from the dash between them; the calendar button is in the second.
-     The columns start at 0, so the start input's padding does not make it wider than the end input. */
+     The columns start at 0, so the start input's padding does not make it wider than the end input. A range has no
+     smallest width of its own (field.css gives the single field one): narrower than a container, it puts the end input
+     under the start input instead. */
   :host {
+    min-inline-size: 0;
     container-type: inline-size;
   }
 

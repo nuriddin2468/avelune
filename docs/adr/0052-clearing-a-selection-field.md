@@ -43,3 +43,15 @@ Facts, verified on 2026-09-25 in Angular 22.2.0, Angular Aria 22.2.0 and Chromiu
 - ADR 0048's equal columns hold for a range that cannot be cleared; one that can has a wider end input. ADR 0048 is otherwise unchanged.
 - The baselines of every story with an editable, optional value in the five components change; the same-size invariant is unaffected, since the button changes no box.
 - A select or multiselect clears on Delete or Backspace; its docs page and the harness say so. The date fields' stories find the calendar button by its popup, no longer as the field's first button.
+
+## Addendum (2026-09-28): a date field is never narrower than its date with its buttons
+
+The first full visual run after this decision found the date cut in a single DatePicker in a narrow column: with both buttons a medium field needs 154px for `18.03.2026` (the size's padding, 72px of text in Avelune Sans, the room of two squares and the borders; 142px small, 166px large), and in a two-column row of a 390px viewport it was 146 to 150px, so it showed `18.03.202`. The range was not affected: its end input is wider by the clear button's room (point 3), and it stacks its inputs below 320px.
+
+The product owner chose (2026-09-28) a smallest width over hiding the clear button in a narrow field (a phone, where a touch screen needs the button most) and over leaving the date cut:
+
+- A DatePicker is never narrower than the widest date its locale writes and its placeholder, with the input's padding and borders and the room of its buttons. Figures are tabular, so any date with a two-digit day and month is the widest; the field draws it, unseen, in a sizer without height, whose words are generated content (`attr()` in `::before` and `::after`), so the page gains no text. The host's `min-inline-size` is `min-content`; the input, at 100%, adds none of its own.
+- The room for the clear button is kept whenever the field may be cleared (enabled, not readonly, not required), with a date or without, so nothing moves when a date comes, as in the range. A field that may not be cleared keeps the calendar button's room only (126px at the medium size).
+- In a flex row the field keeps its width and its neighbours take less; in a grid track narrower than it, it overflows the track rather than cut its value. The range keeps `min-inline-size: 0` and its stacking.
+
+`date-picker.spec.ts` proves it in a 100px row: the field is wider than the row, its text fits its input (`scrollWidth` equals `clientWidth`, which fails without the smallest width), and its width stays the same when the date is cleared and typed again.

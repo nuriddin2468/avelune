@@ -374,6 +374,50 @@ describe('AveDatePicker', () => {
     withLayout(false);
   });
 
+  it('is never narrower than its date with both buttons, and keeps that room while empty (ADR 0052)', async () => {
+    withLayout(true);
+    const fixture = mount(OptionalHost, 'ru');
+    const field = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveDatePickerHarness);
+    const element = fixture.nativeElement as HTMLElement;
+    // A row far narrower than a date: the field keeps its smallest width, and the date shows whole.
+    element.style.display = 'flex';
+    element.style.inlineSize = '100px';
+    const host = element.querySelector('ave-date-picker');
+    const input = element.querySelector('input');
+    if (host === null || input === null) throw new Error('No parts');
+    const width = host.getBoundingClientRect().width;
+    expect(width).toBeGreaterThan(100);
+    expect(await field.canClear()).toBe(true);
+    expect(input.scrollWidth).toBe(input.clientWidth);
+    // Empty, the field keeps the clear button's room: nothing moves when a date comes.
+    await field.clear();
+    expect(host.getBoundingClientRect().width).toBe(width);
+    await field.type('28.12.2026');
+    expect(host.getBoundingClientRect().width).toBe(width);
+    expect(input.scrollWidth).toBe(input.clientWidth);
+    withLayout(false);
+  });
+
+  it('keeps the same smallest width, and the date whole, in a required and a readonly field', async () => {
+    withLayout(true);
+    const fixture = mount(ReactiveHost, 'ru');
+    const [due] = await TestbedHarnessEnvironment.loader(fixture).getAllHarnesses(AveDatePickerHarness);
+    const element = fixture.nativeElement as HTMLElement;
+    element.style.display = 'flex';
+    element.style.inlineSize = '100px';
+    const [required, frozen] = [...element.querySelectorAll('ave-date-picker')];
+    const input = required?.querySelector('input');
+    if (required === undefined || frozen === undefined || input === null || input === undefined) {
+      throw new Error('No parts');
+    }
+    await due?.type('01.10.2026');
+    expect(input.scrollWidth).toBe(input.clientWidth);
+    // Neither may be cleared: both keep the calendar button's room only, and the same smallest width.
+    expect(required.getBoundingClientRect().width).toBeGreaterThan(100);
+    expect(required.getBoundingClientRect().width).toBe(frozen.getBoundingClientRect().width);
+    withLayout(false);
+  });
+
   it('shows no clear button on a required or readonly date', async () => {
     const fixture = mount(ReactiveHost, 'ru');
     const [due, frozen] = await TestbedHarnessEnvironment.loader(fixture).getAllHarnesses(AveDatePickerHarness);

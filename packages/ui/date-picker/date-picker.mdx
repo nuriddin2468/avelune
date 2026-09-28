@@ -84,6 +84,8 @@ A date field that is not required shows a clear button before the calendar butto
 
 <Canvas of={DatePickerStories.Clearing} />
 
+A date field is never narrower than its date with its buttons: at the medium size in the default density, 154px while it may be cleared, empty or not, so nothing moves when a date comes, and 126px when it may not (the widest date of the locale and the placeholder decide, with the font). In a row, the field keeps that width and its neighbours take less (ADR 0052, addendum).
+
 ## Forms
 
 <Canvas of={DatePickerStories.Forms} />

@@ -8,7 +8,7 @@
 
     position: relative;
     display: block;
-    min-inline-size: 0;
+    min-inline-size: min-content;
   }
 
   :host([data-size='sm']) {
@@ -62,6 +62,36 @@
     &[data-clear] {
       padding-inline-end: calc(var(--ave-date-height) * 2 - var(--ave-space-2));
     }
+  }
+
+  /* A date field is never narrower than its date with its buttons (ADR 0052, addendum): the sizer is the input's box
+     around the widest date and the placeholder, one on each line, with room for the clear button whenever the field
+     may be cleared. It has no height and no paint; the host's smallest width is its width. The input, at 100%, gives
+     the host none of its own. */
+  .sizer {
+    display: block;
+    block-size: 0;
+    padding-inline: var(--ave-date-padding) var(--ave-date-height);
+    border-inline: var(--ave-border-width-default) solid transparent;
+    overflow: hidden;
+    font: var(--ave-font-body-md);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    visibility: hidden;
+
+    &::before {
+      display: block;
+      content: attr(data-date);
+    }
+
+    &::after {
+      display: block;
+      content: attr(data-placeholder);
+    }
+  }
+
+  :host([data-clearable]) .sizer {
+    padding-inline-end: calc(var(--ave-date-height) * 2 - var(--ave-space-2));
   }
 
   /* The calendar button: a square 4px inside the field, with corners concentric to it (8 - 4 = 4). Its focus ring is

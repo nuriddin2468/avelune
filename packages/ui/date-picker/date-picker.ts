@@ -20,7 +20,7 @@ import { NgControl, type ControlValueAccessor } from '@angular/forms';
 import { FORM_FIELD } from '@angular/forms/signals';
 import { lucideCalendar, lucideX } from '@avelune/icons/lucide';
 import { AVE_CONTROL_OWNER, AveClearButton, AveControlTarget, injectControlState } from '@avelune/ui/forms';
-import { aveDateFormat, injectAveMessages, type AvePlainDate } from '@avelune/ui/i18n';
+import { aveDateFormat, injectAveMessages, toPlainDate, type AvePlainDate } from '@avelune/ui/i18n';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
 import { aveConnectedOverlay, aveOverlayPresence } from '@avelune/ui/overlay';
 import { AveCalendar } from './calendar';
@@ -46,8 +46,11 @@ import type { AveDatePickerSize } from './types';
   providers: [provideAveIcons([lucideCalendar, lucideX]), { provide: AVE_CONTROL_OWNER, useExisting: AveDatePicker }],
   host: {
     '[attr.data-size]': 'size()',
+    '[attr.data-clearable]': 'canClear() ? "" : null',
     '(focusout)': 'left($event)',
   },
+  // The sizer draws the widest date and the placeholder, unseen: the field is never narrower than they are with its
+  // buttons (ADR 0052, addendum). Its words are generated content, so it adds no text to the page.
   template: `
     <input
       #input
@@ -65,6 +68,12 @@ import type { AveDatePickerSize } from './types';
       (input)="typed($event)"
       (keydown.enter)="commit()"
     />
+    <span
+      class="sizer"
+      aria-hidden="true"
+      [attr.data-date]="widest"
+      [attr.data-placeholder]="format.placeholder"
+    ></span>
     @if (clearable()) {
       <button aveClearButton type="button" class="clear" [label]="label()" (click)="clear()">
         <ave-icon name="x" decorative />
@@ -162,10 +171,17 @@ export class AveDatePicker implements ControlValueAccessor {
   });
   protected readonly isDisabled = computed(() => this.disabled() || this.state.disabled() || this.disabledByForm());
 
-  /** Whether the clear button shows: a date that can be changed and may be taken away (ADR 0052). */
-  protected readonly clearable = computed(
-    () => this.value() !== null && !this.isDisabled() && !this.readonly() && !this.state.required(),
-  );
+  /**
+   * Whether the date may be taken away: it can be changed and is not required (ADR 0052). The field keeps room for the
+   * clear button even while it is empty, so nothing moves when a date comes.
+   */
+  protected readonly canClear = computed(() => !this.isDisabled() && !this.readonly() && !this.state.required());
+
+  /** Whether the clear button shows: a date, in a field that may be cleared. */
+  protected readonly clearable = computed(() => this.value() !== null && this.canClear());
+
+  /** The widest date the locale writes: figures are tabular, so any date with a two-digit day and month. */
+  protected readonly widest = this.format.numeric(toPlainDate(2026, 12, 28));
 
   /** @internal The field around the control dims its label while the control is disabled, by input or by form. */
   readonly controlDisabled = this.isDisabled;

@@ -16,6 +16,7 @@ import { Signal } from '@angular/core';
 // @alpha
 export class AveDatePicker implements ControlValueAccessor {
     constructor();
+    protected readonly canClear: _angular_core.Signal<boolean>;
     protected choose(date: AvePlainDate): void;
     // (undocumented)
     protected readonly chosen: _angular_core.Signal<readonly string[]>;
@@ -60,6 +61,7 @@ export class AveDatePicker implements ControlValueAccessor {
     // (undocumented)
     protected typed(event: Event): void;
     readonly value: _angular_core.ModelSignal<string | null>;
+    protected readonly widest: string;
     // @internal (undocumented)
     writeValue(value: unknown): void;
     // (undocumented)
