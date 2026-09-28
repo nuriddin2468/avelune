@@ -82,6 +82,30 @@
   background: var(--ave-color-accent-bg);
 }
 
+/* Forced colours would drop the track's and the thumb's fills and leave nothing to see: as on the Slider, the track
+   takes the text colour and the thumb the highlight. */
+@media (forced-colors: active) {
+  .thumb-sample::-webkit-slider-runnable-track {
+    background-color: CanvasText;
+    forced-color-adjust: none;
+  }
+
+  .thumb-sample::-moz-range-track {
+    background-color: CanvasText;
+    forced-color-adjust: none;
+  }
+
+  .thumb-sample::-webkit-slider-thumb {
+    background-color: Highlight;
+    forced-color-adjust: none;
+  }
+
+  .thumb-sample::-moz-range-thumb {
+    background-color: Highlight;
+    forced-color-adjust: none;
+  }
+}
+
 /* A list that clips its rows at its rounded edge: the rows draw the ring inset. */
 .clipped {
   display: grid;
