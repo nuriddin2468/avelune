@@ -1,7 +1,9 @@
 import {
   DestroyRef,
   ElementRef,
+  Injector,
   PLATFORM_ID,
+  afterNextRender,
   afterRenderEffect,
   effect,
   inject,
@@ -25,8 +27,8 @@ export type AveSearchMode = 'local' | 'server';
 
 /** What a list driven by a server needs from its component. */
 export interface RemoteSource {
-  /** Where the options come from. */
-  readonly search: Signal<AveSearchMode>;
+  /** Where the options come from; `none` for a multiselect without a search. */
+  readonly search: Signal<AveSearchMode | 'none'>;
   /** What to search for now: what the input says, or `''` while it shows the chosen label. */
   readonly text: Signal<string>;
   /** Whether the list is open. */
@@ -41,6 +43,8 @@ export interface RemoteSource {
   readonly count: Signal<number>;
   /** The element that scrolls the options. */
   readonly list: Signal<HTMLElement | undefined>;
+  /** The listbox, which moves the keyboard to an option. */
+  readonly listbox: Signal<{ gotoIndex(index: number): void } | undefined>;
   /** Emits the text to search for. */
   readonly query: OutputEmitterRef<string>;
   /** Emits when the list wants its next page. */
@@ -65,9 +69,10 @@ export interface RemoteList {
 type Request = { readonly kind: 'query'; readonly text: string } | { readonly kind: 'more' };
 
 /**
- * The server's side of a combobox's list (ADR 0056): the search sent after a pause, the first search when the list
- * opens, the next page at the list's end, a retry of what failed, the spinner's timing, and what screen readers hear
- * once the list loads. Call it in an injection context.
+ * The server's side of a combobox's or a searchable multiselect's list (ADR 0056, 0057): the search sent after a
+ * pause, the first search when the list opens, the next page at the list's end and on Down from its last option, a
+ * retry of what failed, the spinner's timing, and what screen readers hear once the list loads. Call it in the
+ * injection context of the component, whose host it listens to.
  */
 export function remoteList(source: RemoteSource): RemoteList {
   const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
@@ -76,6 +81,7 @@ export function remoteList(source: RemoteSource): RemoteList {
   const messages = injectAveMessages();
   // CDK's LiveAnnouncer does not load the styles that hide its live element (ADR 0050).
   inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
+  const injector = inject(Injector);
   const server = () => source.search() === 'server';
   let asked: string | null = null;
   let last: Request | null = null;
@@ -124,6 +130,35 @@ export function remoteList(source: RemoteSource): RemoteList {
           ? messages.noResults
           : messages.optionsFound(source.count());
       void announcer.announce(said, 'polite');
+    });
+  });
+
+  // Down on the last option, while the server has more, asks for the next page; it is read before Aria's own handler,
+  // in the capture phase, while the last option is still the active one. Once the page has come, the keyboard goes
+  // on to its first option.
+  let pending: number | null = null;
+  const down = (event: KeyboardEvent) => {
+    if (event.key !== 'ArrowDown' || !source.expanded() || !source.hasMore()) return;
+    if (source.list()?.querySelector('.option:last-child')?.getAttribute('data-active') !== 'true') return;
+    pending = source.count();
+    more();
+  };
+  host.addEventListener('keydown', down, { capture: true });
+  inject(DestroyRef).onDestroy(() => {
+    host.removeEventListener('keydown', down, { capture: true });
+  });
+  afterRenderEffect(() => {
+    const count = source.count();
+    const loading = source.loading();
+    untracked(() => {
+      const index = pending;
+      if (index === null) return;
+      if (count > index) {
+        pending = null;
+        afterNextRender(() => source.listbox()?.gotoIndex(index), { injector });
+      } else if (!loading) {
+        pending = null;
+      }
     });
   });
 

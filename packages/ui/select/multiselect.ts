@@ -5,8 +5,10 @@ import {
   booleanAttribute,
   computed,
   contentChild,
+  effect,
   inject,
   input,
+  linkedSignal,
   model,
   output,
   signal,
@@ -17,19 +19,24 @@ import { Listbox, Option } from '@angular/aria/listbox';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { NgControl, type ControlValueAccessor } from '@angular/forms';
 import { FORM_FIELD } from '@angular/forms/signals';
-import { lucideCheck, lucideChevronDown, lucideX } from '@avelune/icons/lucide';
+import { lucideCheck, lucideChevronDown, lucideCircleAlert, lucideLoaderCircle, lucideX } from '@avelune/icons/lucide';
+import { AveButton } from '@avelune/ui/button';
 import { AVE_CONTROL_OWNER, AveClearButton, AveControlTarget, injectControlState } from '@avelune/ui/forms';
+import { injectAveMessages } from '@avelune/ui/i18n';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
 import { aveConnectedOverlay, aveOverlayPresence } from '@avelune/ui/overlay';
 import { pruned } from './choice';
+import { matches } from './match';
 import { AveOptionContent, describedBy, optionIds } from './option-content';
+import { remoteList, type AveSearchMode } from './remote';
 import { AveOptionTemplate } from './templates';
 import type { AveOption, AveSelectSize } from './types';
 
 /**
  * The kit's multiselect (brief §9.1, ADR 0046): several choices from a list, under a trigger with the box of an
  * Input that names what is chosen. The list stays open while people check and uncheck options, and closes on Escape,
- * Tab or a click outside. Built on Angular Aria's combobox and a multi-select listbox, in CDK's overlay. Signal Forms
+ * Tab or a click outside. With `search`, the trigger is an input that filters the options or asks a server (ADR
+ * 0057). Built on Angular Aria's combobox and a multi-select listbox, in CDK's overlay. Signal Forms
  * bind its `value` model (`[formField]` on an array), Reactive Forms its value accessor. Put it in an
  * `<ave-form-field>` for its label, hint and error.
  *
@@ -42,6 +49,7 @@ import type { AveOption, AveSelectSize } from './types';
 @Component({
   selector: 'ave-multiselect',
   imports: [
+    AveButton,
     AveClearButton,
     AveControlTarget,
     AveIcon,
@@ -54,34 +62,59 @@ import type { AveOption, AveSelectSize } from './types';
     OverlayModule,
   ],
   providers: [
-    provideAveIcons([lucideCheck, lucideChevronDown, lucideX]),
+    provideAveIcons([lucideCheck, lucideChevronDown, lucideCircleAlert, lucideLoaderCircle, lucideX]),
     { provide: AVE_CONTROL_OWNER, useExisting: AveMultiselect },
   ],
   host: {
     '[attr.data-size]': 'size()',
   },
   template: `
-    <button
-      #combobox="ngCombobox"
-      class="trigger"
-      type="button"
-      aveControlTarget
-      ngCombobox
-      [disabled]="isDisabled()"
-      [softDisabled]="false"
-      [preserveContent]="true"
-      [readonly]="readonly()"
-      [attr.aria-label]="label() || null"
-      [attr.data-empty]="chosen().length === 0 ? '' : null"
-      [attr.data-clear]="clearable() ? '' : null"
-      [(expanded)]="expanded"
-      (focusout)="left($event)"
-      (keydown.delete)="clearByKey($event)"
-      (keydown.backspace)="clearByKey($event)"
-    >
-      <span class="value">{{ text() }}</span>
-      <ave-icon class="chevron" name="chevron-down" decorative />
-    </button>
+    @if (search() === 'none') {
+      <button
+        class="trigger"
+        type="button"
+        aveControlTarget
+        ngCombobox
+        [disabled]="isDisabled()"
+        [softDisabled]="false"
+        [preserveContent]="true"
+        [readonly]="readonly()"
+        [attr.aria-label]="label() || null"
+        [attr.data-empty]="chosen().length === 0 ? '' : null"
+        [attr.data-clear]="clearable() ? '' : null"
+        [(expanded)]="expanded"
+        (focusout)="left($event)"
+        (keydown.delete)="clearByKey($event)"
+        (keydown.backspace)="clearByKey($event)"
+      >
+        <span class="value">{{ text() }}</span>
+        <ave-icon class="chevron" name="chevron-down" decorative />
+      </button>
+    } @else {
+      <!-- A searchable multiselect (ADR 0057): the chosen labels until people type, then the search. -->
+      <input
+        class="trigger"
+        type="text"
+        autocomplete="off"
+        aveControlTarget
+        ngCombobox
+        [disabled]="isDisabled()"
+        [softDisabled]="false"
+        [preserveContent]="true"
+        [readonly]="readonly()"
+        [attr.aria-label]="label() || null"
+        [attr.placeholder]="placeholder() || null"
+        [attr.data-empty]="chosen().length === 0 ? '' : null"
+        [attr.data-clear]="clearable() ? '' : null"
+        [(value)]="searchText"
+        [(expanded)]="expanded"
+        (focus)="selectText($event)"
+        (click)="selectText($event)"
+        (focusout)="left($event)"
+        (input)="typed()"
+        (keydown.enter)="enter()"
+      />
+    }
     @if (clearable()) {
       <button aveClearButton type="button" class="clear" [label]="label()" (click)="clear()">
         <ave-icon name="x" decorative />
@@ -89,7 +122,7 @@ import type { AveOption, AveSelectSize } from './types';
     }
     <!-- The popup outside the overlay, so the combobox knows its popup (aria-haspopup, aria-autocomplete) before it
          first opens; the overlay renders once the list is first shown and stays, closed, after (preserveContent). -->
-    <ng-template ngComboboxPopup [combobox]="combobox">
+    <ng-template ngComboboxPopup [combobox]="trigger()">
       <ng-template [cdkConnectedOverlay]="overlay()" [cdkConnectedOverlayOpen]="presence.open()">
         <div
           #popup
@@ -106,11 +139,13 @@ import type { AveOption, AveSelectSize } from './types';
             focusMode="activedescendant"
             selectionMode="explicit"
             [tabindex]="-1"
+            [wrap]="!hasMore()"
             [value]="value()"
             [activeDescendant]="listbox.activeDescendant()"
             (valueChange)="choose($event)"
+            (scroll)="scrolled()"
           >
-            @for (option of options(); track $index) {
+            @for (option of shown(); track $index) {
               <div
                 class="option"
                 ngOption
@@ -129,6 +164,22 @@ import type { AveOption, AveSelectSize } from './types';
               </div>
             }
           </div>
+          @if (spinner()) {
+            <p class="state">
+              <ave-icon class="ave-motion-spin" name="loader-circle" decorative />{{ messages.loading }}
+            </p>
+          } @else if (error()) {
+            <div class="state failed">
+              <ave-icon class="alert" name="circle-alert" decorative />
+              <span class="text">{{ messages.loadFailed }}</span>
+              <button aveButton type="button" variant="ghost" size="sm" (click)="retry()">
+                {{ messages.retry }}
+              </button>
+            </div>
+          } @else if (search() !== 'none' && shown().length === 0 && !loading()) {
+            <!-- A local list says it here; a server's list says it through the announcer, once it has loaded. -->
+            <p class="empty" [attr.role]="search() === 'local' ? 'status' : null">{{ messages.noResults }}</p>
+          }
         </div>
       </ng-template>
     </ng-template>
@@ -163,8 +214,29 @@ export class AveMultiselect<V> implements ControlValueAccessor {
    */
   readonly chosenOptions = input<readonly AveOption<V>[]>([]);
 
+  /**
+   * Whether people search the options (ADR 0057): `none`, a button opens the list; `local`, an input filters the
+   * options by label as people type; `server`, the input asks a server through `query`, a page at a time (ADR 0056).
+   */
+  readonly search = input<AveSearchMode | 'none'>('none');
+
+  /** With `search="server"`: whether the server is sending options. */
+  readonly loading = input(false, { transform: booleanAttribute });
+
+  /** With `search="server"`: whether the last request failed; the list offers to try again, as Enter does. */
+  readonly error = input(false, { transform: booleanAttribute });
+
+  /** With `search="server"`: whether the server has more options than the list. */
+  readonly hasMore = input(false, { transform: booleanAttribute });
+
   /** Emits when the person leaves the multiselect, which marks a Signal Forms field touched. */
   readonly touch = output();
+
+  /** With `search="server"`: the text to search for, once typing pauses, and at once when the list opens. */
+  readonly query = output<string>();
+
+  /** With `search="server"` and `hasMore`: the list wants its next page. */
+  readonly loadMore = output();
 
   /** The form state, read on the host, where the form binding is. */
   readonly state = injectControlState();
@@ -195,11 +267,35 @@ export class AveMultiselect<V> implements ControlValueAccessor {
   /** The options people chose, which the options may no longer hold. */
   private readonly remembered = signal<readonly AveOption<V>[]>([]);
 
-  /** What the trigger says: the chosen labels, comma-separated, or the placeholder. */
-  protected readonly text = computed(() => {
-    const chosen = this.chosen();
-    return chosen.length === 0 ? this.placeholder() : chosen.map((option) => option.label).join(', ');
+  /** The chosen labels, comma-separated. */
+  private readonly summary = computed(() =>
+    this.chosen()
+      .map((option) => option.label)
+      .join(', '),
+  );
+
+  /** What the button says: the chosen labels, or the placeholder. */
+  protected readonly text = computed(() => this.summary() || this.placeholder());
+
+  /**
+   * What the searchable input says (ADR 0057): the chosen labels, or what the person types. It follows the chosen
+   * labels while the text is not being edited; a search stays while options are checked.
+   */
+  protected readonly searchText = linkedSignal<string, string>({
+    source: this.summary,
+    computation: (summary, previous) =>
+      previous === undefined || previous.value === previous.source ? summary : previous.value,
   });
+
+  /** The options the list shows: every one, or the matches of a local search while the text is a search. */
+  protected readonly shown = computed(() => {
+    const options = this.options();
+    if (this.search() !== 'local') return options;
+    const text = this.searchText();
+    return text === this.summary() ? options : options.filter((option) => matches(option.label, text));
+  });
+
+  protected readonly messages = injectAveMessages();
 
   protected readonly isDisabled = computed(() => this.disabled() || this.state.disabled() || this.disabledByForm());
 
@@ -211,7 +307,7 @@ export class AveMultiselect<V> implements ControlValueAccessor {
   /** @internal The field around the control dims its label while the control is disabled, by input or by form. */
   readonly controlDisabled = this.isDisabled;
 
-  private readonly trigger = viewChild.required<Combobox>('combobox');
+  protected readonly trigger = viewChild.required<Combobox>(Combobox);
   private readonly list = viewChild<Listbox<V>>('listbox');
   private readonly popup = viewChild<ElementRef<HTMLElement>>('popup');
 
@@ -222,6 +318,25 @@ export class AveMultiselect<V> implements ControlValueAccessor {
   );
 
   protected readonly overlay = computed(() => aveConnectedOverlay(this.trigger().element));
+
+  /** The server's side of the list (ADR 0056). */
+  private readonly remote = remoteList({
+    search: this.search,
+    // The chosen labels are not a search: the list asks for everything.
+    text: computed(() => (this.searchText() === this.summary() ? '' : this.searchText())),
+    expanded: this.expanded,
+    loading: this.loading,
+    error: this.error,
+    hasMore: this.hasMore,
+    count: computed(() => this.shown().length),
+    list: computed(() => this.popup()?.nativeElement.querySelector<HTMLElement>('.listbox') ?? undefined),
+    listbox: this.list,
+    query: this.query,
+    loadMore: this.loadMore,
+  });
+
+  /** Whether the list shows its spinner, on the spinner's timings (ADR 0056). */
+  protected readonly spinner = this.remote.spinner;
 
   private readonly disabledByForm = signal(false);
   private changed: (value: V[]) => void = () => undefined;
@@ -237,6 +352,38 @@ export class AveMultiselect<V> implements ControlValueAccessor {
     afterRenderEffect(() => {
       this.list()?.scrollActiveItemIntoView({ block: 'nearest' });
     });
+    // The list closed: a search gives way to the chosen labels again.
+    effect(() => {
+      if (!this.expanded()) this.searchText.set(this.summary());
+    });
+  }
+
+  /**
+   * Focus or a click came to the searchable input while it says the chosen labels: they are selected, so typing starts
+   * a search rather than editing them.
+   */
+  protected selectText(event: Event): void {
+    if (event.target instanceof HTMLInputElement && this.searchText() === this.summary()) event.target.select();
+  }
+
+  /** The person typed: a server's list searches once typing pauses. */
+  protected typed(): void {
+    this.remote.typed();
+  }
+
+  /** The list scrolled: at its end, a server's list asks for its next page. */
+  protected scrolled(): void {
+    this.remote.scrolled();
+  }
+
+  /** The Try again button: the last request goes again. */
+  protected retry(): void {
+    this.remote.retry();
+  }
+
+  /** Enter with no option active, after a request failed, asks the server again (ADR 0056). */
+  protected enter(): void {
+    if (this.error() && this.list()?.activeDescendant() === undefined) this.remote.retry();
   }
 
   /**
@@ -244,17 +391,19 @@ export class AveMultiselect<V> implements ControlValueAccessor {
    * stay after them; the list stays open.
    */
   protected choose(values: V[]): void {
-    // Chosen values no option holds, which Aria's listbox dropped, stay chosen, after those the list shows.
-    if (pruned(this.value(), values, this.options())) return;
-    const options = this.options();
-    const listed = options
-      .map((option) => option.value)
-      .filter((value) => values.some((chosen) => Object.is(chosen, value)));
-    const hidden = this.value().filter((value) => !options.some((option) => Object.is(option.value, value)));
-    const next = [...listed, ...hidden];
+    const shown = this.shown();
+    // Chosen values the list does not show, which Aria's listbox dropped, stay chosen.
+    if (pruned(this.value(), values, shown)) return;
+    const has = (list: readonly V[], value: V) => list.some((other) => Object.is(other, value));
+    const isShown = (value: V) => shown.some((option) => Object.is(option.value, value));
+    // A value the list shows is chosen as the list says; one it hides (a search, a server's page) as it was.
+    const kept = (value: V) => (isShown(value) ? has(values, value) : has(this.value(), value));
+    const known = this.options().map((option) => option.value);
+    const outside = this.value().filter((value) => !has(known, value));
+    const next = [...known.filter(kept), ...outside.filter(kept)];
     this.remembered.update((remembered) => [
-      ...remembered.filter((option) => !listed.some((value) => Object.is(value, option.value))),
-      ...options.filter((option) => listed.some((value) => Object.is(value, option.value))),
+      ...remembered.filter((option) => !isShown(option.value)),
+      ...shown.filter((option) => has(next, option.value)),
     ]);
     this.value.set(next);
     this.changed(next);
@@ -279,6 +428,7 @@ export class AveMultiselect<V> implements ControlValueAccessor {
   protected left(event: FocusEvent): void {
     const next = event.relatedTarget;
     if (next instanceof Node && this.trigger().element.parentElement?.contains(next) === true) return;
+    this.searchText.set(this.summary());
     this.touch.emit();
     this.touched();
   }

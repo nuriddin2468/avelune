@@ -12,13 +12,14 @@ import { AveCombobox, AveMultiselect, AveSelect } from '@avelune/ui/select';
 import { AveSlider } from '@avelune/ui/slider';
 import { AveTextarea } from '@avelune/ui/textarea';
 import { CounterpartyDirectory } from './counterparty-directory';
-import { approvers, contractKinds } from './data';
+import { approvers, contractKinds, regions } from './data';
 
 interface Contract {
   number: string;
   kind: string | null;
   counterparty: number | null;
   approvers: string[];
+  regions: string[];
   signedOn: string | null;
   term: AveDateRange | null;
   subject: string;
@@ -36,6 +37,7 @@ const empty: Contract = {
   kind: null,
   counterparty: null,
   approvers: [],
+  regions: [],
   signedOn: null,
   term: null,
   subject: '',
@@ -183,6 +185,16 @@ const sendDelay = 1500;
           <p aveHint>Юридический отдел согласует каждый договор.</p>
         </ave-form-field>
 
+        <ave-form-field label="Регионы поставки">
+          <ave-multiselect
+            search="local"
+            placeholder="Начните вводить регион"
+            [options]="regions"
+            [formField]="contract.regions"
+          />
+          <p aveHint>Все регионы, куда контрагент поставляет по договору.</p>
+        </ave-form-field>
+
         <ave-form-field label="Почта для уведомлений">
           <input aveInput type="email" autocomplete="email" [formField]="contract.email" />
           @if (contract.email().errors().length > 0) {
@@ -247,6 +259,7 @@ export class ContractForm {
   protected readonly contractKinds = contractKinds;
   protected readonly directory = inject(CounterpartyDirectory);
   protected readonly approvers = approvers;
+  protected readonly regions = regions;
   protected readonly attachmentLimit = 20 * 1024 * 1024;
   protected readonly termPresets = termPresets;
   protected readonly percent: Intl.NumberFormatOptions = { style: 'unit', unit: 'percent' };

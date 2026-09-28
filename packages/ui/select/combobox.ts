@@ -1,9 +1,6 @@
 import {
   Component,
-  DestroyRef,
   ElementRef,
-  Injector,
-  afterNextRender,
   afterRenderEffect,
   booleanAttribute,
   computed,
@@ -14,7 +11,6 @@ import {
   model,
   output,
   signal,
-  untracked,
   viewChild,
 } from '@angular/core';
 import { Combobox, ComboboxPopup, ComboboxWidget } from '@angular/aria/combobox';
@@ -310,14 +306,11 @@ export class AveCombobox<V> implements ControlValueAccessor {
     hasMore: this.hasMore,
     count: computed(() => this.shown().length),
     list: computed(() => this.popup()?.nativeElement.querySelector<HTMLElement>('.listbox') ?? undefined),
+    listbox: this.list,
     query: this.query,
     loadMore: this.loadMore,
   });
 
-  /** After Down on the last option asked for the next page: the index its first option will have. */
-  private pending: number | null = null;
-
-  private readonly injector = inject(Injector);
   private readonly disabledByForm = signal(false);
   private changed: (value: V | null) => void = () => undefined;
   private touched: () => void = () => undefined;
@@ -331,31 +324,6 @@ export class AveCombobox<V> implements ControlValueAccessor {
     if (ngControl !== null) ngControl.valueAccessor = this;
     afterRenderEffect(() => {
       this.list()?.scrollActiveItemIntoView({ block: 'nearest' });
-    });
-    // Down on the last option, while the server has more, asks for the next page; it is read before Aria's own
-    // handler, in the capture phase, while the last option is still the active one.
-    const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
-    const down = (event: KeyboardEvent) => {
-      if (event.key === 'ArrowDown') this.downOnLast();
-    };
-    host.addEventListener('keydown', down, { capture: true });
-    inject(DestroyRef).onDestroy(() => {
-      host.removeEventListener('keydown', down, { capture: true });
-    });
-    // Once the next page has come, the keyboard goes on to its first option.
-    afterRenderEffect(() => {
-      const count = this.shown().length;
-      const loading = this.loading();
-      untracked(() => {
-        const index = this.pending;
-        if (index === null) return;
-        if (count > index) {
-          this.pending = null;
-          afterNextRender(() => this.list()?.gotoIndex(index), { injector: this.injector });
-        } else if (!loading) {
-          this.pending = null;
-        }
-      });
     });
   }
 
@@ -380,14 +348,6 @@ export class AveCombobox<V> implements ControlValueAccessor {
   /** Enter with no option active, after a request failed, asks the server again (ADR 0056). */
   protected enter(): void {
     if (this.error() && this.list()?.activeDescendant() === undefined) this.remote.retry();
-  }
-
-  private downOnLast(): void {
-    if (!this.expanded() || !this.hasMore()) return;
-    const last = this.popup()?.nativeElement.querySelector('.option:last-child');
-    if (last?.getAttribute('data-active') !== 'true') return;
-    this.pending = this.shown().length;
-    this.remote.more();
   }
 
   /**

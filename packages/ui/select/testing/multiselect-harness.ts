@@ -1,4 +1,4 @@
-import { HarnessPredicate } from '@angular/cdk/testing';
+import { HarnessPredicate, TestKey } from '@angular/cdk/testing';
 import { optionName } from './option-name';
 import { AveSelectHarness, type AveSelectHarnessFilters } from './select-harness';
 
@@ -12,11 +12,42 @@ export class AveMultiselectHarness extends AveSelectHarness {
   /** Selector that finds kit multiselects. */
   static override hostSelector = 'ave-multiselect';
 
+  private readonly input = this.locatorForOptional('input.trigger');
+
   /** Gets a predicate that matches multiselects by the given filters. */
   static override with(options: AveSelectHarnessFilters = {}): HarnessPredicate<AveMultiselectHarness> {
     return new HarnessPredicate(AveMultiselectHarness, options).addOption('text', options.text, (harness, text) =>
       HarnessPredicate.stringMatches(harness.getText(), text),
     );
+  }
+
+  /** Gets what the trigger says: the chosen labels or the placeholder; a searchable one's input, what it holds. */
+  override async getText(): Promise<string> {
+    const input = await this.input();
+    return input === null ? super.getText() : input.getProperty<string>('value');
+  }
+
+  /** Whether the trigger is an input that searches the options (ADR 0057). */
+  async isSearchable(): Promise<boolean> {
+    return (await this.input()) !== null;
+  }
+
+  /** Types a search into a searchable multiselect's input, as a person does; the list opens on its matches. */
+  async search(text: string): Promise<void> {
+    const input = await this.input();
+    if (input === null) throw new Error('AveMultiselectHarness: the multiselect has no search.');
+    await input.clear();
+    if (text !== '') await input.sendKeys(text);
+  }
+
+  /** Opens the list, as a click on the button does, or Down in a searchable one's input, unless it is open. */
+  override async open(): Promise<void> {
+    const input = await this.input();
+    if (input === null) return super.open();
+    if (!(await this.isOpen())) {
+      await input.focus();
+      await input.sendKeys(TestKey.DOWN_ARROW);
+    }
   }
 
   /** Gets the labels of the chosen options, opening the list if needed. */

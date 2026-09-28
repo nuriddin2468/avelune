@@ -41,6 +41,26 @@ Options take the same fields and templates as a select's (ADR 0055); the trigger
 
 <Canvas of={MultiselectStories.RichOptions} />
 
+## Search
+
+For long lists, `search="local"` makes the trigger an input (ADR 0057): it says the chosen labels until people type, then filters the options by label, as a combobox does. Checking an option keeps the search and the list open; leaving puts the chosen labels back. `search="server"` asks a server instead, with the combobox's `query`, `loading`, `error`, `hasMore` and `loadMore` (ADR 0056).
+
+```html
+<ave-form-field label="Регионы поставки">
+  <ave-multiselect
+    search="local"
+    [options]="regions"
+    placeholder="Начните вводить регион"
+    [formField]="contract.regions"
+  />
+</ave-form-field>
+```
+
+<Canvas of={MultiselectStories.Search} />
+
+- Down opens the list; Enter checks or unchecks the active option; Space types; Escape closes.
+- Deleting the text clears the search, not the choices: uncheck them in the list, or all of them with the clear button.
+
 ## States
 
 <Canvas of={MultiselectStories.States} />
@@ -71,7 +91,7 @@ When the chosen labels do not fit, the trigger truncates them on one line; the l
 
 ## Keyboard
 
-Tab moves to the trigger; Down, Enter or Space open the list; the arrow keys move; Enter or Space check or uncheck the active option; Escape or Tab close the list. Delete or Backspace on the trigger uncheck every option of a multiselect that is not required.
+Tab moves to the trigger; Down, Enter or Space open the list; the arrow keys move; Enter or Space check or uncheck the active option; Escape or Tab close the list. Delete or Backspace on the trigger uncheck every option of a multiselect that is not required. With `search`, the trigger is an input: typing searches, Enter checks, Space types.
 
 ## Accessibility
 

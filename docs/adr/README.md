@@ -62,6 +62,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0054](0054-date-range-presets.md) | DateRangePicker presets: a typed, translated set and the application's own, a listbox beside or above the calendar | Accepted |
 | [0055](0055-rich-options.md) | Rich options in the select family: fields of an option in one row layout, and templates inside the kit's row | Accepted |
 | [0056](0056-remote-lists.md) | Remote lists: a server's search, pages that load at the end, and chosen options the list no longer holds | Accepted |
+| [0057](0057-searchable-multiselect.md) | A multiselect that searches: an input as its trigger over the same multi-select listbox | Accepted |
 
 ## Template
 

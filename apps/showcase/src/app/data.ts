@@ -45,3 +45,21 @@ export const approvers: readonly AveOption<string>[] = [
   { value: 'security', label: 'Служба безопасности' },
   { value: 'procurement', label: 'Отдел закупок' },
 ];
+
+/** The regions a contract delivers to: a long list, searched (ADR 0057). */
+export const regions: readonly AveOption<string>[] = [
+  { value: 'karakalpakstan', label: 'Республика Каракалпакстан' },
+  { value: 'andijan', label: 'Андижанская область' },
+  { value: 'bukhara', label: 'Бухарская область' },
+  { value: 'jizzakh', label: 'Джизакская область' },
+  { value: 'kashkadarya', label: 'Кашкадарьинская область' },
+  { value: 'navoi', label: 'Навоийская область' },
+  { value: 'namangan', label: 'Наманганская область' },
+  { value: 'samarkand', label: 'Самаркандская область' },
+  { value: 'surkhandarya', label: 'Сурхандарьинская область' },
+  { value: 'syrdarya', label: 'Сырдарьинская область' },
+  { value: 'tashkent-region', label: 'Ташкентская область' },
+  { value: 'fergana', label: 'Ферганская область' },
+  { value: 'khorezm', label: 'Хорезмская область' },
+  { value: 'tashkent', label: 'город Ташкент' },
+];

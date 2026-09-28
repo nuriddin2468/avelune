@@ -12,7 +12,7 @@ import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { AveMultiselect, type AveSelectSize } from '@avelune/ui/select';
 import { lucideFileArchive, lucideFileImage, lucideFileSpreadsheet, lucideFileText } from '@avelune/icons/lucide';
 import { provideAveIcons } from '@avelune/ui/icon';
-import { approvers } from './fixtures/options';
+import { approvers, regions, regionsUz } from './fixtures/options';
 import { documentTypes } from './fixtures/rich';
 
 type View = 'states' | 'long';
@@ -87,6 +87,37 @@ class MultiselectForms {
     minLength(path.approvers, 1);
   });
   protected readonly chosen = new FormControl<string[]>(['legal'], { nonNullable: true });
+}
+
+/** A searchable multiselect (ADR 0057): the regions of Uzbekistan, in Russian and in Uzbek, Latin script. */
+@Component({
+  selector: 'ave-multiselect-search',
+  imports: [AveMultiselect],
+  template: `
+    <div class="stack narrow room">
+      <div class="field" lang="ru">
+        <span class="label">Регионы поставки</span>
+        <ave-multiselect
+          label="Регионы поставки"
+          search="local"
+          placeholder="Начните вводить регион"
+          [options]="regions"
+          [(value)]="chosen"
+        />
+      </div>
+      <div class="field" lang="uz-Latn">
+        <span class="label">Yetkazib berish hududlari</span>
+        <ave-multiselect label="Yetkazib berish hududlari" search="local" [options]="regionsUz" [value]="['fergana']" />
+      </div>
+    </div>
+    <p class="status" role="status">Регионы: {{ chosen().join(', ') || 'нет' }}</p>
+  `,
+  styleUrl: './select.stories.css',
+})
+class MultiselectSearch {
+  protected readonly regions = regions;
+  protected readonly regionsUz = regionsUz;
+  protected readonly chosen = signal<string[]>(['tashkent']);
 }
 
 /** Clearing (ADR 0052): an optional multiselect with chosen options shows the clear button; one that needs an option does not. */
@@ -303,5 +334,41 @@ export const RichOptions: Story = {
     await expect(option).toHaveAccessibleDescription('42');
     await expect(option.querySelector('ave-icon')).not.toBeNull();
     await expect(canvas.getByRole('option', { name: 'Сканы' })).toHaveAttribute('aria-selected', 'true');
+  },
+};
+
+/**
+ * Search (ADR 0057): the input says the chosen regions until people type, then filters by label; checking one keeps
+ * the search and the list open; leaving puts the chosen labels back.
+ */
+export const Search: Story = {
+  decorators: [locale('ru')],
+  render: () => ({ template: '<ave-multiselect-search />', moduleMetadata: { imports: [MultiselectSearch] } }),
+  parameters: source('<ave-multiselect search="local" [options]="regions" [formField]="contract.regions" />'),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole('combobox', { name: 'Регионы поставки' });
+    await expect(input).toHaveValue('город Ташкент');
+    await expect(canvas.getByRole('combobox', { name: 'Yetkazib berish hududlari' })).toHaveValue('Fargʻona viloyati');
+    await userEvent.click(input);
+    await userEvent.keyboard('дарь');
+    const listbox = await canvas.findByRole('listbox');
+    await expect(listbox).toHaveAttribute('aria-multiselectable', 'true');
+    await waitFor(() =>
+      expect(
+        within(listbox)
+          .getAllByRole('option')
+          .map((option) => option.getAttribute('aria-label')),
+      ).toEqual(['Кашкадарьинская область', 'Сурхандарьинская область', 'Сырдарьинская область']),
+    );
+    // Typing opens the list with its first match active; Enter checks it.
+    await userEvent.keyboard('{Enter}');
+    await expect(input).toHaveValue('дарь');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Регионы: kashkadarya, tashkent');
+    await userEvent.keyboard('{Escape}');
+    await expect(input).toHaveValue('Кашкадарьинская область, город Ташкент');
+    await userEvent.click(input);
+    await userEvent.keyboard('обл');
+    await canvas.findAllByRole('option');
   },
 };

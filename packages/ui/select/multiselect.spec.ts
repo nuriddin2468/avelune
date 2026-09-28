@@ -74,6 +74,57 @@ class ChosenHost {
   readonly saved: readonly AveOption<string>[] = [{ value: 'accounting', label: 'Бухгалтерия (архив)' }];
 }
 
+const regions: readonly AveOption<string>[] = [
+  { value: 'tashkent', label: 'Ташкент' },
+  { value: 'samarkand', label: 'Самаркандская область' },
+  { value: 'bukhara', label: 'Бухарская область' },
+  { value: 'fergana', label: 'Fargʻona viloyati' },
+  { value: 'andijan', label: 'Андижанская область' },
+];
+
+@Component({
+  selector: 'ave-multiselect-search',
+  imports: [AveMultiselect],
+  template: `<ave-multiselect
+    label="Regions"
+    search="local"
+    placeholder="Регион"
+    [options]="regions"
+    [(value)]="chosen"
+  />`,
+})
+class SearchHost {
+  readonly regions = regions;
+  readonly chosen = signal<string[]>(['tashkent']);
+}
+
+@Component({
+  selector: 'ave-multiselect-server',
+  imports: [AveMultiselect],
+  template: `
+    <ave-multiselect
+      label="Counterparties"
+      search="server"
+      [options]="page()"
+      [loading]="loading()"
+      [error]="failed()"
+      [hasMore]="more()"
+      [(value)]="chosen"
+      (query)="asked.push($event)"
+      (loadMore)="pages = pages + 1"
+    />
+  `,
+})
+class ServerHost {
+  readonly page = signal<readonly AveOption<number>[]>([]);
+  readonly loading = signal(false);
+  readonly failed = signal(false);
+  readonly more = signal(false);
+  readonly chosen = signal<number[]>([]);
+  readonly asked: string[] = [];
+  pages = 0;
+}
+
 function mount<T>(type: new () => T): { fixture: ComponentFixture<T>; element: HTMLElement } {
   const fixture = TestBed.createComponent(type);
   const element = fixture.nativeElement as HTMLElement;
@@ -172,6 +223,79 @@ describe('AveMultiselect', () => {
     const { fixture } = mount(ChosenHost);
     const select = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveMultiselectHarness);
     expect(await select.getText()).toBe('Юридический отдел, Бухгалтерия (архив)');
+  });
+
+  it('searches its options from an input over the same list, and keeps the chosen labels (ADR 0057)', async () => {
+    const { fixture, element } = mount(SearchHost);
+    const select = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveMultiselectHarness);
+    expect(await select.isSearchable()).toBe(true);
+    expect(await select.getText()).toBe('Ташкент');
+    const input = element.querySelector('input');
+    input?.focus();
+    // Focus selects the chosen labels, so typing starts a search.
+    expect([input?.selectionStart, input?.selectionEnd]).toEqual([0, 'Ташкент'.length]);
+    await select.search('област');
+    expect(await select.isOpen()).toBe(true);
+    expect(await select.getOptions()).toEqual(['Самаркандская область', 'Бухарская область', 'Андижанская область']);
+    await select.toggle('Бухарская область');
+    // The search and the list stay; the choice hidden by the search stays chosen, in the order of the options.
+    expect(await select.getText()).toBe('област');
+    expect(await select.isOpen()).toBe(true);
+    expect(fixture.componentInstance.chosen()).toEqual(['tashkent', 'bukhara']);
+    await select.search("farg'ona");
+    expect(await select.getOptions()).toEqual(['Fargʻona viloyati']);
+    await select.press('down');
+    await select.press('enter');
+    expect(fixture.componentInstance.chosen()).toEqual(['tashkent', 'bukhara', 'fergana']);
+    await select.close();
+    expect(await select.getText()).toBe('Ташкент, Бухарская область, Fargʻona viloyati');
+    // A click in the still focused input selects the chosen labels again.
+    input?.setSelectionRange(3, 3);
+    input?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect([input?.selectionStart, input?.selectionEnd]).toEqual([0, input?.value.length]);
+    await select.search('Ташкент');
+    await select.toggle('Ташкент');
+    await select.blur();
+    expect(await select.getText()).toBe('Бухарская область, Fargʻona viloyati');
+    await select.search('');
+    expect(await select.getOptions()).toHaveLength(5);
+    await select.search('Нукус');
+    expect(await select.getOptions()).toEqual([]);
+    expect(document.querySelector('.popup .empty')?.getAttribute('role')).toBe('status');
+  });
+
+  it('asks a server from its input, and keeps the choices its pages do not hold (ADR 0056, 0057)', async () => {
+    const { fixture } = mount(ServerHost);
+    const host = fixture.componentInstance;
+    const select = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveMultiselectHarness);
+    await select.open();
+    expect(host.asked).toEqual(['']);
+    host.page.set([
+      { value: 1, label: 'ООО «Альфа»' },
+      { value: 2, label: 'АО «Бета»' },
+    ]);
+    fixture.detectChanges();
+    await select.toggle('ООО «Альфа»');
+    host.page.set([{ value: 3, label: 'ЧП «Гамма»' }]);
+    fixture.detectChanges();
+    await select.toggle('ЧП «Гамма»');
+    expect(host.chosen()).toEqual([3, 1]);
+    await select.close();
+    expect(await select.getText()).toBe('ЧП «Гамма», ООО «Альфа»');
+    // A search that failed: no options, so Enter tries again; with an option active it would check it.
+    host.page.set([]);
+    host.failed.set(true);
+    fixture.detectChanges();
+    await select.open();
+    expect(document.querySelector('.popup .failed')).not.toBeNull();
+    await select.press('enter');
+    expect(host.asked.length).toBeGreaterThan(1);
+    expect(host.chosen()).toEqual([3, 1]);
+    const scrolling = document.querySelector('.listbox');
+    scrolling?.dispatchEvent(new Event('scroll'));
+    expect(host.pages).toBe(0);
+    document.querySelector<HTMLButtonElement>('.popup .failed button')?.click();
+    expect(host.asked.length).toBeGreaterThan(2);
   });
 
   it('keeps focus on the trigger when an option is pressed', async () => {

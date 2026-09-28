@@ -42,3 +42,30 @@ export const approvers: readonly AveOption<string>[] = [
   { value: 'procurement', label: 'Отдел закупок' },
   { value: 'director', label: 'Заместитель директора по общим вопросам' },
 ];
+
+/** The regions of Uzbekistan: a long list for a searchable multiselect (ADR 0057). */
+export const regions: readonly AveOption<string>[] = [
+  { value: 'karakalpakstan', label: 'Республика Каракалпакстан' },
+  { value: 'andijan', label: 'Андижанская область' },
+  { value: 'bukhara', label: 'Бухарская область' },
+  { value: 'jizzakh', label: 'Джизакская область' },
+  { value: 'kashkadarya', label: 'Кашкадарьинская область' },
+  { value: 'navoi', label: 'Навоийская область' },
+  { value: 'namangan', label: 'Наманганская область' },
+  { value: 'samarkand', label: 'Самаркандская область' },
+  { value: 'surkhandarya', label: 'Сурхандарьинская область' },
+  { value: 'syrdarya', label: 'Сырдарьинская область' },
+  { value: 'tashkent-region', label: 'Ташкентская область' },
+  { value: 'fergana', label: 'Ферганская область' },
+  { value: 'khorezm', label: 'Хорезмская область' },
+  { value: 'tashkent', label: 'город Ташкент' },
+];
+
+/** The same regions in Uzbek, Latin script. */
+export const regionsUz: readonly AveOption<string>[] = [
+  { value: 'karakalpakstan', label: 'Qoraqalpogʻiston Respublikasi' },
+  { value: 'andijan', label: 'Andijon viloyati' },
+  { value: 'bukhara', label: 'Buxoro viloyati' },
+  { value: 'fergana', label: 'Fargʻona viloyati' },
+  { value: 'tashkent', label: 'Toshkent shahri' },
+];
