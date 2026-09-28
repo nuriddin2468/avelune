@@ -1,0 +1,53 @@
+@layer components {
+  /* A skeleton (ADR 0060): parts in color.bg.placeholder, each with a band of color.bg.placeholder-highlight that
+     sweeps across it (ave-motion-shimmer). The band rests out of sight, before the part's start: under reduced motion
+     the shimmer's period is 0, the animation ends at once, and the fill stands still. */
+  :host {
+    display: grid;
+    inline-size: 100%;
+  }
+
+  /* Text: one bar per line of body text, 12px tall in the 20px line, with the line's leading above and below; the
+     last of several lines is shorter, as a paragraph ends. */
+  .part {
+    display: block;
+    block-size: calc(var(--ave-font-body-md-line-height) - var(--ave-space-2));
+    margin-block: var(--ave-space-1);
+    overflow: hidden;
+    border-radius: var(--ave-radius-sm);
+    background-color: var(--ave-color-bg-placeholder);
+  }
+
+  .part:last-child:not(:first-child) {
+    inline-size: 60%;
+  }
+
+  /* A block fills its box: as tall as a medium control unless the application sizes it. */
+  :host([data-shape='block']) {
+    min-block-size: var(--ave-control-height-md);
+  }
+
+  :host([data-shape='block']) .part {
+    block-size: 100%;
+    margin-block: 0;
+    border-radius: var(--ave-radius-md);
+  }
+
+  .highlight {
+    display: block;
+    block-size: 100%;
+    background-image: linear-gradient(90deg, transparent, var(--ave-color-bg-placeholder-highlight), transparent);
+    translate: -100% 0;
+  }
+
+  /* Forced colours drop background colours: each part keeps an outline in the text colour, and the band goes. */
+  @media (forced-colors: active) {
+    .part {
+      border: var(--ave-border-width-default) solid CanvasText;
+    }
+
+    .highlight {
+      display: none;
+    }
+  }
+}

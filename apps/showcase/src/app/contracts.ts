@@ -3,7 +3,11 @@ import { RouterLink } from '@angular/router';
 import { AveButton } from '@avelune/ui/button';
 import { aveDateFormat, aveNumberFormat } from '@avelune/ui/i18n';
 import { AveProgress } from '@avelune/ui/progress';
+import { AveSkeleton } from '@avelune/ui/skeleton';
 import { contractStatuses, contracts, type ContractRecord } from './data';
+
+/** How long the pretend server takes to send the register. */
+const loadDelay = 800;
 
 /** How the pretend export advances: a share of the register every step. */
 const exportStep = 0.2;
@@ -15,11 +19,14 @@ const exportInterval = 400;
  */
 @Component({
   selector: 'ave-showcase-contracts',
-  imports: [AveButton, AveProgress, RouterLink],
+  imports: [AveButton, AveProgress, AveSkeleton, RouterLink],
   template: `
     <div class="page" lang="ru">
       <header class="header">
-        <h1 class="title">Договоры</h1>
+        <div class="heading">
+          <h1 class="title">Договоры</h1>
+          <p class="count" role="status">{{ loading() ? 'Загрузка договоров…' : count() }}</p>
+        </div>
         <div class="actions">
           <button aveButton type="button" [disabled]="exporting()" (click)="startExport()">Выгрузить в Excel</button>
           <a aveButton variant="primary" routerLink="/">Новый договор</a>
@@ -43,7 +50,21 @@ const exportInterval = 400;
         </section>
       }
 
-      <ul class="list" aria-label="Договоры подразделения">
+      <ul class="list" aria-label="Договоры подразделения" [attr.aria-busy]="loading() ? 'true' : null">
+        @if (loading()) {
+          @for (row of placeholders; track row) {
+            <li class="row" data-placeholder>
+              <div class="main">
+                <ave-skeleton class="short" />
+                <ave-skeleton lines="2" />
+              </div>
+              <div class="facts">
+                <ave-skeleton class="long" />
+                <ave-skeleton class="short" />
+              </div>
+            </li>
+          }
+        }
         @for (contract of rows(); track contract.id) {
           <li class="row">
             <div class="main">
@@ -69,7 +90,18 @@ export class ContractsPage {
   protected readonly percent = aveNumberFormat('ru', { style: 'percent' });
   private readonly sums = aveNumberFormat('ru');
 
-  protected readonly rows = signal<readonly ContractRecord[]>(contracts);
+  /** The register comes from a pretend server: skeleton rows hold its place until it arrives. */
+  protected readonly loading = signal(true);
+  protected readonly rows = signal<readonly ContractRecord[]>([]);
+  protected readonly placeholders = [1, 2, 3];
+
+  /** How many contracts the list holds, in Russian: 1 договор, 2 договора, 5 договоров. */
+  protected readonly count = computed(() => {
+    const count = this.rows().length;
+    const noun = { one: 'договор', few: 'договора', many: 'договоров', other: 'договора' } as const;
+    const form = new Intl.PluralRules('ru').select(count);
+    return `${String(count)} ${form === 'zero' || form === 'two' ? noun.many : noun[form]}`;
+  });
 
   /** The share of the register exported so far, or `null` before the first export. */
   protected readonly exported = signal<number | null>(null);
@@ -81,7 +113,12 @@ export class ContractsPage {
   private timer: ReturnType<typeof setInterval> | undefined;
 
   constructor() {
+    const load = setTimeout(() => {
+      this.rows.set(contracts);
+      this.loading.set(false);
+    }, loadDelay);
     inject(DestroyRef).onDestroy(() => {
+      clearTimeout(load);
       clearInterval(this.timer);
     });
   }

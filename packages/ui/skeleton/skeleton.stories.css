@@ -1,0 +1,87 @@
+/* The frame of the Skeleton stories. Stories only; the component's own styles are skeleton.css. */
+@layer components {
+  :host {
+    display: grid;
+    gap: var(--ave-space-4);
+    justify-items: start;
+    padding: var(--ave-space-6);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--ave-container-xs)), 1fr));
+    gap: var(--ave-space-6);
+    inline-size: 100%;
+  }
+
+  .sample {
+    display: grid;
+    align-content: start;
+    gap: var(--ave-space-2);
+    margin: 0;
+  }
+
+  figcaption {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-caption);
+  }
+
+  .chart {
+    block-size: calc(var(--ave-space-10) * 4);
+  }
+
+  .card {
+    display: grid;
+    gap: var(--ave-space-3);
+    inline-size: min(100%, var(--ave-container-sm));
+    padding: var(--ave-space-4);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface);
+  }
+
+  .heading {
+    inline-size: 50%;
+  }
+
+  .title {
+    font: var(--ave-font-heading-sm);
+  }
+
+  .rows {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* A row keeps its height whether it holds the skeleton or the content: two lines of 20px. */
+  .row {
+    display: grid;
+    padding-block: var(--ave-space-2);
+  }
+
+  .row + .row {
+    border-block-start: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  }
+
+  .line {
+    font: var(--ave-font-body-md);
+  }
+
+  .short {
+    inline-size: 40%;
+    font: var(--ave-font-body-md);
+  }
+
+  .muted {
+    color: var(--ave-color-fg-muted);
+  }
+
+  /* The words that say the list loads, for everyone; the skeleton shows where it will be. */
+  .status {
+    min-block-size: var(--ave-font-caption-line-height);
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-caption);
+  }
+}

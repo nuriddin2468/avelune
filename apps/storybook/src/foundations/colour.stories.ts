@@ -43,9 +43,13 @@ const groups: readonly Group[] = [
     ],
   },
   {
-    title: 'Tracks',
-    note: 'The empty part of a bar that fills to show an amount. The accent, success and danger fills keep 3:1 against it.',
-    swatches: [{ name: 'color.bg.track', kind: 'fill' }],
+    title: 'Tracks and placeholders',
+    note: 'The empty part of a bar that fills to show an amount, where the accent, success and danger fills keep 3:1; the fill of a skeleton, and the band that sweeps across it.',
+    swatches: [
+      { name: 'color.bg.track', kind: 'fill' },
+      { name: 'color.bg.placeholder', kind: 'fill' },
+      { name: 'color.bg.placeholder-highlight', kind: 'fill' },
+    ],
   },
   {
     title: 'Text',

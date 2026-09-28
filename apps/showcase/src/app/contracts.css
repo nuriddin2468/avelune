@@ -20,8 +20,19 @@
     gap: var(--ave-space-4);
   }
 
+  .heading {
+    display: grid;
+    gap: var(--ave-space-1);
+  }
+
   .title {
     font: var(--ave-font-heading-xl);
+  }
+
+  /* Under the title: that the register loads, then how many contracts it holds; one line either way. */
+  .count {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
   }
 
   .actions {
@@ -112,6 +123,15 @@
   .ends {
     color: var(--ave-color-fg-muted);
     font: var(--ave-font-body-sm);
+  }
+
+  /* Skeleton rows hold the widths of the facts to come. */
+  .short {
+    inline-size: calc(var(--ave-space-16) * 1.5);
+  }
+
+  .long {
+    inline-size: calc(var(--ave-space-16) * 2.5);
   }
 
   .amount {

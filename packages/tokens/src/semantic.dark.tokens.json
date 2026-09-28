@@ -37,6 +37,14 @@
       "track": {
         "$value": "{color.neutral.800}",
         "$description": "The empty part of a bar that fills to show an amount: a progress bar's track. Visible on every surface; the accent, success and danger fills on it keep 3:1 (WCAG 1.4.11)."
+      },
+      "placeholder": {
+        "$value": "{color.neutral.800}",
+        "$description": "The fill of content that is on its way: a skeleton's lines and blocks. Visible on every surface in both themes; decorative, hidden from assistive technology, so no contrast minimum."
+      },
+      "placeholder-highlight": {
+        "$value": "{color.neutral.700}",
+        "$description": "The band of light that sweeps across color.bg.placeholder while it waits (ave-motion-shimmer); lighter than the fill in both themes. Under reduced motion the band stays out of sight."
       }
     },
     "fg": {

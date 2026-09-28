@@ -221,7 +221,7 @@ Wave 2 build (2026-09-25), before the product owner's corrections and the wave's
 | Banner | 3 | components | planned | | |
 | Progress | 3 | components | experimental | | `@avelune/ui/progress` (ADR 0059): `progress[aveProgress]`, native, determinate only (a wait of unknown length takes the spinner); `accent`, `success`, `danger` on the new `color.bg.track`; 8px or 4px; the showcase's register export on the new contracts screen; 1.04 kB of 1.2 kB; beta after the Wave 3 visual review |
 | Spinner | 3 | components | experimental | | `@avelune/ui/spinner` (ADR 0058): `<ave-spinner>`, `aveDelayedSpinner`'s 300ms delay and 500ms minimum, a named `progressbar` while shown, its icon box kept before and after; sizes 16/20/24; in the showcase's settings, while a change saves; 1.33 kB of 1.5 kB; beta after the Wave 3 visual review |
-| Skeleton | 3 | components | planned | | `ave-motion-shimmer`, static under reduced motion (ADR 0031); in dark, `bg.surface-sunken` equals the canvas, so the fill needs another role |
+| Skeleton | 3 | components | experimental | | `@avelune/ui/skeleton` (ADR 0060): `<ave-skeleton>`, lines of body text or a block the page sizes, on the new `color.bg.placeholder` and `-highlight` (the dark canvas hid `bg.surface-sunken`); `ave-motion-shimmer`, still under reduced motion; hidden from assistive technology; the showcase's contracts register while it loads; 1.16 kB of 1.3 kB; beta after the Wave 3 visual review |
 | EmptyState | 3 | composites | planned | | |
 | Tabs | 4 | composites | planned | | Aria Tabs |
 | Breadcrumbs | 4 | components | planned | | |

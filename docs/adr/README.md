@@ -65,6 +65,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0057](0057-searchable-multiselect.md) | A multiselect that searches: an input as its trigger over the same multi-select listbox | Accepted |
 | [0058](0058-spinner.md) | Spinner: the delayed spinner as a component, a named progress bar that keeps its box | Accepted |
 | [0059](0059-progress.md) | Progress: a native progress bar with a value, on a new track colour | Accepted |
+| [0060](0060-skeleton.md) | Skeleton: lines and blocks on a placeholder colour of their own, the catalog's shimmer | Accepted |
 
 ## Template
 
