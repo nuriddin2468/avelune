@@ -147,10 +147,15 @@ describe('AveSidebarNav', () => {
     expect(await nav.isGroupOpen('Справочники')).toBe(true);
     expect(await nav.getCurrent()).toBe('Подразделения');
     expect(element.querySelector('button .chevron')?.getAttribute('data-icon')).toBe('chevron-down');
-    // Closed by the person, the group that holds the current page looks current.
+    // Closed by the person, the group that holds the current page is current to eyes and to screen readers.
     await nav.toggleGroup('Справочники');
     expect(await nav.isGroupOpen('Справочники')).toBe(false);
-    expect(element.querySelector('button')?.hasAttribute('data-current')).toBe(true);
+    expect(element.querySelector('button')?.getAttribute('aria-current')).toBe('true');
+    // New items (a count, the person's rights) leave the closed group closed.
+    fixture.componentInstance.items.set([...pages]);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(await nav.isGroupOpen('Справочники')).toBe(false);
     await nav.toggleGroup('Журналы');
     expect(await nav.getLinks()).toEqual(['Главная', 'Договоры', 'Настройки', 'Журнал входов']);
     await nav.follow('Журнал входов');

@@ -28,16 +28,14 @@
     background-color: var(--ave-color-bg-hover);
   }
 
-  /* The current page, a page above it, or a closed group that holds it (product owner, 2026-09-29): the neutral fill
+  /* The current page, a page above it, or a closed group that holds it, each `aria-current` (product owner, 2026-09-29): the neutral fill
      of a pressed row and a 2px accent bar at the inline start, 8px short of the row's top and bottom. */
   :host(:active),
-  :host([aria-current]),
-  :host([data-current]) {
+  :host([aria-current]) {
     background-color: var(--ave-color-bg-active);
   }
 
-  :host([aria-current])::before,
-  :host([data-current])::before {
+  :host([aria-current])::before {
     position: absolute;
     inset-block: var(--ave-space-2);
     inset-inline-start: 0;
@@ -64,8 +62,7 @@
 
   /* Forced colours paint the fills as the canvas: the bar takes the system's highlight colour. */
   @media (forced-colors: active) {
-    :host([aria-current])::before,
-    :host([data-current])::before {
+    :host([aria-current])::before {
       background-color: Highlight;
       forced-color-adjust: none;
     }

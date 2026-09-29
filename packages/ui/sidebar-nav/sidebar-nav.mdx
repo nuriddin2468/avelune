@@ -52,7 +52,7 @@ Entries are data (`AveSidebarEntry`): a page `{ label, link, icon?, exact? }`, a
 ## States
 
 - **Current:** the page itself, and a page above it (the register on a contract's page): the neutral fill of a pressed row and a 2px accent bar at its start, the words in the text colour.
-- **A closed group that holds the current page** looks current too. A group opens by itself when navigation reaches one of its pages; otherwise it stays as the person left it.
+- **A closed group that holds the current page** looks current too, and says so. A group opens by itself when navigation reaches one of its pages; otherwise, new items included, it stays as the person left it.
 - **Hover:** the hover fill. **Pressed:** the pressed fill. **Focus:** the kit's ring.
 
 <Canvas of={SidebarNavStories.InGroup} />
@@ -79,7 +79,7 @@ Native links and buttons, per the WAI-ARIA disclosure navigation pattern:
 
 - The landmark has a name; a section's heading names its list, and each list says how many entries it holds.
 - The current page is `aria-current="page"`, a page above it `aria-current="true"`: screen readers say "current page" and "current".
-- A group's button says whether it is expanded, and controls its list, which is out of the page while closed.
+- A group's button says whether it is expanded, and controls its list, which is out of the page while closed. A closed group that holds the current page is `aria-current="true"` too.
 - In forced colours the bar takes the system's highlight colour.
 
 ## Layout

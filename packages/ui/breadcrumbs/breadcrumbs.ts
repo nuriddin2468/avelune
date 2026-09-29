@@ -21,7 +21,7 @@ import type { AveBreadcrumb } from './types';
   imports: [AveIcon, RouterLink],
   providers: [provideAveIcons([lucideChevronRight])],
   template: `
-    <nav [attr.aria-label]="messages.breadcrumbs">
+    <nav [attr.aria-label]="label() ?? messages.breadcrumbs">
       <ol class="trail">
         @for (item of items(); track $index) {
           <li class="item">
@@ -43,6 +43,12 @@ export class AveBreadcrumbs {
 
   /** The current page's name, as its heading says it; shown last, not as a link. */
   readonly current = input.required<string>();
+
+  /**
+   * Names the landmark: the kit's words ("Навигационная цепочка") by default. A page with two trails names each, so
+   * screen readers can tell the landmarks apart.
+   */
+  readonly label = input<string>();
 
   protected readonly messages = injectAveMessages();
 }

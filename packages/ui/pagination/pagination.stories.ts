@@ -12,10 +12,12 @@ type View = 'default' | 'few' | 'narrow' | 'long';
   template: `
     @switch (view()) {
       @case ('few') {
-        <ave-pagination [total]="45" [pageSize]="10" [(page)]="page" />
+        <ave-pagination label="Страницы актов" [total]="45" [pageSize]="10" [(page)]="page" />
       }
       @case ('narrow') {
-        <div class="narrow"><ave-pagination [total]="134" [pageSize]="10" [(page)]="page" /></div>
+        <div class="narrow">
+          <ave-pagination label="Страницы писем" [total]="134" [pageSize]="10" [(page)]="page" />
+        </div>
       }
       @default {
         <ave-pagination [total]="134" [pageSize]="10" [(page)]="page" />
@@ -76,7 +78,7 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const nav = within(canvas.getByRole('navigation', { name: 'Страницы' }));
-    await expect(nav.getByRole('status')).toHaveTextContent('41–50 из 134');
+    await expect(canvas.getByRole('status')).toHaveTextContent('41–50 из 134');
     // The numbers from a small container (480px); on a phone the page of pages between the arrows.
     if ((canvasElement.querySelector('ave-pagination')?.clientWidth ?? 0) >= 480) {
       await expect(nav.getByRole('button', { name: 'Страница 5' })).toHaveAttribute('aria-current', 'page');
@@ -87,14 +89,14 @@ export const Default: Story = {
       await expect(nav.getByText('Страница 5 из 14')).toBeVisible();
       await userEvent.click(nav.getByRole('button', { name: 'Следующая страница' }));
     }
-    await expect(nav.getByRole('status')).toHaveTextContent('51–60 из 134');
+    await expect(canvas.getByRole('status')).toHaveTextContent('51–60 из 134');
     await userEvent.click(nav.getByRole('button', { name: 'Предыдущая страница' }));
-    await expect(nav.getByRole('status')).toHaveTextContent('41–50 из 134');
+    await expect(canvas.getByRole('status')).toHaveTextContent('41–50 из 134');
     (document.activeElement as HTMLElement | null)?.blur();
   },
 };
 
-/** Five pages: every page shows, and there is no page before the first. */
+/** Five pages: every page shows, and there is no page before the first. Named apart (`label`), as a second one on a page is. */
 export const FewPages: Story = {
   name: 'Few pages',
   render: frame('few'),

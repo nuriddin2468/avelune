@@ -116,6 +116,7 @@ export class AveMenubar<V> {
     });
     effect(() => {
       const open = this.open();
+      this.tops();
       untracked(() => {
         this.present(open);
       });
@@ -148,8 +149,14 @@ export class AveMenubar<V> {
     }
   }
 
-  /** Shows the open menu in its overlay, and lets every other menu that shows play its exit and leave. */
+  /**
+   * Shows the open menu in its overlay, and lets every other menu that shows play its exit and leave. The overlays of
+   * menus the bar no longer has go with them.
+   */
   private present(open: number): void {
+    const count = this.tops().length;
+    for (const overlay of this.overlays.splice(count)) overlay?.dispose();
+    if (this.closing().length > count) this.closing.set(this.closing().slice(0, count));
     this.tops().forEach((top, index) => {
       const menu = top.submenu()?.element;
       if (menu === undefined) return;

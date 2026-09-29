@@ -13,6 +13,7 @@ export class AvePagination {
     protected readonly current: _angular_core.Signal<number>;
     protected format(value: number): string;
     protected go(page: number, fromNumber?: boolean): void;
+    readonly label: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
     protected readonly messages: _avelune_ui_i18n.AveMessages;
     readonly page: _angular_core.ModelSignal<number>;
@@ -22,7 +23,7 @@ export class AvePagination {
     protected readonly shown: _angular_core.Signal<number[]>;
     readonly total: _angular_core.InputSignalWithTransform<number, unknown>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AvePagination, "ave-pagination", never, { "total": { "alias": "total"; "required": true; "isSignal": true; }; "page": { "alias": "page"; "required": false; "isSignal": true; }; "pageSize": { "alias": "pageSize"; "required": false; "isSignal": true; }; }, { "page": "pageChange"; }, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AvePagination, "ave-pagination", never, { "total": { "alias": "total"; "required": true; "isSignal": true; }; "page": { "alias": "page"; "required": false; "isSignal": true; }; "pageSize": { "alias": "pageSize"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, { "page": "pageChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AvePagination, never>;
 }

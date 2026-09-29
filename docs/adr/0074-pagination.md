@@ -35,3 +35,11 @@ Brief §9.4 lists Pagination in Wave 4. Facts, verified on 2026-09-29 (Angular 2
 
 - The showcase's register pages its contracts, ten to a page.
 - A page's number buttons are not Buttons, so the same-size invariant does not measure them; their height is the control height all the same.
+
+## Addendum: a name of the page's own (2026-09-29)
+
+The docs page, which draws the stories together, broke axe's `landmark-unique` with landmarks all named "Страницы", as a page with a pagination over and under a long list, or two lists, would (the first visual run of Wave 4). `label` (optional) names the landmark; the kit's words stay the default.
+
+## Addendum: a list whose items are on their way (2026-09-29)
+
+A review of Wave 4 found that while `total` was 0 the page was clamped to 1, so a list paged from the address (`?page=3`) lost its page before the server's first answer, and that the range's live region appeared with its first range, which screen readers then did not announce. While `total` is 0 the page stays as the application set it, and the range is a live region from the start, before the landmark, empty until there are items.

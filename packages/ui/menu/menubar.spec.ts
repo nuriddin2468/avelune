@@ -43,12 +43,12 @@ const menus: readonly AveMenubarMenu<Command>[] = [
   providers: [provideAveIcons([lucideFileDown, lucideSave])],
   template: `
     <button type="button" id="before">Before</button>
-    <ave-menubar label="Шаблон договора" [menus]="menus" (itemSelected)="chosen.set($event)" />
+    <ave-menubar label="Шаблон договора" [menus]="menus()" (itemSelected)="chosen.set($event)" />
     <p id="outside">Текст шаблона</p>
   `,
 })
 class MenubarHost {
-  readonly menus = menus;
+  readonly menus = signal(menus);
   readonly chosen = signal<Command | null>(null);
 }
 
@@ -222,6 +222,34 @@ describe('AveMenubar', () => {
       expect(menu?.isConnected).toBe(false);
     });
     motion.remove();
+    element.remove();
+  });
+
+  it('closes its menu when focus leaves the bar, and switches menus under the pointer', async () => {
+    const { element, bar } = await mount();
+    await bar.open('Файл');
+    await userEvent.hover(top(element, 'Правка'));
+    await vi.waitFor(() => {
+      expect(openMenu()?.getAttribute('aria-labelledby')).toBe(top(element, 'Правка').id);
+    });
+    await userEvent.tab();
+    await vi.waitFor(() => {
+      expect(openMenu()).toBeNull();
+    });
+    expect(element.querySelector('[role="menubar"]')?.contains(document.activeElement)).toBe(false);
+    element.remove();
+  });
+
+  it('lets the overlay of a menu the bar no longer has go', async () => {
+    const { fixture, element, bar } = await mount();
+    await bar.open('Вставка');
+    fixture.componentInstance.menus.set(menus.slice(0, 2));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(await bar.getMenus()).toEqual(['Файл', 'Правка']);
+    await vi.waitFor(() => {
+      expect(document.querySelectorAll('.cdk-overlay-popover:popover-open')).toHaveLength(0);
+    });
     element.remove();
   });
 

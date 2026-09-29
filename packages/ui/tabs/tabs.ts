@@ -139,8 +139,10 @@ export class AveTabs {
         this.resized.update((count) => count + 1);
       });
       const list = this.list().nativeElement;
-      // A tab's words can change width without the list's (a web font arriving), and tabs come and go.
+      // A tab's words can change width without the list's (a web font arriving), and tabs come and go: the observer
+      // starts again on the tabs there are.
       const observeTabs = (): void => {
+        observer.disconnect();
         observer.observe(list);
         for (const tab of list.querySelectorAll('[role="tab"]')) observer.observe(tab);
       };

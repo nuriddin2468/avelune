@@ -34,3 +34,7 @@ Brief §9.4 lists sidebar navigation in Wave 4. Facts, verified on 2026-09-29 (A
 
 - The showcase's shell holds the navigation at the inline start from `breakpoint.md`, and in a drawer from the start edge below it, opened by a button in the application bar.
 - A group holds links only: one level of nesting.
+
+## Addendum: a closed group that holds the current page, in words (2026-09-29)
+
+A review of Wave 4 found that a closed group holding the current page looked current but said nothing to screen readers, and that new `items` (a count, the person's rights) reopened a group the person had closed. The group's button is now `aria-current="true"` while it is closed and holds the current page, the one attribute its look follows, and only navigation opens a group.

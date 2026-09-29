@@ -33,8 +33,8 @@ export class AvePaginationHarness extends ComponentHarness {
 
   /** Gets which items the page shows, as the range says it ("21–40 из 134"), or `null` while nothing is drawn. */
   async getRange(): Promise<string | null> {
-    const range = await this.locatorForOptional('.range')();
-    return range === null ? null : (await range.text()).trim();
+    const range = (await (await this.locatorFor('.range')()).text()).trim();
+    return range === '' ? null : range;
   }
 
   /** Gets the numbers in the seven places, with `…` for a gap. */

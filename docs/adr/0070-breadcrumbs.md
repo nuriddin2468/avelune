@@ -31,3 +31,7 @@ Brief §9.4 lists Breadcrumbs in Wave 4. Facts, verified on 2026-09-29 (Angular 
 
 - Stories and specs that draw the trail provide a router (`provideRouter`); the stories use hash locations, so a click stays inside Storybook's frame.
 - The showcase's contract page (`/contracts/:id`) shows the trail; the register links each contract's number to it.
+
+## Addendum: a name of the page's own (2026-09-29)
+
+The docs page, which draws the stories together, broke axe's `landmark-unique` with three landmarks named "Навигационная цепочка", as a page with a second trail would (the first visual run of Wave 4). `label` (optional) names the landmark; the kit's words stay the default.

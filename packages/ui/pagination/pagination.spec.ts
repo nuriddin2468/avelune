@@ -12,7 +12,7 @@ import { userEvent } from 'vitest/browser';
   imports: [AvePagination],
   template: `
     <div class="frame">
-      <ave-pagination [total]="total()" [pageSize]="size()" [(page)]="page" />
+      <ave-pagination [total]="total()" [pageSize]="size()" [label]="label()" [(page)]="page" />
     </div>
   `,
 })
@@ -20,6 +20,7 @@ class PaginationHost {
   readonly total = signal(134);
   readonly size = signal(10);
   readonly page = signal(1);
+  readonly label = signal<string | undefined>(undefined);
 }
 
 const used = [
@@ -157,6 +158,26 @@ describe('AvePagination', () => {
     element.remove();
   });
 
+  it('keeps the page it was given while the list holds nothing yet, and announces the first range', async () => {
+    const { fixture, element, pagination } = await mount();
+    fixture.componentInstance.total.set(0);
+    fixture.componentInstance.page.set(3);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.page()).toBe(3);
+    // The live region is there before the items arrive, so their range is announced.
+    const status = element.querySelector('[role="status"]');
+    expect(status?.textContent.trim()).toBe('');
+    fixture.componentInstance.total.set(134);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.page()).toBe(3);
+    expect(await pagination.getCurrentPage()).toBe(3);
+    expect(element.querySelector('[role="status"]')).toBe(status);
+    expect(status?.textContent.trim()).toBe('21–30 из 134');
+    element.remove();
+  });
+
   it('draws square pages of the control height, the current one on the accent fill', async () => {
     const { element } = await mount();
     const current = button(element, 'Страница 1');
@@ -183,6 +204,14 @@ describe('AvePagination', () => {
     expect(getComputedStyle(element.querySelector('.numbers') ?? element).display).toBe('none');
     const nav = element.querySelector('nav');
     expect(nav?.scrollWidth).toBe(nav?.clientWidth);
+    element.remove();
+  });
+
+  it('takes a name of the page’s own for its landmark', async () => {
+    const { fixture, element } = await mount();
+    fixture.componentInstance.label.set('Страницы актов');
+    fixture.detectChanges();
+    expect(element.querySelector('nav')?.getAttribute('aria-label')).toBe('Страницы актов');
     element.remove();
   });
 

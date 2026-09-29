@@ -46,7 +46,7 @@ const above: Partial<IsActiveMatchOptions> = { paths: 'subset', queryParams: 'ig
                         [icon]="child.icon"
                         [expanded]="isOpen(child)"
                         [attr.aria-controls]="groupId(child)"
-                        [attr.data-current]="!isOpen(child) && holdsCurrent(child) ? '' : null"
+                        [attr.aria-current]="!isOpen(child) && holdsCurrent(child) ? 'true' : null"
                         (click)="toggle(child)"
                       >
                         {{ child.label }}
@@ -83,7 +83,7 @@ const above: Partial<IsActiveMatchOptions> = { paths: 'subset', queryParams: 'ig
                 [icon]="entry.icon"
                 [expanded]="isOpen(entry)"
                 [attr.aria-controls]="groupId(entry)"
-                [attr.data-current]="!isOpen(entry) && holdsCurrent(entry) ? '' : null"
+                [attr.aria-current]="!isOpen(entry) && holdsCurrent(entry) ? 'true' : null"
                 (click)="toggle(entry)"
               >
                 {{ entry.label }}
@@ -148,7 +148,8 @@ export class AveSidebarNav {
     // Navigation into a group opens it; what the person opened and closed stays otherwise.
     effect(() => {
       this.url();
-      const groups = this.groups().filter((group) => untracked(() => this.holdsCurrent(group)));
+      // Only navigation opens a group: new items (their counts, the person's rights) leave the groups as they are.
+      const groups = untracked(() => this.groups().filter((group) => this.holdsCurrent(group)));
       if (groups.length === 0) return;
       this.opened.update((opened) => new Set([...opened, ...groups.map((group) => group.label)]));
     });

@@ -19,6 +19,11 @@
     list-style: none;
   }
 
+  /* A narrow column, so the long link wraps at any width. */
+  .narrow {
+    max-inline-size: var(--ave-container-xs);
+  }
+
   .hint {
     color: var(--ave-color-fg-muted);
     font: var(--ave-font-caption);

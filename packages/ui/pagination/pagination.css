@@ -1,17 +1,13 @@
 @layer components {
-  /* The pagination (ADR 0074) adapts to its own width: numbers from a small container, the compact words under it. */
+  /* The pagination (ADR 0074) adapts to its own width: numbers from a small container, the compact words under it.
+     The range at the start, the pages at the end; under each other when they do not fit. */
   :host {
-    display: block;
-    container-type: inline-size;
-  }
-
-  /* The range at the start, the pages at the end; under each other when they do not fit. */
-  .pagination {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: var(--ave-space-2) var(--ave-space-4);
+    container-type: inline-size;
   }
 
   .range {

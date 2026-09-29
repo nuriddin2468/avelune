@@ -16,7 +16,7 @@ class Page {}
 @Component({
   selector: 'ave-breadcrumbs-host',
   imports: [AveBreadcrumbs],
-  template: ` <div class="frame"><ave-breadcrumbs [items]="items()" [current]="current()" /></div> `,
+  template: ` <div class="frame"><ave-breadcrumbs [items]="items()" [current]="current()" [label]="label()" /></div> `,
 })
 class BreadcrumbsHost {
   readonly items = signal<readonly AveBreadcrumb[]>([
@@ -25,6 +25,7 @@ class BreadcrumbsHost {
     { label: 'Поставки', link: ['/contracts', 'supply'] },
   ]);
   readonly current = signal('ДК-2026/114');
+  readonly label = signal<string | undefined>(undefined);
 }
 
 const used = [
@@ -162,6 +163,14 @@ describe('AveBreadcrumbs', () => {
     expect((items.at(-1)?.getBoundingClientRect().height ?? 0) % 24).toBe(0);
     expect(items.at(-1)?.getBoundingClientRect().height).toBeGreaterThan(24);
     expect(trail.scrollWidth).toBe(trail.clientWidth);
+    element.remove();
+  });
+
+  it('takes a name of the page’s own for its landmark', async () => {
+    const { fixture, element, trail } = await mount();
+    fixture.componentInstance.label.set('Путь к договору');
+    fixture.detectChanges();
+    expect(await trail.getLabel()).toBe('Путь к договору');
     element.remove();
   });
 

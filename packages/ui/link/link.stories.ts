@@ -26,7 +26,7 @@ type View = 'default' | 'places' | 'long';
         </div>
       }
       @case ('long') {
-        <p class="text" lang="uz-Latn">
+        <p class="text narrow" lang="uz-Latn">
           Hujjat
           <a aveLink routerLink="/decrees/214"
             >Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2026-yil 18-martdagi 214-sonli qarori</a
@@ -113,7 +113,7 @@ export const Places: Story = {
   },
 };
 
-/** A long Uzbek link wraps with the text around it, underlined on every line. */
+/** A long Uzbek link wraps with the text around it in a narrow column, underlined on every line. */
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),

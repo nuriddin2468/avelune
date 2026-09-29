@@ -31,24 +31,25 @@ const long: readonly AveBreadcrumb[] = [
   template: `
     @switch (view()) {
       @case ('deep') {
-        <header class="page">
-          <ave-breadcrumbs [items]="deep" current="Банковские реквизиты" />
+        <div class="page">
+          <ave-breadcrumbs label="Путь к реквизитам" [items]="deep" current="Банковские реквизиты" />
           <h1 class="title">Банковские реквизиты</h1>
-        </header>
+        </div>
       }
       @case ('long') {
-        <header class="page">
+        <div class="page">
           <ave-breadcrumbs
+            label="Hujjat yoʻli"
             [items]="long"
             current="Toshkent shahar hokimligining 2026-yil 18-martdagi 214-sonli qarori"
           />
-        </header>
+        </div>
       }
       @default {
-        <header class="page">
+        <div class="page">
           <ave-breadcrumbs [items]="contract" current="ДК-2026/114" />
           <h1 class="title">Договор ДК-2026/114</h1>
-        </header>
+        </div>
       }
     }
   `,
@@ -115,7 +116,10 @@ export const Default: Story = {
   },
 };
 
-/** Four levels above the page: the trail is as long as the path, and wraps between its items on a phone. */
+/**
+ * Four levels above the page: the trail is as long as the path, and wraps between its items on a phone. Named apart
+ * (`label`), as a page with a second trail would be.
+ */
 export const Deep: Story = {
   render: frame('deep'),
   play: async ({ canvasElement }) => {

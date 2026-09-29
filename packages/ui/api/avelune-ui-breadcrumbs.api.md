@@ -17,10 +17,11 @@ export interface AveBreadcrumb {
 export class AveBreadcrumbs {
     readonly current: _angular_core.InputSignal<string>;
     readonly items: _angular_core.InputSignal<readonly AveBreadcrumb[]>;
+    readonly label: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
     protected readonly messages: _avelune_ui_i18n.AveMessages;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveBreadcrumbs, "ave-breadcrumbs", never, { "items": { "alias": "items"; "required": true; "isSignal": true; }; "current": { "alias": "current"; "required": true; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveBreadcrumbs, "ave-breadcrumbs", never, { "items": { "alias": "items"; "required": true; "isSignal": true; }; "current": { "alias": "current"; "required": true; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveBreadcrumbs, never>;
 }

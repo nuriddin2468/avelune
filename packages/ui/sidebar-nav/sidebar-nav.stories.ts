@@ -71,13 +71,14 @@ const long: readonly AveSidebarEntry[] = [
     ]),
   ],
   template: `
-    <aside class="column">
+    <div class="column">
+      <p class="product">Avelune · Документооборот</p>
       @if (view() === 'long') {
         <ave-sidebar-nav label="Boʻlimlar" [items]="long" lang="uz-Latn" />
       } @else {
-        <ave-sidebar-nav label="Разделы" [items]="pages" />
+        <ave-sidebar-nav [label]="label()" [items]="pages" />
       }
-    </aside>
+    </div>
   `,
   styleUrl: './sidebar-nav.stories.css',
 })
@@ -85,6 +86,8 @@ class SidebarNavStories implements OnInit {
   readonly view = input<View>('default');
   /** The page the story opens on. */
   readonly url = input('/');
+  /** The landmark's name; each story's is its own, as the docs page shows them together. */
+  readonly label = input('Разделы');
   protected readonly pages = pages;
   protected readonly long = long;
   private readonly router = inject(Router);
@@ -96,10 +99,10 @@ class SidebarNavStories implements OnInit {
 
 type Story = StoryObj<SidebarNavStories>;
 
-function frame(view: View, url: string): NonNullable<Story['render']> {
+function frame(view: View, url: string, label = 'Разделы'): NonNullable<Story['render']> {
   return () => ({
-    props: { view, url },
-    template: `<ave-sidebar-nav-stories [view]="view" [url]="url" />`,
+    props: { view, url, label },
+    template: `<ave-sidebar-nav-stories [view]="view" [url]="url" [label]="label" />`,
     moduleMetadata: { imports: [SidebarNavStories] },
   });
 }
@@ -128,7 +131,7 @@ export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default', '/contracts'),
   parameters: source(
-    '<ave-sidebar-nav label="Разделы" [items]="pages" />',
+    '<ave-sidebar-nav [label]="label()" [items]="pages" />',
     '',
     'pages: AveSidebarEntry[] = [',
     "  { label: 'Главная', link: '/', icon: 'house', exact: true },",
@@ -156,7 +159,7 @@ export const Default: Story = {
 /** A page inside a group: the group opens by itself; closed, it shows that it holds the current page. */
 export const InGroup: Story = {
   name: 'In a group',
-  render: frame('default', '/directories/departments'),
+  render: frame('default', '/directories/departments', 'Разделы документооборота'),
   play: async ({ canvasElement }) => {
     const nav = within(within(canvasElement).getByRole('navigation'));
     // The navigation happens as the story opens: the group opens once it has.

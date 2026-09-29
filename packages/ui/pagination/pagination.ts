@@ -48,9 +48,10 @@ function pagesToShow(current: number, count: number): number[] {
   imports: [AveIconButton, AveTooltip],
   providers: [provideAveIcons([lucideChevronLeft, lucideChevronRight])],
   template: `
+    <!-- The range is a live region from the start, so the first range is announced as a list's items arrive. -->
+    <p class="range" role="status">{{ total() > 0 ? range() : '' }}</p>
     @if (total() > 0) {
-      <nav class="pagination" [attr.aria-label]="messages.pagination">
-        <p class="range" role="status">{{ range() }}</p>
+      <nav class="pagination" [attr.aria-label]="label() ?? messages.pagination">
         <div class="pages">
           <button
             aveIconButton
@@ -110,6 +111,12 @@ export class AvePagination {
   /** How many items a page shows. */
   readonly pageSize = input(20, { transform: numberAttribute });
 
+  /**
+   * Names the landmark: the kit's words ("Страницы") by default. A page with two paginations (over and under a long
+   * list, or of two lists) names each, so screen readers can tell the landmarks apart.
+   */
+  readonly label = input<string>();
+
   protected readonly messages = injectAveMessages();
   private readonly numbers = aveNumberFormat(inject(LOCALE_ID));
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
@@ -133,8 +140,10 @@ export class AvePagination {
   });
 
   constructor() {
-    // A page beyond the last (after a filter, a new page size) becomes the last.
+    // A page beyond the last (after a filter, a new page size) becomes the last; while the list holds nothing yet (its
+    // first page on its way from a server), the page stays as the application set it.
     effect(() => {
+      if (this.total() <= 0) return;
       const current = this.current();
       if (this.page() !== current) this.page.set(current);
     });

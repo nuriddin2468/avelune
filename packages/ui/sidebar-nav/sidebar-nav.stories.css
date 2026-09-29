@@ -1,5 +1,5 @@
-/* The frame of the Sidebar navigation stories: an application's sidebar column on its surface. Stories only; the
-   navigation's styles are sidebar-nav.css. */
+/* The frame of the Sidebar navigation stories: an application's sidebar column on its surface, under the product's
+   name. Stories only; the navigation's styles are sidebar-nav.css. */
 @layer components {
   :host {
     display: block;
@@ -11,5 +11,11 @@
     border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
     border-radius: var(--ave-radius-lg);
     background-color: var(--ave-color-bg-surface);
+  }
+
+  /* The product's name over its navigation, as an application's sidebar shows it. */
+  .product {
+    padding: var(--ave-space-4) var(--ave-space-5) 0;
+    font: var(--ave-font-label-md);
   }
 }
