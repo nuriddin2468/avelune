@@ -48,10 +48,8 @@
     font: var(--ave-font-label-md);
   }
 
-  /* The message's own paragraphs and actions, 8px apart. */
+  /* The message is text that flows, a link inside it included; its actions have a row of their own (actions.css). */
   .message {
-    display: grid;
-    gap: var(--ave-space-2);
-    justify-items: start;
+    display: block;
   }
 }

@@ -1,0 +1,11 @@
+@layer components {
+  /* The actions of an alert (ADR 0061, addendum): a row under the message that wraps, 8px apart and 8px under it (the
+     content's 4px gap and 4px of its own). */
+  :host {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ave-space-2);
+    margin-block-start: var(--ave-space-1);
+  }
+}

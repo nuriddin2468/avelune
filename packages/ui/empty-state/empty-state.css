@@ -31,9 +31,9 @@
     font: var(--ave-font-heading-md);
   }
 
+  /* The message is text that flows, a link inside it included (ADR 0061, addendum); the actions have their row. */
   .message {
-    display: grid;
-    gap: var(--ave-space-2);
+    display: block;
     color: var(--ave-color-fg-muted);
   }
 }

@@ -8,7 +8,7 @@ import * as AlertStories from './alert.stories';
 `<ave-alert>` is a notice about one part of the screen, placed next to that part: a field that failed a check, a document about to expire, a form that did not send (ADR 0061).
 
 ```ts
-import { AveAlert } from '@avelune/ui/alert';
+import { AveAlert, AveAlertActions } from '@avelune/ui/alert';
 ```
 
 <Canvas of={AlertStories.Default} />
@@ -26,7 +26,7 @@ import { AveAlert } from '@avelune/ui/alert';
 
 ## Anatomy
 
-A box in the variant's subtle fill, `radius.lg`, 12px and 16px of padding. At the start, the variant's icon (20px, in the variant's colour), level with the first line; then an optional heading in bold and the message, which may hold paragraphs, a link or a small button, 8px apart.
+A box in the variant's subtle fill, `radius.lg`, 12px and 16px of padding. At the start, the variant's icon (20px, in the variant's colour), level with the first line; then an optional heading in bold and the message, text that flows like a sentence, a link inside it included; its actions, when it has any, in a row of their own 8px under it (`aveAlertActions`).
 
 ```html
 <ave-alert variant="warning" heading="Контрагент не прошёл проверку">
@@ -51,7 +51,14 @@ Each variant has an icon of its own shape, and the text says the rest, so the ki
 
 - The heading says what happened, in a few words: "Договор не отправлен". The message says why and what to do: "Сервер не ответил. Отправьте договор ещё раз." Never apologise; never "Что-то пошло не так" alone.
 - Without a heading, the message alone.
-- Put the action in the message: a link to where the fix is, or a small secondary button to try again.
+- A link that belongs to the sentence stays in it ("<a>Проверьте ИНН</a> или выберите другого контрагента"). An action of its own, a link to where the fix is or a small secondary button to try again, goes in `aveAlertActions`, a row under the message:
+
+```html
+<ave-alert variant="danger" heading="Список контрагентов не загрузился">
+  Сервер справочника не ответил за 30 секунд.
+  <div aveAlertActions><button aveButton type="button" size="sm" (click)="reload()">Повторить</button></div>
+</ave-alert>
+```
 
 <Canvas of={AlertStories.WithoutHeading} />
 

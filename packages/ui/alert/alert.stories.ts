@@ -1,7 +1,7 @@
 import { Component, LOCALE_ID, input, signal } from '@angular/core';
 import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular-vite';
 import { expect, userEvent, within } from 'storybook/test';
-import { AveAlert, type AveAlertVariant } from '@avelune/ui/alert';
+import { AveAlert, AveAlertActions, type AveAlertVariant } from '@avelune/ui/alert';
 import { AveButton } from '@avelune/ui/button';
 
 type View = 'default' | 'variants' | 'plain' | 'actions' | 'long';
@@ -28,7 +28,7 @@ const variants = [
 /** The frame the stories draw alerts in. Styled with tokens only. */
 @Component({
   selector: 'ave-alert-stories',
-  imports: [AveAlert, AveButton],
+  imports: [AveAlert, AveAlertActions, AveButton],
   template: `
     @switch (view()) {
       @case ('variants') {
@@ -42,11 +42,12 @@ const variants = [
       }
       @case ('actions') {
         <ave-alert variant="danger" heading="Список контрагентов не загрузился" lang="ru">
-          <p>Сервер справочника не ответил за 30 секунд.</p>
-          <button aveButton type="button" size="sm">Повторить</button>
+          Сервер справочника не ответил за 30 секунд.
+          <div aveAlertActions><button aveButton type="button" size="sm">Повторить</button></div>
         </ave-alert>
         <ave-alert variant="warning" lang="ru">
-          ИНН контрагента не найден в реестре налоговой. <a href="#counterparty">Открыть карточку контрагента</a>
+          ИНН контрагента не найден в реестре налоговой.
+          <div aveAlertActions><a href="#counterparty">Открыть карточку контрагента</a></div>
         </ave-alert>
       }
       @case ('long') {
@@ -134,7 +135,14 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const alert = within(canvasElement).getByRole('alert');
     await expect(within(alert).getByRole('img', { name: 'Предупреждение' })).toBeVisible();
-    await expect(within(alert).getByRole('link', { name: 'Проверьте ИНН' })).toBeVisible();
+    const link = within(alert).getByRole('link', { name: 'Проверьте ИНН' });
+    await expect(link).toBeVisible();
+    // The link is part of the sentence: the words after it go on from the line it ends on.
+    const after = document.createRange();
+    after.selectNodeContents(link.nextSibling ?? link);
+    await expect(Math.round(after.getClientRects()[0]?.top ?? 0)).toBe(
+      Math.round([...link.getClientRects()].at(-1)?.top ?? -1),
+    );
   },
 };
 
@@ -175,8 +183,19 @@ export const WithoutHeading: Story = {
 export const WithActions: Story = {
   name: 'With actions',
   render: frame('actions'),
+  parameters: source(
+    '<ave-alert variant="danger" heading="Список контрагентов не загрузился">',
+    '  Сервер справочника не ответил за 30 секунд.',
+    '  <div aveAlertActions><button aveButton type="button" size="sm" (click)="reload()">Повторить</button></div>',
+    '</ave-alert>',
+  ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    // The actions have a row of their own, 8px under the message.
+    const [first] = canvasElement.querySelectorAll('ave-alert');
+    const message = first?.querySelector('.message')?.getBoundingClientRect();
+    const actions = first?.querySelector('[aveAlertActions]')?.getBoundingClientRect();
+    await expect(actions?.top).toBe((message?.bottom ?? 0) + 8);
     await userEvent.tab();
     await expect(canvas.getByRole('button', { name: 'Повторить' })).toHaveFocus();
     await userEvent.tab();

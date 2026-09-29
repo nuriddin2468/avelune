@@ -26,7 +26,7 @@ import { AveDialog, AveDialogActions } from '@avelune/ui/dialog';
 
 ## Anatomy
 
-The `<dialog>` is the backdrop itself, over the whole viewport in `color.bg.backdrop`. The panel sits in its middle, 16px from its edges at least: the raised surface with the dialog elevation, `radius.lg` and a subtle edge. In it, the `heading` (20/28) and a close button at the top, the content, and the actions (`aveDialogActions`) at the end under a rule, the primary one last. The content scrolls between the heading and the actions, which stay in view.
+The `<dialog>` is the backdrop itself, over the whole viewport in `color.bg.backdrop`. The panel sits in its middle, 16px from its edges at least: the raised surface with the dialog elevation, `radius.lg` and a subtle edge. In it, the `heading` (20/28) and a close button at the top, the content, and the actions (`aveDialogActions`) at the end under a rule, the primary one last. The content is a column of blocks, 16px apart: fields, paragraphs, lists; text goes in a paragraph, so a link or a word in bold stays in its sentence. It scrolls between the heading and the actions, which stay in view.
 
 ```html
 <dialog aveDialog heading="Изменить контрагента" [(open)]="editing">

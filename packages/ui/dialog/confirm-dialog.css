@@ -16,7 +16,10 @@
     flex: 1 1 auto;
   }
 
+  /* The message is text that flows, a number in bold or a link inside it included: not the dialog's column of
+     blocks. */
   .body {
+    display: block;
     color: var(--ave-color-fg-muted);
   }
 }

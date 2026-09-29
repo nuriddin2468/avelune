@@ -2,18 +2,22 @@ import { Component, LOCALE_ID, signal } from '@angular/core';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { tokens, type TokenName } from '@avelune/tokens';
-import { AveAlert, AveBanner, type AveAlertVariant } from '@avelune/ui/alert';
+import { AveAlert, AveAlertActions, AveBanner, type AveAlertVariant } from '@avelune/ui/alert';
 import { AveAlertHarness, AveBannerHarness } from '@avelune/ui/alert/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 @Component({
   selector: 'ave-alert-host',
-  imports: [AveAlert, AveBanner],
+  imports: [AveAlert, AveAlertActions, AveBanner],
   template: `
     <ave-alert [variant]="variant()" [heading]="heading()">
-      Налоговый номер не найден в реестре. <a href="#check">Проверить ИНН</a>
+      Налоговый номер не найден в реестре. <a href="#check">Проверить ИНН</a> или выберите другого контрагента.
     </ave-alert>
     <ave-alert>Договор сохранён как черновик.</ave-alert>
+    <ave-alert variant="danger" heading="Список не загрузился">
+      Сервер справочника не ответил.
+      <div aveAlertActions><button type="button">Повторить</button><a href="#help">Справка</a></div>
+    </ave-alert>
     <ave-banner [variant]="variant()" [dismissible]="dismissible()" (dismiss)="dismissed.set(dismissed() + 1)">
       В субботу с 22:00 до 02:00 система будет недоступна.
     </ave-banner>
@@ -82,6 +86,20 @@ function rgb(hex: string): string {
 }
 
 describe('AveAlert', () => {
+  it('lets its message flow as a sentence, a link inside it, and puts its actions in a row 8px under it', () => {
+    const { element } = mount();
+    const [first, , third] = element.querySelectorAll('ave-alert');
+    const link = first?.querySelector('a');
+    const after = document.createRange();
+    after.selectNodeContents(link?.nextSibling ?? element);
+    expect(Math.round(after.getClientRects()[0]?.top ?? 0)).toBe(Math.round(link?.getClientRects()[0]?.top ?? -1));
+    const message = third?.querySelector('.message')?.getBoundingClientRect();
+    const actions = third?.querySelector('[aveAlertActions]');
+    expect(actions?.getBoundingClientRect().top).toBe((message?.bottom ?? 0) + 8);
+    expect(getComputedStyle(actions ?? element).display).toBe('flex');
+    expect(getComputedStyle(actions ?? element).columnGap).toBe('8px');
+  });
+
   it('is an alert for a warning or an error and a status otherwise, its icon named by its kind', async () => {
     const { fixture } = mount();
     const loader = TestbedHarnessEnvironment.loader(fixture);
@@ -89,9 +107,11 @@ describe('AveAlert', () => {
     expect(await warning.getRole()).toBe('alert');
     expect(await warning.getKind()).toBe('Предупреждение');
     expect(await warning.getHeading()).toBe('Контрагент не прошёл проверку');
-    expect(await warning.getMessage()).toBe('Налоговый номер не найден в реестре. Проверить ИНН');
+    expect(await warning.getMessage()).toBe(
+      'Налоговый номер не найден в реестре. Проверить ИНН или выберите другого контрагента.',
+    );
     expect(await warning.getText()).toBe(
-      'Контрагент не прошёл проверку Налоговый номер не найден в реестре. Проверить ИНН',
+      'Контрагент не прошёл проверку Налоговый номер не найден в реестре. Проверить ИНН или выберите другого контрагента.',
     );
     const info = await loader.getHarness(AveAlertHarness.with({ text: 'Договор сохранён как черновик.' }));
     expect(await info.getVariant()).toBe('info');

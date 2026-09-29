@@ -59,7 +59,7 @@ type View = 'delete' | 'send' | 'long';
           (confirm)="result.set('Договор удалён.')"
           lang="ru"
         >
-          Договор и его приложения будут удалены без возможности восстановления.
+          Договор <b>ДК-2026/114</b> и его приложения будут удалены без возможности восстановления.
         </dialog>
       }
     }
@@ -108,7 +108,7 @@ export const Default: Story = {
   parameters: source(
     '<dialog aveConfirmDialog heading="Удалить договор ДК-2026/114?" action="Удалить договор"',
     '  [(open)]="asking" (confirm)="remove()">',
-    '  Договор и его приложения будут удалены без возможности восстановления.',
+    '  Договор <b>ДК-2026/114</b> и его приложения будут удалены без возможности восстановления.',
     '</dialog>',
   ),
   play: async ({ canvasElement }) => {
@@ -117,8 +117,12 @@ export const Default: Story = {
     const confirm = within(canvasElement).getByRole('alertdialog', { name: 'Удалить договор ДК-2026/114?' });
     await expect(confirm).toBe(dialog);
     await expect(confirm).toHaveAccessibleDescription(
-      'Договор и его приложения будут удалены без возможности восстановления.',
+      'Договор ДК-2026/114 и его приложения будут удалены без возможности восстановления.',
     );
+    // The number in bold is part of the sentence, on its first line (a line is 20px).
+    const number = within(dialog).getByText('ДК-2026/114').getBoundingClientRect();
+    const body = dialog.querySelector('.body')?.getBoundingClientRect();
+    await expect(number.top - (body?.top ?? 0)).toBeLessThan(20);
     await waitFor(() => expect(within(dialog).getByRole('button', { name: 'Отмена' })).toHaveFocus());
     await userEvent.keyboard('{Enter}');
     await waitFor(() => expect(dialog.open).toBe(false));

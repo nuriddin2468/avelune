@@ -20,9 +20,17 @@ export class AveAlert {
     protected readonly role: _angular_core.Signal<"alert" | "status">;
     readonly variant: _angular_core.InputSignal<AveAlertVariant>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveAlert, "ave-alert", never, { "variant": { "alias": "variant"; "required": false; "isSignal": true; }; "heading": { "alias": "heading"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveAlert, "ave-alert", never, { "variant": { "alias": "variant"; "required": false; "isSignal": true; }; "heading": { "alias": "heading"; "required": false; "isSignal": true; }; }, {}, never, ["*", "[aveAlertActions]"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveAlert, never>;
+}
+
+// @alpha
+export class AveAlertActions {
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveAlertActions, "[aveAlertActions]", never, {}, {}, never, ["*"], true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveAlertActions, never>;
 }
 
 // @alpha

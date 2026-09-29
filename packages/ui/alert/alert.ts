@@ -5,14 +5,32 @@ import { aveStatusIcon, aveStatusIcons, aveStatusLabel, aveStatusRole } from './
 import type { AveAlertVariant } from './types';
 
 /**
+ * The actions of an alert: a link to where the fix is, or a small button to try again, in a row under its message that
+ * wraps, 8px apart (ADR 0061, addendum).
+ *
+ * ```html
+ * <div aveAlertActions><button aveButton type="button" size="sm" (click)="reload()">Повторить</button></div>
+ * ```
+ *
+ * @alpha
+ */
+@Component({
+  selector: '[aveAlertActions]',
+  template: '<ng-content />',
+  styleUrl: './actions.css',
+})
+export class AveAlertActions {}
+
+/**
  * The kit's inline alert (GUIDELINES.md, "Toast, inline alert or banner"; ADR 0061): a notice about one part of the
- * screen, next to that part. A tinted box with the variant's icon, an optional heading and the message, which may hold
- * a link or a button. A warning or an error is an `alert` and information or a success a `status`, so an alert that
- * appears is announced; the icon is named by its kind in the application's locale.
+ * screen, next to that part. A tinted box with the variant's icon, an optional heading and the message, text that may
+ * hold a link, with its actions in a row under it (`aveAlertActions`). A warning or an error is an `alert` and
+ * information or a success a `status`, so an alert that appears is announced; the icon is named by its kind in the
+ * application's locale.
  *
  * ```html
  * <ave-alert variant="warning" heading="Контрагент не прошёл проверку">
- *   Налоговый номер не найден в реестре. Проверьте ИНН или выберите другого контрагента.
+ *   Налоговый номер не найден в реестре. <a href="…">Проверьте ИНН</a> или выберите другого контрагента.
  * </ave-alert>
  * ```
  *
@@ -33,6 +51,7 @@ import type { AveAlertVariant } from './types';
         <p class="heading">{{ heading() }}</p>
       }
       <div class="message"><ng-content /></div>
+      <ng-content select="[aveAlertActions]" />
     </div>
   `,
   styleUrl: './alert.css',

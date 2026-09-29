@@ -33,3 +33,12 @@ GUIDELINES.md sends a notice about one part of the screen to an inline alert and
 
 - The toast (ADR to come) reuses the icons and their names.
 - After a banner is closed, focus falls to the document, and the next Tab continues from where the banner was (the browser's focus navigation starting point); the docs page says so. No library behaviour moves it, and the kit adds none.
+
+## Addendum (2026-09-29): the message flows, and the actions have a row
+
+The Wave 3 baselines showed the Default story's sentence broken into three lines: "…в реестре." / "Проверьте ИНН" / "или выберите…". The message was a grid for "paragraphs and actions", so every text run and the link became rows of their own. A grid cannot tell a link inside a sentence from an action under it, and the kit cannot style projected children (emulated encapsulation, no `::ng-deep`).
+
+- The alert's message is text that flows (`display: block`), a link inside it included.
+- Its actions go in `AveAlertActions` (`[aveAlertActions]`, exported from `@avelune/ui/alert`), a row that wraps, 8px apart and 8px under the message, as the dialog's and the empty state's actions do.
+- The same holds for the empty state's message (ADR 0062) and the confirmation's (ADR 0066): text that flows, a number in bold or a link inside it included. The dialog's and the drawer's body stay a column of blocks, 16px apart, for fields and paragraphs; text goes in paragraphs there.
+- The Default stories check that the words after a link go on from its line; the confirmation's, that a number in bold stays on the first line.
