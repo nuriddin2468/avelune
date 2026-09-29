@@ -201,20 +201,4 @@
     font: var(--ave-font-body-md);
     font-variant-numeric: tabular-nums;
   }
-
-  .status {
-    font: var(--ave-font-label-sm);
-
-    &[data-status='approval'] {
-      color: var(--ave-color-info-fg);
-    }
-
-    &[data-status='signed'] {
-      color: var(--ave-color-success-fg);
-    }
-
-    &[data-status='expired'] {
-      color: var(--ave-color-danger-fg);
-    }
-  }
 }

@@ -1,3 +1,4 @@
+import type { AveBadgeVariant } from '@avelune/ui/badge';
 import type { AveOption } from '@avelune/ui/select';
 
 /** The showcase's reference data: what a work system would load from its server. */
@@ -73,6 +74,14 @@ export const contractStatuses: Readonly<Record<ContractStatus, string>> = {
   approval: 'На согласовании',
   signed: 'Подписан',
   expired: 'Истёк',
+};
+
+/** How each status reads on a badge: a draft neutral, approval under way, a signature a good end, the end danger. */
+export const contractStatusVariants: Readonly<Record<ContractStatus, AveBadgeVariant>> = {
+  draft: 'neutral',
+  approval: 'info',
+  signed: 'success',
+  expired: 'danger',
 };
 
 /** A contract of the department's register, as the list shows it. */

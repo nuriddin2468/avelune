@@ -38,7 +38,7 @@ export class AveSidebarNavHarness extends ComponentHarness {
   async getLinks(): Promise<string[]> {
     const shown: string[] = [];
     for (const link of await this.links()) {
-      if ((await link.getProperty<number>('offsetHeight')) > 0) shown.push((await link.text()).trim());
+      if ((await link.getProperty<number>('offsetHeight')) > 0) shown.push(await this.words(link));
     }
     return shown;
   }
@@ -46,7 +46,7 @@ export class AveSidebarNavHarness extends ComponentHarness {
   /** Gets the words of the current page's link, or `null` when no link is the current page. */
   async getCurrent(): Promise<string | null> {
     for (const link of await this.links()) {
-      if ((await link.getAttribute('aria-current')) === 'page') return (await link.text()).trim();
+      if ((await link.getAttribute('aria-current')) === 'page') return await this.words(link);
     }
     return null;
   }
@@ -55,9 +55,20 @@ export class AveSidebarNavHarness extends ComponentHarness {
   async getAbove(): Promise<string[]> {
     const above: string[] = [];
     for (const link of await this.links()) {
-      if ((await link.getAttribute('aria-current')) === 'true') above.push((await link.text()).trim());
+      if ((await link.getAttribute('aria-current')) === 'true') above.push(await this.words(link));
     }
     return above;
+  }
+
+  /** Gets the count shown at the end of the page's link with this name ("12", "99+"), or an empty string without one. */
+  async getCount(label: string | RegExp): Promise<string> {
+    for (const link of await this.links()) {
+      if (await HarnessPredicate.stringMatches(this.words(link), label)) {
+        const count = await this.locatorForOptional(`a[href="${(await link.getAttribute('href')) ?? ''}"] ave-count`)();
+        return count === null ? '' : (await count.text()).trim();
+      }
+    }
+    throw new Error(`AveSidebarNavHarness: no link matches ${String(label)}.`);
   }
 
   /** Gets the names of the groups, in order. */
@@ -78,12 +89,17 @@ export class AveSidebarNavHarness extends ComponentHarness {
   /** Follows the first link whose words are this string or match this pattern. */
   async follow(label: string | RegExp): Promise<void> {
     for (const link of await this.links()) {
-      if (await HarnessPredicate.stringMatches((await link.text()).trim(), label)) {
+      if (await HarnessPredicate.stringMatches(await this.words(link), label)) {
         await link.click();
         return;
       }
     }
     throw new Error(`AveSidebarNavHarness: no link matches ${String(label)}.`);
+  }
+
+  /** A link's words, without its count. */
+  private async words(link: TestElement): Promise<string> {
+    return (await link.text({ exclude: 'ave-count' })).trim();
   }
 
   private async group(label: string | RegExp): Promise<TestElement> {

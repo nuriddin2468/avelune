@@ -1,0 +1,24 @@
+@layer components {
+  /* A count (ADR 0079): the accent fill, fully rounded, 20px tall and at least as wide, so one figure is a circle;
+     tabular figures. The border is transparent and only forced colours paint it, where the fill is dropped. */
+  :host {
+    display: inline-block;
+    flex: none;
+    inline-size: fit-content;
+    min-inline-size: var(--ave-space-5);
+    padding: calc(var(--ave-space-1) / 2 - var(--ave-border-width-default))
+      calc(var(--ave-space-1) - var(--ave-border-width-default));
+    border: var(--ave-border-width-default) solid transparent;
+    border-radius: var(--ave-radius-full);
+    background-color: var(--ave-color-accent-bg);
+    color: var(--ave-color-fg-on-accent);
+    font: var(--ave-font-label-sm);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  :host([data-empty]) {
+    display: none;
+  }
+}

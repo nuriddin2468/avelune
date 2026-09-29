@@ -14,6 +14,11 @@ export interface AveSidebarLink {
   readonly icon?: AveIconName;
   /** Current only on its own page, never on the pages under it: for the home page (`'/'`). */
   readonly exact?: boolean;
+  /**
+   * How many items wait on the page, drawn as the kit's count at the row's end and read after the page's name
+   * ("Входящие 12"); nothing at 0 (ADR 0072, second addendum).
+   */
+  readonly count?: number;
 }
 
 /**

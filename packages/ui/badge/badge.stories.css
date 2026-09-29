@@ -1,0 +1,81 @@
+/* The frame of the Badge stories. Stories only; the components' own styles are badge.css and count.css. */
+@layer components {
+  :host {
+    display: grid;
+    gap: var(--ave-space-4);
+    max-inline-size: var(--ave-container-md);
+    padding: var(--ave-space-6);
+  }
+
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ave-space-2);
+  }
+
+  /* A list's rows on one surface, the status at each row's end. */
+  .rows {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface);
+    list-style: none;
+  }
+
+  .row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--ave-space-4);
+    padding: var(--ave-space-3) var(--ave-space-4);
+  }
+
+  .row + .row {
+    border-block-start: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  }
+
+  .record {
+    display: grid;
+    gap: var(--ave-space-1);
+  }
+
+  .number {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+
+  .heading {
+    font: var(--ave-font-heading-sm);
+  }
+
+  .narrow {
+    display: grid;
+    gap: var(--ave-space-2);
+    justify-items: start;
+    inline-size: calc(var(--ave-space-16) * 3);
+  }
+
+  /* Places in a column, each name with its count at the end. */
+  .places {
+    display: grid;
+    gap: var(--ave-space-1);
+    inline-size: calc(var(--ave-space-16) * 4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .place {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ave-space-2);
+    min-block-size: var(--ave-control-height-md);
+    padding-inline: var(--ave-control-padding-inline-sm);
+    border-radius: var(--ave-radius-md);
+    color: var(--ave-color-fg-default);
+    text-decoration-line: none;
+  }
+}

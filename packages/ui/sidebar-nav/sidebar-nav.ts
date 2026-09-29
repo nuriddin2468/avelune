@@ -58,6 +58,7 @@ const above: Partial<IsActiveMatchOptions> = { paths: 'subset', queryParams: 'ig
                               aveSidebarItem
                               [routerLink]="link.link"
                               [icon]="link.icon"
+                              [count]="link.count"
                               [attr.aria-current]="current(link)"
                               >{{ link.label }}</a
                             >
@@ -69,6 +70,7 @@ const above: Partial<IsActiveMatchOptions> = { paths: 'subset', queryParams: 'ig
                         aveSidebarItem
                         [routerLink]="child.link"
                         [icon]="child.icon"
+                        [count]="child.count"
                         [attr.aria-current]="current(child)"
                         >{{ child.label }}</a
                       >
@@ -91,16 +93,26 @@ const above: Partial<IsActiveMatchOptions> = { paths: 'subset', queryParams: 'ig
               <ul class="list pages" [id]="groupId(entry)" [hidden]="!isOpen(entry)">
                 @for (link of entry.items; track $index) {
                   <li>
-                    <a aveSidebarItem [routerLink]="link.link" [icon]="link.icon" [attr.aria-current]="current(link)">{{
-                      link.label
-                    }}</a>
+                    <a
+                      aveSidebarItem
+                      [routerLink]="link.link"
+                      [icon]="link.icon"
+                      [count]="link.count"
+                      [attr.aria-current]="current(link)"
+                      >{{ link.label }}</a
+                    >
                   </li>
                 }
               </ul>
             } @else {
-              <a aveSidebarItem [routerLink]="entry.link" [icon]="entry.icon" [attr.aria-current]="current(entry)">{{
-                entry.label
-              }}</a>
+              <a
+                aveSidebarItem
+                [routerLink]="entry.link"
+                [icon]="entry.icon"
+                [count]="entry.count"
+                [attr.aria-current]="current(entry)"
+                >{{ entry.label }}</a
+              >
             }
           </li>
         }

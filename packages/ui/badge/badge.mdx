@@ -1,0 +1,84 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as BadgeStories from './badge.stories';
+
+<Meta of={BadgeStories} />
+
+# Badge
+
+`<ave-badge>` is the status of a record in words, on the tinted fill of what that status means: a contract that is "Подписан", a document "На согласовании" (ADR 0079). `<ave-count>`, in the same entry point, says how many items wait in a place: "Входящие 12".
+
+```ts
+import { AveBadge, AveCount } from '@avelune/ui/badge';
+```
+
+<Canvas of={BadgeStories.Default} />
+
+## When to use
+
+- For the status of a record in a list, a table, a card or a page's heading, where people scan many records for the ones in one state.
+- `<ave-count>` for how many items need attention in a place: unread documents, contracts to approve.
+
+## When not to use
+
+- For a value that people add and remove (a region, a label, a filter): use a tag.
+- For a message about the record ("Срок действия истекает через 3 дня"): use an alert next to it.
+- For a number that is data (a sum, a quantity): write it in its column, with tabular figures.
+- For a category or a decoration: status colours carry meaning, never ornament (`docs/GUIDELINES.md`, "Foundations").
+
+## Anatomy
+
+The words of the status in `font.label-sm`, 8px from either side, on the variant's subtle fill in its text colour, `radius.sm` (product owner, 2026-09-29), 20px tall on one line. The neutral fill is translucent, so a badge keeps its shape on a hovered or chosen row.
+
+```html
+<ave-badge variant="success">Подписан</ave-badge>
+```
+
+## Variants
+
+| Variant             | Use for                                | Example                     |
+| ------------------- | -------------------------------------- | --------------------------- |
+| `neutral` (default) | A state without a judgement            | Черновик, Создан, В архиве  |
+| `info`              | Work under way                         | На согласовании, На подписи |
+| `success`           | A good end                             | Подписан, Исполнен          |
+| `warning`           | A risk that needs a look soon          | Истекает, Просрочен ответ   |
+| `danger`            | A failure, or an end that needs action | Истёк, Отклонён             |
+
+The application maps its statuses to the variants once and uses them everywhere, so one status has one colour across the product.
+
+<Canvas of={BadgeStories.Places} />
+
+## Content
+
+- One to three words, in sentence case, that name the state: "Подписан", "Ждёт подписи". Never all caps.
+- The same word as the filter, the report and the document use.
+- A long status wraps inside its column and is never cut; a badge without words draws nothing.
+
+<Canvas of={BadgeStories.LongText} />
+
+## Count
+
+`<ave-count [value]>` writes a whole number in the application's locale (`aveNumberFormat`) with tabular figures, on the accent fill, fully rounded: one figure is a 20px circle. Above `max` (99 by default) it says "99+"; at 0 it draws nothing. The sidebar navigation draws one at the end of a page's row from the page's `count`.
+
+```html
+<a aveLink routerLink="/inbox">Входящие <ave-count [value]="unread()" /></a>
+```
+
+<Canvas of={BadgeStories.Counts} />
+
+## Accessibility
+
+- A badge is text: screen readers read its words where it stands, after the record's name or inside the heading. Its colour repeats the words and never replaces them (WCAG 1.4.1).
+- It has no role and is not a live region. When an action changes a status, say so where the action answers (a toast, the page's live region).
+- Each status's text colour keeps 4.5:1 on its fill in both themes (`contrast-pairs.json`); in forced colours the fill is dropped and the badge keeps its outline.
+- A count is read after the name around it ("Входящие 12"): word the name so the number makes sense, and keep a space between them.
+
+## Motion
+
+None.
+
+## Do and don't
+
+- Do give every status the same variant everywhere in the product.
+- Do put the badge at the end of a row or after a heading, where the eye finds it in the same place.
+- Don't make a badge a button or a link; a status is changed by the record's actions.
+- Don't use `danger` for every state people should notice; keep it for failures and ends that need action.

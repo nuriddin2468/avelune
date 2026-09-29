@@ -11,6 +11,7 @@ import {
   lucidePencil,
   lucidePrinter,
 } from '@avelune/icons/lucide';
+import { AveBadge } from '@avelune/ui/badge';
 import { AveBreadcrumbs, type AveBreadcrumb } from '@avelune/ui/breadcrumbs';
 import { AveButton, AveIconButton } from '@avelune/ui/button';
 import { AveStepper, type AveStep } from '@avelune/ui/stepper';
@@ -23,7 +24,7 @@ import { AveLink } from '@avelune/ui/link';
 import { aveDateFormat, aveNumberFormat } from '@avelune/ui/i18n';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
 import { AveMenu, type AveMenuEntry } from '@avelune/ui/menu';
-import { contractStatuses, contracts, type ContractRecord } from './data';
+import { contractStatusVariants, contractStatuses, contracts, type ContractRecord } from './data';
 
 /** The contract a route's `:id` names, if the register holds it. */
 function contractOf(id: string | undefined): ContractRecord | undefined {
@@ -43,6 +44,7 @@ export const contractTitle: ResolveFn<string> = (route) => {
 @Component({
   selector: 'ave-showcase-contract',
   imports: [
+    AveBadge,
     AveBreadcrumbs,
     AveButton,
     AveEmptyState,
@@ -137,7 +139,9 @@ export const contractTitle: ResolveFn<string> = (route) => {
               </div>
               <div class="fact">
                 <dt>Статус</dt>
-                <dd>{{ statuses[contract.status] }}</dd>
+                <dd>
+                  <ave-badge [variant]="variants[contract.status]">{{ statuses[contract.status] }}</ave-badge>
+                </dd>
               </div>
               <div class="fact">
                 <dt>Подписан</dt>
@@ -222,6 +226,7 @@ export class ContractPage {
   ];
   protected readonly trail: readonly AveBreadcrumb[] = [{ label: 'Договоры', link: '/contracts' }];
   protected readonly statuses = contractStatuses;
+  protected readonly variants = contractStatusVariants;
   protected readonly dates = aveDateFormat('ru');
   private readonly sums = aveNumberFormat('ru');
 

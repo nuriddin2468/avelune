@@ -86,6 +86,13 @@ One primary button per view region (a form, a dialog, a toolbar, a card): the on
 | More than 15, or unknown | Combobox with search |
 | Thousands, on the server | Combobox with `search="server"`: the server searches, a page at a time (ADR 0056) |
 
+### Status, tag or count
+
+| Use | When |
+|---|---|
+| Badge | The status of a record, in its words and colour: "Подписан", "На согласовании" (ADR 0079). One status, one variant, across the product |
+| Count | How many items wait in a place, beside its name: "Входящие 12"; nothing at 0 |
+
 ## States
 
 - **Disabled** controls are dimmed and cannot be used. When people need to know why, keep the control focusable (a button's `disabledInteractive`) and say why next to it or in its description.

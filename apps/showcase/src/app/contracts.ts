@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AveAlert } from '@avelune/ui/alert';
+import { AveBadge } from '@avelune/ui/badge';
 import { lucideCopy, lucideEllipsis, lucideFileText, lucideSearch, lucideTrash } from '@avelune/icons/lucide';
 import { AveButton } from '@avelune/ui/button';
 import { AveCheckbox, AveChoice } from '@avelune/ui/checkbox';
@@ -27,7 +28,7 @@ import { AveRadio } from '@avelune/ui/radio';
 import { AveProgress } from '@avelune/ui/progress';
 import { AveSkeleton } from '@avelune/ui/skeleton';
 import { AveToaster } from '@avelune/ui/toast';
-import { contractStatuses, contracts, type ContractRecord, type ContractStatus } from './data';
+import { contractStatusVariants, contractStatuses, contracts, type ContractRecord, type ContractStatus } from './data';
 
 /** What a row's menu does to its contract. */
 type RowAction = 'open' | 'copy' | 'delete';
@@ -47,6 +48,7 @@ const exportInterval = 400;
   selector: 'ave-showcase-contracts',
   imports: [
     AveAlert,
+    AveBadge,
     AveButton,
     AveCheckbox,
     AveChoice,
@@ -182,7 +184,7 @@ const exportInterval = 400;
               </div>
               <div class="facts">
                 <span class="amount">{{ amount(contract) }}</span>
-                <span class="status" [attr.data-status]="contract.status">{{ statuses[contract.status] }}</span>
+                <ave-badge [variant]="variants[contract.status]">{{ statuses[contract.status] }}</ave-badge>
                 <span class="ends">до {{ dates.numeric(contract.endsOn) }}</span>
               </div>
               <ave-menu
@@ -227,7 +229,9 @@ const exportInterval = 400;
           <dt>Сумма без НДС</dt>
           <dd>{{ amount(contract) }}</dd>
           <dt>Статус</dt>
-          <dd>{{ statuses[contract.status] }}</dd>
+          <dd>
+            <ave-badge [variant]="variants[contract.status]">{{ statuses[contract.status] }}</ave-badge>
+          </dd>
           <dt>Подписан</dt>
           <dd>{{ contract.signedOn === null ? 'Ещё не подписан' : dates.numeric(contract.signedOn) }}</dd>
           <dt>Действует до</dt>
@@ -254,6 +258,7 @@ const exportInterval = 400;
 })
 export class ContractsPage {
   protected readonly statuses = contractStatuses;
+  protected readonly variants = contractStatusVariants;
   protected readonly dates = aveDateFormat('ru');
   protected readonly percent = aveNumberFormat('ru', { style: 'percent' });
   private readonly sums = aveNumberFormat('ru');

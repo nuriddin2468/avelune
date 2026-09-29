@@ -19,7 +19,7 @@ type View = 'default' | 'long';
 const pages: readonly AveSidebarEntry[] = [
   { label: 'Главная', link: '/', icon: 'house', exact: true },
   { label: 'Входящие', link: '/inbox', icon: 'inbox' },
-  { label: 'Договоры', link: '/contracts', icon: 'file-text' },
+  { label: 'Договоры', link: '/contracts', icon: 'file-text', count: 2 },
   {
     label: 'Справочники',
     icon: 'book-open',
@@ -135,7 +135,7 @@ export const Default: Story = {
     '',
     'pages: AveSidebarEntry[] = [',
     "  { label: 'Главная', link: '/', icon: 'house', exact: true },",
-    "  { label: 'Договоры', link: '/contracts', icon: 'file-text' },",
+    "  { label: 'Договоры', link: '/contracts', icon: 'file-text', count: 2 },",
     "  { label: 'Справочники', icon: 'book-open', items: [{ label: 'Контрагенты', link: '/directories/counterparties' }] },",
     "  { heading: 'Администрирование', items: [{ label: 'Настройки', link: '/settings', icon: 'settings' }] },",
     '];',
@@ -143,7 +143,7 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const nav = within(canvas.getByRole('navigation', { name: 'Разделы' }));
-    await waitFor(() => expect(nav.getByRole('link', { name: 'Договоры' })).toHaveAttribute('aria-current', 'page'));
+    await waitFor(() => expect(nav.getByRole('link', { name: 'Договоры 2' })).toHaveAttribute('aria-current', 'page'));
     await expect(nav.getByRole('list', { name: 'Администрирование' })).toBeVisible();
     const group = nav.getByRole('button', { name: 'Справочники' });
     await expect(group).toHaveAttribute('aria-expanded', 'false');

@@ -38,3 +38,7 @@ Brief §9.4 lists sidebar navigation in Wave 4. Facts, verified on 2026-09-29 (A
 ## Addendum: a closed group that holds the current page, in words (2026-09-29)
 
 A review of Wave 4 found that a closed group holding the current page looked current but said nothing to screen readers, and that new `items` (a count, the person's rights) reopened a group the person had closed. The group's button is now `aria-current="true"` while it is closed and holds the current page, the one attribute its look follows, and only navigation opens a group.
+
+## Addendum: a page's count (2026-09-29)
+
+With the Count of ADR 0079, a page takes `count`: how many items wait there, drawn as an `AveCount` at the row's end, level with the first line of its words, and nothing at 0. The link's name reads "Реестр договоров 2": the item puts a space before the count, which a flex row does not draw. The harness reads a link's words without it (`getLinks`) and the count apart (`getCount`). The showcase counts the register's expired contracts.

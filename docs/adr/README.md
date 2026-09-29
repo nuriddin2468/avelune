@@ -77,13 +77,14 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0069](0069-overlay-invariants.md) | Overlay invariants: one control per kind, opened as a person does, and CDK kept from closing on Escape | Accepted; the largest corner in addendum (2026-09-29) |
 | [0070](0070-breadcrumbs.md) | Breadcrumbs: a trail from data, links through Angular's router, the current page as text | Accepted |
 | [0071](0071-tabs.md) | Tabs: Angular Aria's tabs, tabs declared as panels, an indicator that slides on `timing.slide` | Accepted |
-| [0072](0072-sidebar-nav.md) | SidebarNav: the product's navigation from data, current pages from the router, groups that disclose | Accepted |
+| [0072](0072-sidebar-nav.md) | SidebarNav: the product's navigation from data, current pages from the router, groups that disclose | Accepted; a page's count in addendum (0079) |
 | [0073](0073-link.md) | Link: a native link, always underlined, that says when it opens a new tab | Accepted |
 | [0074](0074-pagination.md) | Pagination: seven places for page numbers, the current page on the accent fill, a compact form in narrow containers | Accepted |
 | [0075](0075-toolbar.md) | Toolbar: Angular Aria's toolbar on the application's element, its items marked, a menu that joins it | Accepted |
 | [0076](0076-menubar.md) | Menubar: Angular Aria's menubar, menus as data, each menu moved into its overlay while it is open | Accepted |
 | [0077](0077-stepper.md) | Stepper: where a person is in a sequence of steps, drawn from data, the done steps optionally a way back | Accepted |
 | [0078](0078-data-table-native-table-pages.md) | DataTable: a native table the kit draws, not Aria's grid or CDK's table; pages, not virtual scrolling | Accepted |
+| [0079](0079-badge-and-count.md) | Badge and Count: a record's status in words on its tinted fill, and a number that needs attention | Accepted |
 
 ## Template
 

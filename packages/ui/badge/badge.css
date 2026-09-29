@@ -1,0 +1,47 @@
+@layer components {
+  /* A badge (ADR 0079): a tinted rectangle, the variant's subtle fill and its text colour, the small radius (product
+     owner, 2026-09-29); 20px tall on one line, 8px either side of the words, which wrap and never truncate; as wide as
+     its words in a grid or a flex column too, never stretched. The
+     border is transparent and only forced colours paint it, where the fill is dropped. The neutral fill is
+     translucent, so it keeps its shape on a hovered or chosen row. */
+  :host {
+    --ave-badge-fill: var(--ave-color-bg-active);
+    --ave-badge-text: var(--ave-color-fg-muted);
+
+    display: inline-block;
+    inline-size: fit-content;
+    max-inline-size: 100%;
+    padding: calc(var(--ave-space-1) / 2 - var(--ave-border-width-default))
+      calc(var(--ave-space-2) - var(--ave-border-width-default));
+    border: var(--ave-border-width-default) solid transparent;
+    border-radius: var(--ave-radius-sm);
+    background-color: var(--ave-badge-fill);
+    color: var(--ave-badge-text);
+    font: var(--ave-font-label-sm);
+  }
+
+  /* A badge without words draws nothing. */
+  :host(:empty) {
+    display: none;
+  }
+
+  :host([data-variant='info']) {
+    --ave-badge-fill: var(--ave-color-info-bg-subtle);
+    --ave-badge-text: var(--ave-color-info-fg);
+  }
+
+  :host([data-variant='success']) {
+    --ave-badge-fill: var(--ave-color-success-bg-subtle);
+    --ave-badge-text: var(--ave-color-success-fg);
+  }
+
+  :host([data-variant='warning']) {
+    --ave-badge-fill: var(--ave-color-warning-bg-subtle);
+    --ave-badge-text: var(--ave-color-warning-fg);
+  }
+
+  :host([data-variant='danger']) {
+    --ave-badge-fill: var(--ave-color-danger-bg-subtle);
+    --ave-badge-text: var(--ave-color-danger-fg);
+  }
+}

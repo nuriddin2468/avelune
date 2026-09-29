@@ -12,6 +12,7 @@ import { HarnessPredicate } from '@angular/cdk/testing';
 export class AveSidebarNavHarness extends ComponentHarness {
     follow(label: string | RegExp): Promise<void>;
     getAbove(): Promise<string[]>;
+    getCount(label: string | RegExp): Promise<string>;
     getCurrent(): Promise<string | null>;
     getGroups(): Promise<string[]>;
     getLabel(): Promise<string | null>;

@@ -19,6 +19,7 @@ export interface AveSidebarGroup {
 
 // @alpha
 export interface AveSidebarLink {
+    readonly count?: number;
     readonly exact?: boolean;
     readonly icon?: AveIconName;
     readonly label: string;

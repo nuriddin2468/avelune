@@ -6,6 +6,10 @@ import { AveDrawer } from '@avelune/ui/dialog';
 import { AveSidebarNav, type AveSidebarEntry } from '@avelune/ui/sidebar-nav';
 import { AveTheme } from '@avelune/ui/theme';
 import { AveTooltip } from '@avelune/ui/tooltip';
+import { contracts } from './data';
+
+/** The register's expired contracts, which wait for someone to extend or close them: the navigation counts them. */
+const expired = contracts.filter((contract) => contract.status === 'expired').length;
 
 /**
  * The showcase shell: the application bar with the theme and density switches the reviews need, a banner about
@@ -83,13 +87,16 @@ export class App {
   /** Whether the person closed the maintenance banner; a real application would remember it. */
   protected readonly maintenanceSeen = signal(false);
 
-  /** The product's pages: the contracts and their template in a group, the settings under administration. */
+  /**
+   * The product's pages: the contracts and their template in a group, the register with the count of its expired
+   * contracts, the settings under administration.
+   */
   protected readonly pages: readonly AveSidebarEntry[] = [
     {
       label: 'Договоры',
       icon: 'file-text',
       items: [
-        { label: 'Реестр договоров', link: '/contracts' },
+        { label: 'Реестр договоров', link: '/contracts', count: expired },
         { label: 'Новый договор', link: '/', exact: true },
         { label: 'Шаблон договора', link: '/templates' },
       ],

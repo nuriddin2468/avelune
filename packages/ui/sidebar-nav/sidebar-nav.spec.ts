@@ -16,7 +16,7 @@ class Page {}
 
 const pages: readonly AveSidebarEntry[] = [
   { label: 'Главная', link: '/', icon: 'house', exact: true },
-  { label: 'Договоры', link: ['/contracts'], icon: 'file-text' },
+  { label: 'Договоры', link: ['/contracts'], icon: 'file-text', count: 3 },
   {
     label: 'Справочники',
     icon: 'book-open',
@@ -48,6 +48,8 @@ const used = [
   'space.1',
   'space.2',
   'space.4',
+  'space.5',
+  'border-width.default',
   'radius.md',
   'radius.full',
   'border-width.selected',
@@ -61,6 +63,7 @@ const used = [
   'color.bg.hover',
   'color.bg.active',
   'color.accent.bg',
+  'color.fg.on-accent',
   'easing.standard',
 ] as const satisfies readonly TokenName[];
 
@@ -102,7 +105,9 @@ async function mount(url = '/'): Promise<{
 }
 
 function link(element: HTMLElement, name: string): HTMLAnchorElement {
-  const found = [...element.querySelectorAll('a')].find((anchor) => anchor.textContent.trim() === name);
+  const found = [...element.querySelectorAll('a')].find(
+    (anchor) => anchor.querySelector('.label')?.textContent.trim() === name,
+  );
   if (found === undefined) throw new Error(`No link ${name}`);
   return found;
 }
@@ -201,6 +206,22 @@ describe('AveSidebarNav', () => {
     const group = element.querySelector('button .label')?.getBoundingClientRect();
     const page = link(element, 'Контрагенты').querySelector('.label')?.getBoundingClientRect();
     expect(page?.left).toBe(group?.left);
+    element.remove();
+  });
+
+  it('shows how many items wait on a page at its row’s end, level with its words and read after them', async () => {
+    const { element, nav } = await mount();
+    expect(await nav.getCount('Договоры')).toBe('3');
+    expect(await nav.getCount('Главная')).toBe('');
+    expect(await nav.getLinks()).toEqual(['Главная', 'Договоры', 'Настройки']);
+    await expect(nav.getCount('Отчёты')).rejects.toThrow(/no link matches/);
+    const row = link(element, 'Договоры');
+    expect(row.textContent.replace(/\s+/g, ' ').trim()).toBe('Договоры 3');
+    const count = row.querySelector('ave-count')?.getBoundingClientRect();
+    const words = row.querySelector('.label')?.getBoundingClientRect();
+    expect(count?.top).toBe(words?.top);
+    expect(Math.round(row.getBoundingClientRect().right - (count?.right ?? 0))).toBe(12);
+    expect(row.getBoundingClientRect().height).toBe(36);
     element.remove();
   });
 
