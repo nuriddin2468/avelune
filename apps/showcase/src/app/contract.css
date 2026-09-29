@@ -72,24 +72,15 @@
     color: var(--ave-color-fg-muted);
   }
 
-  /* A panel's list: a row per step, file or event, what it is and its date or size at the end. */
-  .events {
+  /* The files: their list over the button that attaches one. */
+  .files {
     display: grid;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    gap: var(--ave-space-4);
+    justify-items: start;
   }
 
-  .event {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: var(--ave-space-1) var(--ave-space-4);
-    padding-block: var(--ave-space-3);
-  }
-
-  .event + .event {
-    border-block-start: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  .files > ave-list {
+    justify-self: stretch;
   }
 
   /* An organisation's or a person's avatar 8px before the name, level with it. */
@@ -101,6 +92,7 @@
 
   .when {
     color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
     font-variant-numeric: tabular-nums;
   }
 }

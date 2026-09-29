@@ -1,0 +1,67 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ListStories from './list.stories';
+
+<Meta of={ListStories} />
+
+# List
+
+`<ave-list>` is records one under another on one surface, between lines: a contract's files, an approval route, a history (ADR 0086). Each `<ave-list-item>` has a start, its content and an end.
+
+```ts
+import { AveList, AveListItem } from '@avelune/ui/list';
+```
+
+<Canvas of={ListStories.Default} />
+
+## When to use
+
+- For a few to a few dozen records read in order, each with a handful of facts and actions.
+
+## When not to use
+
+- For many records compared by the same columns, sorted or chosen in bulk: use a table.
+- For records side by side on a dashboard: use cards.
+- For choosing one of several options: use radios, a select or a tree.
+
+## Anatomy
+
+The list: `bg.surface`, a `border.subtle` border and `radius.lg`, named by `label`. Each item: 12px and 16px of padding; `[aveListStart]` (an avatar, an icon) 12px before the content, `[aveListEnd]` (a status, facts, a menu) 16px after it, both centred on it; the content's lines under each other, 4px apart, wrapping. A line between items. A part an item does not have takes no room.
+
+```html
+<ave-list label="Маршрут согласования">
+  @for (person of route(); track person.id) {
+  <ave-list-item>
+    <ave-avatar aveListStart [name]="person.name" decorative />
+    <span>{{ person.name }}</span>
+    <span class="muted">{{ person.department }}</span>
+    <ave-badge aveListEnd [variant]="person.variant">{{ person.status }}</ave-badge>
+  </ave-list-item>
+  }
+</ave-list>
+```
+
+A list without items draws nothing: show an empty state in its place.
+
+## Motion
+
+The catalog's list item (brief §6.3). A row that comes after the list's first rows fades in on `duration.normal` and opens from no height on `timing.expand`, `easing.enter`, after the rows that came with it, 30ms apart (`timing.stagger`), up to the fifth. A row that goes fades out on `duration.fast` and closes on `timing.expand`, `easing.exit`, and leaves the page once it has closed. The rows the list holds as it first renders stay still. Under reduced motion rows fade, and neither open nor wait.
+
+<Canvas of={ListStories.AddingAndRemoving} />
+
+## Content
+
+- The first line names the record; the lines under it add its facts, in the muted colour.
+- Long text wraps; nothing is cut.
+
+<Canvas of={ListStories.LongText} />
+
+## Accessibility
+
+- The list is a `list` named by `label`, each item a `listitem`: screen readers say how many there are.
+- The item's own controls (a menu, a remove button) are named for their record: "Открепить Договор поставки.pdf".
+- In forced colours the border and the lines stay.
+
+## Do and don't
+
+- Do put a record's actions in its end, the rarer ones in a menu.
+- Don't make a whole row a link; link the record's name in its content.

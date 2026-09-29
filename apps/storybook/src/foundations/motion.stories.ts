@@ -173,7 +173,7 @@ function reducedMotion(): boolean {
 }
 
 /** A duration token in the current motion mode, in milliseconds. */
-function milliseconds(name: DurationName | 'timing.shimmer-period' | 'timing.spin-period'): number {
+function milliseconds(name: DurationName | 'timing.shimmer-period' | 'timing.spin-period' | 'timing.expand'): number {
   const token = tokens[name];
   return reducedMotion() && 'reduced' in token ? token.reduced.value : token.value;
 }
@@ -246,6 +246,36 @@ async function expectMotion(element: Element, motion: CatalogMotion, poseAt: 'st
   await expect(actual.x, `${motion.className} x`).toBeCloseTo(expected.x, 3);
   await expect(actual.y, `${motion.className} y`).toBeCloseTo(expected.y, 3);
   await expect(actual.scale, `${motion.className} scale`).toBeCloseTo(expected.scale, 3);
+  if (motion.expands === true) await expectExpand(element, motion, poseAt);
+  animation.finish();
+}
+
+/**
+ * The second animation of an entry that opens or closes (ADR 0086): its rows from or to none, on timing.expand and the
+ * entry's easing; under reduced motion it takes no time.
+ */
+async function expectExpand(element: Element, motion: CatalogMotion, poseAt: 'start' | 'end'): Promise<void> {
+  const keyframes = poseAt === 'start' ? 'ave-motion-expand-in' : 'ave-motion-expand-out';
+  if (reducedMotion()) {
+    // No time: the animation is over as it starts, if it is still there at all.
+    const running = element
+      .getAnimations()
+      .filter((animation) => animation instanceof CSSAnimation && animation.animationName === keyframes);
+    for (const animation of running) {
+      await expect(animation.effect?.getComputedTiming().duration, `${keyframes} duration`).toBe(0);
+    }
+    return;
+  }
+  const animation = await animationOf(element, keyframes);
+  const effect = animation.effect;
+  if (!(effect instanceof KeyframeEffect)) throw new Error('No keyframe effect');
+  await expect(effect.getComputedTiming().duration, `${keyframes} duration`).toBe(milliseconds('timing.expand'));
+  for (const keyframe of effect.getKeyframes()) {
+    await expect(keyframe.easing, `${keyframes} easing`).toBe(canonical(tokens[motion.easing].css));
+  }
+  animation.pause();
+  animation.currentTime = poseAt === 'start' ? 0 : milliseconds('timing.expand');
+  await expect(getComputedStyle(element).gridTemplateRows, `${keyframes} rows`).toBe('0px');
   animation.finish();
 }
 

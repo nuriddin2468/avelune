@@ -1,0 +1,28 @@
+/* The frame of the List stories. Stories only; the components' own styles are list.css and item.css. */
+@layer components {
+  :host {
+    display: grid;
+    gap: var(--ave-space-4);
+    max-inline-size: var(--ave-container-md);
+    padding: var(--ave-space-6);
+  }
+
+  .stack {
+    display: grid;
+    gap: var(--ave-space-4);
+    justify-items: start;
+  }
+
+  .stack > ave-list {
+    justify-self: stretch;
+  }
+
+  .narrow {
+    max-inline-size: calc(var(--ave-space-16) * 5);
+  }
+
+  .muted {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+}

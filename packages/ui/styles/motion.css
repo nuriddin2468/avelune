@@ -64,6 +64,21 @@
     }
   }
 
+  /* A list's row opens from no height to its own and closes back, by the rows of the one-row grid it is
+     (grid-template-rows: 1fr at rest, its content min-block-size 0 and clipped; ADR 0086), the accordion's technique
+     of brief §6.4. */
+  @keyframes ave-motion-expand-in {
+    from {
+      grid-template-rows: 0fr;
+    }
+  }
+
+  @keyframes ave-motion-expand-out {
+    to {
+      grid-template-rows: 0fr;
+    }
+  }
+
   @keyframes ave-motion-shimmer {
     from {
       translate: -100% 0;
@@ -200,6 +215,31 @@
   .ave-motion-drawer-exit {
     animation-name: ave-motion-slide-out;
     animation-duration: var(--ave-duration-normal);
+    animation-timing-function: var(--ave-easing-exit);
+    animation-fill-mode: forwards;
+  }
+
+  /* A list's rows (ADR 0086): a row that comes fades in and opens, after the rows that came with it before it
+     (--ave-motion-order, at most 4, times timing.stagger); a row that goes fades out and closes. The rows' part runs on
+     timing.expand, so it stops under reduced motion, and so does the stagger; the fades stay. Each class runs two
+     animations; their durations, both tokens, are one custom property, since the strict-value rule reads a
+     comma-separated list as one value. The catalog page checks each (ADR 0086). */
+  .ave-motion-list-enter {
+    --ave-motion-order: 0;
+    --ave-motion-list-durations: var(--ave-duration-normal), var(--ave-timing-expand);
+
+    animation-name: ave-motion-fade-in, ave-motion-expand-in;
+    animation-duration: var(--ave-motion-list-durations);
+    animation-timing-function: var(--ave-easing-enter);
+    animation-delay: calc(var(--ave-motion-order) * var(--ave-timing-stagger));
+    animation-fill-mode: backwards;
+  }
+
+  .ave-motion-list-exit {
+    --ave-motion-list-durations: var(--ave-duration-fast), var(--ave-timing-expand);
+
+    animation-name: ave-motion-fade-out, ave-motion-expand-out;
+    animation-duration: var(--ave-motion-list-durations);
     animation-timing-function: var(--ave-easing-exit);
     animation-fill-mode: forwards;
   }

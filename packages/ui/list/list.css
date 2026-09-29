@@ -1,0 +1,15 @@
+@layer components {
+  /* A list (ADR 0086): one surface with a subtle border and the large radius (the agent's proposal); its rows between
+     lines. Without rows it draws nothing: the page shows its empty state. */
+  :host {
+    display: grid;
+    overflow: hidden;
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface);
+  }
+
+  :host(:empty) {
+    display: none;
+  }
+}

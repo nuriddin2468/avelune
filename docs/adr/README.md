@@ -36,7 +36,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0028](0028-size-budget-per-entry-point.md) | Size budgets: one per entry point, declared in its manifest | Accepted |
 | [0029](0029-repository-guardrails-proven.md) | Repository guardrails: project tags, browser floor, commits, formatting, dependency policy | Accepted; the pinned release age changed by 0042 |
 | [0030](0030-global-stylesheet.md) | Global stylesheet: one entry, layered files, loaded through the consumer's bundler; one focus ring | Accepted |
-| [0031](0031-motion-catalog.md) | Motion catalog: motion.css classes, reduced motion from tokens, linear only on loops | Accepted; the drawer's reduced motion settled by 0067, top-layer overlays by 0066 |
+| [0031](0031-motion-catalog.md) | Motion catalog: motion.css classes, reduced motion from tokens, linear only on loops | Accepted; the drawer's reduced motion settled by 0067, top-layer overlays by 0066, the list item by 0086 |
 | [0032](0032-runtime-theme-api.md) | Runtime API: provideAvelune() and AveTheme in @avelune/ui/theme | Accepted |
 | [0033](0033-icon-set-and-ave-icon.md) | Icon set and `<ave-icon>`: typed Lucide data, frozen strokes, a label or decorative | Accepted; decisions 1, 3 and 6 superseded by 0036 |
 | [0034](0034-docs-pages-follow-the-theme.md) | Storybook docs pages: the Theme toolbar, GFM tables, written snippets | Accepted; docs sweep, surface and props table in addendum |
@@ -91,6 +91,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0083](0083-card.md) | Card: a bordered surface without a shadow, a heading row with its end, a row of actions at its foot | Accepted |
 | [0084](0084-accordion.md) | Accordion: Angular Aria's accordion, items declared with their content, a panel that opens on `timing.expand` | Accepted |
 | [0085](0085-tree.md) | Tree: Angular Aria's tree from data, one chosen node, rows indented by level, a chevron at the start | Accepted |
+| [0086](0086-list.md) | List: records on one surface between lines, and rows that fade and open as they come and go | Accepted |
 
 ## Template
 

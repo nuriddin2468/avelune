@@ -1,0 +1,54 @@
+@layer components {
+  /* A row (ADR 0086): a one-row grid, so it can open from no height and close to none (motion.css), with a line above
+     it after the first; its content clipped while it moves. */
+  :host {
+    display: grid;
+    grid-template-rows: 1fr;
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-body-md);
+  }
+
+  :host(:not(:first-child)) {
+    border-block-start: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  }
+
+  .clip {
+    min-block-size: 0;
+    overflow: hidden;
+  }
+
+  /* 12px and 16px of padding; the start 12px before the content and the end 16px after it, both centred on it; a
+     part the item does not have takes no room. */
+  .row {
+    display: flex;
+    align-items: center;
+    padding: var(--ave-space-3) var(--ave-space-4);
+  }
+
+  .start,
+  .end {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--ave-space-2);
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  .start {
+    margin-inline-end: var(--ave-space-3);
+  }
+
+  .end {
+    margin-inline-start: var(--ave-space-4);
+  }
+
+  .content {
+    display: grid;
+    flex: 1;
+    gap: var(--ave-space-1);
+    min-inline-size: 0;
+  }
+}

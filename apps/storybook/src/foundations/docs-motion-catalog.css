@@ -80,6 +80,23 @@
     background: var(--ave-color-bg-backdrop);
     box-shadow: none;
   }
+
+  /* A list's row: a one-row grid whose row opens and closes (ADR 0086); its words carry the padding. */
+  &[data-kind='list'] {
+    display: grid;
+    grid-template-rows: 1fr;
+    padding: 0;
+    background: var(--ave-color-bg-surface);
+    box-shadow: none;
+  }
+}
+
+/* The clipped row: no block padding of its own, which would stay when the row has closed. */
+.sample[data-kind='list'] > .words {
+  min-block-size: 0;
+  padding-inline: var(--ave-space-3);
+  overflow: hidden;
+  line-height: var(--ave-space-10);
 }
 
 .loops {

@@ -21,6 +21,11 @@ export interface CatalogMotion {
    * motion it travels 0 and fades instead.
    */
   readonly travels?: true;
+  /**
+   * Whether it also opens from no height or closes to none, a second animation (`ave-motion-expand-in` or `-out`) on
+   * timing.expand, which stops under reduced motion (ADR 0086).
+   */
+  readonly expands?: true;
 }
 
 /** An element that enters and leaves with animate.enter and animate.leave (brief §6.3). */
@@ -143,6 +148,25 @@ export const catalog: readonly CatalogEntry[] = [
       offset: 'motion.distance.lg',
     },
   },
+  {
+    id: 'list',
+    label: 'List item',
+    sample: 'Договор ДК-2025/114 · Поставка офисной мебели',
+    enter: {
+      className: 'ave-motion-list-enter',
+      keyframes: 'ave-motion-fade-in',
+      duration: 'duration.normal',
+      easing: 'easing.enter',
+      expands: true,
+    },
+    exit: {
+      className: 'ave-motion-list-exit',
+      keyframes: 'ave-motion-fade-out',
+      duration: 'duration.fast',
+      easing: 'easing.exit',
+      expands: true,
+    },
+  },
 ];
 
 const short = (name: TokenName) => name.split('.').at(-1) ?? name;
@@ -188,7 +212,7 @@ const short = (name: TokenName) => name.split('.').at(-1) ?? name;
                     [animate.enter]="entry.enter.className"
                     [animate.leave]="entry.exit.className"
                   >
-                    {{ entry.sample }}
+                    <span class="words">{{ entry.sample }}</span>
                   </div>
                 }
               </div>
@@ -250,6 +274,8 @@ export class MotionCatalog {
 
   protected spec(motion: CatalogMotion): string {
     const name = motion.className.replace('ave-motion-', '');
-    return `${name}: ${motion.keyframes.replace('ave-motion-', '')} · ${short(motion.duration)} · ${short(motion.easing)}`;
+    const expand =
+      motion.expands === true ? ` + ${motion.keyframes.endsWith('-in') ? 'expand-in' : 'expand-out'} · expand` : '';
+    return `${name}: ${motion.keyframes.replace('ave-motion-', '')} · ${short(motion.duration)}${expand} · ${short(motion.easing)}`;
   }
 }

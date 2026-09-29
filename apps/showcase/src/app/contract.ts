@@ -6,10 +6,12 @@ import {
   lucideCopy,
   lucideDownload,
   lucideEllipsis,
+  lucideFileText,
   lucideFileX,
   lucidePaperclip,
   lucidePencil,
   lucidePrinter,
+  lucideX,
 } from '@avelune/icons/lucide';
 import { AveAccordion, AveAccordionItem } from '@avelune/ui/accordion';
 import { AveAvatar } from '@avelune/ui/avatar';
@@ -23,6 +25,7 @@ import { AveToolbar, AveToolbarItem, AveToolbarSeparator } from '@avelune/ui/too
 import { AveTooltip } from '@avelune/ui/tooltip';
 import { AveEmptyState, AveEmptyStateActions } from '@avelune/ui/empty-state';
 import { AveLink } from '@avelune/ui/link';
+import { AveList, AveListItem } from '@avelune/ui/list';
 import { aveDateFormat, aveNumberFormat } from '@avelune/ui/i18n';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
 import { AveMenu, type AveMenuEntry } from '@avelune/ui/menu';
@@ -57,6 +60,8 @@ export const contractTitle: ResolveFn<string> = (route) => {
     AveIcon,
     AveIconButton,
     AveLink,
+    AveList,
+    AveListItem,
     AveMenu,
     AveStepper,
     AveTab,
@@ -73,10 +78,12 @@ export const contractTitle: ResolveFn<string> = (route) => {
       lucideCopy,
       lucideDownload,
       lucideEllipsis,
+      lucideFileText,
       lucideFileX,
       lucidePaperclip,
       lucidePencil,
       lucidePrinter,
+      lucideX,
     ]),
   ],
   template: `
@@ -177,27 +184,46 @@ export const contractTitle: ResolveFn<string> = (route) => {
             <ave-stepper label="Маршрут согласования" orientation="vertical" [steps]="approval" [current]="1" />
           </ave-tab>
           <ave-tab value="files" label="Файлы" icon="paperclip">
-            <ul class="events">
-              @for (file of files; track file.name) {
-                <li class="event">
-                  <span>{{ file.name }}</span>
-                  <span class="when">{{ file.size }}</span>
-                </li>
+            <div class="files">
+              @if (files().length > 0) {
+                <ave-list label="Файлы договора">
+                  @for (file of files(); track file.name) {
+                    <ave-list-item>
+                      <ave-icon aveListStart name="file-text" decorative />
+                      <span>{{ file.name }}</span>
+                      <span class="when">{{ file.size }}</span>
+                      <button
+                        aveIconButton
+                        aveListEnd
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        icon="x"
+                        [label]="'Открепить ' + file.name"
+                        [aveTooltip]="'Открепить ' + file.name"
+                        (click)="detach(file.name)"
+                      ></button>
+                    </ave-list-item>
+                  }
+                </ave-list>
+              } @else {
+                <p class="note">К договору не прикреплено ни одного файла.</p>
               }
-            </ul>
+              <button aveButton type="button" (click)="attach()">
+                <ave-icon name="paperclip" decorative />Прикрепить акт сверки
+              </button>
+            </div>
           </ave-tab>
           <ave-tab value="history" label="История">
-            <ol class="events">
+            <ave-list label="История договора">
               @for (event of history; track event.what) {
-                <li class="event">
-                  <span class="party">
-                    <ave-avatar size="sm" decorative [name]="event.who" />
-                    <span>{{ event.who }}: {{ event.what }}</span>
-                  </span>
-                  <span class="when">{{ dates.numeric(event.on) }}</span>
-                </li>
+                <ave-list-item>
+                  <ave-avatar aveListStart size="sm" decorative [name]="event.who" />
+                  <span>{{ event.who }}: {{ event.what }}</span>
+                  <span aveListEnd class="when">{{ dates.numeric(event.on) }}</span>
+                </ave-list-item>
               }
-            </ol>
+            </ave-list>
           </ave-tab>
         </ave-tabs>
       } @else {
@@ -249,10 +275,19 @@ export class ContractPage {
   ];
 
   /** The contract's files. */
-  protected readonly files = [
+  protected readonly files = signal([
     { name: 'Договор поставки.pdf', size: '1,2 МБ' },
     { name: 'Спецификация оборудования.xlsx', size: '86 КБ' },
-  ];
+  ]);
+
+  /** A pretend upload: the next act of reconciliation joins the files. */
+  protected attach(): void {
+    this.files.update((files) => [...files, { name: `Акт сверки № ${String(files.length + 1)}.pdf`, size: '240 КБ' }]);
+  }
+
+  protected detach(name: string): void {
+    this.files.update((files) => files.filter((file) => file.name !== name));
+  }
 
   /** What happened to the contract, newest first. */
   protected readonly history = [
