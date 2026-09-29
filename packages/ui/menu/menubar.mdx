@@ -1,0 +1,94 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as MenubarStories from './menubar.stories';
+
+<Meta of={MenubarStories} />
+
+# Menubar
+
+`<ave-menubar>` is the row of menus at the top of an editor ("Файл", "Правка", "Вставка"): each word opens its menu of commands, and the arrows move along the bar and between open menus. It is Angular Aria's menubar (the WAI-ARIA menubar pattern), with the kit's popup for each menu (ADR 0076).
+
+```ts
+import { AveMenubar, type AveMenubarMenu } from '@avelune/ui/menu';
+```
+
+<Canvas of={MenubarStories.Default} />
+
+## When to use
+
+- In an editor of a document or a template, where people expect a desktop application's menus and use many commands.
+
+## When not to use
+
+- For a page's or a record's actions: use a toolbar, buttons, or a menu button.
+- For navigation between pages: use the sidebar navigation.
+- For a few commands: a menubar with one menu is a menu button.
+
+## Anatomy
+
+A bar named by `label`, of ghost items in the label font, each opening its menu under it: the raised popup of the Menu, with icons, separators, disabled and destructive items. A menu opens from its item's start, or ends at its end when there is no room.
+
+```html
+<ave-menubar label="Шаблон договора" [menus]="menus" (itemSelected)="run($event)" />
+```
+
+```ts
+menus: AveMenubarMenu<Command>[] = [
+  {
+    label: 'Файл',
+    items: [
+      { value: 'save', label: 'Сохранить', icon: 'save' },
+      { separator: true },
+      { value: 'close', label: 'Закрыть шаблон' },
+    ],
+  },
+  { label: 'Правка', items: [{ value: 'undo', label: 'Отменить' }] },
+];
+```
+
+Menus are data (`AveMenubarMenu<V>`): `{ label, items }`, the items the Menu's `AveMenuEntry<V>`s. Values are unique across menus; `itemSelected` emits the chosen one. Register the icons with `provideAveIcons`.
+
+## States
+
+- **Bar items:** the hover fill under the pointer, the pressed fill while their menu is open, the kit's ring on focus.
+- **Menu items:** as the Menu's: the hover fill and the ring inside, `danger`, and `disabled`, which focus reaches but a press does not choose.
+
+<Canvas of={MenubarStories.Open} />
+
+## Content
+
+- Bar items are nouns: "Файл", "Правка", "Вставка", "Вид". Menu items are verbs, as buttons are.
+- Long items wrap inside the menu's 320px; nothing truncates.
+
+<Canvas of={MenubarStories.LongText} />
+
+## Keyboard
+
+Per the WAI-ARIA menubar pattern, from Angular Aria:
+
+| Key                | On the bar                        | In a menu                                          |
+| ------------------ | --------------------------------- | -------------------------------------------------- |
+| Left, Right        | the item before or after (wraps)  | the menu before or after, opened on its first item |
+| Down, Enter, Space | opens the menu on its first item  | Down: the next item; Enter, Space: chooses it      |
+| Up                 | opens the menu on its last item   | the item before                                    |
+| Home, End          | the first, the last item          | the first, the last item                           |
+| A letter           | the next item that starts with it | the next item that starts with it                  |
+| Escape             |                                   | closes the menu, focus back on its bar item        |
+| Tab                | leaves the bar                    | closes the menu and leaves the bar                 |
+
+While a menu is open, the pointer moving over another bar item opens that one. A press outside closes the menu.
+
+## Accessibility
+
+- The bar is a `menubar` named by `label`; its items are `menuitem`s with `aria-haspopup` and `aria-expanded`, each controlling its `menu`, which the item names.
+- A closed menu is out of the page; only one menu is open at a time.
+- In forced colours the open bar item and the menu item with focus take the system's selection colours.
+
+## Motion
+
+A menu takes the catalog's popover entry: `ave-motion-popover-enter` fades in from `motion.scale.enter` at its item in `duration.normal`, `ave-motion-popover-exit` fades out in `duration.fast`. Under reduced motion it fades without scaling.
+
+## Do and don't
+
+- Do keep the order people know from desktop editors: "Файл", "Правка", "Вставка", "Вид".
+- Do give the most used commands a toolbar under the bar as well.
+- Don't put a command only in a menubar on a phone: keep a page's main actions on the page.

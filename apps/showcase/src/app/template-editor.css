@@ -1,0 +1,38 @@
+/* A template's editor: the trail and the heading, then the menubar, the toolbar and the text on a surface. Tokens
+   only. */
+@layer app {
+  :host {
+    display: block;
+  }
+
+  .page {
+    display: grid;
+    gap: var(--ave-space-6);
+    max-inline-size: var(--ave-container-lg);
+    margin-inline: auto;
+  }
+
+  .header {
+    display: grid;
+    gap: var(--ave-space-2);
+  }
+
+  .title {
+    font: var(--ave-font-heading-xl);
+  }
+
+  /* The editor's window: the menubar, the toolbar under it, then the text. */
+  .editor {
+    display: grid;
+    gap: var(--ave-space-2);
+    padding: var(--ave-space-2) var(--ave-space-4) var(--ave-space-4);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface);
+  }
+
+  .tools {
+    padding-block-end: var(--ave-space-2);
+    border-block-end: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  }
+}

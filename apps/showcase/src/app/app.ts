@@ -83,7 +83,7 @@ export class App {
   /** Whether the person closed the maintenance banner; a real application would remember it. */
   protected readonly maintenanceSeen = signal(false);
 
-  /** The product's pages: the contracts in a group, the settings under administration. */
+  /** The product's pages: the contracts and their template in a group, the settings under administration. */
   protected readonly pages: readonly AveSidebarEntry[] = [
     {
       label: 'Договоры',
@@ -91,6 +91,7 @@ export class App {
       items: [
         { label: 'Реестр договоров', link: '/contracts' },
         { label: 'Новый договор', link: '/', exact: true },
+        { label: 'Шаблон договора', link: '/templates' },
       ],
     },
     { heading: 'Администрирование', items: [{ label: 'Настройки', link: '/settings', icon: 'settings' }] },

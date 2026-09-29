@@ -1,0 +1,50 @@
+@layer components {
+  :host {
+    display: block;
+  }
+
+  /* The bar (ADR 0076): its items in a row, 4px apart; no surface of its own. */
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ave-space-1);
+  }
+
+  /* An item of the bar: a ghost button of the control height, its words in the label font; the hover fill under the
+     pointer, the pressed fill while its menu is open. */
+  .top {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--ave-control-height-md);
+    padding-inline: var(--ave-control-padding-inline-sm);
+    border-radius: var(--ave-radius-md);
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-label-md);
+    white-space: nowrap;
+    cursor: pointer;
+    transition-property: background-color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+
+    &:hover {
+      background-color: var(--ave-color-bg-hover);
+    }
+
+    &[aria-expanded='true'] {
+      background-color: var(--ave-color-bg-active);
+    }
+  }
+
+  /* The menus before the holder leaves the page, on the first render. */
+  .holder {
+    display: none;
+  }
+
+  @media (forced-colors: active) {
+    .top[aria-expanded='true'] {
+      background-color: Highlight;
+      color: HighlightText;
+      forced-color-adjust: none;
+    }
+  }
+}

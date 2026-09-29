@@ -40,6 +40,29 @@ export class AveMenu<V> {
 }
 
 // @alpha
+export class AveMenubar<V> {
+    constructor();
+    protected chosen(value: V | undefined): void;
+    protected readonly closing: _angular_core.WritableSignal<readonly boolean[]>;
+    protected isSeparator(entry: AveMenuEntry<V>): entry is AveMenuSeparator;
+    readonly itemSelected: _angular_core.OutputEmitterRef<V>;
+    readonly label: _angular_core.InputSignal<string>;
+    readonly menus: _angular_core.InputSignal<readonly AveMenubarMenu<V>[]>;
+    protected readonly submenus: _angular_core.Signal<readonly Menu<V>[]>;
+    protected topId(index: number): string;
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveMenubar<any>, "ave-menubar", never, { "label": { "alias": "label"; "required": true; "isSignal": true; }; "menus": { "alias": "menus"; "required": true; "isSignal": true; }; }, { "itemSelected": "itemSelected"; }, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveMenubar<any>, never>;
+}
+
+// @alpha
+export interface AveMenubarMenu<V> {
+    readonly items: readonly AveMenuEntry<V>[];
+    readonly label: string;
+}
+
+// @alpha
 export type AveMenuEntry<V> = AveMenuItem<V> | AveMenuSeparator;
 
 // @alpha

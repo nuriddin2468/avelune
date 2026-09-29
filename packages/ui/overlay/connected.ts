@@ -1,4 +1,10 @@
-import type { CdkConnectedOverlayConfig, ConnectedPosition } from '@angular/cdk/overlay';
+import type { Injector } from '@angular/core';
+import {
+  createFlexibleConnectedPositionStrategy,
+  type CdkConnectedOverlayConfig,
+  type ConnectedPosition,
+  type FlexibleConnectedPositionStrategy,
+} from '@angular/cdk/overlay';
 
 /**
  * Under the control, or over it when there is no room below; the panel starts at the control's inline start. The gap
@@ -44,7 +50,39 @@ export function aveConnectedOverlay(
     disableClose: true,
   };
   if (options.align !== 'either') return config;
+  const either = place(origin, 'either');
+  return { ...config, positions: either.positions, push: either.push, viewportMargin: either.margin };
+}
+
+/**
+ * The place of `aveConnectedOverlay` as a position strategy, for an overlay the component creates itself
+ * (`createOverlayRef`): the menubar's, whose menus exist before they open and move into their overlays (ADR 0076).
+ * Its popover goes right after the origin.
+ *
+ * @alpha
+ */
+export function aveConnectedStrategy(
+  injector: Injector,
+  origin: HTMLElement,
+  options: { readonly transformOrigin?: string; readonly align?: 'start' | 'either' } = {},
+): FlexibleConnectedPositionStrategy {
+  const { positions: places, push, margin } = place(origin, options.align ?? 'start');
+  return createFlexibleConnectedPositionStrategy(injector, origin)
+    .withPositions(places)
+    .withFlexibleDimensions(false)
+    .withPush(push)
+    .withViewportMargin(margin)
+    .withTransformOriginOn(options.transformOrigin ?? '.popup')
+    .withPopoverLocation('inline');
+}
+
+/** The positions for an alignment, whether the panel is pushed inside the viewport, and how far from its edge. */
+function place(
+  origin: HTMLElement,
+  align: 'start' | 'either',
+): { positions: ConnectedPosition[]; push: boolean; margin: number } {
+  if (align === 'start') return { positions, push: false, margin: 0 };
   // The margin is a token, read from the control as the kit reads its timings.
   const margin = Number.parseFloat(getComputedStyle(origin).getPropertyValue('--ave-space-2')) || 0;
-  return { ...config, positions: eitherEdge, push: true, viewportMargin: margin };
+  return { positions: eitherEdge, push: true, margin };
 }

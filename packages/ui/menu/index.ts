@@ -1,2 +1,3 @@
 export { AveMenu } from './menu';
-export type { AveMenuEntry, AveMenuItem, AveMenuSeparator } from './types';
+export { AveMenubar } from './menubar';
+export type { AveMenuEntry, AveMenuItem, AveMenuSeparator, AveMenubarMenu } from './types';

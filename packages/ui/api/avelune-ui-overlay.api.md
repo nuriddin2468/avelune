@@ -5,6 +5,8 @@
 ```ts
 
 import { CdkConnectedOverlayConfig } from '@angular/cdk/overlay';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { Injector } from '@angular/core';
 import { Provider } from '@angular/core';
 import { Signal } from '@angular/core';
 
@@ -14,6 +16,12 @@ export function aveConnectedOverlay(origin: HTMLElement, options?: {
     readonly transformOrigin?: string;
     readonly align?: 'start' | 'either';
 }): CdkConnectedOverlayConfig;
+
+// @alpha
+export function aveConnectedStrategy(injector: Injector, origin: HTMLElement, options?: {
+    readonly transformOrigin?: string;
+    readonly align?: 'start' | 'either';
+}): FlexibleConnectedPositionStrategy;
 
 // @alpha
 export const aveHostAnnouncer: Provider[];

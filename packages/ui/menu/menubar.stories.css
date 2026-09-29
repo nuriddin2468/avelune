@@ -1,0 +1,17 @@
+/* The frame of the Menubar stories: the top of an editor, with room under the bar for its menus. Stories only; the
+   menubar's styles are menubar.css and panel.css. */
+@layer components {
+  :host {
+    display: grid;
+    gap: var(--ave-space-4);
+    align-content: start;
+    min-block-size: calc(var(--ave-space-16) * 6);
+    padding: var(--ave-space-6);
+  }
+
+  .status {
+    min-block-size: var(--ave-font-body-sm-line-height);
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+}

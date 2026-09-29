@@ -47,6 +47,7 @@ One primary button per view region (a form, a dialog, a toolbar, a card): the on
 - Order in a row: the primary action last (at the inline end), "Cancel" before it.
 - A button that navigates is a link styled as a button (`a[aveButton]`); a button that acts is a `<button>`.
 - Five or more actions on one thing go into a toolbar (`[aveToolbar]`, ADR 0075): one Tab stop, ghost buttons, the rarest in its menu at the end.
+- An editor's many commands go into a menubar (`<ave-menubar>`, ADR 0076), "Файл", "Правка", "Вставка", with the most used in a toolbar under it; a page's or a record's actions never do.
 - A clickable icon without a visible label is an IconButton, with a label for assistive technology and the same words in its tooltip (`aveTooltip`), so everyone can read its name.
 
 ### Dialog, drawer or page

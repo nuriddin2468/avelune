@@ -1,5 +1,7 @@
+import { Injector } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
-import { aveConnectedOverlay } from '@avelune/ui/overlay';
+import { aveConnectedOverlay, aveConnectedStrategy } from '@avelune/ui/overlay';
 
 describe('aveConnectedOverlay', () => {
   it('opens a list from its control, as wide as it, in the top layer', () => {
@@ -22,6 +24,19 @@ describe('aveConnectedOverlay', () => {
     expect(config.push).toBe(true);
     expect(config.viewportMargin).toBe(8);
     expect(config.transformOriginSelector).toBe('.menu');
+    button.remove();
+  });
+
+  it('gives the same places as a strategy for an overlay the component creates, its popover after its origin', () => {
+    const injector = TestBed.inject(Injector);
+    const button = document.createElement('button');
+    document.body.append(button);
+    button.style.setProperty('--ave-space-2', '8px');
+    const start = aveConnectedStrategy(injector, button);
+    expect(start.positions).toHaveLength(2);
+    expect(start.getPopoverInsertionPoint()).toBe(button);
+    const either = aveConnectedStrategy(injector, button, { align: 'either', transformOrigin: '.menu' });
+    expect(either.positions).toHaveLength(4);
     button.remove();
   });
 });

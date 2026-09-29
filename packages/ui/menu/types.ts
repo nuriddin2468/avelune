@@ -35,3 +35,15 @@ export interface AveMenuSeparator {
  * @alpha
  */
 export type AveMenuEntry<V> = AveMenuItem<V> | AveMenuSeparator;
+
+/**
+ * One menu of a menubar (ADR 0076): the words of its item in the bar, and its entries.
+ *
+ * @alpha
+ */
+export interface AveMenubarMenu<V> {
+  /** The menu's words in the bar, a noun: "Файл", "Правка", "Вставка". */
+  readonly label: string;
+  /** Its actions, in order, with separators between groups. */
+  readonly items: readonly AveMenuEntry<V>[];
+}

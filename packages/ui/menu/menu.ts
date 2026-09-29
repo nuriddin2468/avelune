@@ -150,7 +150,7 @@ let nextMenu = 0;
       </div>
     </ng-template>
   `,
-  styleUrl: './menu.css',
+  styleUrls: ['./panel.css', './menu.css'],
 })
 export class AveMenu<V> {
   /** The button's words ("Действия"); with an `icon`, its name and tooltip instead. */

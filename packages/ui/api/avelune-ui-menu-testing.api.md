@@ -9,6 +9,24 @@ import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
 // @alpha
+export class AveMenubarHarness extends ComponentHarness {
+    close(menu: string | RegExp): Promise<void>;
+    getItems(menu: string | RegExp): Promise<string[]>;
+    getLabel(): Promise<string | null>;
+    getMenus(): Promise<string[]>;
+    static hostSelector: string;
+    isOpen(menu: string | RegExp): Promise<boolean>;
+    open(menu: string | RegExp): Promise<void>;
+    selectItem(menu: string | RegExp, label: string | RegExp): Promise<void>;
+    static with(options?: AveMenubarHarnessFilters): HarnessPredicate<AveMenubarHarness>;
+}
+
+// @alpha
+export interface AveMenubarHarnessFilters extends BaseHarnessFilters {
+    label?: string | RegExp;
+}
+
+// @alpha
 export class AveMenuHarness extends ComponentHarness {
     close(): Promise<void>;
     getDisabledItems(): Promise<string[]>;
