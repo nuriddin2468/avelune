@@ -48,7 +48,7 @@
       },
       "tooltip": {
         "$value": "{color.neutral.800}",
-        "$description": "The small dark surface of a tooltip, which stands apart from every surface and popover under it: darker than all of them in light, lighter than all of them in dark."
+        "$description": "The small surface of a tooltip, which stands apart from every surface and popover under it: darker than all of them in light, lighter than all of them in dark."
       }
     },
     "fg": {
