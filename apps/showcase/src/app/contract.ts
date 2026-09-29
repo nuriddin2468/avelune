@@ -13,6 +13,7 @@ import {
 } from '@avelune/icons/lucide';
 import { AveBreadcrumbs, type AveBreadcrumb } from '@avelune/ui/breadcrumbs';
 import { AveButton, AveIconButton } from '@avelune/ui/button';
+import { AveStepper, type AveStep } from '@avelune/ui/stepper';
 import { AveTab, AveTabs } from '@avelune/ui/tabs';
 import { AveToaster } from '@avelune/ui/toast';
 import { AveToolbar, AveToolbarItem, AveToolbarSeparator } from '@avelune/ui/toolbar';
@@ -50,6 +51,7 @@ export const contractTitle: ResolveFn<string> = (route) => {
     AveIconButton,
     AveLink,
     AveMenu,
+    AveStepper,
     AveTab,
     AveTabs,
     AveToolbar,
@@ -152,14 +154,7 @@ export const contractTitle: ResolveFn<string> = (route) => {
               Договор согласуют по порядку, описанному в
               <a aveLink href="https://lex.uz/docs/6134567" target="_blank">регламенте документооборота</a>.
             </p>
-            <ol class="events">
-              @for (step of approval; track step.department) {
-                <li class="event">
-                  <span>{{ step.department }}</span>
-                  <span class="when">{{ step.state }}</span>
-                </li>
-              }
-            </ol>
+            <ave-stepper label="Маршрут согласования" orientation="vertical" [steps]="approval" [current]="1" />
           </ave-tab>
           <ave-tab value="files" label="Файлы" icon="paperclip">
             <ul class="events">
@@ -206,11 +201,12 @@ export class ContractPage {
   /** The section the page shows; the facts first. */
   protected readonly section = signal('facts');
 
-  /** Who approves the contract, in order, and where each stands. */
-  protected readonly approval = [
-    { department: 'Юридический отдел', state: 'Согласовано' },
-    { department: 'Финансовый отдел', state: 'На рассмотрении' },
-    { department: 'Служба безопасности', state: 'Ожидает' },
+  /** Who approves the contract, in order, and where each stands: the legal department agreed, finance has it now. */
+  protected readonly approval: readonly AveStep[] = [
+    { label: 'Юридический отдел', description: 'Согласовано 18.09.2026' },
+    { label: 'Финансовый отдел', description: 'На рассмотрении с 19.09.2026' },
+    { label: 'Служба безопасности', description: 'Ожидает' },
+    { label: 'Директор', description: 'Подпись' },
   ];
 
   /** The contract's files. */

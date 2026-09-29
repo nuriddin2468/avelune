@@ -62,7 +62,7 @@
   }
 
   .note {
-    margin-block-end: var(--ave-space-2);
+    margin-block-end: var(--ave-space-4);
     color: var(--ave-color-fg-muted);
   }
 

@@ -85,6 +85,8 @@ export interface AveMessages {
     readonly required: string;
     readonly retry: string;
     readonly retryWithEnter: string;
+    readonly stepComplete: string;
+    readonly stepError: string;
     readonly tooManyFiles: (max: number) => string;
     readonly upperValue: string;
 }

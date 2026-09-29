@@ -1,0 +1,171 @@
+@layer components {
+  /* A stepper (ADR 0077) adapts to its own width: a row of steps from a small container, a column under it. */
+  :host {
+    display: block;
+    container-type: inline-size;
+  }
+
+  .steps {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* In a column: the words beside the mark, 24px between steps, a line under each mark to the next one. */
+  .step {
+    position: relative;
+    padding-block-end: var(--ave-space-6);
+
+    &:last-child {
+      padding-block-end: 0;
+    }
+
+    &::after {
+      position: absolute;
+      inset-block: calc(var(--ave-size-icon-lg) + var(--ave-space-1)) var(--ave-space-1);
+      inset-inline-start: calc((var(--ave-size-icon-lg) - var(--ave-border-width-default)) / 2);
+      inline-size: var(--ave-border-width-default);
+      background-color: var(--ave-color-border-default);
+      content: '';
+    }
+
+    &[data-state='done']::after {
+      background-color: var(--ave-color-accent-bg);
+    }
+
+    &:last-child::after {
+      display: none;
+    }
+  }
+
+  /* A step's mark and its words; a done step's button draws the same. */
+  .target {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--ave-space-3);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--ave-radius-sm);
+    background-color: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: start;
+  }
+
+  button.target {
+    cursor: pointer;
+  }
+
+  /* The mark: a 24px circle with the step's number, a check when it is done, a cross when it needs attention. */
+  .mark {
+    display: grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--ave-size-icon-lg);
+    block-size: var(--ave-size-icon-lg);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-strong);
+    border-radius: var(--ave-radius-full);
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-label-sm);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The words, the first line on the mark's middle. */
+  .text {
+    display: grid;
+    min-inline-size: 0;
+    padding-block-start: calc((var(--ave-size-icon-lg) - var(--ave-font-label-md-line-height)) / 2);
+  }
+
+  .label {
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-label-md);
+  }
+
+  .description {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-caption);
+  }
+
+  [data-state='done'] > .target .mark {
+    border-color: var(--ave-color-accent-bg);
+    background-color: var(--ave-color-accent-bg);
+    color: var(--ave-color-fg-on-accent);
+  }
+
+  [data-state='current'] > .target .mark {
+    border: var(--ave-border-width-selected) solid var(--ave-color-accent-border);
+    color: var(--ave-color-accent-fg);
+  }
+
+  [data-state='ahead'] > .target .label {
+    color: var(--ave-color-fg-muted);
+  }
+
+  /* A done step's button underlines its words under the pointer. */
+  button.target:hover .label {
+    text-decoration-line: underline;
+    text-decoration-thickness: var(--ave-border-width-default);
+  }
+
+  [data-error] > .target .mark {
+    border-color: var(--ave-color-danger-bg);
+    background-color: var(--ave-color-danger-bg);
+    color: var(--ave-color-fg-on-danger);
+  }
+
+  [data-error] > .target .description {
+    color: var(--ave-color-danger-fg);
+  }
+
+  /* In a row: the steps share the width 8px apart, the words under the mark, a line from each mark to the next. */
+  @container (min-width: 480px) {
+    :host([data-orientation='horizontal']) .steps {
+      grid-auto-columns: minmax(0, 1fr);
+      grid-auto-flow: column;
+      gap: var(--ave-space-2);
+    }
+
+    :host([data-orientation='horizontal']) .step {
+      padding-block-end: 0;
+    }
+
+    :host([data-orientation='horizontal']) .step::after {
+      inset-block: calc((var(--ave-size-icon-lg) - var(--ave-border-width-default)) / 2) auto;
+      inset-inline: calc(var(--ave-size-icon-lg) + var(--ave-space-2)) 0;
+      inline-size: auto;
+      block-size: var(--ave-border-width-default);
+    }
+
+    :host([data-orientation='horizontal']) .target {
+      flex-direction: column;
+      gap: var(--ave-space-2);
+    }
+
+    :host([data-orientation='horizontal']) .text {
+      padding-block-start: 0;
+    }
+  }
+
+  /* Forced colours paint the fills as the canvas: done and failing marks take the system's colours. */
+  @media (forced-colors: active) {
+    [data-state='done'] > .target .mark,
+    [data-error] > .target .mark {
+      border-color: CanvasText;
+      background-color: CanvasText;
+      color: Canvas;
+      forced-color-adjust: none;
+    }
+
+    [data-state='current'] > .target .mark {
+      border-color: Highlight;
+    }
+
+    .step::after {
+      background-color: CanvasText;
+      forced-color-adjust: none;
+    }
+  }
+}

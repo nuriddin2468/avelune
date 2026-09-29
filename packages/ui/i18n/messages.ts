@@ -121,6 +121,10 @@ export interface AveMessages {
   readonly pageOf: (page: string, count: string) => string;
   /** Which items a page shows, and how many there are in all. */
   readonly itemRange: (from: string, to: string, total: string) => string;
+  /** Names the mark of a step that is done; screen readers hear it with the step's words. */
+  readonly stepComplete: string;
+  /** Names the mark of a step that needs attention before the steps after it. */
+  readonly stepError: string;
 }
 
 /**
@@ -186,6 +190,8 @@ export const aveMessagesEn: AveMessages = {
   page: (page) => `Page ${page}`,
   pageOf: (page, count) => `Page ${page} of ${count}`,
   itemRange: (from, to, total) => `${from}–${to} of ${total}`,
+  stepComplete: 'Done',
+  stepError: 'Needs attention',
 };
 
 /**
@@ -253,6 +259,8 @@ export const aveMessagesRu: AveMessages = {
   page: (page) => `Страница ${page}`,
   pageOf: (page, count) => `Страница ${page} из ${count}`,
   itemRange: (from, to, total) => `${from}–${to} из ${total}`,
+  stepComplete: 'Выполнен',
+  stepError: 'Требует внимания',
 };
 
 /**
@@ -318,6 +326,8 @@ export const aveMessagesUzLatn: AveMessages = {
   page: (page) => `${page}-sahifa`,
   pageOf: (page, count) => `${page}-sahifa, jami ${count}`,
   itemRange: (from, to, total) => `${from}–${to}, jami ${total}`,
+  stepComplete: 'Bajarildi',
+  stepError: 'Eʼtibor talab qiladi',
 };
 
 /**
@@ -383,6 +393,8 @@ export const aveMessagesUzCyrl: AveMessages = {
   page: (page) => `${page}-саҳифа`,
   pageOf: (page, count) => `${page}-саҳифа, жами ${count}`,
   itemRange: (from, to, total) => `${from}–${to}, жами ${total}`,
+  stepComplete: 'Бажарилди',
+  stepError: 'Эътибор талаб қилади',
 };
 
 /**

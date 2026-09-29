@@ -1,0 +1,82 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as StepperStories from './stepper.stories';
+
+<Meta of={StepperStories} />
+
+# Stepper
+
+`<ave-stepper>` shows where a person, or a document, is in a sequence of steps: the steps done, the current one and those ahead, each state in a mark and in words (ADR 0077).
+
+```ts
+import { AveStepper, type AveStep } from '@avelune/ui/stepper';
+```
+
+<Canvas of={StepperStories.Default} />
+
+## When to use
+
+- Over a long form split into steps that people fill in turn: the steps done are a way back.
+- For the stages a document passes through, such as an approval route, which nobody clicks.
+
+## When not to use
+
+- For sections people open in any order: use tabs.
+- For a page's place in the product: use breadcrumbs.
+- For a form of one screen: show it whole; steps add clicks.
+- For the share of a long job that is done: use a progress bar.
+
+## Anatomy
+
+An ordered list named by `label`. Each step has a 24px mark and its words: its name, and a line under it. A done step's mark is the accent fill with a check, the current one's a 2px accent ring with its number, one ahead a ring with its number and muted words, one that needs attention the danger fill with a cross and its line in the danger colour. A line leads from each mark to the next, in the accent colour after a done step.
+
+```html
+<ave-stepper
+  label="Оформление договора"
+  selectable
+  [steps]="steps"
+  [current]="step()"
+  (stepSelected)="step.set($event)"
+/>
+```
+
+Steps are data (`AveStep`): `{ label, description?, error? }`. `current` is the index of the current step, from 0; the steps before it are done, those after it ahead.
+
+## Orientation
+
+`orientation="horizontal"` (default) shares the width among the steps, the words under the marks; in a container under 480px the steps go into a column. `orientation="vertical"` is always a column, the words beside the marks: for a route in a side panel or a tab.
+
+<Canvas of={StepperStories.Route} />
+
+## States
+
+- **Done, current, ahead,** from `current`; the current step is `aria-current="step"`.
+- **Needs attention** (`error`): a done step with an error in its fields, or a current one that was refused; say why in its description.
+- **Selectable** (`selectable`): each done step is a button back to it, underlined under the pointer, with the kit's ring on focus. The current step and those ahead are not reachable from here.
+
+## Content
+
+- Name steps with nouns or short phrases, the same words as the step's heading.
+- Keep to about five steps; group more into fewer.
+- Long names wrap under or beside their mark; nothing is cut.
+
+<Canvas of={StepperStories.LongText} />
+
+## Keyboard
+
+With `selectable`, Tab reaches each done step's button and Enter or Space goes back to it. Otherwise the stepper is not in the focus order.
+
+## Accessibility
+
+- The list says how many steps there are, and the current step is announced as the current step.
+- The marks carry the states in words: "Выполнен" and "Требует внимания" in the locale, not only a colour or a check.
+- In forced colours the marks and lines take the system's colours; the current ring the highlight.
+
+## Motion
+
+None: a step's state changes at once.
+
+## Do and don't
+
+- Do keep the step's own heading on the page under the stepper.
+- Do let people go back to a done step, and keep what they entered.
+- Don't let people skip ahead: a step ahead needs the ones before it.

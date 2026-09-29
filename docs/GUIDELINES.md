@@ -67,6 +67,7 @@ One primary button per view region (a form, a dialog, a toolbar, a card): the on
 | Tabs | Sections of one page that people look at one at a time; tabs never change the address (ADR 0071) |
 | Link (`a[aveLink]`) | A reference inside text, or a record's name that opens its page; always underlined, and it says when it opens a new tab (ADR 0073) |
 | Pagination | A list longer than a page, under the list; back to the first page when a search or a filter changes it (ADR 0074) |
+| Stepper | The steps of a long form in turn, or the stages a document passes through (an approval route); never sections people open in any order (ADR 0077) |
 
 ### Toast, inline alert or banner
 

@@ -82,6 +82,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0074](0074-pagination.md) | Pagination: seven places for page numbers, the current page on the accent fill, a compact form in narrow containers | Accepted |
 | [0075](0075-toolbar.md) | Toolbar: Angular Aria's toolbar on the application's element, its items marked, a menu that joins it | Accepted |
 | [0076](0076-menubar.md) | Menubar: Angular Aria's menubar, menus as data, each menu moved into its overlay while it is open | Accepted |
+| [0077](0077-stepper.md) | Stepper: where a person is in a sequence of steps, drawn from data, the done steps optionally a way back | Accepted |
 
 ## Template
 

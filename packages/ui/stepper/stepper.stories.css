@@ -1,0 +1,23 @@
+/* The frame of the Stepper stories: the top of a form, or a contract's approval on its surface. Stories only; the
+   stepper's styles are stepper.css. */
+@layer components {
+  :host {
+    display: grid;
+    gap: var(--ave-space-4);
+    max-inline-size: var(--ave-container-lg);
+    padding: var(--ave-space-6);
+  }
+
+  .panel {
+    max-inline-size: var(--ave-container-sm);
+    padding: var(--ave-space-4);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface);
+  }
+
+  .status {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+}
