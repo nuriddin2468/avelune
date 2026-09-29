@@ -5,6 +5,7 @@
 ```ts
 
 import * as _angular_core from '@angular/core';
+import * as _avelune_ui_dialog from '@avelune/ui/dialog';
 import * as _avelune_ui_i18n from '@avelune/ui/i18n';
 import { Signal } from '@angular/core';
 
@@ -23,7 +24,7 @@ export class AveConfirmDialog {
     // (undocumented)
     protected readonly messages: _avelune_ui_i18n.AveMessages;
     // (undocumented)
-    protected readonly modal: AveModal;
+    protected readonly modal: _avelune_ui_dialog.AveModal;
     readonly open: _angular_core.ModelSignal<boolean>;
     readonly variant: _angular_core.InputSignal<AveConfirmVariant>;
     // (undocumented)
@@ -43,7 +44,7 @@ export class AveDialog {
     // (undocumented)
     protected readonly messages: _avelune_ui_i18n.AveMessages;
     // (undocumented)
-    protected readonly modal: AveModal;
+    protected readonly modal: _avelune_ui_dialog.AveModal;
     readonly open: _angular_core.ModelSignal<boolean>;
     protected readonly overflows: _angular_core.Signal<boolean>;
     readonly size: _angular_core.InputSignal<AveDialogSize>;
@@ -72,7 +73,7 @@ export class AveDrawer {
     // (undocumented)
     protected readonly messages: _avelune_ui_i18n.AveMessages;
     // (undocumented)
-    protected readonly modal: AveModal;
+    protected readonly modal: _avelune_ui_dialog.AveModal;
     readonly open: _angular_core.ModelSignal<boolean>;
     protected readonly overflows: _angular_core.Signal<boolean>;
     readonly side: _angular_core.InputSignal<AveDrawerSide>;
@@ -88,6 +89,15 @@ export type AveDrawerSide = 'end' | 'start';
 
 // @alpha
 export type AveDrawerSize = 'sm' | 'md' | 'lg';
+
+// @alpha
+export interface AveModal {
+    cancel(event: Event): void;
+    clicked(event: MouseEvent): void;
+    closed(): void;
+    readonly closing: Signal<boolean>;
+    pressed(event: PointerEvent): void;
+}
 
 // (No @packageDocumentation comment for this package)
 

@@ -9,40 +9,16 @@ import {
   signal,
   untracked,
   type ModelSignal,
-  type Provider,
   type Signal,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { LIVE_ANNOUNCER_ELEMENT_TOKEN, LiveAnnouncer } from '@angular/cdk/a11y';
-import { _CdkPrivateStyleLoader, _VisuallyHiddenLoader } from '@angular/cdk/private';
-
-let nextAnnouncer = 0;
 
 /**
- * A `LiveAnnouncer` of the dialog's own, for the content inside it (ADR 0066). A modal `<dialog>` makes everything
- * outside it inert, CDK's live element in `<body>` included, so a control inside the dialog that announces (a file
- * upload, a searched list) would say nothing. The dialog provides an announcer whose live element is inside it.
+ * What a kit dialog's host binds: the exit, and the native events that close it. Exported for the type of the dialogs'
+ * protected `modal` member.
+ *
+ * @alpha
  */
-export const dialogAnnouncer: Provider[] = [
-  LiveAnnouncer,
-  {
-    provide: LIVE_ANNOUNCER_ELEMENT_TOKEN,
-    useFactory: (): HTMLElement => {
-      const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
-      // CDK hides its live element with this class but loads its styles only through its directives.
-      inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
-      const live = host.ownerDocument.createElement('div');
-      live.classList.add('cdk-live-announcer-element', 'cdk-visually-hidden');
-      live.setAttribute('aria-atomic', 'true');
-      live.setAttribute('aria-live', 'polite');
-      live.id = `ave-dialog-announcer-${String(nextAnnouncer++)}`;
-      host.append(live);
-      return live;
-    },
-  },
-];
-
-/** What a kit dialog's host binds: the exit, and the native events that close it. */
 export interface AveModal {
   /** Whether the dialog plays its exit, before it closes. */
   readonly closing: Signal<boolean>;

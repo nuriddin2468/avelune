@@ -1,0 +1,106 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ToastStories from './toast.stories';
+
+<Meta of={ToastStories} />
+
+# Toast
+
+`AveToaster` shows toasts: a short confirmation of something the person just did ("Документ сохранён"), at the bottom of the screen for a few seconds (ADR 0068). Press the button in each example to show its toasts.
+
+```ts
+import { AveToaster } from '@avelune/ui/toast';
+
+private readonly toaster = inject(AveToaster);
+
+this.toaster.show({ message: 'Документ сохранён', variant: 'success' });
+```
+
+<Canvas of={ToastStories.Default} />
+
+## When to use
+
+- To confirm an action the person just took, when the result is not already in view: saved, sent, copied, started (`docs/GUIDELINES.md`, "Toast, inline alert or banner").
+- To offer a quick way back from what they just did: Undo after a deletion.
+
+## When not to use
+
+- For an error people must fix: show it next to what failed, in an alert or under the field. A toast about an error never stands alone.
+- For a state of the whole product or page: use a banner.
+- For something people must answer: use a dialog.
+- When the change is already visible where the person looks (a checkbox that was checked, a row that moved): no toast.
+
+## Anatomy
+
+A toast is the raised surface of every popup with its subtle edge: the variant's icon, the message, an optional action and a close button in one row, 48px tall (44px in compact density, which the notifications take from the page), growing as the message wraps; the action goes under a message that needs the room. Toasts stack at the bottom of the screen, the newest nearest the edge: at the inline end from a small window up (24px from the corner, as wide as the widest toast, 320–480px), across the whole width on a phone (16px from the edges).
+
+```ts
+this.toaster.show({
+  message: 'Договор ДК-2026/114 удалён',
+  variant: 'success',
+  action: { label: 'Отменить', run: () => this.restore(contract) },
+});
+```
+
+`show()` also takes the message alone, as an `info` toast, and returns a reference whose `dismiss()` closes the toast early.
+
+## Variants
+
+<Canvas of={ToastStories.Variants} />
+
+The four of Alert and Banner, with the same icons: `info` (default), `success`, `warning` and `danger`.
+
+## An action
+
+<Canvas of={ToastStories.Undo} />
+
+One action at most, a verb ("Отменить", "Повторить", "Открыть"). Choosing it runs it and closes the toast. Whatever the action does must also be possible elsewhere, or not matter much if missed: a toast goes by itself.
+
+## Timing and the queue
+
+A toast stays for `timing.toast`, 6 seconds. Its clock stops while the pointer or focus is on the notifications, and while the page is hidden, and runs on with the time that was left (WCAG 2.2.1). At most three show at once; the next waits its turn and shows as soon as one goes.
+
+<Canvas of={ToastStories.Queue} />
+
+## Content
+
+- One sentence, what happened: "Документ сохранён", not "Успех!". No period after a single sentence.
+- Long messages wrap; nothing truncates.
+
+<Canvas of={ToastStories.LongText} />
+
+<Canvas of={ToastStories.Compact} />
+
+## Over a dialog
+
+A modal dialog makes the page behind it inert, so while one is open the notifications move into it, above its backdrop, where they can be read and used; they move back when it closes.
+
+<Canvas of={ToastStories.OverADialog} />
+
+## Keyboard
+
+| Key          | Does                                                                                   |
+| ------------ | -------------------------------------------------------------------------------------- |
+| F8           | Moves focus to the notifications while any show; their clocks stop while focus stays   |
+| Tab          | Moves through the toasts' actions and close buttons                                    |
+| Escape       | In the notifications: focus goes back to where it was; a dialog around them stays open |
+| Enter, Space | On a button: runs the action or closes the toast                                       |
+
+When the toast that holds focus closes, focus stays in the notifications while others show, and goes back to where it was when it closes the last.
+
+## Accessibility
+
+- The notifications are a landmark region named "Уведомления (F8)" in the locale, a list of toasts; each toast's icon is named by its kind.
+- Each toast is announced when it shows, through a live element of the region's own that stays usable over a modal dialog: information and success politely, warnings and errors at once, the action's words after the message.
+- The close button is named "Закрыть" in the locale and shows it as a tooltip.
+
+## Motion
+
+The toast entry of the motion catalog: a toast slides `distance.lg` up from the bottom as it fades in, on `easing.spring` (`ave-motion-toast-enter`, `duration.normal`), and slides back down as it fades out (`ave-motion-toast-exit`, `duration.fast`). Under reduced motion it only fades. The others close up at once when one goes.
+
+## Do and don't
+
+- Do confirm what the person did, in their words: "Договор отправлен на согласование".
+- Do offer Undo after a deletion instead of asking first, when the deletion can be undone.
+- Don't show a toast for something the person can already see.
+- Don't put the only copy of an error in a toast.
+- Don't show several toasts for one action.

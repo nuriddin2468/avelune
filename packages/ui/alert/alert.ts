@@ -1,7 +1,7 @@
 import { Component, computed, input } from '@angular/core';
 import { injectAveMessages } from '@avelune/ui/i18n';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
-import { statusIcon, statusIcons, statusLabel, statusRole } from './status';
+import { aveStatusIcon, aveStatusIcons, aveStatusLabel, aveStatusRole } from './status';
 import type { AveAlertVariant } from './types';
 
 /**
@@ -21,7 +21,7 @@ import type { AveAlertVariant } from './types';
 @Component({
   selector: 'ave-alert',
   imports: [AveIcon],
-  providers: [provideAveIcons(statusIcons)],
+  providers: [provideAveIcons(aveStatusIcons)],
   host: {
     '[attr.role]': 'role()',
     '[attr.data-variant]': 'variant()',
@@ -46,7 +46,7 @@ export class AveAlert {
 
   private readonly messages = injectAveMessages();
 
-  protected readonly icon = computed(() => statusIcon[this.variant()]);
-  protected readonly kind = computed(() => this.messages[statusLabel[this.variant()]]);
-  protected readonly role = computed(() => statusRole(this.variant()));
+  protected readonly icon = computed(() => aveStatusIcon[this.variant()]);
+  protected readonly kind = computed(() => this.messages[aveStatusLabel[this.variant()]]);
+  protected readonly role = computed(() => aveStatusRole(this.variant()));
 }

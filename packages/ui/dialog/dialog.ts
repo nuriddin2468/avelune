@@ -4,7 +4,8 @@ import { AveIconButton } from '@avelune/ui/button';
 import { injectAveMessages } from '@avelune/ui/i18n';
 import { provideAveIcons } from '@avelune/ui/icon';
 import { AveTooltip } from '@avelune/ui/tooltip';
-import { aveModal, aveOverflows, dialogAnnouncer } from './modal';
+import { aveHostAnnouncer } from '@avelune/ui/overlay';
+import { aveModal, aveOverflows } from './modal';
 import type { AveDialogSize } from './types';
 
 let nextDialog = 0;
@@ -47,7 +48,7 @@ export class AveDialogActions {}
 @Component({
   selector: 'dialog[aveDialog]',
   imports: [AveIconButton, AveTooltip],
-  providers: [provideAveIcons([lucideX]), ...dialogAnnouncer],
+  providers: [provideAveIcons([lucideX]), ...aveHostAnnouncer],
   host: {
     class: 'ave-motion-backdrop-enter',
     '[class.ave-motion-backdrop-exit]': 'modal.closing()',

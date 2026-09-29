@@ -1,0 +1,98 @@
+@layer components {
+  /* The toast region (ADR 0068): a manual popover, so the browser's popover rules are replaced: fixed at the bottom of
+     the viewport, 16px from its edges and as wide as it on a phone; from breakpoint.sm, 24px from the bottom and the
+     inline end, as wide as its widest toast. Transparent and borderless: only the toasts are drawn. */
+  :host {
+    position: fixed;
+    inset: auto var(--ave-space-4) var(--ave-space-4);
+    inline-size: auto;
+    block-size: auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    overflow: visible;
+    background-color: transparent;
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-body-md);
+  }
+
+  /* One column of toasts, the oldest on top; every toast as wide as the widest, between a small container and a
+     medium one. */
+  .list {
+    display: grid;
+    gap: var(--ave-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (width >= 600px) {
+    :host {
+      inset: auto var(--ave-space-6) var(--ave-space-6) auto;
+    }
+
+    .list {
+      min-inline-size: var(--ave-container-xs);
+      max-inline-size: var(--ave-container-sm);
+    }
+  }
+
+  /* A toast: the raised surface of every popup (ADR 0046), its subtle edge and radius.lg, the popover elevation; the
+     variant's icon, the message, the action and the close button in one row of the small control height, so a toast
+     is 48px tall (44px in compact density) and grows as the message wraps. The icon and the close button stay on its
+     first line. */
+  .toast {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--ave-space-2);
+    padding-block: calc(var(--ave-space-2) - var(--ave-border-width-default));
+    padding-inline: calc(var(--ave-space-4) - var(--ave-border-width-default))
+      calc(var(--ave-space-2) - var(--ave-border-width-default));
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface-raised);
+    box-shadow: var(--ave-elevation-popover);
+  }
+
+  /* The icon on the middle of the first line, in the variant's colour. */
+  .icon {
+    flex: none;
+    margin-block: calc((var(--ave-control-height-sm) - var(--ave-size-icon-md)) / 2);
+    margin-inline-end: var(--ave-space-1);
+    color: var(--ave-color-info-fg);
+  }
+
+  .toast[data-variant='success'] > .icon {
+    color: var(--ave-color-success-fg);
+  }
+
+  .toast[data-variant='warning'] > .icon {
+    color: var(--ave-color-warning-fg);
+  }
+
+  .toast[data-variant='danger'] > .icon {
+    color: var(--ave-color-danger-fg);
+  }
+
+  /* The message and the action after it, wrapping as one line of words: the action moves under a message that
+     needs the room. */
+  .body {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 var(--ave-space-4);
+    min-inline-size: 0;
+  }
+
+  .message {
+    min-inline-size: 0;
+    margin: 0;
+    padding-block: calc((var(--ave-control-height-sm) - var(--ave-font-body-md-line-height)) / 2);
+    overflow-wrap: anywhere;
+  }
+
+  .close {
+    flex: none;
+  }
+}

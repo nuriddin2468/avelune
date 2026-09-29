@@ -1,0 +1,36 @@
+/* The frame of the Toast stories: a page with the button that shows toasts, or a list whose rows can be deleted.
+   Stories only; the toasts' own styles are region.css. */
+@layer components {
+  :host {
+    display: block;
+    min-block-size: calc(var(--ave-space-16) * 6);
+    padding: var(--ave-space-6);
+  }
+
+  .page {
+    display: grid;
+    gap: var(--ave-space-4);
+    justify-items: start;
+  }
+
+  .muted {
+    color: var(--ave-color-fg-muted);
+  }
+
+  .rows {
+    display: grid;
+    max-inline-size: var(--ave-container-sm);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ave-space-4);
+    padding-block: var(--ave-space-2);
+    border-block-end: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  }
+}

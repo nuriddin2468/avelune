@@ -15,6 +15,7 @@ import { AvePopover } from '@avelune/ui/popover';
 import { AveRadio } from '@avelune/ui/radio';
 import { AveProgress } from '@avelune/ui/progress';
 import { AveSkeleton } from '@avelune/ui/skeleton';
+import { AveToaster } from '@avelune/ui/toast';
 import { contractStatuses, contracts, type ContractRecord, type ContractStatus } from './data';
 
 /** What a row's menu does to its contract. */
@@ -234,6 +235,7 @@ export class ContractsPage {
   protected readonly dates = aveDateFormat('ru');
   protected readonly percent = aveNumberFormat('ru', { style: 'percent' });
   private readonly sums = aveNumberFormat('ru');
+  private readonly toaster = inject(AveToaster);
 
   /** The register comes from a pretend server: skeleton rows hold its place until it arrives. */
   protected readonly loading = signal(true);
@@ -324,7 +326,7 @@ export class ContractsPage {
     this.searchBox().nativeElement.focus();
   }
 
-  /** A row's menu chose an action for its contract. */
+  /** A row's menu chose an action for its contract; a copy is confirmed by a toast that opens it. */
   protected act(contract: ContractRecord, action: RowAction): void {
     if (action === 'open') {
       this.viewed.set(contract);
@@ -339,6 +341,16 @@ export class ContractsPage {
         signedOn: null,
       };
       this.rows.set([copy, ...this.rows()]);
+      this.toaster.show({
+        message: `Создан черновик ${copy.number}`,
+        variant: 'success',
+        action: {
+          label: 'Открыть',
+          run: () => {
+            this.act(copy, 'open');
+          },
+        },
+      });
     } else {
       this.deleting.set(contract);
       this.asking.set(true);
@@ -353,11 +365,12 @@ export class ContractsPage {
   protected readonly deleting = signal<ContractRecord | null>(null);
   protected readonly asking = signal(false);
 
-  /** The confirmation said yes: the contract goes. */
+  /** The confirmation said yes: the contract goes, and a toast confirms it. */
   protected remove(): void {
     const contract = this.deleting();
     if (contract === null) return;
     this.rows.set(this.rows().filter((row) => row.id !== contract.id));
+    this.toaster.show({ message: `Договор ${contract.number} удалён`, variant: 'success' });
   }
 
   protected search(event: Event): void {

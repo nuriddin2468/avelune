@@ -5,6 +5,7 @@
 ```ts
 
 import * as _angular_core from '@angular/core';
+import { AveIconName } from '@avelune/ui/icon';
 import * as _avelune_icons from '@avelune/icons';
 import * as _avelune_ui_i18n from '@avelune/ui/i18n';
 
@@ -45,6 +46,18 @@ export class AveBanner {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveBanner, never>;
 }
+
+// @alpha
+export const aveStatusIcon: Readonly<Record<AveAlertVariant, AveIconName>>;
+
+// @alpha
+export const aveStatusIcons: (_avelune_icons.IconDefinition<"info"> | _avelune_icons.IconDefinition<"circle-check"> | _avelune_icons.IconDefinition<"triangle-alert"> | _avelune_icons.IconDefinition<"circle-alert">)[];
+
+// @alpha
+export const aveStatusLabel: Readonly<Record<AveAlertVariant, 'alertInfo' | 'alertSuccess' | 'alertWarning' | 'alertDanger'>>;
+
+// @alpha
+export function aveStatusRole(variant: AveAlertVariant): 'alert' | 'status';
 
 // (No @packageDocumentation comment for this package)
 

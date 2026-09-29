@@ -1,7 +1,8 @@
 import { Component, input, model, output } from '@angular/core';
 import { AveButton } from '@avelune/ui/button';
 import { injectAveMessages } from '@avelune/ui/i18n';
-import { aveModal, dialogAnnouncer } from './modal';
+import { aveHostAnnouncer } from '@avelune/ui/overlay';
+import { aveModal } from './modal';
 import type { AveConfirmVariant } from './types';
 
 let nextConfirm = 0;
@@ -24,7 +25,7 @@ let nextConfirm = 0;
 @Component({
   selector: 'dialog[aveConfirmDialog]',
   imports: [AveButton],
-  providers: dialogAnnouncer,
+  providers: aveHostAnnouncer,
   host: {
     class: 'ave-motion-backdrop-enter',
     role: 'alertdialog',

@@ -4,7 +4,8 @@ import { AveIconButton } from '@avelune/ui/button';
 import { injectAveMessages } from '@avelune/ui/i18n';
 import { provideAveIcons } from '@avelune/ui/icon';
 import { AveTooltip } from '@avelune/ui/tooltip';
-import { aveModal, aveOverflows, dialogAnnouncer } from './modal';
+import { aveHostAnnouncer } from '@avelune/ui/overlay';
+import { aveModal, aveOverflows } from './modal';
 import type { AveDrawerSide, AveDrawerSize } from './types';
 
 let nextDrawer = 0;
@@ -27,7 +28,7 @@ let nextDrawer = 0;
 @Component({
   selector: 'dialog[aveDrawer]',
   imports: [AveIconButton, AveTooltip],
-  providers: [provideAveIcons([lucideX]), ...dialogAnnouncer],
+  providers: [provideAveIcons([lucideX]), ...aveHostAnnouncer],
   host: {
     class: 'ave-motion-backdrop-enter',
     '[class.ave-motion-backdrop-exit]': 'modal.closing()',

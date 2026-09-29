@@ -5,6 +5,7 @@
 ```ts
 
 import { CdkConnectedOverlayConfig } from '@angular/cdk/overlay';
+import { Provider } from '@angular/core';
 import { Signal } from '@angular/core';
 
 // @alpha
@@ -13,6 +14,9 @@ export function aveConnectedOverlay(origin: HTMLElement, options?: {
     readonly transformOrigin?: string;
     readonly align?: 'start' | 'either';
 }): CdkConnectedOverlayConfig;
+
+// @alpha
+export const aveHostAnnouncer: Provider[];
 
 // @alpha
 export interface AveOverlayPresence {

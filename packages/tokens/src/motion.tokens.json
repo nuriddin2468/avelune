@@ -154,6 +154,13 @@
         "unit": "ms"
       },
       "$description": "How long a part of a control slides to show its new state: the switch thumb, and later the tabs indicator, on easing.spring or easing.standard. The same 120ms as duration.fast; 0ms under reduced motion, where the part jumps (ADR 0045)."
+    },
+    "toast": {
+      "$value": {
+        "value": 6000,
+        "unit": "ms"
+      },
+      "$description": "How long a toast stays on screen: paused while the pointer or focus is on the notifications, and restarted from what was left (ADR 0068). Not motion: the same under reduced motion."
     }
   }
 }

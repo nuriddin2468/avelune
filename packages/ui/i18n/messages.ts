@@ -103,6 +103,8 @@ export interface AveMessages {
   readonly alertDanger: string;
   /** The button of a confirmation that keeps things as they are. */
   readonly cancel: string;
+  /** The name of the region of the page where notifications (toasts) appear. */
+  readonly notifications: string;
 }
 
 /**
@@ -159,6 +161,7 @@ export const aveMessagesEn: AveMessages = {
   alertWarning: 'Warning',
   alertDanger: 'Error',
   cancel: 'Cancel',
+  notifications: 'Notifications',
 };
 
 /**
@@ -217,6 +220,7 @@ export const aveMessagesRu: AveMessages = {
   alertWarning: 'Предупреждение',
   alertDanger: 'Ошибка',
   cancel: 'Отмена',
+  notifications: 'Уведомления',
 };
 
 /**
@@ -273,6 +277,7 @@ export const aveMessagesUzLatn: AveMessages = {
   alertWarning: 'Ogohlantirish',
   alertDanger: 'Xato',
   cancel: 'Bekor qilish',
+  notifications: 'Bildirishnomalar',
 };
 
 /**
@@ -329,6 +334,7 @@ export const aveMessagesUzCyrl: AveMessages = {
   alertWarning: 'Огоҳлантириш',
   alertDanger: 'Хато',
   cancel: 'Бекор қилиш',
+  notifications: 'Билдиришномалар',
 };
 
 /**

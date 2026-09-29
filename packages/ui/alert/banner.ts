@@ -3,7 +3,8 @@ import { lucideX } from '@avelune/icons/lucide';
 import { AveIconButton } from '@avelune/ui/button';
 import { injectAveMessages } from '@avelune/ui/i18n';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
-import { statusIcon, statusIcons, statusLabel, statusRole } from './status';
+import { AveTooltip } from '@avelune/ui/tooltip';
+import { aveStatusIcon, aveStatusIcons, aveStatusLabel, aveStatusRole } from './status';
 import type { AveAlertVariant } from './types';
 
 /**
@@ -22,8 +23,8 @@ import type { AveAlertVariant } from './types';
  */
 @Component({
   selector: 'ave-banner',
-  imports: [AveIcon, AveIconButton],
-  providers: [provideAveIcons([...statusIcons, lucideX])],
+  imports: [AveIcon, AveIconButton, AveTooltip],
+  providers: [provideAveIcons([...aveStatusIcons, lucideX])],
   host: {
     '[attr.role]': 'role()',
     '[attr.data-variant]': 'variant()',
@@ -40,6 +41,7 @@ import type { AveAlertVariant } from './types';
         size="sm"
         icon="x"
         [label]="messages.close"
+        [aveTooltip]="messages.close"
         (click)="dismiss.emit()"
       ></button>
     }
@@ -58,7 +60,7 @@ export class AveBanner {
 
   protected readonly messages = injectAveMessages();
 
-  protected readonly icon = computed(() => statusIcon[this.variant()]);
-  protected readonly kind = computed(() => this.messages[statusLabel[this.variant()]]);
-  protected readonly role = computed(() => statusRole(this.variant()));
+  protected readonly icon = computed(() => aveStatusIcon[this.variant()]);
+  protected readonly kind = computed(() => this.messages[aveStatusLabel[this.variant()]]);
+  protected readonly role = computed(() => aveStatusRole(this.variant()));
 }
