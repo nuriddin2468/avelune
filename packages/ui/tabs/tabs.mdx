@@ -1,0 +1,84 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as TabsStories from './tabs.stories';
+
+<Meta of={TabsStories} />
+
+# Tabs
+
+`<ave-tabs>` divides one page's content into sections that people switch between without leaving the page: a list of tabs over the panel of the chosen one. It is Angular Aria's tabs (the WAI-ARIA tabs pattern), each `<ave-tab>` a tab with its panel (ADR 0071).
+
+```ts
+import { AveTab, AveTabs } from '@avelune/ui/tabs';
+```
+
+<Canvas of={TabsStories.Default} />
+
+## When to use
+
+- For a few sections of one thing that people look at one at a time: a contract's facts, its approval, its files, its history.
+- When the sections are of equal rank and none needs the others on screen.
+
+## When not to use
+
+- For moving between pages: use the sidebar navigation or links; tabs do not change the address.
+- For steps that follow one another: use a stepper.
+- For content people compare side by side, or read top to bottom: show it on the page, under headings.
+- For more than about six sections: use a page per section.
+
+## Anatomy
+
+A row of tabs over a subtle line, then the chosen tab's panel 16px under it. Each tab is 40px tall (36px in compact density), its words in the label font; an optional 16px icon before them. The chosen tab's words take the text colour over a 2px accent bar that covers the line; the others are muted.
+
+```html
+<ave-tabs label="Разделы договора" [(selected)]="section">
+  <ave-tab value="facts" label="Сведения">…</ave-tab>
+  <ave-tab value="files" label="Файлы" icon="paperclip">…</ave-tab>
+</ave-tabs>
+```
+
+`label` names the list for assistive technology. `selected` holds the chosen tab's `value`; while it names no tab, the first enabled tab is chosen. A panel's content enters the page when its tab is first chosen and stays, hidden, when another is. Register the icons with `provideAveIcons`.
+
+## States
+
+- **Chosen:** the text colour and the accent bar; one tab at a time.
+- **Hover:** the text colour and a bar in the default border colour.
+- **Focus:** the kit's ring, inside the tab.
+- **Disabled:** the disabled colour; focus still reaches it, so people find it, but it cannot be chosen.
+
+<Canvas of={TabsStories.States} />
+
+## Content
+
+- Tab words are short nouns in sentence case: "Сведения", "Файлы", not verbs.
+- Labels never wrap or truncate. When the tabs are wider than their container, the list scrolls sideways (the arrows, a swipe, a trackpad), and the chosen tab is scrolled into view.
+
+<Canvas of={TabsStories.LongText} />
+
+## Keyboard
+
+Per the WAI-ARIA tabs pattern with automatic activation, from Angular Aria:
+
+| Key          | Does                                                        |
+| ------------ | ----------------------------------------------------------- |
+| Tab          | moves into the list, onto the chosen tab; then to the panel |
+| Left, Right  | moves to the tab before or after and chooses it (wraps)     |
+| Home, End    | the first, the last tab                                     |
+| Enter, Space | chooses the tab with focus                                  |
+
+## Accessibility
+
+- The list is a `tablist` named by `label`; each tab a `tab` that controls its `tabpanel`, which it names.
+- Only the chosen tab is a Tab stop; the panel follows it in the focus order.
+- A hidden panel is inert: out of the focus order and the accessibility tree.
+- The muted words keep their contrast in both themes; in forced colours the bar takes the system's highlight colour.
+
+## Motion
+
+The bar slides to the chosen tab on `timing.slide` (120ms) and `easing.standard`, the catalog's tabs indicator; only after the person has used the tabs, never as the page opens. Under reduced motion it jumps. Hover colours change in `duration.instant`.
+
+## Do and don't
+
+- Do keep every tab's content independent: nothing on one panel should need another.
+- Do keep the tabs in the same order on every record of a kind.
+- Don't put tabs inside tabs.
+- Don't hide the only way to act in a tab people may not open; put the main actions above the tabs.

@@ -1,0 +1,12 @@
+/* The frame of the Tabs stories: a page's width, or a narrow panel. Stories only; the tabs' styles are tabs.css. */
+@layer components {
+  :host {
+    display: block;
+    max-inline-size: var(--ave-container-lg);
+    padding: var(--ave-space-6);
+  }
+
+  .narrow {
+    max-inline-size: var(--ave-container-xs);
+  }
+}

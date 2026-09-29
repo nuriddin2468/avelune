@@ -1,0 +1,14 @@
+@layer components {
+  :host {
+    display: block;
+  }
+
+  /* The chosen tab's panel, 16px under the list's line; the others are hidden (Aria makes them inert). */
+  .panel {
+    padding-block-start: var(--ave-space-4);
+
+    &[inert] {
+      display: none;
+    }
+  }
+}

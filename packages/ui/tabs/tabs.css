@@ -1,0 +1,111 @@
+@layer components {
+  /* The tabs over a subtle line (ADR 0071); the indicator's place comes from the chosen tab's measured box. */
+  :host {
+    --ave-tabs-indicator-offset: 0;
+    --ave-tabs-indicator-scale: 0;
+
+    display: block;
+  }
+
+  /* The line under the tabs, over the panels. */
+  .bar {
+    border-block-end: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  }
+
+  /* The list overlaps the line by its width, so the chosen tab's bar covers the line. Labels never wrap: a list
+     wider than its container scrolls sideways, without a scrollbar that would sit between the tabs and the line. */
+  .list {
+    position: relative;
+    display: flex;
+    gap: var(--ave-space-1);
+    margin-block-end: calc(-1 * var(--ave-border-width-default));
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  /* A tab: the large control height, its words in the label font and the muted colour. The pointer shows a bar in the
+     default border colour under it; the ring is drawn inside, since the list clips. */
+  .tab {
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: var(--ave-space-2);
+    min-block-size: var(--ave-control-height-lg);
+    margin: 0;
+    padding-block: 0;
+    padding-inline: var(--ave-control-padding-inline-sm);
+    border: 0;
+    background-color: transparent;
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-label-md);
+    white-space: nowrap;
+    cursor: pointer;
+    transition-property: color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+
+    &::after {
+      position: absolute;
+      inset-block-end: 0;
+      inset-inline: 0;
+      block-size: var(--ave-border-width-selected);
+      background-color: transparent;
+      content: '';
+      transition-property: background-color;
+      transition-duration: var(--ave-duration-instant);
+      transition-timing-function: var(--ave-easing-standard);
+    }
+
+    &:hover,
+    &[aria-selected='true'] {
+      color: var(--ave-color-fg-default);
+    }
+
+    &:hover:not([aria-selected='true'], [aria-disabled='true'])::after {
+      background-color: var(--ave-color-border-default);
+    }
+
+    &[aria-disabled='true'] {
+      color: var(--ave-color-fg-disabled);
+      cursor: not-allowed;
+    }
+  }
+
+  /* One bar for the list, as wide as the list and scaled from its left edge to the chosen tab's box. It slides on the
+     slide timing once the person has used the tabs, and jumps under reduced motion (timing.slide is 0). */
+  .indicator {
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline: 0;
+    block-size: var(--ave-border-width-selected);
+    background-color: var(--ave-color-accent-bg);
+    pointer-events: none;
+    transform-origin: 0 0;
+    translate: var(--ave-tabs-indicator-offset) 0;
+    scale: var(--ave-tabs-indicator-scale) 1;
+  }
+
+  .list[data-slide] .indicator {
+    transition-property: translate, scale;
+    transition-duration: var(--ave-timing-slide);
+    transition-timing-function: var(--ave-easing-standard);
+  }
+
+  /* Forced colours paint fills as the canvas: the bars take the system's colours. */
+  @media (forced-colors: active) {
+    .indicator {
+      background-color: Highlight;
+      forced-color-adjust: none;
+    }
+
+    .tab:hover:not([aria-selected='true'], [aria-disabled='true'])::after {
+      background-color: CanvasText;
+      forced-color-adjust: none;
+    }
+
+    .tab[aria-disabled='true'] {
+      color: GrayText;
+    }
+  }
+}

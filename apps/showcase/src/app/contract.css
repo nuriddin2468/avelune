@@ -34,10 +34,6 @@
     background-color: var(--ave-color-bg-surface);
   }
 
-  .panel-heading {
-    font: var(--ave-font-heading-md);
-  }
-
   /* The facts in columns as wide as a small container, as many as fit. */
   .facts {
     display: grid;
@@ -62,6 +58,31 @@
   }
 
   .amount {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* A panel's list: a row per step, file or event, what it is and its date or size at the end. */
+  .events {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .event {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--ave-space-1) var(--ave-space-4);
+    padding-block: var(--ave-space-3);
+  }
+
+  .event + .event {
+    border-block-start: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  }
+
+  .when {
+    color: var(--ave-color-fg-muted);
     font-variant-numeric: tabular-nums;
   }
 }
