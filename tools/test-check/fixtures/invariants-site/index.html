@@ -34,6 +34,10 @@
         <input aveinput data-size="md" class="control" aria-label="Name" />
       </div>
       <button type="button" aria-haspopup="dialog" aria-expanded="false" data-popup>Actions</button>
+      <!-- A closed dialog keeps its controls in the DOM, at no size: the same-size check leaves them out. -->
+      <dialog aria-label="Closed">
+        <button avebutton data-size="md" type="button" class="control">Cancel</button>
+      </dialog>
     </main>
     <script src="/overlay.js"></script>
   </body>

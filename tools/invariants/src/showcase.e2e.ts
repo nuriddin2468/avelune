@@ -150,28 +150,31 @@ test('controls of the same size share height, radius, border, font size and padd
       await openScreen(page, path);
       const boxes = await page.evaluate(
         (selector): ControlBox[] =>
-          [...document.querySelectorAll(selector)].map((control) => {
-            const style = getComputedStyle(control);
-            const owner = control.closest(
-              'ave-select, ave-combobox, ave-multiselect, ave-date-picker, ave-date-range-picker',
-            );
-            const kind =
-              owner?.localName ??
-              ['aveButton', 'aveIconButton', 'aveInput', 'aveTextarea'].find((name) => control.hasAttribute(name)) ??
-              '';
-            const text = (control.getAttribute('aria-label') ?? control.textContent).replace(/\s+/g, ' ').trim();
-            return {
-              control: owner === null ? `${control.localName}[${kind}] "${text}"` : `${kind} "${text}"`,
-              size: (owner ?? control).getAttribute('data-size') ?? '',
-              square: kind === 'aveIconButton',
-              multiline: kind === 'aveTextarea',
-              height: control.getBoundingClientRect().height,
-              radius: style.borderTopLeftRadius,
-              border: style.borderTopWidth,
-              fontSize: style.fontSize,
-              padding: style.paddingInlineStart,
-            };
-          }),
+          // Only controls that are drawn: a closed dialog keeps its buttons in the DOM, at no size.
+          [...document.querySelectorAll(selector)]
+            .filter((control) => control.checkVisibility())
+            .map((control) => {
+              const style = getComputedStyle(control);
+              const owner = control.closest(
+                'ave-select, ave-combobox, ave-multiselect, ave-date-picker, ave-date-range-picker',
+              );
+              const kind =
+                owner?.localName ??
+                ['aveButton', 'aveIconButton', 'aveInput', 'aveTextarea'].find((name) => control.hasAttribute(name)) ??
+                '';
+              const text = (control.getAttribute('aria-label') ?? control.textContent).replace(/\s+/g, ' ').trim();
+              return {
+                control: owner === null ? `${control.localName}[${kind}] "${text}"` : `${kind} "${text}"`,
+                size: (owner ?? control).getAttribute('data-size') ?? '',
+                square: kind === 'aveIconButton',
+                multiline: kind === 'aveTextarea',
+                height: control.getBoundingClientRect().height,
+                radius: style.borderTopLeftRadius,
+                border: style.borderTopWidth,
+                fontSize: style.fontSize,
+                padding: style.paddingInlineStart,
+              };
+            }),
         controlSelector,
       );
       expect.soft(sameSizeViolations(boxes), `controls of one size that differ on ${path}`).toEqual([]);
