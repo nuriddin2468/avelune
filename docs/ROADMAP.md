@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below that is not marked **Deferred**, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 5, Wave 3: all thirteen components are built and experimental (2026-09-28 to 2026-09-29: ADR 0058–0068, one commit each), the overlay invariants of brief §8.2 are in `tools/invariants` (ADR 0069), and the wave's baselines are in (2026-09-29, "Wave 3 baselines" below): 242 new and 16 changed, every image inspected, the full visual suite passes in compare mode (868 tests), the invariants (28) and their proofs (19) pass. Next: **STOP**, the product owner reviews Wave 3; the visual review of brief §8.1 for Wave 2 and Wave 3, which the product owner starts, is still open. Wave 1 is closed: the product owner approved it on 2026-09-25 without the showcase review of its STOP. The release age is 16 hours since 2026-09-25 (ADR 0042). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-25.
+**Current position:** Phase 5, Wave 4 (navigation), started 2026-09-29: the product owner passed Wave 3's STOP by starting Wave 4, chose four looks ("Wave 4 decisions" below) and asked for the visual suite once, after the wave's last component. The components are built in the order of the "Wave 4 plan" below, one commit each with its ADR; each is experimental until the wave's visual review. The visual review of brief §8.1 for Wave 2 and Wave 3, which the product owner starts, is still open. Wave 1 is closed: the product owner approved it on 2026-09-25 without the showcase review of its STOP. The release age is 16 hours since 2026-09-25 (ADR 0042). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-25.
 
 ## Parameters
 
@@ -196,13 +196,23 @@ Wave 3 baselines (2026-09-29), the first visual run of the wave, after its last 
 - Two docs pages had gone in unformatted: the commit hook's Prettier check left out Markdown and MDX. It covers them now.
 - `invariants:e2e`: the new overlay test passed on every screen and project at its first run in the container; the same-size test measured the buttons of the contracts screen's closed dialogs, at no size, and now measures drawn controls only. 28 passed. `test-check:e2e` proves both, the overlay test with the fixture site's broken popup, the same-size test with a closed dialog on its index: 19 passed.
 
+Wave 3 STOP passed (2026-09-29): the product owner started Wave 4 without a review of Wave 3's screens; its visual review stays open with Wave 2's.
+
+Wave 4 decisions (product owner, 2026-09-29), every other decision of the wave the agent's, for the product owner's taste at its end:
+- SidebarNav: the current page on the neutral fill with a 3px accent bar at its inline start, its words in the text colour.
+- Breadcrumbs: the links in the muted text colour, underlined under the pointer; a chevron between items; the current page in the text colour and not a link.
+- Pagination: the current page on the accent fill, as a calendar's chosen day; the other pages ghost buttons.
+- Link (`a[aveLink]`): always underlined, in text and outside it; the underline thicker under the pointer.
+
+Wave 4 plan (2026-09-29), in this order: Breadcrumbs (and the showcase's contract page), Tabs, SidebarNav (the showcase shell), Link (`a` joins `avelune/no-raw-elements`), Pagination, Toolbar, Menubar, Stepper; then the wave's visual suite, invariants and summary.
+
 ## Component waves
 
 | Wave | Components | Gate |
 |---|---|---|
 | 1 Calibration | Icon, Button, IconButton, Input, FormField, Checkbox | **STOP:** passed 2026-09-25 (product owner) |
 | 2 Forms | Textarea, RadioGroup, Switch, Select, Combobox/Autocomplete, Multiselect, DatePicker, DateRangePicker, FileUpload, Slider | STOP + summary |
-| 3 Overlays & feedback | Dialog, ConfirmDialog, Drawer, Popover, Tooltip, Menu, Toast, Alert, Banner, Progress, Spinner, Skeleton, EmptyState | STOP + summary |
+| 3 Overlays & feedback | Dialog, ConfirmDialog, Drawer, Popover, Tooltip, Menu, Toast, Alert, Banner, Progress, Spinner, Skeleton, EmptyState | **STOP:** passed 2026-09-29 (product owner started Wave 4) |
 | 4 Navigation | Tabs, Breadcrumbs, Pagination, SidebarNav, Menubar, Toolbar, Stepper, Link | STOP + summary |
 | 5 Data | Badge, Tag, Avatar, Card, Accordion, Tree, List, DataTable (ADR first: CDK Table + virtual scroll vs Aria Grid) | STOP + summary |
 | 6 Patterns | ListPage, ListDetail, FormPage, Dashboard, FilterPanel, SearchHeader, SettingsPage | STOP + summary |
