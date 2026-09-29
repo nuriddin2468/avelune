@@ -1,7 +1,8 @@
-// The showcase's screens: every same-origin page reachable by links from `/`. The suite finds them itself, so a new
+// The showcase's screens: every same-origin route reachable by links from `/`. The suite finds them itself, so a new
 // screen is checked as soon as the showcase links to it.
 import { expect, type Browser, type BrowserContextOptions, type Page, type Request } from '@playwright/test';
 import { expectKitFonts } from '@avelune/visual';
+import { routeOf } from './routes.ts';
 
 /** Upper bound on screens, so a link loop or generated URLs fail instead of running forever. */
 const maxScreens = 200;
@@ -47,7 +48,7 @@ export async function openScreen(page: Page, path: string): Promise<void> {
   await expectKitFonts(page);
 }
 
-/** Every same-origin path linked from `/`, breadth first, at desktop width. */
+/** Every same-origin route linked from `/`, breadth first, at desktop width: the first path found of each. */
 export async function findScreens(browser: Browser, options: BrowserContextOptions): Promise<string[]> {
   const context = await browser.newContext({ ...options, viewport: { width: 1280, height: 800 } });
   const page = await context.newPage();
@@ -63,7 +64,10 @@ export async function findScreens(browser: Browser, options: BrowserContextOptio
         );
       for (const link of links) {
         const url = new URL(link);
-        if (url.origin === origin && !screens.includes(url.pathname)) screens.push(url.pathname);
+        if (url.origin !== origin) continue;
+        // One page of each route: /contracts/113 is the screen of /contracts/114.
+        if (screens.some((screen) => routeOf(screen) === routeOf(url.pathname))) continue;
+        screens.push(url.pathname);
       }
       if (screens.length > maxScreens) throw new Error(`More than ${String(maxScreens)} screens linked from /`);
     }

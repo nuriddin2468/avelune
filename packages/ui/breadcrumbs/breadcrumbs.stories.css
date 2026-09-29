@@ -1,0 +1,18 @@
+/* The frame of the Breadcrumbs stories: the top of a page. Stories only; the trail's styles are breadcrumbs.css. */
+@layer components {
+  :host {
+    display: grid;
+    gap: var(--ave-space-8);
+    padding: var(--ave-space-6);
+  }
+
+  .page {
+    display: grid;
+    gap: var(--ave-space-2);
+    max-inline-size: var(--ave-container-md);
+  }
+
+  .title {
+    font: var(--ave-font-heading-xl);
+  }
+}

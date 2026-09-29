@@ -32,7 +32,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0024](0024-stylelint-configuration.md) | Stylelint: token-only values, same-element nesting, logical exceptions derived from browser data | Accepted; no nesting under `:host` since Angular 22.2 (addendum) |
 | [0025](0025-storybook-jit.md) | Storybook compiles stories JIT; ngc type-checks them | Accepted |
 | [0026](0026-unit-and-story-tests.md) | Unit and story tests: Angular's unit-test builder in Chromium, per-file thresholds, failing fixtures | Accepted |
-| [0027](0027-browser-suites-in-the-pinned-container.md) | Browser suites: visual, axe sweep and invariants in the pinned container | Accepted |
+| [0027](0027-browser-suites-in-the-pinned-container.md) | Browser suites: visual, axe sweep and invariants in the pinned container | Accepted; one screen per route in addendum (2026-09-29) |
 | [0028](0028-size-budget-per-entry-point.md) | Size budgets: one per entry point, declared in its manifest | Accepted |
 | [0029](0029-repository-guardrails-proven.md) | Repository guardrails: project tags, browser floor, commits, formatting, dependency policy | Accepted; the pinned release age changed by 0042 |
 | [0030](0030-global-stylesheet.md) | Global stylesheet: one entry, layered files, loaded through the consumer's bundler; one focus ring | Accepted |
@@ -75,6 +75,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0067](0067-drawer.md) | Drawer: the kit's dialog against an edge, and a token that turns its slide into a fade under reduced motion | Accepted |
 | [0068](0068-toast.md) | Toast: a service, a popover region that moves into an open modal dialog, a queue of three, F8 | Accepted |
 | [0069](0069-overlay-invariants.md) | Overlay invariants: one control per kind, opened as a person does, and CDK kept from closing on Escape | Accepted |
+| [0070](0070-breadcrumbs.md) | Breadcrumbs: a trail from data, links through Angular's router, the current page as text | Accepted |
 
 ## Template
 

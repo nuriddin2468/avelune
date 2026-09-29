@@ -157,7 +157,7 @@ const exportInterval = 400;
           @for (contract of shown(); track contract.id) {
             <li class="row">
               <div class="main">
-                <span class="number">{{ contract.number }}</span>
+                <a class="number" [routerLink]="['/contracts', contract.id]">{{ contract.number }}</a>
                 <span class="subject">{{ contract.subject }}</span>
                 <span class="counterparty">{{ contract.counterparty }}</span>
               </div>

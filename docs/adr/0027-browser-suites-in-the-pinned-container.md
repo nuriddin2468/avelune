@@ -66,3 +66,10 @@ The first full runs of the Wave 1 suites (Docker was down when Wave 1 was built)
 - **A blinking caret in forced colours.** Forced colours force `caret-color`, so the screenshot option `caret: 'hide'` (a transparent caret) does nothing there. A focused text field's caret then blinks into some screenshots and not others: the Input States forced-colors baseline differed by one 1 × 18 px column between two runs.
   - The forced-colors spec sets `caret-animation: manual` (Chromium 153) before its screenshot. The caret stops blinking and is drawn in every run; checked with the style applied at six points of the blink cycle.
 - **The same-size proof had never run.** Its fixture row was wider than 320 px, so the page broke the overflow invariant as well. Its pattern expected plain quotes where Playwright's diff prints `\"`. Both are fixed, and the proof fails and passes where it should.
+
+## Addendum: one screen per route (2026-09-29)
+
+Wave 4 links every contract of the showcase's register to its own page (`/contracts/114`, ADR 0070). The crawl took each path for a screen: six pages drawn by one template, each probed in four projects, overlays included.
+
+- Decision: a screen is a route. `routeOf` (`tools/invariants/src/routes.ts`) turns each numeric segment of a path into `:n`; the crawl keeps the first path it finds of each route and still follows every link of the screens it keeps. `routes.spec.ts` pins it.
+- What it leaves out: the same template with another record's data. A record that breaks the layout (a long name) belongs in the stories' stress content, and in the page the register links first.

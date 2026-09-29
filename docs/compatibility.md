@@ -20,7 +20,7 @@ Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` an
 
 | Area | Package | Version | Deciding constraint |
 |---|---|---|---|
-| Framework | `@angular/{core,common,compiler,forms,router,platform-browser}` | 22.2.0 | Latest stable (released 2026-09-23); installed 2026-09-25. Its compiler scopes nested CSS rules (ADR 0024, addendum) and adds `strictUnclaimedEventNames` (ADR 0022, addendum) |
+| Framework | `@angular/{core,common,compiler,forms,router,platform-browser}` | 22.2.0 | Latest stable (released 2026-09-23); installed 2026-09-25. Its compiler scopes nested CSS rules (ADR 0024, addendum) and adds `strictUnclaimedEventNames` (ADR 0022, addendum). `@avelune/ui` peers `core`, `common` and `forms` `^22.2.0`, and `router` since Breadcrumbs (2026-09-29, ADR 0070) |
 | | `@angular/cli`, `@angular/build`, `@angular-devkit/{core,schematics}`, `@schematics/angular` | 22.2.0 | Schematics toolchain for `ng add` / `ng update`. `@angular/build` peers TS `>=6.0 <6.1`, Vitest `^4.0.8 \|\| ^5.0.0` |
 | | `@angular/cdk`, `@angular/aria` | 22.2.0 | Peers `@angular/core ^22 \|\| ^23`; Aria peers `@angular/cdk` 22.2.0 exactly; stable since 22.0. `@avelune/ui` peers both (`^22.2.0`) since the select family (ADR 0046) |
 | | `typescript` | ~6.0.3 | Angular `>=6.0 <6.1`; npm `latest` is 7.0.2, not supported |

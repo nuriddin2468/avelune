@@ -251,7 +251,7 @@ Wave 4 plan (2026-09-29), in this order: Breadcrumbs (and the showcase's contrac
 | Skeleton | 3 | components | experimental | | `@avelune/ui/skeleton` (ADR 0060): `<ave-skeleton>`, lines of body text or a block the page sizes, on the new `color.bg.placeholder` and `-highlight` (the dark canvas hid `bg.surface-sunken`); `ave-motion-shimmer`, still under reduced motion; hidden from assistive technology; the showcase's contracts register while it loads; 1.16 kB of 1.3 kB; beta after the Wave 3 visual review |
 | EmptyState | 3 | composites | experimental | | `@avelune/ui/empty-state` (ADR 0062): `<ave-empty-state heading icon>` and `[aveEmptyStateActions]`, a centred column at most 480px wide, the icon in a 48px circle; the showcase's contracts search when nothing matches; 1.19 kB of 1.4 kB; beta after the Wave 3 visual review |
 | Tabs | 4 | composites | planned | | Aria Tabs |
-| Breadcrumbs | 4 | components | planned | | |
+| Breadcrumbs | 4 | components | experimental | | `@avelune/ui/breadcrumbs` (ADR 0070): `<ave-breadcrumbs [items] current>`, a named `nav` with an `ol` of `RouterLink`s from data and the current page as text (`aria-current="page"`); `@avelune/ui` peers `@angular/router`; muted links underlined under the pointer, chevrons between (product owner, 2026-09-29), 24px lines; the showcase's contract page (`/contracts/:id`), which the register links; 1.5 kB of 1.7 kB; beta after the Wave 4 visual review |
 | Pagination | 4 | composites | planned | | |
 | SidebarNav | 4 | composites | planned | | |
 | Menubar | 4 | composites | planned | | Aria MenuBar |

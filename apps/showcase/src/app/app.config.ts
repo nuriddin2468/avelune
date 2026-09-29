@@ -1,5 +1,5 @@
 import { type ApplicationConfig, LOCALE_ID, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import {
   lucideCircleAlert,
   lucideCircleCheck,
@@ -20,7 +20,8 @@ export const appConfig: ApplicationConfig = {
     // The screens are in Russian; the kit's own words follow (ADR 0047).
     { provide: LOCALE_ID, useValue: 'ru' },
     provideAvelune({ theme: 'light' }),
-    provideRouter(routes),
+    // A route's parameters are the inputs of its screen (a contract's `:id`).
+    provideRouter(routes, withComponentInputBinding()),
     provideAveIcons([lucideCircleAlert, lucideCircleCheck, lucideMoon, lucideRows2, lucideRows3, lucideSun]),
   ],
 };

@@ -1,0 +1,54 @@
+@layer components {
+  :host {
+    display: block;
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-md);
+  }
+
+  /* The trail wraps between its items; a long name wraps inside its own. */
+  .trail {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: var(--ave-space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* An item's lines are 24px, so a link has 24px of room for a finger (WCAG 2.5.8) and wrapped lines stay apart. Its
+     words flow as text: the chevron follows the last word, 4px after it. */
+  .item {
+    min-inline-size: 0;
+    line-height: var(--ave-size-target-min);
+  }
+
+  /* The links in the muted colour (product owner, 2026-09-29), underlined and in the text colour under the pointer.
+     Padding above and below the letters makes what a press can hit at least 24px tall. */
+  .link {
+    padding-block: calc((var(--ave-size-target-min) - var(--ave-font-body-md-size)) / 2);
+    border-radius: var(--ave-radius-sm);
+    color: var(--ave-color-fg-muted);
+    text-decoration-line: none;
+    transition-property: color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+
+    &:hover {
+      color: var(--ave-color-fg-default);
+      text-decoration-line: underline;
+      text-decoration-thickness: var(--ave-border-width-default);
+    }
+  }
+
+  /* Level with the line: from its top, half of what the line leaves around the icon. */
+  .separator {
+    margin-block-start: calc((var(--ave-size-target-min) - var(--ave-size-icon-sm)) / 2);
+    margin-inline-start: var(--ave-space-1);
+    color: var(--ave-color-fg-subtle);
+    vertical-align: top;
+  }
+
+  .current {
+    color: var(--ave-color-fg-default);
+  }
+}

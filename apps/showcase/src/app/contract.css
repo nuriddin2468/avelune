@@ -1,0 +1,67 @@
+/* A contract's page: the trail and the heading, then its facts on a surface. Tokens only. */
+@layer app {
+  :host {
+    display: block;
+  }
+
+  .page {
+    display: grid;
+    gap: var(--ave-space-6);
+    max-inline-size: var(--ave-container-lg);
+    margin-inline: auto;
+  }
+
+  /* The trail, 8px over the heading; the subject under it. */
+  .header {
+    display: grid;
+    gap: var(--ave-space-2);
+  }
+
+  .title {
+    font: var(--ave-font-heading-xl);
+  }
+
+  .subject {
+    color: var(--ave-color-fg-muted);
+  }
+
+  .panel {
+    display: grid;
+    gap: var(--ave-space-4);
+    padding: var(--ave-space-4);
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface);
+  }
+
+  .panel-heading {
+    font: var(--ave-font-heading-md);
+  }
+
+  /* The facts in columns as wide as a small container, as many as fit. */
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--ave-space-16) * 3.5)), 1fr));
+    gap: var(--ave-space-4) var(--ave-space-6);
+    margin: 0;
+  }
+
+  .fact {
+    display: grid;
+    gap: var(--ave-space-1);
+    align-content: start;
+  }
+
+  .fact dt {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+
+  .fact dd {
+    margin: 0;
+  }
+
+  .amount {
+    font-variant-numeric: tabular-nums;
+  }
+}

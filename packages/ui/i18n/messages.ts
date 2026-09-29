@@ -105,6 +105,8 @@ export interface AveMessages {
   readonly cancel: string;
   /** The name of the region of the page where notifications (toasts) appear. */
   readonly notifications: string;
+  /** The name of a page's breadcrumbs: the path from the top of the product to the page. */
+  readonly breadcrumbs: string;
 }
 
 /**
@@ -162,6 +164,7 @@ export const aveMessagesEn: AveMessages = {
   alertDanger: 'Error',
   cancel: 'Cancel',
   notifications: 'Notifications',
+  breadcrumbs: 'Breadcrumb',
 };
 
 /**
@@ -221,6 +224,7 @@ export const aveMessagesRu: AveMessages = {
   alertDanger: 'Ошибка',
   cancel: 'Отмена',
   notifications: 'Уведомления',
+  breadcrumbs: 'Навигационная цепочка',
 };
 
 /**
@@ -278,6 +282,7 @@ export const aveMessagesUzLatn: AveMessages = {
   alertDanger: 'Xato',
   cancel: 'Bekor qilish',
   notifications: 'Bildirishnomalar',
+  breadcrumbs: 'Navigatsiya zanjiri',
 };
 
 /**
@@ -335,6 +340,7 @@ export const aveMessagesUzCyrl: AveMessages = {
   alertDanger: 'Хато',
   cancel: 'Бекор қилиш',
   notifications: 'Билдиришномалар',
+  breadcrumbs: 'Навигация занжири',
 };
 
 /**

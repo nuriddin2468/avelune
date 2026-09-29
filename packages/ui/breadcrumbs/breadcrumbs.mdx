@@ -1,0 +1,77 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as BreadcrumbsStories from './breadcrumbs.stories';
+
+<Meta of={BreadcrumbsStories} />
+
+# Breadcrumbs
+
+`<ave-breadcrumbs>` shows where a page is: the path from the top of the product down to it, with a link to each page above and the current page's name last (ADR 0070).
+
+```ts
+import { AveBreadcrumbs, type AveBreadcrumb } from '@avelune/ui/breadcrumbs';
+```
+
+<Canvas of={BreadcrumbsStories.Default} />
+
+## When to use
+
+- On a page deep in a hierarchy that people reach from a list or a search: a contract under the register, a counterparty under a directory.
+- Above the page's heading, as its first line.
+
+## When not to use
+
+- On the top pages of the product: the sidebar navigation already says where they are.
+- For the steps of a task: use a stepper.
+- For history ("back"): breadcrumbs follow the hierarchy, not the path a person took.
+
+## Anatomy
+
+A navigation landmark named "Навигационная цепочка" in the locale, holding an ordered list: a link to each page above this one, a chevron after each link, and the current page's name, which is text. Links go through Angular's router: `link` is a path or the router's commands.
+
+```html
+<ave-breadcrumbs
+  [items]="[
+    { label: 'Главная', link: '/' },
+    { label: 'Договоры', link: '/contracts' },
+  ]"
+  current="ДК-2026/114"
+/>
+```
+
+Items are data (`AveBreadcrumb`): `{ label, link }`. `current` is the page's own name, as its heading says it.
+
+<Canvas of={BreadcrumbsStories.Deep} />
+
+## States
+
+- **Links:** the muted text colour; under the pointer, the text colour and an underline. Keyboard focus draws the kit's ring.
+- **The current page:** the text colour, not a link, marked `aria-current="page"`.
+
+Items sit on 24px lines, and each link is at least 24px tall to a press.
+
+## Content
+
+- Name each page as its heading or the navigation names it, in sentence case.
+- Keep the whole path: a long trail wraps between its items, and a long name inside itself; nothing is cut.
+
+<Canvas of={BreadcrumbsStories.LongText} />
+
+## Keyboard
+
+Links are native: Tab moves to each in turn, Enter follows it. The current page is not a stop.
+
+## Accessibility
+
+- The landmark has a name, so screen readers list it among the page's navigation; the list says how many levels there are.
+- The current page is announced as the current page; the chevrons are hidden from assistive technology.
+- The muted links and the chevrons keep their contrast in both themes; in forced colours the links take the system's link colour.
+
+## Motion
+
+The hover colour changes in `duration.instant` (the catalog's hover entry). Nothing else moves.
+
+## Do and don't
+
+- Do put the trail above the heading, and the heading's words in `current`.
+- Don't repeat the product's name as the first item when the sidebar already leads there; start at the first page that matters.
+- Don't use breadcrumbs as the only navigation of a page.
