@@ -9,6 +9,7 @@ describe('aveConnectedOverlay', () => {
     expect(config.matchWidth).toBe(true);
     expect(config.positions).toHaveLength(2);
     expect(config.push).toBeUndefined();
+    expect(config.disableClose).toBe(true);
   });
 
   it('lets a menu or a popover end at its button and be pushed space.2 inside the viewport', () => {

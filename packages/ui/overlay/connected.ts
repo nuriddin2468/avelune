@@ -21,7 +21,9 @@ const eitherEdge: ConnectedPosition[] = [
  * the control or over it, and scaled from the control's edge (the panel's element matches `transformOrigin`). A list
  * is as wide as its control (`matchWidth`); a calendar keeps its own width. A menu or a popover wider than its button
  * may end at the button's end instead (`align: 'either'`), when a button at the end of a row leaves no room after its
- * start (ADR 0064); when neither fits, it is pushed inside the viewport, `space.2` from its edge (ADR 0065).
+ * start (ADR 0064); when neither fits, it is pushed inside the viewport, `space.2` from its edge (ADR 0065). CDK never
+ * closes it on Escape itself (`disableClose`), which would take it away at once, without its exit: the component
+ * closes it, through `aveOverlayPresence`.
  *
  * @alpha
  */
@@ -39,6 +41,7 @@ export function aveConnectedOverlay(
     usePopover: 'inline',
     matchWidth: options.matchWidth ?? true,
     transformOriginSelector: options.transformOrigin ?? '.popup',
+    disableClose: true,
   };
   if (options.align !== 'either') return config;
   // The margin is a token, read from the control as the kit reads its timings.
