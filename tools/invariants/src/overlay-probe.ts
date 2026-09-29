@@ -5,6 +5,7 @@
 import type { ElementHandle, JSHandle, Page } from '@playwright/test';
 import { motionGlobal, type MotionRecord } from './motion.ts';
 import type { OverlayProbe } from './overlays.ts';
+import { loaded } from './screens.ts';
 
 /** The controls that open an overlay. */
 const triggerSelector = '[aria-haspopup]:not([aria-haspopup="false"])';
@@ -240,11 +241,6 @@ async function probe(
     closesOnOutsidePress,
     removed,
   };
-}
-
-/** Waits until nothing on the screen is loading (`aria-busy`), so every control that opens an overlay is there. */
-async function loaded(page: Page): Promise<void> {
-  await page.waitForFunction(() => document.querySelector('[aria-busy="true"]') === null);
 }
 
 /** Probes the overlay of every kind of control on the open screen. */

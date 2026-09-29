@@ -48,7 +48,15 @@ export async function openScreen(page: Page, path: string): Promise<void> {
   await expectKitFonts(page);
 }
 
-/** Every same-origin route linked from `/`, breadth first, at desktop width: the first path found of each. */
+/** Waits until nothing on the screen is loading (`aria-busy`), so every control and link it shows is there. */
+export async function loaded(page: Page): Promise<void> {
+  await page.waitForFunction(() => document.querySelector('[aria-busy="true"]') === null);
+}
+
+/**
+ * Every same-origin route linked from `/`, breadth first, at desktop width: the first path found of each. Links are
+ * read once nothing loads, so a list's links (the register's contracts) are found on every run (ADR 0027, addendum).
+ */
 export async function findScreens(browser: Browser, options: BrowserContextOptions): Promise<string[]> {
   const context = await browser.newContext({ ...options, viewport: { width: 1280, height: 800 } });
   const page = await context.newPage();
@@ -56,6 +64,7 @@ export async function findScreens(browser: Browser, options: BrowserContextOptio
   try {
     for (let index = 0; index < screens.length; index++) {
       await openScreen(page, screens[index] ?? '/');
+      await loaded(page);
       const origin = new URL(page.url()).origin;
       const links = await page
         .locator('a[href]')

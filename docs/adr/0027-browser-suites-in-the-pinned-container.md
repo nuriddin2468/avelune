@@ -73,3 +73,10 @@ Wave 4 links every contract of the showcase's register to its own page (`/contra
 
 - Decision: a screen is a route. `routeOf` (`tools/invariants/src/routes.ts`) turns each numeric segment of a path into `:n`; the crawl keeps the first path it finds of each route and still follows every link of the screens it keeps. `routes.spec.ts` pins it.
 - What it leaves out: the same template with another record's data. A record that breaks the layout (a long name) belongs in the stories' stress content, and in the page the register links first.
+
+## Addendum: links read once nothing loads (2026-09-29)
+
+Wave 4's first invariants run passed the 320px check although the contract page scrolled sideways at that width: the crawl read the register's links while its rows were still skeletons, so no contract page was a screen. The next run found one in a single project, and failed there.
+
+- Decision: `findScreens` waits until no element is `aria-busy="true"` before it reads a screen's links, the wait the overlay probe already made (`loaded` in `screens.ts`, shared by both). The set of screens no longer depends on how fast a list loads.
+- The checks themselves still run on a screen as the network leaves it, loading or loaded.
