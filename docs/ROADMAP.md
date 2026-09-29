@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below that is not marked **Deferred**, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 5, Wave 5 (data) next, to start in a fresh session: the product owner passed Wave 4's STOP on 2026-09-29 by asking for Wave 5 there. Wave 5's first item is the DataTable ADR (CDK Table with virtual scroll, or Aria's Grid); taste questions go to the product owner with each component's docs page. Wave 4 (navigation) is built and verified ("Wave 4" below), its components experimental. The visual reviews of brief §8.1 for Waves 2, 3 and 4, which the product owner starts, are still open. Wave 1 is closed: the product owner approved it on 2026-09-25 without the showcase review of its STOP. The release age is 16 hours since 2026-09-25 (ADR 0042). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-25.
+**Current position:** Phase 5, Wave 5 (data), started 2026-09-29: the product owner passed Wave 4's STOP by asking for Wave 5, and chose four looks ("Wave 5 decisions" below). The DataTable's base is decided (ADR 0078: a native table the kit draws, pages instead of virtual scrolling). The components are built in the order of the "Wave 5 plan" below, one commit each with its ADR; each is experimental until the wave's visual review, and the visual suite runs once, after the wave's last component, as in Waves 3 and 4. The visual reviews of brief §8.1 for Waves 2, 3 and 4, which the product owner starts, are still open. Wave 1 is closed: the product owner approved it on 2026-09-25 without the showcase review of its STOP. The release age is 16 hours since 2026-09-25 (ADR 0042). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-25.
 
 ## Parameters
 
@@ -235,6 +235,18 @@ Wave 4 baselines (2026-09-29), the wave's visual suite, run after its last compo
 
 Wave 4 STOP passed (2026-09-29): the product owner asked to start Wave 5 in a fresh session, without a review of Wave 4's screens; its visual review stays open with those of Wave 2 and Wave 3.
 
+Wave 5 base (2026-09-29, before its components, as brief §9.4 asks): ADR 0078. The DataTable is a native `<table>` the kit draws with the control flow, its controls native in the cells; neither Aria's grid (application mode, cells selected instead of rows, the arrows taken from the menus in cells) nor CDK's table (its sticky styler writes raw offsets and z-indexes; virtual scrolling takes rows away from screen readers and find in page). A table shows a page, with the kit's Pagination and a page-size select.
+
+Wave 5 decisions (product owner, 2026-09-29, chosen on a page that drew each option in the kit's tokens and font in both themes, [private to the product owner](https://claude.ai/artifact/DjXbauHRGfYAyLQUzEanit)):
+- Badge: a tinted rectangle, the status's subtle fill and its text colour, `radius.sm`, as the Alert's fills.
+- DataTable rows: a `border.subtle` line between rows, the header on the table's surface.
+- A chosen row: the neutral `bg.active` fill, with its checkbox checked.
+- Multiselect: the chosen values as Tags with a remove button, in this wave (Wave 2 had left chips until Tag).
+
+Proposed by the agent on the same page, not objected to, for the product owner's taste at the wave's review: Tag outlined in `border.default` on the surface, `radius.sm`, 28px tall with a 24×24 remove button; Avatar initials on the neutral fill, a circle for a person and a rounded square for an organisation, 24/32/40px, no colours from names (status colours carry meaning, the accent is for action and choice); Card a surface with a `border.subtle` border and `radius.lg`, no shadow (shadows stay with what floats over the page); Accordion's chevron at the header's end; Tree's chevron at the row's start, 24px a level, the chosen node as SidebarNav's current row; List rows on one surface with lines between them.
+
+Wave 5 plan (2026-09-29), in this order: Badge, Tag, the Multiselect's chips, Avatar, Card, Accordion, Tree, List, DataTable (with the page-size select in Pagination, and the showcase's register as a table); then the wave's visual suite, invariants and summary.
+
 ## Component waves
 
 | Wave | Components | Gate |
@@ -243,7 +255,7 @@ Wave 4 STOP passed (2026-09-29): the product owner asked to start Wave 5 in a fr
 | 2 Forms | Textarea, RadioGroup, Switch, Select, Combobox/Autocomplete, Multiselect, DatePicker, DateRangePicker, FileUpload, Slider | STOP + summary |
 | 3 Overlays & feedback | Dialog, ConfirmDialog, Drawer, Popover, Tooltip, Menu, Toast, Alert, Banner, Progress, Spinner, Skeleton, EmptyState | **STOP:** passed 2026-09-29 (product owner started Wave 4) |
 | 4 Navigation | Tabs, Breadcrumbs, Pagination, SidebarNav, Menubar, Toolbar, Stepper, Link | **STOP:** passed 2026-09-29 (product owner started Wave 5) |
-| 5 Data | Badge, Tag, Avatar, Card, Accordion, Tree, List, DataTable (ADR first: CDK Table + virtual scroll vs Aria Grid) | STOP + summary |
+| 5 Data | Badge, Tag, Avatar, Card, Accordion, Tree, List, DataTable (base first: ADR 0078, a native table, pages) | STOP + summary |
 | 6 Patterns | ListPage, ListDetail, FormPage, Dashboard, FilterPanel, SearchHeader, SettingsPage | STOP + summary |
 
 ## Component status
@@ -294,7 +306,7 @@ Wave 4 STOP passed (2026-09-29): the product owner asked to start Wave 5 in a fr
 | Accordion | 5 | composites | planned | | Aria Accordion |
 | Tree | 5 | composites | planned | | Aria Tree |
 | List | 5 | composites | planned | | item add and remove: fade and expand, stagger ≤ 5 × 30ms; the expand is not a transform (ADR 0031) |
-| DataTable | 5 | composites | planned | | ADR first |
+| DataTable | 5 | composites | planned | | a native table the kit draws, pages instead of virtual scrolling (ADR 0078) |
 
 ## Status transitions
 
