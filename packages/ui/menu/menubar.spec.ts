@@ -165,6 +165,26 @@ describe('AveMenubar', () => {
     element.remove();
   });
 
+  it('closes a menu opened by a click on Escape, focus staying on its item; with none open, Escape goes on', async () => {
+    const { element } = await mount();
+    await userEvent.click(top(element, 'Файл'));
+    await vi.waitFor(() => {
+      expect(openMenu()?.getAttribute('aria-labelledby')).toBe(top(element, 'Файл').id);
+    });
+    expect(document.activeElement).toBe(top(element, 'Файл'));
+    await userEvent.keyboard('{Escape}');
+    await vi.waitFor(() => {
+      expect(openMenu()).toBeNull();
+    });
+    expect(document.activeElement).toBe(top(element, 'Файл'));
+    const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+    top(element, 'Файл').dispatchEvent(escape);
+    expect(escape.defaultPrevented).toBe(false);
+    // The pointer leaves the page's corner, where the next file's components draw.
+    await userEvent.unhover(top(element, 'Файл'));
+    element.remove();
+  });
+
   it('emits the chosen item and closes its menu; a disabled item is not chosen', async () => {
     const { fixture, element, bar } = await mount();
     await bar.selectItem('Вставка', 'Дата подписания');

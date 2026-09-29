@@ -34,3 +34,7 @@ Brief §9.1 names Angular Aria's `MenuBar` for the menubar (ADR 0002, decision 2
 
 - The showcase's template editor (`/templates`) has a menubar over a toolbar and the template's text.
 - The overlay probe opens a menubar's first menu on every screen that has one; the bar's items carry `aria-haspopup`.
+
+## Addendum: Escape on a bar item whose menu is open (2026-09-29)
+
+The overlay invariants of Wave 4 found that a menu opened by a click did not close on Escape. Aria's menubar leaves focus on the bar item when a click opens its menu, and handles Escape only from inside a menu; its `ngMenuBar` has no Escape of its own. The bar item now closes its open menu on Escape, keeping focus, and stops the key as Aria's handlers do, so a dialog around the bar stays open; with no menu open, Escape goes on. The menu button's trigger does the same through Aria (ADR 0064).

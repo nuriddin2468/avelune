@@ -44,6 +44,7 @@ export class AveMenubar<V> {
     constructor();
     protected chosen(value: V | undefined): void;
     protected readonly closing: _angular_core.WritableSignal<readonly boolean[]>;
+    protected dismiss(event: Event): void;
     protected isSeparator(entry: AveMenuEntry<V>): entry is AveMenuSeparator;
     readonly itemSelected: _angular_core.OutputEmitterRef<V>;
     readonly label: _angular_core.InputSignal<string>;

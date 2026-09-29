@@ -81,6 +81,7 @@ let nextMenubar = 0;
     </div>
   `,
   styleUrls: ['./panel.css', './menubar.css'],
+  host: { '(keydown.escape)': 'dismiss($event)' },
 })
 export class AveMenubar<V> {
   /** Names the bar for assistive technology: what its menus act on ("Шаблон договора"). */
@@ -134,6 +135,19 @@ export class AveMenubar<V> {
   /** Whether an entry is a separator. */
   protected isSeparator(entry: AveMenuEntry<V>): entry is AveMenuSeparator {
     return 'separator' in entry;
+  }
+
+  /**
+   * Escape on a top item whose menu is open closes the menu, focus staying on the item. Aria's menubar closes a menu on
+   * Escape only from inside it, and a menu opened by a click keeps focus on its item (ADR 0076, addendum). With no menu
+   * open, Escape goes on, to a dialog around the bar.
+   */
+  protected dismiss(event: Event): void {
+    const top = this.tops().find((item) => item.element === event.target);
+    if (top?.expanded() !== true) return;
+    event.preventDefault();
+    event.stopPropagation();
+    top.close();
   }
 
   /** Aria's menubar emits the chosen item's value, of any of its menus, or `undefined` for none. */
