@@ -101,6 +101,16 @@ function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
   return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
 }
 
+/**
+ * A banner is one row of the small control height, 40px, while its message is one line, and a line of body text
+ * (20px) taller for each line more: its message's rows (32px, then 20px each) plus 8px, at any width.
+ */
+async function expectRows(banner: Element): Promise<void> {
+  const message = banner.querySelector('.message')?.getBoundingClientRect().height ?? 0;
+  const lines = Math.round((message - 12) / 20);
+  await expect(banner.getBoundingClientRect().height).toBe(40 + 20 * (lines - 1));
+}
+
 const meta: Meta<BannerStories> = {
   title: 'Components/Banner',
   component: BannerStories,
@@ -119,18 +129,16 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const banner = within(canvasElement).getByRole('alert');
     await expect(within(banner).getByRole('button', { name: 'Закрыть' })).toBeVisible();
-    await expect(banner.getBoundingClientRect().height).toBe(40);
+    await expectRows(banner);
   },
 };
 
-/** Four variants, and one that may be closed: each 40px tall. */
+/** Four variants, and one that may be closed: each 40px tall on one line. */
 export const Variants: Story = {
   tags: ['forced-colors'],
   render: frame('variants'),
   play: async ({ canvasElement }) => {
-    for (const banner of canvasElement.querySelectorAll('ave-banner')) {
-      await expect(banner.getBoundingClientRect().height).toBe(40);
-    }
+    for (const banner of canvasElement.querySelectorAll('ave-banner')) await expectRows(banner);
   },
 };
 

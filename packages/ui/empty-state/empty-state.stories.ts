@@ -140,8 +140,14 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByText('Договоров пока нет')).toBeVisible();
-    const [upload, create] = canvas.getAllByRole('button');
-    await expect(upload?.getBoundingClientRect().top).toBe(create?.getBoundingClientRect().top);
+    const [upload, create] = canvas.getAllByRole('button').map((button) => button.getBoundingClientRect());
+    const row = canvasElement.querySelector('[aveEmptyStateActions]')?.getBoundingClientRect();
+    // One row while both fit, 8px apart; on a narrow screen the row wraps, 8px under.
+    if ((upload?.width ?? 0) + 8 + (create?.width ?? 0) <= (row?.width ?? 0)) {
+      await expect(upload?.top).toBe(create?.top);
+    } else {
+      await expect(create?.top).toBe((upload?.bottom ?? 0) + 8);
+    }
   },
 };
 

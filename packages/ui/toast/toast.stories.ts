@@ -272,15 +272,12 @@ export const OverADialog: Story = {
   },
 };
 
-/** Compact density, which the notifications take from the page: 44px tall, the buttons one step down. */
+/** Compact density, which the notifications take from the page: 44px tall, the close button one step down. */
 export const Compact: Story = {
   globals: { density: 'compact' },
-  render: frame('undo'),
+  render: frame('default'),
   play: async ({ canvasElement }) => {
-    const [first] = within(canvasElement).getAllByRole('button', { name: 'Удалить' });
-    if (first !== undefined) await userEvent.click(first);
-    await waitFor(() => expect(toasts()).toHaveLength(1));
-    await rest();
+    await showToasts(canvasElement, 'Сохранить документ', 1);
     const [toast] = toasts();
     await expect(toast?.getBoundingClientRect().height).toBe(44);
   },

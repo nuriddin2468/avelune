@@ -176,12 +176,14 @@ export const Loading: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const region = canvas.getByRole('region', { name: 'Договоры на согласовании' });
-    await waitFor(() => expect(region).not.toHaveAttribute('aria-busy'));
+    // The pretend server answers after 600ms; emulated amd64 in the visual suite may need longer.
+    await waitFor(() => expect(region).not.toHaveAttribute('aria-busy'), { timeout: 3000 });
     await expect(canvas.getAllByRole('listitem')).toHaveLength(3);
     await userEvent.click(canvas.getByRole('button', { name: 'Обновить список' }));
-    await expect(region).toHaveAttribute('aria-busy', 'true');
-    await expect(canvasElement.querySelectorAll('[data-placeholder]')).toHaveLength(3);
-    await waitFor(() => expect(canvas.getByText('Поставка серверного оборудования')).toBeVisible());
+    // The list renders its placeholders on the next change detection.
+    await waitFor(() => expect(region).toHaveAttribute('aria-busy', 'true'));
+    await waitFor(() => expect(canvasElement.querySelectorAll('[data-placeholder]')).toHaveLength(3));
+    await waitFor(() => expect(canvas.getByText('Поставка серверного оборудования')).toBeVisible(), { timeout: 3000 });
     (document.activeElement as HTMLElement | null)?.blur();
   },
 };

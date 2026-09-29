@@ -16,12 +16,11 @@
     gap: var(--ave-space-1);
   }
 
-  /* Room on every side for each side's tooltip. */
+  /* Room on every side for each side's tooltip, down to a 390px screen: one centred column. */
   .sides {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--ave-space-16);
-    padding-inline: var(--ave-space-16);
+    display: grid;
+    gap: var(--ave-space-12);
+    justify-items: center;
   }
 
   /* An element at the very top of the page, with no room above it. */

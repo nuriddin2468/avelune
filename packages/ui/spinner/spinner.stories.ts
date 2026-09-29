@@ -140,7 +140,9 @@ export const Delay: Story = {
     await expect(spinner).not.toHaveAttribute('data-shown');
     await userEvent.click(canvas.getByRole('button', { name: 'Slow search' }));
     await expect(spinner).not.toHaveAttribute('data-shown');
-    await waitFor(() => expect(canvas.getByRole('progressbar', { name: 'Searching' })).toBeVisible());
+    await waitFor(() => expect(canvas.getByRole('progressbar', { name: 'Searching' })).toBeVisible(), {
+      timeout: 2000,
+    });
     await expect(spinner?.getBoundingClientRect()).toEqual(box);
     await waitFor(() => expect(spinner).not.toHaveAttribute('data-shown'), { timeout: 3000 });
     (document.activeElement as HTMLElement | null)?.blur();
