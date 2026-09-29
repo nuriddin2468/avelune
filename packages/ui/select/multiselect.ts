@@ -1,6 +1,9 @@
 import {
   Component,
+  DestroyRef,
   ElementRef,
+  Renderer2,
+  RendererStyleFlags2,
   afterRenderEffect,
   booleanAttribute,
   computed,
@@ -8,7 +11,6 @@ import {
   effect,
   inject,
   input,
-  linkedSignal,
   model,
   output,
   signal,
@@ -16,7 +18,7 @@ import {
 } from '@angular/core';
 import { Combobox, ComboboxPopup, ComboboxWidget } from '@angular/aria/combobox';
 import { Listbox, Option } from '@angular/aria/listbox';
-import { OverlayModule } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, OverlayModule } from '@angular/cdk/overlay';
 import { NgControl, type ControlValueAccessor } from '@angular/forms';
 import { FORM_FIELD } from '@angular/forms/signals';
 import { lucideCheck, lucideChevronDown, lucideCircleAlert, lucideLoaderCircle, lucideX } from '@avelune/icons/lucide';
@@ -25,6 +27,7 @@ import { AVE_CONTROL_OWNER, AveClearButton, AveControlTarget, injectControlState
 import { injectAveMessages } from '@avelune/ui/i18n';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
 import { aveConnectedOverlay, aveOverlayPresence } from '@avelune/ui/overlay';
+import { AVE_TAG_FIELD, AveTag } from '@avelune/ui/tag';
 import { pruned } from './choice';
 import { matches } from './match';
 import { AveOptionContent, describedBy, optionIds } from './option-content';
@@ -57,6 +60,7 @@ import type { AveOption, AveSelectSize } from './types';
     Combobox,
     ComboboxPopup,
     ComboboxWidget,
+    AveTag,
     Listbox,
     Option,
     OverlayModule,
@@ -64,62 +68,90 @@ import type { AveOption, AveSelectSize } from './types';
   providers: [
     provideAveIcons([lucideCheck, lucideChevronDown, lucideCircleAlert, lucideLoaderCircle, lucideX]),
     { provide: AVE_CONTROL_OWNER, useExisting: AveMultiselect },
+    { provide: AVE_TAG_FIELD, useValue: true },
   ],
   host: {
     '[attr.data-size]': 'size()',
+    '[attr.data-chips]': 'chosen().length > 0 ? "" : null',
+    '[attr.data-disabled]': 'isDisabled() ? "" : null',
   },
   template: `
-    @if (search() === 'none') {
-      <button
-        class="trigger"
-        type="button"
-        aveControlTarget
-        ngCombobox
-        [disabled]="isDisabled()"
-        [softDisabled]="false"
-        [preserveContent]="true"
-        [readonly]="readonly()"
-        [attr.aria-label]="label() || null"
-        [attr.data-empty]="chosen().length === 0 ? '' : null"
-        [attr.data-clear]="clearable() ? '' : null"
-        [(expanded)]="expanded"
-        (focusout)="left($event)"
-        (keydown.delete)="clearByKey($event)"
-        (keydown.backspace)="clearByKey($event)"
-      >
-        <span class="value">{{ text() }}</span>
-        <ave-icon class="chevron" name="chevron-down" decorative />
-      </button>
-    } @else {
-      <!-- A searchable multiselect (ADR 0057): the chosen labels until people type, then the search. -->
-      <input
-        class="trigger"
-        type="text"
-        autocomplete="off"
-        aveControlTarget
-        ngCombobox
-        [disabled]="isDisabled()"
-        [softDisabled]="false"
-        [preserveContent]="true"
-        [readonly]="readonly()"
-        [attr.aria-label]="label() || null"
-        [attr.placeholder]="placeholder() || null"
-        [attr.data-empty]="chosen().length === 0 ? '' : null"
-        [attr.data-clear]="clearable() ? '' : null"
-        [(value)]="searchText"
-        [(expanded)]="expanded"
-        (focus)="selectText($event)"
-        (click)="selectText($event)"
-        (focusout)="left($event)"
-        (input)="typed()"
-        (keydown.enter)="enter()"
-      />
-    }
-    @if (clearable()) {
-      <button aveClearButton type="button" class="clear" [label]="label()" (click)="clear()">
-        <ave-icon name="x" decorative />
-      </button>
-    }
+    <!-- The field: the trigger, and while there are chosen values their tags, whose rows set its height (ADR 0081). -->
+    <div class="box">
+      @if (search() === 'none') {
+        <button
+          class="trigger"
+          type="button"
+          aveControlTarget
+          ngCombobox
+          [disabled]="isDisabled()"
+          [softDisabled]="false"
+          [preserveContent]="true"
+          [readonly]="readonly()"
+          [attr.aria-label]="label() || null"
+          [attr.data-empty]="chosen().length === 0 ? '' : null"
+          [attr.data-clear]="clearable() ? '' : null"
+          [(expanded)]="expanded"
+          (focusout)="left($event)"
+          (keydown.delete)="clearByKey($event)"
+          (keydown.backspace)="clearByKey($event)"
+        >
+          <!-- The combobox's value: the chosen labels, out of sight while the tags show them (ADR 0081). -->
+          <span class="value" [class.cdk-visually-hidden]="chosen().length > 0">{{ text() }}</span>
+          <ave-icon class="chevron" name="chevron-down" decorative />
+        </button>
+      } @else {
+        <!-- A searchable multiselect (ADR 0057, 0081): the search only, after the last tag. -->
+        <input
+          class="trigger"
+          type="text"
+          autocomplete="off"
+          aveControlTarget
+          ngCombobox
+          [disabled]="isDisabled()"
+          [softDisabled]="false"
+          [preserveContent]="true"
+          [readonly]="readonly()"
+          [attr.aria-label]="label() || null"
+          [attr.placeholder]="(chosen().length === 0 && placeholder()) || null"
+          [attr.data-empty]="chosen().length === 0 ? '' : null"
+          [attr.data-clear]="clearable() ? '' : null"
+          [(value)]="searchText"
+          [(expanded)]="expanded"
+          (focusout)="left($event)"
+          (input)="typed()"
+          (keydown.enter)="enter()"
+        />
+      }
+      @if (chosen().length > 0) {
+        <!-- The chosen values as tags over the trigger, in rows that wrap (ADR 0081); a press on a tag's words reaches the
+           trigger under it, its remove button unchecks it. -->
+        <ul
+          class="chips"
+          [attr.data-clear]="clearable() ? '' : null"
+          [attr.aria-disabled]="isDisabled() ? 'true' : null"
+        >
+          @for (option of chosen(); track option) {
+            <li>
+              <ave-tag size="sm" [removable]="changeable()" (remove)="uncheck(option.value)">{{
+                option.label
+              }}</ave-tag>
+            </li>
+          }
+          @if (search() !== 'none') {
+            <li #room class="room" aria-hidden="true"></li>
+          }
+        </ul>
+        @if (search() !== 'none') {
+          <span hidden [id]="chosenId">{{ messages.chosenValues(summary()) }}</span>
+        }
+      }
+      @if (clearable()) {
+        <button aveClearButton type="button" class="clear" [label]="label()" (click)="clear()">
+          <ave-icon name="x" decorative />
+        </button>
+      }
+    </div>
     <!-- The popup outside the overlay, so the combobox knows its popup (aria-haspopup, aria-autocomplete) before it
          first opens; the overlay renders once the list is first shown and stays, closed, after (preserveContent). -->
     <ng-template ngComboboxPopup [combobox]="trigger()">
@@ -184,7 +216,7 @@ import type { AveOption, AveSelectSize } from './types';
       </ng-template>
     </ng-template>
   `,
-  styleUrls: ['./select.css', './list.css'],
+  styleUrls: ['./select.css', './list.css', './chips.css'],
 })
 export class AveMultiselect<V> implements ControlValueAccessor {
   /** The options, in the order they are shown. */
@@ -268,7 +300,7 @@ export class AveMultiselect<V> implements ControlValueAccessor {
   private readonly remembered = signal<readonly AveOption<V>[]>([]);
 
   /** The chosen labels, comma-separated. */
-  private readonly summary = computed(() =>
+  protected readonly summary = computed(() =>
     this.chosen()
       .map((option) => option.label)
       .join(', '),
@@ -278,26 +310,25 @@ export class AveMultiselect<V> implements ControlValueAccessor {
   protected readonly text = computed(() => this.summary() || this.placeholder());
 
   /**
-   * What the searchable input says (ADR 0057): the chosen labels, or what the person types. It follows the chosen
-   * labels while the text is not being edited; a search stays while options are checked.
+   * What the searchable input holds (ADR 0081): only what the person types, which stays while options are checked;
+   * the tags say what is chosen.
    */
-  protected readonly searchText = linkedSignal<string, string>({
-    source: this.summary,
-    computation: (summary, previous) =>
-      previous === undefined || previous.value === previous.source ? summary : previous.value,
-  });
+  protected readonly searchText = signal('');
 
-  /** The options the list shows: every one, or the matches of a local search while the text is a search. */
+  /** The options the list shows: every one, or the matches of a local search. */
   protected readonly shown = computed(() => {
     const options = this.options();
-    if (this.search() !== 'local') return options;
     const text = this.searchText();
-    return text === this.summary() ? options : options.filter((option) => matches(option.label, text));
+    if (this.search() !== 'local' || text === '') return options;
+    return options.filter((option) => matches(option.label, text));
   });
 
   protected readonly messages = injectAveMessages();
 
   protected readonly isDisabled = computed(() => this.disabled() || this.state.disabled() || this.disabledByForm());
+
+  /** Whether the chosen options can be changed: their tags have remove buttons. */
+  protected readonly changeable = computed(() => !this.isDisabled() && !this.readonly());
 
   /** Whether the clear button shows: chosen options that can be changed and may be taken away (ADR 0052). */
   protected readonly clearable = computed(
@@ -307,9 +338,23 @@ export class AveMultiselect<V> implements ControlValueAccessor {
   /** @internal The field around the control dims its label while the control is disabled, by input or by form. */
   readonly controlDisabled = this.isDisabled;
 
+  /** The id of the words that describe a searchable input with what is chosen (ADR 0081). */
+  protected readonly chosenId = `${this.optionIds}-chosen`;
+
+  /** @internal A searchable input is described by what is chosen, which its tags show and its value does not. */
+  readonly controlDescriptions = computed(() =>
+    this.search() !== 'none' && this.chosen().length > 0 ? [this.chosenId] : [],
+  );
+
   protected readonly trigger = viewChild.required<Combobox>(Combobox);
   private readonly list = viewChild<Listbox<V>>('listbox');
   private readonly popup = viewChild<ElementRef<HTMLElement>>('popup');
+  /** The list's overlay, which follows the field as its rows of tags grow or shrink. */
+  private readonly connected = viewChild(CdkConnectedOverlay);
+  /** The room after the last tag where the search is typed (ADR 0081). */
+  private readonly room = viewChild<ElementRef<HTMLElement>>('room');
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private readonly renderer = inject(Renderer2);
 
   /** The overlay stays open while the list plays its exit (ADR 0046). */
   protected readonly presence = aveOverlayPresence(
@@ -322,8 +367,7 @@ export class AveMultiselect<V> implements ControlValueAccessor {
   /** The server's side of the list (ADR 0056). */
   private readonly remote = remoteList({
     search: this.search,
-    // The chosen labels are not a search: the list asks for everything.
-    text: computed(() => (this.searchText() === this.summary() ? '' : this.searchText())),
+    text: this.searchText,
     expanded: this.expanded,
     loading: this.loading,
     error: this.error,
@@ -352,18 +396,43 @@ export class AveMultiselect<V> implements ControlValueAccessor {
     afterRenderEffect(() => {
       this.list()?.scrollActiveItemIntoView({ block: 'nearest' });
     });
-    // The list closed: a search gives way to the chosen labels again.
+    // The list closed: the search is over.
     effect(() => {
-      if (!this.expanded()) this.searchText.set(this.summary());
+      if (!this.expanded()) this.searchText.set('');
+    });
+    // The search is typed in the room after the last tag, wherever the tags wrap to; an open list stays under the
+    // field as it grows or shrinks by a row.
+    afterRenderEffect(() => {
+      this.chosen();
+      this.placeSearch();
+    });
+    const resized = new ResizeObserver(() => {
+      this.placeSearch();
+      if (this.presence.open()) this.connected()?.overlayRef.updatePosition();
+    });
+    resized.observe(this.host);
+    inject(DestroyRef).onDestroy(() => {
+      resized.disconnect();
     });
   }
 
   /**
-   * Focus or a click came to the searchable input while it says the chosen labels: they are selected, so typing starts
-   * a search rather than editing them.
+   * Puts a searchable input's text in the room after the last tag (ADR 0081): its padding starts where the room
+   * starts, and its line is the room's.
    */
-  protected selectText(event: Event): void {
-    if (event.target instanceof HTMLInputElement && this.searchText() === this.summary()) event.target.select();
+  private placeSearch(): void {
+    const room = this.room()?.nativeElement;
+    if (room === undefined) return;
+    const host = this.host.getBoundingClientRect();
+    const box = room.getBoundingClientRect();
+    const border = Number.parseFloat(getComputedStyle(this.host.querySelector('.trigger') ?? this.host).borderTopWidth);
+    const start = getComputedStyle(this.host).direction === 'rtl' ? host.right - box.right : box.left - host.left;
+    const place = (name: string, value: number) => {
+      this.renderer.setStyle(this.host, name, `${String(value)}px`, RendererStyleFlags2.DashCase);
+    };
+    place('--ave-multiselect-search-start', start - border);
+    place('--ave-multiselect-search-top', box.top - host.top - border);
+    place('--ave-multiselect-search-bottom', host.bottom - box.bottom - border);
   }
 
   /** The person typed: a server's list searches once typing pauses. */
@@ -409,6 +478,14 @@ export class AveMultiselect<V> implements ControlValueAccessor {
     this.changed(next);
   }
 
+  /** A tag's remove button: its option is unchecked, and focus goes to the trigger (ADR 0081). */
+  protected uncheck(value: V): void {
+    const next = this.value().filter((chosen) => !Object.is(chosen, value));
+    this.value.set(next);
+    this.changed(next);
+    this.trigger().element.focus();
+  }
+
   /** The clear button, or Delete: every option is unchecked, the list closes, focus stays on the trigger (ADR 0052). */
   protected clear(): void {
     this.value.set([]);
@@ -427,8 +504,8 @@ export class AveMultiselect<V> implements ControlValueAccessor {
   /** Focus left the multiselect, not into its own list. */
   protected left(event: FocusEvent): void {
     const next = event.relatedTarget;
-    if (next instanceof Node && this.trigger().element.parentElement?.contains(next) === true) return;
-    this.searchText.set(this.summary());
+    if (next instanceof Node && this.host.contains(next)) return;
+    this.searchText.set('');
     this.touch.emit();
     this.touched();
   }

@@ -167,7 +167,8 @@ test('controls of the same size share height, radius, border, font size and padd
                 control: owner === null ? `${control.localName}[${kind}] "${text}"` : `${kind} "${text}"`,
                 size: (owner ?? control).getAttribute('data-size') ?? '',
                 square: kind === 'aveIconButton',
-                multiline: kind === 'aveTextarea',
+                // A textarea's rows set its height (ADR 0043), and so do a multiselect's rows of tags (ADR 0081).
+                multiline: kind === 'aveTextarea' || owner?.hasAttribute('data-chips') === true,
                 height: control.getBoundingClientRect().height,
                 radius: style.borderTopLeftRadius,
                 border: style.borderTopWidth,

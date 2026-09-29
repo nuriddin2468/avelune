@@ -6,9 +6,15 @@
 
 import * as _angular_core from '@angular/core';
 import * as _avelune_ui_i18n from '@avelune/ui/i18n';
+import { InjectionToken } from '@angular/core';
+
+// @alpha
+export const AVE_TAG_FIELD: InjectionToken<true>;
 
 // @alpha
 export class AveTag {
+    protected readonly inField: boolean;
+    protected keepFocus(event: MouseEvent): void;
     // (undocumented)
     protected readonly messages: _avelune_ui_i18n.AveMessages;
     // (undocumented)

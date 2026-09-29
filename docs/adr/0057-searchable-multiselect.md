@@ -1,6 +1,6 @@
 # 0057. A multiselect that searches: an input as its trigger over the same multi-select listbox
 
-- Status: Accepted (2026-09-25, technical decision within Wave 2)
+- Status: Accepted (2026-09-25, technical decision within Wave 2); decision 2 superseded by 0081 (the chosen values as tags, the input holds only the search)
 - Date: 2026-09-25
 - Related: 0046, 0052, 0055, 0056; brief §9.1; ROADMAP.md "Wave 2 additions", item 6
 

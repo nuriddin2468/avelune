@@ -1,0 +1,114 @@
+@layer components {
+  /* The multiselect's chosen values as tags (ADR 0081). While there are tags, the trigger covers the field: it keeps
+     its box, its ring and its states, and the tags lie over it in rows 4px apart, as far from the field's edge as a
+     small tag is from its top on one row. The field grows by a row of tags; the chevron and the clear button stay at
+     the first row's end, and the tags stop before them. Here: the field's height and inline padding for its size, and
+     where the search starts, which the component measures. */
+  :host {
+    --ave-chips-height: var(--ave-control-height-md);
+    --ave-chips-padding: var(--ave-control-padding-inline-md);
+    --ave-multiselect-search-start: var(--ave-chips-padding);
+    --ave-multiselect-search-top: 0;
+    --ave-multiselect-search-bottom: 0;
+  }
+
+  :host([data-size='sm']) {
+    --ave-chips-height: var(--ave-control-height-sm);
+    --ave-chips-padding: var(--ave-control-padding-inline-sm);
+  }
+
+  :host([data-size='lg']) {
+    --ave-chips-height: var(--ave-control-height-lg);
+    --ave-chips-padding: var(--ave-control-padding-inline-lg);
+  }
+
+  /* The field's own box, which the host may be stretched past in a grid or a flex row; the trigger covers it. */
+  .box {
+    position: relative;
+  }
+
+  /* A button and an input size themselves like replaced elements: the field's size is given, not stretched to. */
+  :host([data-chips]) .trigger {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  /* The button: its chevron at the end of the first row; its words, the combobox's value, are out of sight. */
+  :host([data-chips]) button.trigger {
+    align-items: flex-start;
+    padding-block-start: calc(
+      (var(--ave-chips-height) - var(--ave-size-icon-sm)) / 2 - var(--ave-border-width-default)
+    );
+  }
+
+  :host([data-chips]) .chevron {
+    margin-inline-start: auto;
+  }
+
+  /* The search: typed in the room after the last tag, which the component measures. */
+  :host([data-chips]) input.trigger {
+    padding-block: var(--ave-multiselect-search-top) var(--ave-multiselect-search-bottom);
+    padding-inline-start: var(--ave-multiselect-search-start);
+  }
+
+  .chips {
+    --ave-chips-inset: calc((var(--ave-chips-height) - var(--ave-size-target-min)) / 2);
+
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ave-space-1);
+    min-block-size: var(--ave-chips-height);
+    margin: 0;
+    padding-block: var(--ave-chips-inset);
+    padding-inline: var(--ave-chips-inset)
+      calc(var(--ave-border-width-default) + var(--ave-chips-padding) + var(--ave-size-icon-sm) + var(--ave-space-2));
+    list-style: none;
+    pointer-events: none;
+
+    &[data-clear] {
+      padding-inline-end: calc(
+        var(--ave-border-width-default) + var(--ave-chips-padding) + var(--ave-size-icon-sm) + var(--ave-chips-height) -
+          var(--ave-space-1)
+      );
+    }
+  }
+
+  /* A searchable one has no chevron: the tags stop where its text would, before the clear button when it has one. */
+  input.trigger ~ .chips {
+    padding-inline-end: var(--ave-chips-inset);
+
+    &[data-clear] {
+      padding-inline-end: var(--ave-chips-height);
+    }
+  }
+
+  .chips > li {
+    display: flex;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+
+  /* The room for the search on the last row, or a row of its own under 96px. */
+  .room {
+    flex: 1 0 calc(var(--ave-space-16) + var(--ave-space-8));
+    block-size: var(--ave-size-target-min);
+  }
+
+  /* A disabled multiselect's tags dim with it. */
+  :host([data-disabled]) .chips ave-tag {
+    border-color: var(--ave-color-border-subtle);
+    background-color: transparent;
+    color: var(--ave-color-fg-disabled);
+  }
+
+  @media (forced-colors: active) {
+    :host([data-disabled]) .chips ave-tag {
+      border-color: GrayText;
+      color: GrayText;
+    }
+  }
+}

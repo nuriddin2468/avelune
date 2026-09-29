@@ -41,6 +41,7 @@ export interface AveMessages {
     readonly chooseFiles: string;
     readonly chooseMonth: string;
     readonly chooseYear: string;
+    readonly chosenValues: (labels: string) => string;
     readonly clear: string;
     readonly close: string;
     readonly dropFile: string;

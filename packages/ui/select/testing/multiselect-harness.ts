@@ -1,4 +1,5 @@
 import { HarnessPredicate, TestKey } from '@angular/cdk/testing';
+import { AveTagHarness } from '@avelune/ui/tag/testing';
 import { optionName } from './option-name';
 import { AveSelectHarness, type AveSelectHarnessFilters } from './select-harness';
 
@@ -21,10 +22,28 @@ export class AveMultiselectHarness extends AveSelectHarness {
     );
   }
 
-  /** Gets what the trigger says: the chosen labels or the placeholder; a searchable one's input, what it holds. */
+  private readonly chips = this.locatorForAll(AveTagHarness);
+
+  /**
+   * Gets what the trigger says: the chosen labels or the placeholder (out of sight while tags show the labels); a
+   * searchable one's input, the search it holds.
+   */
   override async getText(): Promise<string> {
     const input = await this.input();
     return input === null ? super.getText() : input.getProperty<string>('value');
+  }
+
+  /** Gets the words of the tags that show the chosen values, in order (ADR 0081). */
+  async getChips(): Promise<string[]> {
+    return Promise.all((await this.chips()).map((chip) => chip.getText()));
+  }
+
+  /** Unchecks a chosen value with its tag's remove button, as a click does; throws when no tag has these words. */
+  async removeChip(label: string | RegExp): Promise<void> {
+    for (const chip of await this.chips()) {
+      if (await HarnessPredicate.stringMatches(chip.getText(), label)) return chip.remove();
+    }
+    throw new Error(`AveMultiselectHarness: no tag matches ${String(label)}.`);
   }
 
   /** Whether the trigger is an input that searches the options (ADR 0057). */

@@ -1,6 +1,7 @@
 // The same-size controls invariant of brief §8.2: Button, IconButton, Input (and later Select, Combobox, DatePicker)
 // of one size have the same height, radius, border width and font size, and the ones with a text label the same
-// horizontal padding. A Textarea shares all of it but the height, which its rows set (ADR 0043). The browser measures
+// horizontal padding. A Textarea shares all of it but the height, which its rows set (ADR 0043), as does a Multiselect
+// with its chosen values as tags (ADR 0081). The browser measures
 // each control; this module compares them.
 
 /** The kit's controls that carry a size. */
@@ -27,7 +28,7 @@ export interface ControlBox {
   readonly size: string;
   /** An icon button: a square, whose padding is not compared. */
   readonly square: boolean;
-  /** A textarea: as tall as its rows, so its height is not compared. */
+  /** A textarea, or a multiselect that shows tags: as tall as its rows, so its height is not compared. */
   readonly multiline: boolean;
   readonly height: number;
   readonly radius: string;

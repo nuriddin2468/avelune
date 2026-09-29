@@ -64,6 +64,11 @@
     }
   }
 
+  /* Inside a field (ADR 0081), whose tags let presses through to its trigger, the remove button still takes them. */
+  :host([data-in-field]) .remove {
+    pointer-events: auto;
+  }
+
   :host([data-size='sm']) .remove {
     --ave-tag-remove: var(--ave-size-icon-md);
   }

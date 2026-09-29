@@ -2,6 +2,7 @@ import {
   Component,
   ElementRef,
   EnvironmentInjector,
+  InjectionToken,
   afterNextRender,
   booleanAttribute,
   inject,
@@ -15,6 +16,14 @@ import type { AveTagSize } from './types';
 
 /** Unique ids for the words of tags, which name their remove buttons. */
 let nextTag = 0;
+
+/**
+ * Provided by a field that draws tags inside it, as the multiselect does its chosen values (ADR 0081): the tags'
+ * remove buttons are not Tab stops, a press on one leaves focus where it is, and the field decides where it goes.
+ *
+ * @alpha
+ */
+export const AVE_TAG_FIELD = new InjectionToken<true>('AVE_TAG_FIELD');
 
 /**
  * The kit's tag (brief §9.4, ADR 0080): a value in an outlined rectangle, such as a region chosen for a filter or a
@@ -37,6 +46,7 @@ let nextTag = 0;
   host: {
     '[attr.data-size]': 'size()',
     '[attr.data-removable]': 'removable() ? "" : null',
+    '[attr.data-in-field]': 'inField ? "" : null',
   },
   template: `
     <span class="words" [id]="wordsId"><ng-content /></span>
@@ -45,7 +55,9 @@ let nextTag = 0;
         type="button"
         class="remove"
         data-focus-ring="inset"
+        [attr.tabindex]="inField ? -1 : null"
         [attr.aria-labelledby]="nameId + ' ' + wordsId"
+        (mousedown)="keepFocus($event)"
         (click)="press()"
       >
         <span hidden [id]="nameId">{{ messages.remove }}</span>
@@ -69,11 +81,18 @@ export class AveTag {
   protected readonly wordsId = `ave-tag-${String(nextTag)}`;
   protected readonly nameId = `ave-tag-${String(nextTag++)}-remove`;
 
+  /** Whether a field draws the tag inside it (ADR 0081). */
+  protected readonly inField = inject(AVE_TAG_FIELD, { optional: true }) === true;
+
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   /** Outlives the tag, so the focus can move once the tag has gone. */
   private readonly environment = inject(EnvironmentInjector);
 
   protected press(): void {
+    if (this.inField) {
+      this.remove.emit();
+      return;
+    }
     const neighbour = this.neighbour();
     this.remove.emit();
     afterNextRender(
@@ -84,6 +103,11 @@ export class AveTag {
       },
       { injector: this.environment },
     );
+  }
+
+  /** Inside a field, a press on the remove button leaves focus where it is: on the field's trigger. */
+  protected keepFocus(event: MouseEvent): void {
+    if (this.inField) event.preventDefault();
   }
 
   /** The remove button of the tag after this one among its siblings, or of the one before. */

@@ -76,12 +76,16 @@ export class AveCombobox<V> implements ControlValueAccessor {
 // @alpha
 export class AveMultiselect<V> implements ControlValueAccessor {
     constructor();
+    protected readonly changeable: _angular_core.Signal<boolean>;
     protected choose(values: V[]): void;
     protected readonly chosen: _angular_core.Signal<AveOption<V>[]>;
+    protected readonly chosenId: string;
     readonly chosenOptions: _angular_core.InputSignal<readonly AveOption<V>[]>;
     protected clear(): void;
     protected readonly clearable: _angular_core.Signal<boolean>;
     protected clearByKey(event: Event): void;
+    // @internal
+    readonly controlDescriptions: _angular_core.Signal<string[]>;
     // @internal
     readonly controlDisabled: _angular_core.Signal<boolean>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -116,18 +120,19 @@ export class AveMultiselect<V> implements ControlValueAccessor {
     protected scrolled(): void;
     readonly search: _angular_core.InputSignal<AveSearchMode | "none">;
     protected readonly searchText: _angular_core.WritableSignal<string>;
-    protected selectText(event: Event): void;
     // @internal (undocumented)
     setDisabledState(disabled: boolean): void;
     protected readonly shown: _angular_core.Signal<readonly AveOption<V>[]>;
     readonly size: _angular_core.InputSignal<AveSelectSize>;
     protected readonly spinner: _angular_core.Signal<boolean>;
     readonly state: _avelune_ui_forms.AveControlState;
+    protected readonly summary: _angular_core.Signal<string>;
     protected readonly text: _angular_core.Signal<string>;
     readonly touch: _angular_core.OutputEmitterRef<void>;
     // (undocumented)
     protected readonly trigger: _angular_core.Signal<Combobox>;
     protected typed(): void;
+    protected uncheck(value: V): void;
     readonly value: _angular_core.ModelSignal<V[]>;
     // @internal (undocumented)
     writeValue(value: unknown): void;

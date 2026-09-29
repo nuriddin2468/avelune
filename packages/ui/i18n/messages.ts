@@ -95,6 +95,8 @@ export interface AveMessages {
   readonly close: string;
   /** The button of a tag that takes its value away; screen readers hear the tag's words after it. */
   readonly remove: string;
+  /** Describes a searchable multiselect's input with the labels of what is chosen, which its tags show (ADR 0081). */
+  readonly chosenValues: (labels: string) => string;
   /** Names the icon of a message that informs: an alert, a banner or a notification. */
   readonly alertInfo: string;
   /** Names the icon of a message that confirms a success. */
@@ -179,6 +181,7 @@ export const aveMessagesEn: AveMessages = {
   clear: 'Clear',
   close: 'Close',
   remove: 'Remove',
+  chosenValues: (labels) => `Chosen: ${labels}`,
   alertInfo: 'Information',
   alertSuccess: 'Success',
   alertWarning: 'Warning',
@@ -249,6 +252,7 @@ export const aveMessagesRu: AveMessages = {
   clear: 'Очистить',
   close: 'Закрыть',
   remove: 'Убрать',
+  chosenValues: (labels) => `Выбрано: ${labels}`,
   alertInfo: 'Информация',
   alertSuccess: 'Успешно',
   alertWarning: 'Предупреждение',
@@ -317,6 +321,7 @@ export const aveMessagesUzLatn: AveMessages = {
   clear: 'Tozalash',
   close: 'Yopish',
   remove: 'Olib tashlash',
+  chosenValues: (labels) => `Tanlangan: ${labels}`,
   alertInfo: 'Maʼlumot',
   alertSuccess: 'Muvaffaqiyatli',
   alertWarning: 'Ogohlantirish',
@@ -385,6 +390,7 @@ export const aveMessagesUzCyrl: AveMessages = {
   clear: 'Тозалаш',
   close: 'Ёпиш',
   remove: 'Олиб ташлаш',
+  chosenValues: (labels) => `Танланган: ${labels}`,
   alertInfo: 'Маълумот',
   alertSuccess: 'Муваффақиятли',
   alertWarning: 'Огоҳлантириш',

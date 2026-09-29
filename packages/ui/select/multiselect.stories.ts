@@ -235,8 +235,12 @@ export const States: Story = {
     '<ave-multiselect [options]="approvers" disabled />',
   ),
   play: async ({ canvasElement }) => {
-    for (const trigger of canvasElement.querySelectorAll('.trigger'))
-      await expect(trigger.getBoundingClientRect().height).toBe(36);
+    // One row without tags; with them, rows of tags on the 4px grid (ADR 0081).
+    for (const trigger of canvasElement.querySelectorAll('.trigger')) {
+      const height = trigger.getBoundingClientRect().height;
+      if (trigger.closest('[data-chips]') === null) await expect(height).toBe(36);
+      else await expect(height % 4).toBe(0);
+    }
   },
 };
 
@@ -261,16 +265,49 @@ export const Forms: Story = {
   },
 };
 
-/** Every option chosen: the trigger truncates on one line and keeps its height. */
+/** Every option chosen: the tags wrap in rows and the field grows by a row; nothing is cut (ADR 0081). */
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
   parameters: source('<ave-multiselect [options]="approvers" />'),
   play: async ({ canvasElement }) => {
-    const trigger = canvasElement.querySelector('.trigger');
-    await expect(trigger?.getBoundingClientRect().height).toBe(36);
-    const value = canvasElement.querySelector('.value');
-    await expect((value?.scrollWidth ?? 0) > (value?.clientWidth ?? 0)).toBe(true);
+    const host = canvasElement.querySelector('ave-multiselect');
+    const height = host?.getBoundingClientRect().height ?? 0;
+    await expect(height).toBeGreaterThan(36);
+    // Rows of tags 4px apart, 6px from the field's edges, on the 4px grid; a long name wraps inside its tag.
+    await expect(height % 4).toBe(0);
+    for (const tag of host?.querySelectorAll('ave-tag') ?? []) {
+      await expect(tag.scrollWidth).toBeLessThanOrEqual(tag.clientWidth);
+    }
+    await expect(canvasElement.querySelector('.trigger')?.getBoundingClientRect().height).toBe(height);
+  },
+};
+
+/**
+ * Tags (ADR 0081): each chosen value is a tag in the field; its button unchecks it and puts focus on the trigger, and
+ * is no Tab stop. A press on a tag's words opens the list.
+ */
+export const Tags: Story = {
+  decorators: [locale('ru'), componentWrapperDecorator(MultiselectStoryFrame)],
+  render: (args) => ({
+    props: { ...args, approvers },
+    template: `<ave-multiselect label="Согласующие" lang="ru" [options]="approvers" [value]="['legal', 'finance', 'security']" />`,
+  }),
+  parameters: source('<ave-multiselect [options]="approvers" [formField]="contract.approvers" />'),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('combobox', { name: 'Согласующие' });
+    await expect(trigger).toHaveTextContent('Юридический отдел, Финансовый отдел, Служба безопасности');
+    const remove = canvas.getByRole('button', { name: 'Убрать Финансовый отдел' });
+    await expect(remove).toHaveAttribute('tabindex', '-1');
+    await userEvent.click(remove);
+    await expect(trigger).toHaveFocus();
+    await expect(canvas.queryByRole('button', { name: 'Убрать Финансовый отдел' })).toBeNull();
+    await expect(trigger).toHaveTextContent('Юридический отдел, Служба безопасности');
+    // A press on a tag's words reaches the trigger under it, which opens the list.
+    const words = canvas.getByText('Служба безопасности').getBoundingClientRect();
+    await expect(document.elementFromPoint(words.left + words.width / 2, words.top + words.height / 2)).toBe(trigger);
+    trigger.blur();
   },
 };
 
@@ -338,8 +375,8 @@ export const RichOptions: Story = {
 };
 
 /**
- * Search (ADR 0057): the input says the chosen regions until people type, then filters by label; checking one keeps
- * the search and the list open; leaving puts the chosen labels back.
+ * Search (ADR 0057, 0081): the tags say the chosen regions, the input holds only the search after them and filters by
+ * label; checking one keeps the search and the list open; closing the list ends the search.
  */
 export const Search: Story = {
   decorators: [locale('ru')],
@@ -348,8 +385,10 @@ export const Search: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const input = canvas.getByRole('combobox', { name: 'Регионы поставки' });
-    await expect(input).toHaveValue('город Ташкент');
-    await expect(canvas.getByRole('combobox', { name: 'Yetkazib berish hududlari' })).toHaveValue('Fargʻona viloyati');
+    await expect(input).toHaveValue('');
+    await expect(input).toHaveAccessibleDescription(/Выбрано: город Ташкент/);
+    await expect(canvas.getByRole('button', { name: 'Убрать город Ташкент' })).toBeVisible();
+    await expect(canvas.getByRole('button', { name: 'Убрать Fargʻona viloyati' })).toBeVisible();
     await userEvent.click(input);
     await userEvent.keyboard('дарь');
     const listbox = await canvas.findByRole('listbox');
@@ -366,7 +405,8 @@ export const Search: Story = {
     await expect(input).toHaveValue('дарь');
     await expect(canvas.getByRole('status')).toHaveTextContent('Регионы: kashkadarya, tashkent');
     await userEvent.keyboard('{Escape}');
-    await expect(input).toHaveValue('Кашкадарьинская область, город Ташкент');
+    await expect(input).toHaveValue('');
+    await expect(canvas.getByRole('button', { name: 'Убрать Кашкадарьинская область' })).toBeVisible();
     await userEvent.click(input);
     await userEvent.keyboard('обл');
     await canvas.findAllByRole('option');

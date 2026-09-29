@@ -5,7 +5,7 @@ import * as MultiselectStories from './multiselect.stories';
 
 # Multiselect
 
-`<ave-multiselect>` is several choices from a list, under a trigger that names what is chosen. The list stays open while people check and uncheck options. It is Angular Aria's combobox with a multi-select listbox, in CDK's overlay (ADR 0046).
+`<ave-multiselect>` is several choices from a list, under a trigger that shows each chosen value as a tag. The list stays open while people check and uncheck options. It is Angular Aria's combobox with a multi-select listbox, in CDK's overlay (ADR 0046).
 
 ```ts
 import { AveMultiselect, type AveOption } from '@avelune/ui/select';
@@ -25,7 +25,7 @@ import { AveMultiselect, type AveOption } from '@avelune/ui/select';
 
 ## Anatomy
 
-A trigger with the box of an Input, the chosen labels comma-separated in the order of the list (or the placeholder), and a chevron. The list is the select's, with a check on every chosen option.
+A trigger with the box of an Input and a chevron; inside it, each chosen value as a small tag (ADR 0081), in rows that wrap 4px apart, or the placeholder while nothing is chosen. The field grows by a row of tags. The list is the select's, with a check on every chosen option.
 
 ```html
 <ave-form-field label="Согласующие">
@@ -35,15 +35,21 @@ A trigger with the box of an Input, the chosen labels comma-separated in the ord
 
 <Canvas of={MultiselectStories.Open} />
 
+## Tags
+
+Each chosen value is a tag (`sm`, ADR 0080) inside the field. Its remove button unchecks it and puts focus on the trigger; the buttons are not Tab stops, since the keyboard unchecks in the list, and a disabled or readonly multiselect's tags have none. A press on a tag's words opens the list, as a press anywhere in the field does. The trigger still says the chosen labels to screen readers, out of sight.
+
+<Canvas of={MultiselectStories.Tags} />
+
 ## Rich options
 
-Options take the same fields and templates as a select's (ADR 0055); the trigger names the chosen labels, as text.
+Options take the same fields and templates as a select's (ADR 0055); the tags show the chosen labels, as text.
 
 <Canvas of={MultiselectStories.RichOptions} />
 
 ## Search
 
-For long lists, `search="local"` makes the trigger an input (ADR 0057): it says the chosen labels until people type, then filters the options by label, as a combobox does. Checking an option keeps the search and the list open; leaving puts the chosen labels back. `search="server"` asks a server instead, with the combobox's `query`, `loading`, `error`, `hasMore` and `loadMore` (ADR 0056).
+For long lists, `search="local"` makes the trigger an input (ADR 0057): people type after the last tag (or on a row of their own when the last row is full), and the options are filtered by label, as a combobox does. Checking an option keeps the search and the list open; closing the list or leaving ends the search. The input is described by what is chosen ("Выбрано: город Ташкент", ADR 0081). `search="server"` asks a server instead, with the combobox's `query`, `loading`, `error`, `hasMore` and `loadMore` (ADR 0056).
 
 ```html
 <ave-form-field label="Регионы поставки">
@@ -85,7 +91,7 @@ When the options change and no longer hold the value (a list the application loa
 
 ## Content
 
-When the chosen labels do not fit, the trigger truncates them on one line; the list shows which are chosen.
+The tags wrap in rows and a long label wraps inside its tag; nothing is cut.
 
 <Canvas of={MultiselectStories.LongText} />
 
@@ -96,7 +102,8 @@ Tab moves to the trigger; Down, Enter or Space open the list; the arrow keys mov
 ## Accessibility
 
 - The list is `aria-multiselectable`; each option says whether it is selected.
-- The trigger is named by the field's label; its text lists what is chosen.
+- The trigger is named by the field's label; its text lists what is chosen, out of sight while the tags show it; a searchable input is described by it.
+- Each tag's remove button is named "Убрать" and the value ("Убрать Юридический отдел"); it is left out of the Tab order, as the clear button is.
 - The clear button is named "Clear" and the field's label; it is left out of the Tab order.
 
 ## Motion

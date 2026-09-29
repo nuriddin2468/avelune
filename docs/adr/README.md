@@ -62,7 +62,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0054](0054-date-range-presets.md) | DateRangePicker presets: a typed, translated set and the application's own, a listbox beside or above the calendar | Accepted |
 | [0055](0055-rich-options.md) | Rich options in the select family: fields of an option in one row layout, and templates inside the kit's row | Accepted |
 | [0056](0056-remote-lists.md) | Remote lists: a server's search, pages that load at the end, and chosen options the list no longer holds | Accepted |
-| [0057](0057-searchable-multiselect.md) | A multiselect that searches: an input as its trigger over the same multi-select listbox | Accepted |
+| [0057](0057-searchable-multiselect.md) | A multiselect that searches: an input as its trigger over the same multi-select listbox | Accepted; decision 2 (what the input says) superseded by 0081 |
 | [0058](0058-spinner.md) | Spinner: the delayed spinner as a component, a named progress bar that keeps its box | Accepted |
 | [0059](0059-progress.md) | Progress: a native progress bar with a value, on a new track colour | Accepted |
 | [0060](0060-skeleton.md) | Skeleton: lines and blocks on a placeholder colour of their own, the catalog's shimmer | Accepted |
@@ -86,6 +86,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0078](0078-data-table-native-table-pages.md) | DataTable: a native table the kit draws, not Aria's grid or CDK's table; pages, not virtual scrolling | Accepted |
 | [0079](0079-badge-and-count.md) | Badge and Count: a record's status in words on its tinted fill, and a number that needs attention | Accepted |
 | [0080](0080-tag.md) | Tag: a value in an outlined rectangle, a button that takes it away, focus to the next one | Accepted |
+| [0081](0081-multiselect-chosen-tags.md) | The multiselect's chosen values as tags inside its field | Accepted |
 
 ## Template
 

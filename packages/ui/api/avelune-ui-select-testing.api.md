@@ -41,11 +41,13 @@ export interface AveComboboxHarnessFilters extends BaseHarnessFilters {
 
 // @alpha
 export class AveMultiselectHarness extends AveSelectHarness {
+    getChips(): Promise<string[]>;
     getChosen(): Promise<string[]>;
     getText(): Promise<string>;
     static hostSelector: string;
     isSearchable(): Promise<boolean>;
     open(): Promise<void>;
+    removeChip(label: string | RegExp): Promise<void>;
     search(text: string): Promise<void>;
     toggle(label: string | RegExp): Promise<void>;
     static with(options?: AveSelectHarnessFilters): HarnessPredicate<AveMultiselectHarness>;
