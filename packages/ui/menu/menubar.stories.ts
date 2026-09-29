@@ -147,15 +147,18 @@ export const Default: Story = {
   },
 };
 
-/** The file menu open: the kit's popup under its item, with icons, a separator and the item that closes. */
+/** The file menu open from the keyboard: the kit's popup under its item, with icons, a separator and the item that closes. */
 export const Open: Story = {
   tags: ['forced-colors'],
   render: frame('default'),
   play: async ({ canvasElement }) => {
     const bar = within(within(canvasElement).getByRole('menubar'));
-    await userEvent.click(bar.getByRole('menuitem', { name: 'Файл' }));
+    // Opened from the keyboard, as a script opens it: focus moves to the first item and draws its ring there.
+    await userEvent.tab();
+    await userEvent.keyboard('{ArrowDown}');
     await waitFor(() => expect(openMenu()).not.toBeNull());
     const menu = within(openMenu() ?? canvasElement);
+    await waitFor(() => expect(menu.getByRole('menuitem', { name: 'Новый шаблон' })).toHaveFocus());
     await expect(menu.getAllByRole('menuitem')).toHaveLength(5);
     await expect(menu.getByRole('separator')).toBeInTheDocument();
     await expect(bar.getByRole('menuitem', { name: 'Файл' })).toHaveAttribute('aria-expanded', 'true');
@@ -168,7 +171,10 @@ export const LongText: Story = {
   render: frame('long'),
   play: async ({ canvasElement }) => {
     const bar = within(within(canvasElement).getByRole('menubar'));
-    await userEvent.click(bar.getByRole('menuitem', { name: 'Maʼlumotnomalar' }));
+    await userEvent.tab();
+    await userEvent.keyboard('{ArrowRight}');
+    await expect(bar.getByRole('menuitem', { name: 'Maʼlumotnomalar' })).toHaveFocus();
+    await userEvent.keyboard('{ArrowDown}');
     await waitFor(() => expect(openMenu()).not.toBeNull());
     const menu = openMenu();
     await expect(menu?.getBoundingClientRect().width).toBeLessThanOrEqual(320);
