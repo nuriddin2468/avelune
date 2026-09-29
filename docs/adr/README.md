@@ -51,7 +51,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0043](0043-textarea.md) | Textarea: a native textarea in the box of an input, a fixed number of rows | Accepted |
 | [0044](0044-radio-and-choice-group.md) | Radio and choice group: a drawn native radio, a fieldset that describes its choices | Accepted |
 | [0045](0045-switch.md) | Switch: a drawn native checkbox with the switch role, a thumb that slides on its own timing | Accepted |
-| [0046](0046-select-combobox-multiselect.md) | Select, Combobox and Multiselect: Angular Aria in a CDK overlay, options as data, both form APIs | Accepted; "the value is always an option" superseded by 0056 |
+| [0046](0046-select-combobox-multiselect.md) | Select, Combobox and Multiselect: Angular Aria in a CDK overlay, options as data, both form APIs | Accepted; "the value is always an option" superseded by 0056; the select's `required` added by 0087 |
 | [0047](0047-kit-messages.md) | Kit messages: the words components say themselves, per locale, replaceable | Accepted |
 | [0048](0048-date-picker-and-uzbek-dates.md) | DatePicker and DateRangePicker: ISO dates, a calendar on Angular Aria's grid, Uzbek dates written by the kit | Accepted; the range's equal columns changed by 0052 for a range that may be cleared |
 | [0049](0049-list-values-need-min-length.md) | A list that must hold an item: `minLength(path, 1)`, shown as required | Accepted |
@@ -79,7 +79,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0071](0071-tabs.md) | Tabs: Angular Aria's tabs, tabs declared as panels, an indicator that slides on `timing.slide` | Accepted |
 | [0072](0072-sidebar-nav.md) | SidebarNav: the product's navigation from data, current pages from the router, groups that disclose | Accepted; a page's count in addendum (0079) |
 | [0073](0073-link.md) | Link: a native link, always underlined, that says when it opens a new tab | Accepted |
-| [0074](0074-pagination.md) | Pagination: seven places for page numbers, the current page on the accent fill, a compact form in narrow containers | Accepted |
+| [0074](0074-pagination.md) | Pagination: seven places for page numbers, the current page on the accent fill, a compact form in narrow containers | Accepted; a page-size select added by 0087 |
 | [0075](0075-toolbar.md) | Toolbar: Angular Aria's toolbar on the application's element, its items marked, a menu that joins it | Accepted |
 | [0076](0076-menubar.md) | Menubar: Angular Aria's menubar, menus as data, each menu moved into its overlay while it is open | Accepted |
 | [0077](0077-stepper.md) | Stepper: where a person is in a sequence of steps, drawn from data, the done steps optionally a way back | Accepted |
@@ -92,6 +92,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0084](0084-accordion.md) | Accordion: Angular Aria's accordion, items declared with their content, a panel that opens on `timing.expand` | Accepted |
 | [0085](0085-tree.md) | Tree: Angular Aria's tree from data, one chosen node, rows indented by level, a chevron at the start | Accepted |
 | [0086](0086-list.md) | List: records on one surface between lines, and rows that fade and open as they come and go | Accepted |
+| [0087](0087-data-table.md) | DataTable: columns as data, header buttons that sort, checkboxes that choose, a page size in the pagination | Accepted |
 
 ## Template
 

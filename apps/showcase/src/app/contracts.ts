@@ -5,6 +5,7 @@ import { AveBadge } from '@avelune/ui/badge';
 import { lucideCopy, lucideEllipsis, lucideFileText, lucideSearch, lucideTrash } from '@avelune/icons/lucide';
 import { AveButton } from '@avelune/ui/button';
 import { AveCheckbox, AveChoice } from '@avelune/ui/checkbox';
+import { AveCellTemplate, AveDataTable, type AveColumn, type AveSort } from '@avelune/ui/data-table';
 import { AveConfirmDialog, AveDialog, AveDialogActions, AveDrawer } from '@avelune/ui/dialog';
 import { AveEmptyState, AveEmptyStateActions } from '@avelune/ui/empty-state';
 import { aveDateFormat, aveNumberFormat } from '@avelune/ui/i18n';
@@ -13,11 +14,9 @@ import { AveChoiceGroup } from '@avelune/ui/form-field';
 import { AveInput } from '@avelune/ui/input';
 import { AveLink } from '@avelune/ui/link';
 import { AveMenu, type AveMenuEntry } from '@avelune/ui/menu';
-import { AvePagination } from '@avelune/ui/pagination';
 import { AvePopover } from '@avelune/ui/popover';
 import { AveRadio } from '@avelune/ui/radio';
 import { AveProgress } from '@avelune/ui/progress';
-import { AveSkeleton } from '@avelune/ui/skeleton';
 import { AveTag } from '@avelune/ui/tag';
 import { AveToaster } from '@avelune/ui/toast';
 import { contractStatusVariants, contractStatuses, contracts, type ContractRecord, type ContractStatus } from './data';
@@ -42,10 +41,12 @@ const exportInterval = 400;
     AveAlert,
     AveBadge,
     AveButton,
+    AveCellTemplate,
     AveCheckbox,
     AveChoice,
     AveChoiceGroup,
     AveConfirmDialog,
+    AveDataTable,
     AveDialog,
     AveDialogActions,
     AveDrawer,
@@ -54,11 +55,9 @@ const exportInterval = 400;
     AveInput,
     AveLink,
     AveMenu,
-    AvePagination,
     AvePopover,
     AveProgress,
     AveRadio,
-    AveSkeleton,
     AveTag,
     RouterLink,
   ],
@@ -78,7 +77,7 @@ const exportInterval = 400;
             [disabled]="exporting()"
             (click)="exportOpen.set(true)"
           >
-            Выгрузить в Excel
+            {{ selected().length > 0 ? 'Выгрузить выбранные' : 'Выгрузить в Excel' }}
           </button>
           <a aveButton variant="primary" routerLink="/">Новый договор</a>
         </div>
@@ -155,61 +154,44 @@ const exportInterval = 400;
         </div>
       }
 
-      @if (!loading() && shown().length === 0) {
-        <section class="empty" aria-label="Договоры подразделения">
-          <ave-empty-state icon="search" heading="Ничего не найдено">
-            <p>Ни один договор не подходит под поиск и выбранные статусы.</p>
-            <div aveEmptyStateActions>
-              <button aveButton type="button" (click)="resetSearch()">Сбросить поиск и фильтры</button>
-            </div>
-          </ave-empty-state>
-        </section>
-      } @else {
-        <ul class="list" aria-label="Договоры подразделения" [attr.aria-busy]="loading() ? 'true' : null">
-          @if (loading()) {
-            @for (row of placeholders; track row) {
-              <li class="row" data-placeholder>
-                <div class="main">
-                  <ave-skeleton class="short" />
-                  <ave-skeleton lines="2" />
-                </div>
-                <div class="facts">
-                  <ave-skeleton class="long" />
-                  <ave-skeleton class="short" />
-                </div>
-              </li>
-            }
-          }
-          @for (contract of pageRows(); track contract.id) {
-            <li class="row">
-              <div class="main">
-                <span class="number">{{ contract.number }}</span>
-                <span class="subject">
-                  <a aveLink [routerLink]="['/contracts', contract.id]">{{ contract.subject }}</a>
-                </span>
-                <span class="counterparty">{{ contract.counterparty }}</span>
-              </div>
-              <div class="facts">
-                <span class="amount">{{ amount(contract) }}</span>
-                <ave-badge [variant]="variants[contract.status]">{{ statuses[contract.status] }}</ave-badge>
-                <span class="ends">до {{ dates.numeric(contract.endsOn) }}</span>
-              </div>
-              <ave-menu
-                class="row-actions"
-                icon="ellipsis"
-                variant="ghost"
-                size="sm"
-                [label]="'Действия с договором ' + contract.number"
-                [items]="rowActions"
-                (itemSelected)="act(contract, $event)"
-              />
-            </li>
-          }
-        </ul>
-        @if (!loading()) {
-          <ave-pagination [total]="shown().length" [pageSize]="pageSize" [(page)]="page" />
-        }
-      }
+      <ave-data-table
+        label="Договоры подразделения"
+        selectable
+        [rows]="shown()"
+        [columns]="columns"
+        [rowKey]="byId"
+        [loading]="loading()"
+        [(sort)]="sort"
+        [(selected)]="selected"
+        [(page)]="page"
+        [(pageSize)]="pageSize"
+      >
+        <ng-template aveCell="subject" [aveCellOf]="shown()" let-contract>
+          <a aveLink [routerLink]="['/contracts', contract.id]">{{ contract.subject }}</a>
+        </ng-template>
+        <ng-template aveCell="status" [aveCellOf]="shown()" let-contract>
+          <ave-badge [variant]="variants[contract.status]">{{ statuses[contract.status] }}</ave-badge>
+        </ng-template>
+        <ng-template aveCell="endsOn" [aveCellOf]="shown()" let-contract>
+          <time [attr.datetime]="contract.endsOn">{{ dates.numeric(contract.endsOn) }}</time>
+        </ng-template>
+        <ng-template aveCell="actions" [aveCellOf]="shown()" let-contract>
+          <ave-menu
+            icon="ellipsis"
+            variant="ghost"
+            size="sm"
+            [label]="'Действия с договором ' + contract.number"
+            [items]="rowActions"
+            (itemSelected)="act(contract, $event)"
+          />
+        </ng-template>
+        <ave-empty-state aveDataTableEmpty icon="search" heading="Ничего не найдено">
+          <p>Ни один договор не подходит под поиск и выбранные статусы.</p>
+          <div aveEmptyStateActions>
+            <button aveButton type="button" (click)="resetSearch()">Сбросить поиск и фильтры</button>
+          </div>
+        </ave-empty-state>
+      </ave-data-table>
     </div>
 
     <dialog aveDialog size="sm" heading="Выгрузка реестра" [(open)]="exportOpen" lang="ru">
@@ -274,7 +256,21 @@ export class ContractsPage {
   /** The register comes from a pretend server: skeleton rows hold its place until it arrives. */
   protected readonly loading = signal(true);
   protected readonly rows = signal<readonly ContractRecord[]>([]);
-  protected readonly placeholders = [1, 2, 3];
+
+  /** The register's columns: the number is each row's title, the subject its link, the menu its actions. */
+  protected readonly columns: readonly AveColumn<ContractRecord>[] = [
+    { key: 'number', header: 'Номер', value: (contract) => contract.number, sortable: true, rowHeader: true },
+    { key: 'subject', header: 'Предмет', value: (contract) => contract.subject, sortable: true },
+    { key: 'counterparty', header: 'Контрагент', value: (contract) => contract.counterparty, sortable: true },
+    { key: 'amount', header: 'Сумма, сум', value: (contract) => contract.amount, sortable: true, numeric: true },
+    { key: 'status', header: 'Статус', value: (contract) => contractStatuses[contract.status] },
+    { key: 'endsOn', header: 'Действует до', value: (contract) => contract.endsOn, sortable: true },
+    { key: 'actions', header: 'Действия', hideHeader: true },
+  ];
+  protected readonly byId = (contract: ContractRecord) => contract.id;
+  protected readonly sort = signal<AveSort | null>(null);
+  /** The contracts people chose: the export takes them. */
+  protected readonly selected = signal<readonly number[]>([]);
 
   /** The actions of every row: its card in a drawer, a copy as a new draft, and deleting it. */
   protected readonly rowActions: readonly AveMenuEntry<RowAction>[] = [
@@ -307,25 +303,24 @@ export class ContractsPage {
     );
   });
 
-  /** The register pages ten contracts at a time; a new search or filter goes back to the first page. */
-  protected readonly pageSize = 10;
+  /** The register pages ten contracts at a time at first; a new search or filter goes back to the first page. */
+  protected readonly pageSize = signal(10);
   protected readonly page = linkedSignal({
     source: () => [this.query(), this.shownStatuses()] as const,
     computation: () => 1,
   });
-  protected readonly pageRows = computed(() =>
-    this.shown().slice((this.page() - 1) * this.pageSize, this.page() * this.pageSize),
-  );
 
   /** Contracts whose term has ended: the alert above the list names them, each a link to its page. */
   protected readonly expired = computed(() => this.rows().filter((contract) => contract.status === 'expired'));
 
-  /** How many contracts the list shows, in Russian: 1 договор, 2 договора, 5 договоров. */
+  /** How many contracts the list shows, in Russian (1 договор, 2 договора, 5 договоров), and how many are chosen. */
   protected readonly count = computed(() => {
     const count = this.shown().length;
     const noun = { one: 'договор', few: 'договора', many: 'договоров', other: 'договора' } as const;
     const form = new Intl.PluralRules('ru').select(count);
-    return `${String(count)} ${form === 'zero' || form === 'two' ? noun.many : noun[form]}`;
+    const shown = `${String(count)} ${form === 'zero' || form === 'two' ? noun.many : noun[form]}`;
+    const chosen = this.selected().length;
+    return chosen === 0 ? shown : `${shown}, выбрано ${String(chosen)}`;
   });
 
   /** The share of the register exported so far, or `null` before the first export. */
@@ -432,6 +427,7 @@ export class ContractsPage {
     const contract = this.deleting();
     if (contract === null) return;
     this.rows.set(this.rows().filter((row) => row.id !== contract.id));
+    this.selected.set(this.selected().filter((id) => id !== contract.id));
     this.toaster.show({ message: `Договор ${contract.number} удалён`, variant: 'success' });
   }
 

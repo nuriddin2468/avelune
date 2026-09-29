@@ -68,6 +68,7 @@ class ReactiveHost {
     <ave-select label="Off" [options]="kinds" value="supply" disabled />
     <ave-select label="Nothing" [options]="[]" />
     <ave-select label="Frozen" [options]="kinds" value="loan" readonly />
+    <ave-select label="Needed" [options]="kinds" value="supply" required />
   `,
 })
 class PlainHost {
@@ -335,9 +336,20 @@ describe('AveSelect', () => {
     expect(fixture.componentInstance.model().kind).toBe('supply');
     await expect(select.clear()).rejects.toThrow('shows no clear button');
     const { fixture: plain } = mount(PlainHost);
-    const [, off, , frozen] = await TestbedHarnessEnvironment.loader(plain).getAllHarnesses(AveSelectHarness);
+    const [, off, , frozen, needed] = await TestbedHarnessEnvironment.loader(plain).getAllHarnesses(AveSelectHarness);
     expect(await off?.canClear()).toBe(false);
     expect(await frozen?.canClear()).toBe(false);
+    expect(await needed?.canClear()).toBe(false);
+  });
+
+  it('says a select required outside a form is required, and keeps its value (ADR 0087)', async () => {
+    const { fixture, element } = mount(PlainHost);
+    const triggers = element.querySelectorAll('.trigger');
+    expect(triggers[4]?.getAttribute('aria-required')).toBe('true');
+    expect(triggers[0]?.getAttribute('aria-required')).toBeNull();
+    const needed = (await TestbedHarnessEnvironment.loader(fixture).getAllHarnesses(AveSelectHarness))[4];
+    await needed?.press('delete');
+    expect(await needed?.getText()).toBe('Поставка');
   });
 
   it('keeps the value when the chosen option is chosen again, with a click or Enter', async () => {

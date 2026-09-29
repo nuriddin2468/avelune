@@ -1,4 +1,5 @@
 import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters, type TestElement } from '@angular/cdk/testing';
+import { AveSelectHarness } from '@avelune/ui/select/testing';
 
 /**
  * Filters for {@link AvePaginationHarness}.
@@ -11,7 +12,8 @@ export interface AvePaginationHarnessFilters extends BaseHarnessFilters {
 }
 
 /**
- * Harness for `<ave-pagination>` from `@avelune/ui/pagination`: the range, the pages shown, and going to a page.
+ * Harness for `<ave-pagination>` from `@avelune/ui/pagination`: the range, the pages shown, going to a page, and the
+ * page size.
  *
  * @alpha
  */
@@ -21,6 +23,7 @@ export class AvePaginationHarness extends ComponentHarness {
 
   private readonly pages = this.locatorForAll('.page');
   private readonly arrows = this.locatorForAll('.pages > button');
+  private readonly sizeSelect = this.locatorForOptional(AveSelectHarness);
 
   /** Gets a predicate that matches paginations by the given filters. */
   static with(options: AvePaginationHarnessFilters = {}): HarnessPredicate<AvePaginationHarness> {
@@ -80,6 +83,35 @@ export class AvePaginationHarness extends ComponentHarness {
   /** Whether there is a page after the current one. */
   async hasNext(): Promise<boolean> {
     return (await (await this.arrow(1)).getAttribute('aria-disabled')) !== 'true';
+  }
+
+  /** Gets the page size the select shows, or `null` without a page-size select. */
+  async getPageSize(): Promise<number | null> {
+    const select = await this.sizeSelect();
+    return select === null ? null : Number((await select.getText()).replace(/\D/g, ''));
+  }
+
+  /** Gets the page sizes people choose from, or none without a page-size select. */
+  async getPageSizes(): Promise<number[]> {
+    const select = await this.sizeSelect();
+    if (select === null) return [];
+    await select.open();
+    const sizes = (await select.getOptions()).map((option) => Number(option.replace(/\D/g, '')));
+    await select.close();
+    return sizes;
+  }
+
+  /** Chooses a page size in the select; throws without one, or when the select does not offer it. */
+  async setPageSize(size: number): Promise<void> {
+    const select = await this.sizeSelect();
+    if (select === null) throw new Error('AvePaginationHarness: there is no page-size select.');
+    await select.open();
+    const label = (await select.getOptions()).find((option) => Number(option.replace(/\D/g, '')) === size);
+    if (label === undefined) {
+      await select.close();
+      throw new Error(`AvePaginationHarness: the page size ${String(size)} is not offered.`);
+    }
+    await select.choose(label);
   }
 
   private async arrow(index: 0 | 1): Promise<TestElement> {

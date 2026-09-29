@@ -10,11 +10,29 @@
     container-type: inline-size;
   }
 
+  /* The range and the page-size select at the start, wrapping under each other in a narrow container. */
+  .start {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ave-space-2) var(--ave-space-4);
+  }
+
   .range {
     margin: 0;
     color: var(--ave-color-fg-muted);
     font: var(--ave-font-body-md);
     font-variant-numeric: tabular-nums;
+  }
+
+  /* The page size: its words, then a select as wide as its value. */
+  .size {
+    display: flex;
+    align-items: center;
+    gap: var(--ave-space-2);
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-md);
+    white-space: nowrap;
   }
 
   .pages {

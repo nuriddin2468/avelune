@@ -1,0 +1,121 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as DataTableStories from './data-table.stories';
+
+<Meta of={DataTableStories} />
+
+# DataTable
+
+`<ave-data-table>` is a native table of records, one page at a time: sorted by its headers, chosen by checkboxes, paged under it (ADR 0078, 0087). Columns are data; rich cells are the application's templates.
+
+```ts
+import { AveCellTemplate, AveDataTable, type AveColumn } from '@avelune/ui/data-table';
+```
+
+<Canvas of={DataTableStories.Default} />
+
+## When to use
+
+- For many records compared by the same columns: a register, a report, a journal, sorted and chosen in bulk.
+
+## When not to use
+
+- For a few records read in order, each with a handful of facts: use a list.
+- For records side by side on a dashboard: use cards.
+- For editing values cell by cell, as in a spreadsheet: not this table (ADR 0078).
+
+## Anatomy
+
+The table's box (`bg.surface`, a `border.subtle` border, `radius.lg`), the header over a `border.default` line, rows between `border.subtle` lines, and the Pagination 12px under the box. Rows are the large control height at least, 8px and 12px of padding; text wraps; figures stand at the end in tabular figures.
+
+```ts
+readonly columns: readonly AveColumn<Contract>[] = [
+  { key: 'number', header: 'Номер', value: (row) => row.number, sortable: true, rowHeader: true },
+  { key: 'subject', header: 'Предмет', value: (row) => row.subject, sortable: true },
+  { key: 'amount', header: 'Сумма, сум', value: (row) => row.amount, sortable: true, numeric: true },
+  { key: 'actions', header: 'Действия', hideHeader: true },
+];
+readonly byId = (row: Contract) => row.id;
+```
+
+```html
+<ave-data-table label="Договоры" [rows]="contracts()" [columns]="columns" [rowKey]="byId">
+  <ng-template aveCell="subject" [aveCellOf]="contracts()" let-contract>
+    <a aveLink [routerLink]="['/contracts', contract.id]">{{ contract.subject }}</a>
+  </ng-template>
+  <ng-template aveCell="actions" [aveCellOf]="contracts()" let-contract>
+    <ave-menu
+      icon="ellipsis"
+      variant="ghost"
+      size="sm"
+      [label]="'Действия с договором ' + contract.number"
+      [items]="actions"
+    />
+  </ng-template>
+</ave-data-table>
+```
+
+- `value` is what a cell shows without a template (numbers written for the locale) and what sorting compares: give a date column its ISO date, and draw it in a template.
+- `rowHeader` makes a column the rows' titles; a row's checkbox is named by it ("Выбрать ДК-2026/114").
+
+## Sorting
+
+A sortable header is a button with an arrow. The first press sorts ascending, the next turns the order over, and the page goes back to the first. Local rows are compared by `value`: numbers as numbers, text by the locale's collation with the numbers inside it in order ("ДК-2" before "ДК-10"), empty values last. With `source="server"` the table leaves the rows in the server's order: read `sort` and ask the server for the page.
+
+## Choosing rows
+
+`selectable` adds a column of checkboxes; `selected` holds the chosen rows' keys, which stay chosen across pages and sorts. The header's checkbox chooses the page's rows, and is mixed while some of them are chosen. Chosen rows take the neutral fill. The actions on the chosen rows are the application's, beside the table.
+
+## Pages
+
+The Pagination under the table pages the local rows, or, with `source="server"`, the server's by `total`. People choose how many rows a page shows among `pageSizes` (10, 20, 50 and 100); a new size shows the page that holds the first row they saw.
+
+<Canvas of={DataTableStories.ServerPages} />
+
+## Sticky header and column widths
+
+The header sticks to the top of the table's box. The box scrolls both ways once the application bounds the table's height; while it overflows it is a region named by the table's label, and a Tab stop, so it scrolls from the keyboard. With `resizable`, the edge of each header is a range: the arrows change the width by 8px, and a pointer drags it. A column never narrows below its longest word. `widths` holds the widths set, to keep them.
+
+<Canvas of={DataTableStories.StickyAndResizable} />
+
+## States
+
+<Canvas of={DataTableStories.Loading} />
+
+While `loading`, skeleton rows hold the rows' place (as many as were shown, five at first) and the table is busy. When `failed`, an alert with Retry stands there; Retry emits `retry`. With no rows, the application's empty state (`aveDataTableEmpty`) shows under the header, or the kit's "Записей нет".
+
+<Canvas of={DataTableStories.Failed} />
+
+<Canvas of={DataTableStories.Empty} />
+
+## Content
+
+- Long words wrap in their cells; a table wider than its box scrolls sideways inside it.
+- Compact density moves the rows one step down, as it does every control.
+
+<Canvas of={DataTableStories.LongText} />
+
+<Canvas of={DataTableStories.Compact} />
+
+## Keyboard
+
+| Key          | Does                                                                                     |
+| ------------ | ---------------------------------------------------------------------------------------- |
+| Tab          | Moves through the headers' buttons and ranges, then each row's checkbox, links and menus |
+| Enter, Space | On a header's button: sorts, then turns the order over                                   |
+| Space        | On a checkbox: chooses the row, or the page's rows                                       |
+| Left, Right  | On a column's range: narrower or wider by 8px                                            |
+| Home, End    | On a column's range: the narrowest or the widest                                         |
+
+## Accessibility
+
+- A native `table` with a caption (the label), `th scope="col"` headers and the rows' titles as `th scope="row"`: screen readers' table commands work, and every cell is read with its header.
+- `aria-sort` is on the sorted header only; the arrows are decorative.
+- A column of menus names its header ("Действия") without showing it.
+- In forced colours the lines stay, and chosen rows keep their checked checkbox.
+
+## Do and don't
+
+- Do give each record one link, in its title or subject, and put its rarer actions in a menu.
+- Do keep a page to a size people can Tab through: each row's controls are Tab stops.
+- Don't make a whole row a link or a button.
+- Don't put a table for a handful of records: use a list.

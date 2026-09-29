@@ -1,0 +1,21 @@
+/* The frame of the DataTable stories. Stories only; the component's own styles are data-table.css. */
+@layer components {
+  :host {
+    display: block;
+    padding: var(--ave-space-6);
+  }
+
+  .frame {
+    display: grid;
+    max-inline-size: var(--ave-container-lg);
+  }
+
+  /* A box of its own height, so the rows scroll under the header. */
+  .frame[data-view='sticky'] > ave-data-table {
+    block-size: calc(var(--ave-space-16) * 6);
+  }
+
+  .frame[data-view='long'] {
+    max-inline-size: var(--ave-container-xs);
+  }
+}

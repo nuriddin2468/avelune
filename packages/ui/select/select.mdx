@@ -93,7 +93,7 @@ When the fields are not enough, `<ng-template aveOption let-option>` draws the i
 
 ## Clearing
 
-A select that is not required shows a clear button before the chevron while it has a value and can be changed (ADR 0052). A press takes the value back to none (`null`), closes the list and leaves focus on the trigger. On the keyboard, Delete or Backspace on the trigger does the same; the button is not a Tab stop. A required, readonly or disabled select has no clear button.
+A select that is not required shows a clear button before the chevron while it has a value and can be changed (ADR 0052). A press takes the value back to none (`null`), closes the list and leaves focus on the trigger. On the keyboard, Delete or Backspace on the trigger does the same; the button is not a Tab stop. A required, readonly or disabled select has no clear button. Outside a form, `required` says a select must always hold a value (a page size, ADR 0087): no clear button, and `aria-required` on the trigger.
 
 <Canvas of={SelectStories.Clearing} />
 

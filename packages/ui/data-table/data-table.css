@@ -1,0 +1,175 @@
+@layer components {
+  /* The table's box, then its pagination (ADR 0087). A host whose height the application bounds lets the box
+     shrink, so it scrolls and the header sticks. */
+  :host {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ave-space-3);
+    min-inline-size: 0;
+    min-block-size: 0;
+  }
+
+  :host([data-resizing]) {
+    cursor: col-resize;
+    user-select: none;
+  }
+
+  /* The List's surface; its own stacking context, so the sticky header stays under the page's popups. */
+  .box {
+    flex: 0 1 auto;
+    min-block-size: 0;
+    overflow: auto;
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface);
+    isolation: isolate;
+  }
+
+  table {
+    inline-size: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-body-md);
+  }
+
+  /* A row is the large control height at least, so density applies, and a small control (a row's menu) fits in it
+     with the line under it; its text wraps. */
+  th,
+  td {
+    block-size: var(--ave-control-height-lg);
+    padding-block: calc(
+      (var(--ave-control-height-lg) - var(--ave-control-height-sm) - var(--ave-border-width-default)) / 2
+    );
+    padding-inline: var(--ave-space-3);
+    overflow-wrap: break-word;
+    text-align: start;
+    vertical-align: middle;
+  }
+
+  /* The header sticks to the top of the box over a stronger line. A column is as wide as people set it, or as its
+     content makes it. */
+  thead th {
+    --ave-data-table-column-width: auto;
+
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--ave-z-index-sticky);
+    border-block-end: var(--ave-border-width-default) solid var(--ave-color-border-default);
+    background-color: var(--ave-color-bg-surface);
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-label-md);
+    inline-size: var(--ave-data-table-column-width);
+  }
+
+  /* A row's title is its header for screen readers; it reads as the other cells. */
+  tbody th {
+    font: inherit;
+  }
+
+  /* The chosen rows on the neutral fill with their checkbox, and lines between rows (product owner, 2026-09-29). */
+  tr[data-selected] > * {
+    background-color: var(--ave-color-bg-active);
+  }
+
+  tbody tr:not(:last-child) > * {
+    border-block-end: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  }
+
+  [data-numeric] {
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+  }
+
+  /* The checkboxes' column: as narrow as a checkbox, the next cell's padding after it. */
+  .check {
+    inline-size: 0;
+    padding-inline-end: 0;
+  }
+
+  /* A sortable header: its words and arrow as a button, the hover fill around them. */
+  .sort {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ave-space-1);
+    min-block-size: var(--ave-size-target-min);
+    margin-inline: calc(-1 * var(--ave-space-1));
+    padding-block: 0;
+    padding-inline: var(--ave-space-1);
+    border: 0;
+    border-radius: var(--ave-radius-sm);
+    background-color: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: inherit;
+    cursor: pointer;
+    transition-property: background-color, color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+
+    &:hover {
+      background-color: var(--ave-color-bg-hover);
+      color: var(--ave-color-fg-default);
+    }
+  }
+
+  .arrow {
+    color: var(--ave-color-fg-subtle);
+  }
+
+  /* The sorted column's header and arrow in the default colour. */
+  [aria-sort] > .sort,
+  [aria-sort] .arrow {
+    color: var(--ave-color-fg-default);
+  }
+
+  /* A column's width: a native range along the header's inline edge, whose thumb is not drawn. The edge's line shows
+     while the header is under the pointer, the accent while it is dragged. */
+  .resize {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    inline-size: var(--ave-space-2);
+    block-size: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-inline-end: var(--ave-border-width-default) solid transparent;
+    appearance: none;
+    background-color: transparent;
+    cursor: col-resize;
+    touch-action: none;
+    transition-property: border-color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+
+    &::-webkit-slider-thumb {
+      inline-size: 0;
+      block-size: 0;
+      appearance: none;
+    }
+
+    &::-moz-range-thumb {
+      inline-size: 0;
+      block-size: 0;
+      border: 0;
+    }
+
+    &::-moz-range-track {
+      background-color: transparent;
+    }
+
+    &[data-dragging] {
+      border-inline-end-color: var(--ave-color-accent-bg);
+    }
+  }
+
+  thead th:hover > .resize:not([data-dragging]) {
+    border-inline-end-color: var(--ave-color-border-strong);
+  }
+
+  /* The loading, failed and empty states stand where the rows would. */
+  .state > td {
+    padding-block: var(--ave-space-4);
+  }
+}

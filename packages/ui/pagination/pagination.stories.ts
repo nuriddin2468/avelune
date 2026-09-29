@@ -3,7 +3,7 @@ import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular-
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { AvePagination } from '@avelune/ui/pagination';
 
-type View = 'default' | 'few' | 'narrow' | 'long';
+type View = 'default' | 'few' | 'narrow' | 'sizes' | 'long';
 
 /** The frame the stories draw paginations in: under a list. Styled with tokens only. */
 @Component({
@@ -13,6 +13,15 @@ type View = 'default' | 'few' | 'narrow' | 'long';
     @switch (view()) {
       @case ('few') {
         <ave-pagination label="Страницы актов" [total]="45" [pageSize]="10" [(page)]="page" />
+      }
+      @case ('sizes') {
+        <ave-pagination
+          label="Страницы договоров"
+          [total]="134"
+          [pageSizes]="[10, 20, 50, 100]"
+          [(pageSize)]="pageSize"
+          [(page)]="page"
+        />
       }
       @case ('narrow') {
         <div class="narrow">
@@ -31,6 +40,7 @@ class PaginationStories implements OnInit {
   /** The page the story opens on. */
   readonly start = input(1);
   protected readonly page = signal(1);
+  protected readonly pageSize = signal(10);
 
   ngOnInit(): void {
     this.page.set(this.start());
@@ -105,6 +115,26 @@ export const FewPages: Story = {
     const wide = (canvasElement.querySelector('ave-pagination')?.clientWidth ?? 0) >= 480;
     await expect(nav.queryAllByRole('button', { name: /^Страница/ })).toHaveLength(wide ? 5 : 0);
     await expect(nav.getByRole('button', { name: 'Предыдущая страница' })).toHaveAttribute('aria-disabled', 'true');
+  },
+};
+
+/** A page size people choose after the range: the page that holds the first item they saw stays. */
+export const PageSize: Story = {
+  name: 'Page size',
+  render: frame('sizes', 5),
+  parameters: source(
+    '<ave-pagination [total]="134" [pageSizes]="[10, 20, 50, 100]" [(pageSize)]="pageSize" [(page)]="page" />',
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const size = canvas.getByRole('combobox', { name: 'На странице' });
+    await expect(size).toHaveAttribute('aria-required', 'true');
+    await expect(canvas.getByRole('status')).toHaveTextContent('41–50 из 134');
+    await userEvent.click(size);
+    await userEvent.click(await within(document.body).findByRole('option', { name: '20' }));
+    await waitFor(() => expect(canvas.getByRole('status')).toHaveTextContent('41–60 из 134'));
+    await expect(canvas.queryByRole('button', { name: /Очистить/ })).toBeNull();
+    (document.activeElement as HTMLElement | null)?.blur();
   },
 };
 

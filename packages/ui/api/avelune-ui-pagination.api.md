@@ -6,6 +6,7 @@
 
 import * as _angular_core from '@angular/core';
 import * as _avelune_ui_i18n from '@avelune/ui/i18n';
+import { AveOption } from '@avelune/ui/select';
 
 // @alpha
 export class AvePagination {
@@ -18,12 +19,15 @@ export class AvePagination {
     protected readonly messages: _avelune_ui_i18n.AveMessages;
     readonly page: _angular_core.ModelSignal<number>;
     protected readonly pageCount: _angular_core.Signal<number>;
-    readonly pageSize: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly pageSize: _angular_core.ModelSignal<number>;
+    readonly pageSizes: _angular_core.InputSignal<readonly number[]>;
     protected readonly range: _angular_core.Signal<string>;
+    protected resize(size: number | null): void;
     protected readonly shown: _angular_core.Signal<number[]>;
+    protected readonly sizeOptions: _angular_core.Signal<readonly AveOption<number>[]>;
     readonly total: _angular_core.InputSignalWithTransform<number, unknown>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AvePagination, "ave-pagination", never, { "total": { "alias": "total"; "required": true; "isSignal": true; }; "page": { "alias": "page"; "required": false; "isSignal": true; }; "pageSize": { "alias": "pageSize"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, { "page": "pageChange"; }, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AvePagination, "ave-pagination", never, { "total": { "alias": "total"; "required": true; "isSignal": true; }; "page": { "alias": "page"; "required": false; "isSignal": true; }; "pageSize": { "alias": "pageSize"; "required": false; "isSignal": true; }; "pageSizes": { "alias": "pageSizes"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, { "page": "pageChange"; "pageSize": "pageSizeChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AvePagination, never>;
 }

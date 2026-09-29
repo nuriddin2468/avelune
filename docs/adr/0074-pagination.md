@@ -43,3 +43,7 @@ The docs page, which draws the stories together, broke axe's `landmark-unique` w
 ## Addendum: a list whose items are on their way (2026-09-29)
 
 A review of Wave 4 found that while `total` was 0 the page was clamped to 1, so a list paged from the address (`?page=3`) lost its page before the server's first answer, and that the range's live region appeared with its first range, which screen readers then did not announce. While `total` is 0 the page stays as the application set it, and the range is a live region from the start, before the landmark, empty until there are items.
+
+## Addendum: a page size (2026-09-29)
+
+With the DataTable, ADR 0087 gives the pagination `pageSizes` and makes `pageSize` a model: a select after the range, named "На странице", which always holds a value (the select's new `required`), and a new size shows the page that holds the first item seen so far. The alternative this ADR set aside for the select's clear button no longer applies.

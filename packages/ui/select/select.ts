@@ -20,7 +20,13 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { NgControl, type ControlValueAccessor } from '@angular/forms';
 import { FORM_FIELD } from '@angular/forms/signals';
 import { lucideCheck, lucideChevronDown, lucideX } from '@avelune/icons/lucide';
-import { AVE_CONTROL_OWNER, AveClearButton, AveControlTarget, injectControlState } from '@avelune/ui/forms';
+import {
+  AVE_CONTROL_OWNER,
+  AveClearButton,
+  AveControlTarget,
+  injectControlState,
+  type AveControlState,
+} from '@avelune/ui/forms';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
 import { aveConnectedOverlay, aveOverlayPresence } from '@avelune/ui/overlay';
 import { pruned } from './choice';
@@ -74,6 +80,7 @@ import type { AveOption, AveSelectSize } from './types';
       [preserveContent]="true"
       [readonly]="readonly()"
       [attr.aria-label]="label() || null"
+      [attr.aria-required]="required() && !state.bound ? 'true' : null"
       [attr.data-empty]="selected() === undefined ? '' : null"
       [attr.data-clear]="clearable() ? '' : null"
       [(expanded)]="expanded"
@@ -165,6 +172,12 @@ export class AveSelect<V> implements ControlValueAccessor {
   /** Whether the value can be read but not changed. A form binding sets it too. */
   readonly readonly = input(false, { transform: booleanAttribute });
 
+  /**
+   * Whether the select must hold a value, so it has no clear button: a page size outside a form (ADR 0087). A form's
+   * required validator says it too.
+   */
+  readonly required = input(false, { transform: booleanAttribute });
+
   /** The accessible name when the select has no visible label; an `<ave-form-field>` gives it one instead. */
   readonly label = input('');
 
@@ -177,8 +190,13 @@ export class AveSelect<V> implements ControlValueAccessor {
   /** Emits when the person leaves the select, which marks a Signal Forms field touched. */
   readonly touch = output();
 
-  /** The form state, read on the host, where the form binding is. */
-  readonly state = injectControlState();
+  private readonly formState = injectControlState();
+
+  /** The form state, read on the host, where the form binding is; required by the form or by `required`. */
+  readonly state: AveControlState = {
+    ...this.formState,
+    required: computed(() => this.required() || this.formState.required()),
+  };
 
   /** The application's template for the inside of every option, if it gives one (ADR 0055). */
   protected readonly optionTemplate = contentChild<AveOptionTemplate<V>>(AveOptionTemplate);

@@ -35,6 +35,16 @@ A navigation landmark named "Страницы" in the locale. At its start the r
 
 <Canvas of={PaginationStories.FewPages} />
 
+## Page size
+
+With `pageSizes`, a select after the range lets people choose how many items a page shows ("На странице 20"); `pageSize` is a model. The select always holds a value, so it has no clear button. A new size shows the page that holds the first item people saw: items 41–50 at 10 a page are on page 3 at 20. The current size is offered even when `pageSizes` leaves it out. A DataTable draws its pagination with the sizes 10, 20, 50 and 100 (ADR 0087).
+
+```html
+<ave-pagination [total]="134" [pageSizes]="[10, 20, 50, 100]" [(pageSize)]="pageSize" [(page)]="page" />
+```
+
+<Canvas of={PaginationStories.PageSize} />
+
 ## States
 
 - **The current page:** the accent fill, as a calendar's chosen day, and `aria-current="page"`.
@@ -57,7 +67,7 @@ Under 480px of its container the numbers give way to "Страница 4 из 14
 
 ## Keyboard
 
-Native buttons: Tab moves along the arrows and the numbers, Enter or Space goes to the page.
+Native buttons: Tab moves along the page-size select, the arrows and the numbers, Enter or Space goes to the page. The select opens with Enter, Space or Down, as every select does.
 
 ## Accessibility
 

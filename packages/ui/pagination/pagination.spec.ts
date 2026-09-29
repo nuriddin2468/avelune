@@ -12,13 +12,14 @@ import { userEvent } from 'vitest/browser';
   imports: [AvePagination],
   template: `
     <div class="frame">
-      <ave-pagination [total]="total()" [pageSize]="size()" [label]="label()" [(page)]="page" />
+      <ave-pagination [total]="total()" [pageSizes]="sizes()" [label]="label()" [(pageSize)]="size" [(page)]="page" />
     </div>
   `,
 })
 class PaginationHost {
   readonly total = signal(134);
   readonly size = signal(10);
+  readonly sizes = signal<readonly number[]>([]);
   readonly page = signal(1);
   readonly label = signal<string | undefined>(undefined);
 }
@@ -212,6 +213,37 @@ describe('AvePagination', () => {
     fixture.componentInstance.label.set('Страницы актов');
     fixture.detectChanges();
     expect(element.querySelector('nav')?.getAttribute('aria-label')).toBe('Страницы актов');
+    element.remove();
+  });
+
+  it('lets people choose the page size, keeping the first item they saw on the page (ADR 0087)', async () => {
+    const { fixture, element, pagination } = await mount();
+    expect(await pagination.getPageSize()).toBeNull();
+    expect(await pagination.getPageSizes()).toEqual([]);
+    await expect(pagination.setPageSize(20)).rejects.toThrow('no page-size select');
+    fixture.componentInstance.sizes.set([20, 50]);
+    fixture.componentInstance.page.set(5);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    // The current size is offered too; the select is named by the words before it, which screen readers skip.
+    expect(await pagination.getPageSize()).toBe(10);
+    expect(await pagination.getPageSizes()).toEqual([10, 20, 50]);
+    const words = element.querySelector('.size > span');
+    expect(words?.textContent.trim()).toBe('На странице');
+    expect(words?.getAttribute('aria-hidden')).toBe('true');
+    const trigger = element.querySelector('.size .trigger');
+    expect(trigger?.getAttribute('aria-label')).toBe('На странице');
+    expect(trigger?.getAttribute('aria-required')).toBe('true');
+    expect(element.querySelector('.size .clear')).toBeNull();
+    // Items 41–50 were shown: at 20 a page, they are on page 3; at 50, on page 1.
+    await pagination.setPageSize(20);
+    expect(fixture.componentInstance.size()).toBe(20);
+    expect(fixture.componentInstance.page()).toBe(3);
+    expect(await pagination.getRange()).toBe('41–60 из 134');
+    await pagination.setPageSize(50);
+    expect(fixture.componentInstance.page()).toBe(1);
+    expect(await pagination.getRange()).toBe('1–50 из 134');
+    await expect(pagination.setPageSize(30)).rejects.toThrow('page size 30 is not offered');
     element.remove();
   });
 

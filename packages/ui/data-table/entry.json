@@ -1,5 +1,5 @@
 {
   "$schema": "../entry.schema.json",
   "layer": "composites",
-  "sizeLimit": "3.1 kB"
+  "sizeLimit": "6.4 kB"
 }

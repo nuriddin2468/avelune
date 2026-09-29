@@ -125,6 +125,20 @@ export interface AveMessages {
   readonly pageOf: (page: string, count: string) => string;
   /** Which items a page shows, and how many there are in all. */
   readonly itemRange: (from: string, to: string, total: string) => string;
+  /** Names a pagination's page-size select, and stands before it. */
+  readonly pageSize: string;
+  /** The name of a table's pagination, with the table's name, so two tables' landmarks differ (ADR 0087). */
+  readonly pagesOf: (list: string) => string;
+  /** Said before a row's title by its checkbox in a table: "Выбрать ДК-2026/114". */
+  readonly selectRow: string;
+  /** The checkbox in a table's header that chooses every row of the page. */
+  readonly selectPage: string;
+  /** The control that sets a table column's width, with the column's header. */
+  readonly columnWidth: (header: string) => string;
+  /** A table without rows, when the application gives no empty state of its own. */
+  readonly noRecords: string;
+  /** A table whose rows did not come from the server. */
+  readonly recordsFailed: string;
   /** Names the mark of a step that is done; screen readers hear it with the step's words. */
   readonly stepComplete: string;
   /** Names the mark of a step that needs attention before the steps after it. */
@@ -196,6 +210,13 @@ export const aveMessagesEn: AveMessages = {
   page: (page) => `Page ${page}`,
   pageOf: (page, count) => `Page ${page} of ${count}`,
   itemRange: (from, to, total) => `${from}–${to} of ${total}`,
+  pageSize: 'Per page',
+  pagesOf: (list) => `${list}: pages`,
+  selectRow: 'Select',
+  selectPage: 'Select the rows of the page',
+  columnWidth: (header) => `Width of ${header}`,
+  noRecords: 'No records',
+  recordsFailed: 'The records did not load.',
   stepComplete: 'Done',
   stepError: 'Needs attention',
 };
@@ -267,6 +288,13 @@ export const aveMessagesRu: AveMessages = {
   page: (page) => `Страница ${page}`,
   pageOf: (page, count) => `Страница ${page} из ${count}`,
   itemRange: (from, to, total) => `${from}–${to} из ${total}`,
+  pageSize: 'На странице',
+  pagesOf: (list) => `${list}: страницы`,
+  selectRow: 'Выбрать',
+  selectPage: 'Выбрать строки страницы',
+  columnWidth: (header) => `Ширина столбца «${header}»`,
+  noRecords: 'Записей нет',
+  recordsFailed: 'Записи не загрузились.',
   stepComplete: 'Выполнен',
   stepError: 'Требует внимания',
 };
@@ -336,6 +364,13 @@ export const aveMessagesUzLatn: AveMessages = {
   page: (page) => `${page}-sahifa`,
   pageOf: (page, count) => `${page}-sahifa, jami ${count}`,
   itemRange: (from, to, total) => `${from}–${to}, jami ${total}`,
+  pageSize: 'Sahifada',
+  pagesOf: (list) => `${list}: sahifalar`,
+  selectRow: 'Tanlash',
+  selectPage: 'Sahifa qatorlarini tanlash',
+  columnWidth: (header) => `«${header}» ustunining kengligi`,
+  noRecords: 'Yozuvlar yoʻq',
+  recordsFailed: 'Yozuvlar yuklanmadi.',
   stepComplete: 'Bajarildi',
   stepError: 'Eʼtibor talab qiladi',
 };
@@ -405,6 +440,13 @@ export const aveMessagesUzCyrl: AveMessages = {
   page: (page) => `${page}-саҳифа`,
   pageOf: (page, count) => `${page}-саҳифа, жами ${count}`,
   itemRange: (from, to, total) => `${from}–${to}, жами ${total}`,
+  pageSize: 'Саҳифада',
+  pagesOf: (list) => `${list}: саҳифалар`,
+  selectRow: 'Танлаш',
+  selectPage: 'Саҳифа қаторларини танлаш',
+  columnWidth: (header) => `«${header}» устунининг кенглиги`,
+  noRecords: 'Ёзувлар йўқ',
+  recordsFailed: 'Ёзувлар юкланмади.',
   stepComplete: 'Бажарилди',
   stepError: 'Эътибор талаб қилади',
 };

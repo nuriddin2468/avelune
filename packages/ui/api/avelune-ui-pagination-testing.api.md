@@ -12,6 +12,8 @@ import { HarnessPredicate } from '@angular/cdk/testing';
 export class AvePaginationHarness extends ComponentHarness {
     getCurrentPage(): Promise<number | null>;
     getPages(): Promise<string[]>;
+    getPageSize(): Promise<number | null>;
+    getPageSizes(): Promise<number[]>;
     getRange(): Promise<string | null>;
     goToPage(page: number): Promise<void>;
     hasNext(): Promise<boolean>;
@@ -19,6 +21,7 @@ export class AvePaginationHarness extends ComponentHarness {
     static hostSelector: string;
     next(): Promise<void>;
     previous(): Promise<void>;
+    setPageSize(size: number): Promise<void>;
     static with(options?: AvePaginationHarnessFilters): HarnessPredicate<AvePaginationHarness>;
 }
 

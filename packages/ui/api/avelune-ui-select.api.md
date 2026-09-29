@@ -6,6 +6,7 @@
 
 import * as _angular_cdk_overlay from '@angular/cdk/overlay';
 import * as _angular_core from '@angular/core';
+import { AveControlState } from '@avelune/ui/forms';
 import { AveIconName } from '@avelune/ui/icon';
 import * as _avelune_ui_forms from '@avelune/ui/forms';
 import * as _avelune_ui_i18n from '@avelune/ui/i18n';
@@ -207,19 +208,20 @@ export class AveSelect<V> implements ControlValueAccessor {
     registerOnChange(callback: (value: V | null) => void): void;
     // @internal (undocumented)
     registerOnTouched(callback: () => void): void;
+    readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected readonly selected: _angular_core.Signal<AveOption<V> | undefined>;
     protected readonly selectedValues: _angular_core.WritableSignal<V[]>;
     // @internal (undocumented)
     setDisabledState(disabled: boolean): void;
     readonly size: _angular_core.InputSignal<AveSelectSize>;
-    readonly state: _avelune_ui_forms.AveControlState;
+    readonly state: AveControlState;
     readonly touch: _angular_core.OutputEmitterRef<void>;
     readonly value: _angular_core.ModelSignal<V | null>;
     protected readonly valueTemplate: _angular_core.Signal<AveSelectValueTemplate<V> | undefined>;
     // @internal (undocumented)
     writeValue(value: unknown): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveSelect<any>, "ave-select", never, { "options": { "alias": "options"; "required": true; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; "chosenOptions": { "alias": "chosenOptions"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; "touch": "touch"; }, ["optionTemplate", "valueTemplate"], never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveSelect<any>, "ave-select", never, { "options": { "alias": "options"; "required": true; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; "chosenOptions": { "alias": "chosenOptions"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; "touch": "touch"; }, ["optionTemplate", "valueTemplate"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveSelect<any>, never>;
 }
