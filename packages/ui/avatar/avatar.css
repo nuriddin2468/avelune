@@ -1,0 +1,52 @@
+@layer components {
+  /* An avatar (ADR 0082): the initials in the text colour on the neutral fill, centred; a circle for a person and a
+     rounded square for an organisation; 24, 32 or 40px. No colour from the name. The border is transparent and only
+     forced colours paint it, where the fill is dropped. */
+  :host {
+    --ave-avatar-size: var(--ave-space-8);
+    --ave-avatar-photo: none;
+
+    display: inline-grid;
+    flex: none;
+    place-content: center;
+    inline-size: var(--ave-avatar-size);
+    block-size: var(--ave-avatar-size);
+    overflow: hidden;
+    border: var(--ave-border-width-default) solid transparent;
+    border-radius: var(--ave-radius-full);
+    background-color: var(--ave-color-bg-active);
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-label-sm);
+    user-select: none;
+    vertical-align: middle;
+  }
+
+  :host([data-size='sm']) {
+    --ave-avatar-size: var(--ave-space-6);
+  }
+
+  :host([data-size='lg']) {
+    --ave-avatar-size: var(--ave-space-10);
+
+    font: var(--ave-font-label-md);
+  }
+
+  :host([data-kind='organization']) {
+    border-radius: var(--ave-radius-md);
+  }
+
+  :host([data-kind='organization'][data-size='sm']) {
+    border-radius: var(--ave-radius-sm);
+  }
+
+  /* The photo, once it has loaded, fills the shape, cropped, over the fill; the initials make way. */
+  :host([data-photo]) {
+    background-image: var(--ave-avatar-photo);
+    background-position: center;
+    background-size: cover;
+  }
+
+  :host([data-photo]) .initials {
+    visibility: hidden;
+  }
+}

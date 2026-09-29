@@ -1,0 +1,45 @@
+/* The frame of the Avatar stories. Stories only; the component's own styles are avatar.css. */
+@layer components {
+  :host {
+    display: grid;
+    gap: var(--ave-space-4);
+    max-inline-size: var(--ave-container-md);
+    padding: var(--ave-space-6);
+  }
+
+  .grid {
+    display: grid;
+    gap: var(--ave-space-4);
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ave-space-3);
+  }
+
+  /* A list of people: the avatar 12px before the name and the department under it. */
+  .people {
+    display: grid;
+    gap: var(--ave-space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .person {
+    display: flex;
+    align-items: center;
+    gap: var(--ave-space-3);
+  }
+
+  .who {
+    display: grid;
+  }
+
+  .muted {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+}

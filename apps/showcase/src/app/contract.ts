@@ -11,6 +11,7 @@ import {
   lucidePencil,
   lucidePrinter,
 } from '@avelune/icons/lucide';
+import { AveAvatar } from '@avelune/ui/avatar';
 import { AveBadge } from '@avelune/ui/badge';
 import { AveBreadcrumbs, type AveBreadcrumb } from '@avelune/ui/breadcrumbs';
 import { AveButton, AveIconButton } from '@avelune/ui/button';
@@ -44,6 +45,7 @@ export const contractTitle: ResolveFn<string> = (route) => {
 @Component({
   selector: 'ave-showcase-contract',
   imports: [
+    AveAvatar,
     AveBadge,
     AveBreadcrumbs,
     AveButton,
@@ -131,7 +133,10 @@ export const contractTitle: ResolveFn<string> = (route) => {
             <dl class="facts">
               <div class="fact">
                 <dt>Контрагент</dt>
-                <dd>{{ contract.counterparty }}</dd>
+                <dd class="party">
+                  <ave-avatar size="sm" kind="organization" decorative [name]="contract.counterparty" />
+                  {{ contract.counterparty }}
+                </dd>
               </div>
               <div class="fact">
                 <dt>Сумма без НДС</dt>
@@ -174,7 +179,10 @@ export const contractTitle: ResolveFn<string> = (route) => {
             <ol class="events">
               @for (event of history; track event.what) {
                 <li class="event">
-                  <span>{{ event.what }}</span>
+                  <span class="party">
+                    <ave-avatar size="sm" decorative [name]="event.who" />
+                    <span>{{ event.who }}: {{ event.what }}</span>
+                  </span>
                   <span class="when">{{ dates.numeric(event.on) }}</span>
                 </li>
               }
@@ -221,8 +229,9 @@ export class ContractPage {
 
   /** What happened to the contract, newest first. */
   protected readonly history = [
-    { what: 'Отправлен на согласование', on: '2026-09-18' },
-    { what: 'Создан черновик', on: '2026-09-16' },
+    { who: 'Азиза Каримова', what: 'отправила на согласование', on: '2026-09-18' },
+    { who: 'Азиза Каримова', what: 'добавила спецификацию', on: '2026-09-17' },
+    { who: 'Бахтиёр Рахимов', what: 'создал черновик', on: '2026-09-16' },
   ];
   protected readonly trail: readonly AveBreadcrumb[] = [{ label: 'Договоры', link: '/contracts' }];
   protected readonly statuses = contractStatuses;

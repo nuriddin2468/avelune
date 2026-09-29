@@ -87,6 +87,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0079](0079-badge-and-count.md) | Badge and Count: a record's status in words on its tinted fill, and a number that needs attention | Accepted |
 | [0080](0080-tag.md) | Tag: a value in an outlined rectangle, a button that takes it away, focus to the next one | Accepted |
 | [0081](0081-multiselect-chosen-tags.md) | The multiselect's chosen values as tags inside its field | Accepted |
+| [0082](0082-avatar.md) | Avatar: initials on the neutral fill, a circle for a person and a square for an organisation, a photo over them | Accepted |
 
 ## Template
 

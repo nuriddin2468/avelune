@@ -1,0 +1,67 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as AvatarStories from './avatar.stories';
+
+<Meta of={AvatarStories} />
+
+# Avatar
+
+`<ave-avatar>` is a person or an organisation by their initials, or their photo, beside their name: an approver, an author, a counterparty (ADR 0082).
+
+```ts
+import { AveAvatar } from '@avelune/ui/avatar';
+```
+
+<Canvas of={AvatarStories.Default} />
+
+## When to use
+
+- Beside a person's or an organisation's name in a list, a table, a card or a history, so people find them at a glance.
+
+## When not to use
+
+- Instead of the name: an avatar alone says too little; show the name beside it, or at least in its tooltip.
+- For a thing that is not a person or an organisation (a document, a file): use its icon.
+
+## Anatomy
+
+The initials in `font.label-sm` (`font.label-md` at 40px), in the text colour on the neutral fill; a circle for a person, a square with `radius.md` for an organisation (`radius.sm` at 24px). A photo, once it has loaded, covers the initials, cropped to fill the shape; data URLs work too.
+
+```html
+<ave-avatar name="Азиза Каримова" decorative /> Азиза Каримова
+<ave-avatar name="ООО «Мебель Сервис»" kind="organization" />
+```
+
+## Sizes
+
+| Size           | Box  | Use beside                                  |
+| -------------- | ---- | ------------------------------------------- |
+| `sm`           | 24px | A small line: a table cell, a history entry |
+| `md` (default) | 32px | A name                                      |
+| `lg`           | 40px | A name and a second line                    |
+
+## Initials
+
+The first letters of the first two words of `name`, upper-cased in the application's locale: "Азиза Каримова" → "АК", "Oʻktam Aliyev" → "OA". An organisation takes the words of its name in quotes: "ООО «Мебель Сервис»" → "МС". When the rule does not fit ("ИП Каримов А."), give `initials`.
+
+## Photos
+
+`image` takes the photo's address. The initials show until it has loaded and stay if it fails, so a slow or broken photo never leaves an empty shape.
+
+<Canvas of={AvatarStories.Photos} />
+
+## Accessibility
+
+- An avatar is an image named by `name`. Beside the name it shows, make it `decorative`, so screen readers do not hear the name twice.
+- The initials keep 4.5:1 on the neutral fill in both themes (`contrast-pairs.json`, text on a pressed item). In forced colours the shape keeps its outline.
+
+<Canvas of={AvatarStories.Places} />
+
+## Motion
+
+None.
+
+## Do and don't
+
+- Do give an organisation `kind="organization"`, so it reads apart from a person.
+- Do keep 12px between an avatar and the name beside it.
+- Don't colour avatars: the kit's colours carry meaning.

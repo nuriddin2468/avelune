@@ -86,6 +86,13 @@
     border-block-start: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
   }
 
+  /* An organisation's or a person's avatar 8px before the name, level with it. */
+  .party {
+    display: flex;
+    align-items: center;
+    gap: var(--ave-space-2);
+  }
+
   .when {
     color: var(--ave-color-fg-muted);
     font-variant-numeric: tabular-nums;
