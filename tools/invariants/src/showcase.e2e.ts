@@ -1,6 +1,6 @@
 // Cross-component invariants of brief §8.2 and the axe gate of brief §5.4, on every showcase screen, once per project
-// of playwright.config.ts (light and dark, 1280 and 390 px). Same-size controls joined with Wave 1; overlays and
-// animate.leave join with the overlays (Wave 3).
+// of playwright.config.ts (light and dark, 1280 and 390 px). Same-size controls joined with Wave 1, the overlays with
+// Wave 3.
 import { AxeBuilder } from '@axe-core/playwright';
 import { test as base, expect, type Page } from '@playwright/test';
 import { tokens } from '@avelune/tokens';
@@ -8,6 +8,8 @@ import { fixedEnvironment } from '@avelune/visual';
 import { controlSelector, sameSizeViolations, type ControlBox } from './controls.ts';
 import { motionGlobal, motionTokens, recordMotion, reducedMotionViolations, timingViolations } from './motion.ts';
 import type { MotionRecord } from './motion.ts';
+import { probeOverlays } from './overlay-probe.ts';
+import { overlayViolations, type OverlayProbe } from './overlays.ts';
 import { findScreens, openScreen } from './screens.ts';
 
 const test = base.extend<object, { screens: string[] }>({
@@ -174,5 +176,32 @@ test('controls of the same size share height, radius, border, font size and padd
       );
       expect.soft(sameSizeViolations(boxes), `controls of one size that differ on ${path}`).toEqual([]);
     });
+  }
+});
+
+test("overlays share their family's look, enter and leave, close on Escape and outside, and return focus", async ({
+  page,
+  screens,
+}) => {
+  // Every kind of overlay opens twice on every screen; emulated amd64 is slow.
+  test.setTimeout(300_000);
+  await page.addInitScript(recordMotion);
+  const probes: OverlayProbe[] = [];
+  for (const path of screens) {
+    await test.step(path, async () => {
+      await openScreen(page, path);
+      probes.push(...(await probeOverlays(page, path)));
+    });
+  }
+  await test.info().attach('overlays', { body: JSON.stringify(probes), contentType: 'application/json' });
+  // Judged together, so that each family is compared across screens; reported per screen.
+  const violations = overlayViolations(probes);
+  for (const path of screens) {
+    expect
+      .soft(
+        violations.filter((violation) => violation.endsWith(` on ${path}`)),
+        `overlays that break an invariant on ${path}`,
+      )
+      .toEqual([]);
   }
 });

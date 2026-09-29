@@ -155,3 +155,46 @@ main {
 .taller {
   block-size: 40px;
 }
+
+/* The popups of overlay.js: the kit's popup surface, entering and leaving on catalog keyframes (fades only, so reduced
+   motion holds); .flat is the violation's radius. */
+.popup-host {
+  position: fixed;
+  inset: calc(var(--ave-space-16) * 3) auto auto var(--ave-space-4);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: visible;
+  background: transparent;
+}
+
+.surface {
+  padding: var(--ave-space-2);
+  border-radius: var(--ave-radius-lg);
+  background: var(--ave-color-bg-surface-raised);
+  box-shadow: var(--ave-elevation-popover);
+}
+
+.surface.flat {
+  border-radius: 0;
+}
+
+.surface.enter {
+  animation: ave-motion-pop-in var(--ave-duration-normal) var(--ave-easing-enter);
+}
+
+.surface.exit {
+  animation: ave-motion-fade-out var(--ave-duration-fast) var(--ave-easing-exit) forwards;
+}
+
+@keyframes ave-motion-pop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes ave-motion-fade-out {
+  to {
+    opacity: 0;
+  }
+}

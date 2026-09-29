@@ -28,7 +28,7 @@ describe('showcase suite', () => {
 
   it('fails the run', () => {
     assert.notEqual(run.status, 0, run.log);
-    assert.equal(run.tests.length, 6);
+    assert.equal(run.tests.length, 7);
   });
 
   it('fails axe on the screen with a violation only', () => {
@@ -105,5 +105,27 @@ describe('showcase suite', () => {
       /input\[aveInput\] \\"Query\\" \(md\): height 40, but button\[aveButton\] \\"Search\\" has 36/,
     );
     assert.doesNotMatch(errors, /aveIconButton.*padding/);
+  });
+
+  it('fails an overlay off its family, without catalog motion and deaf to Escape, and accepts the index one', () => {
+    const test = result(
+      "overlays share their family's look, enter and leave, close on Escape and outside, and return focus",
+    );
+    assert.deepEqual(failingScreens(test), ['/overlay.html']);
+    const errors = test.errors.join('\n');
+    assert.match(errors, /Filters\\": radius 0px, but the popup button \[dialog\] \\"Actions\\" has 12px/);
+    assert.match(errors, /Filters\\": plays no enter of the motion catalog/);
+    assert.match(errors, /Filters\\": does not close on Escape/);
+    // A press outside closed it: that part passed.
+    assert.doesNotMatch(errors, /press outside/);
+    // The index's popup passed because it was opened and measured, not because nothing was probed.
+    const probes: unknown = JSON.parse(test.attachments.get('overlays') ?? '[]');
+    assert.ok(Array.isArray(probes));
+    const index: unknown = probes.find(
+      (probe: unknown) => typeof probe === 'object' && probe !== null && Reflect.get(probe, 'path') === '/',
+    );
+    if (typeof index !== 'object' || index === null) assert.fail(`no probe of / in ${JSON.stringify(probes)}`);
+    assert.equal(Reflect.get(index, 'closesOnOutsidePress'), true);
+    assert.deepEqual(Reflect.get(index, 'exited'), ['ave-motion-fade-out']);
   });
 });

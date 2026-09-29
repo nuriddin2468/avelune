@@ -74,6 +74,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0066](0066-dialog-and-confirm-dialog.md) | Dialog and ConfirmDialog: a native modal dialog that is its own backdrop, the catalog's classes, an announcer inside | Accepted |
 | [0067](0067-drawer.md) | Drawer: the kit's dialog against an edge, and a token that turns its slide into a fade under reduced motion | Accepted |
 | [0068](0068-toast.md) | Toast: a service, a popover region that moves into an open modal dialog, a queue of three, F8 | Accepted |
+| [0069](0069-overlay-invariants.md) | Overlay invariants: one control per kind, opened as a person does, and CDK kept from closing on Escape | Accepted |
 
 ## Template
 

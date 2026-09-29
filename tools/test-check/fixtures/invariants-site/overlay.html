@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>An overlay that breaks the overlay invariants</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/tokens/tokens.css" />
+    <link rel="stylesheet" href="/fonts/fonts.css" />
+    <link rel="stylesheet" href="/fixture.css" />
+  </head>
+  <body>
+    <main>
+      <h1>An overlay that breaks the overlay invariants</h1>
+      <!-- Violations: square corners where the index's popup has radius.lg, no enter of the motion catalog, and Escape
+           does not close it. A press outside does. -->
+      <button type="button" aria-haspopup="dialog" aria-expanded="false" data-popup data-broken="look motion escape">
+        Filters
+      </button>
+    </main>
+    <script src="/overlay.js"></script>
+  </body>
+</html>
