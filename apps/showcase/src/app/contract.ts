@@ -11,6 +11,7 @@ import {
   lucidePencil,
   lucidePrinter,
 } from '@avelune/icons/lucide';
+import { AveAccordion, AveAccordionItem } from '@avelune/ui/accordion';
 import { AveAvatar } from '@avelune/ui/avatar';
 import { AveBadge } from '@avelune/ui/badge';
 import { AveBreadcrumbs, type AveBreadcrumb } from '@avelune/ui/breadcrumbs';
@@ -45,6 +46,8 @@ export const contractTitle: ResolveFn<string> = (route) => {
 @Component({
   selector: 'ave-showcase-contract',
   imports: [
+    AveAccordion,
+    AveAccordionItem,
     AveAvatar,
     AveBadge,
     AveBreadcrumbs,
@@ -157,6 +160,14 @@ export const contractTitle: ResolveFn<string> = (route) => {
                 <dd>{{ dates.numeric(contract.endsOn) }}</dd>
               </div>
             </dl>
+            <h2 class="section">Условия договора</h2>
+            <ave-accordion [level]="3">
+              @for (term of terms; track term.heading) {
+                <ave-accordion-item [heading]="term.heading">
+                  <p>{{ term.text }}</p>
+                </ave-accordion-item>
+              }
+            </ave-accordion>
           </ave-tab>
           <ave-tab value="approval" label="Согласование">
             <p class="note">
@@ -219,6 +230,22 @@ export class ContractPage {
     { label: 'Финансовый отдел', description: 'На рассмотрении с 19.09.2026' },
     { label: 'Служба безопасности', description: 'Ожидает' },
     { label: 'Директор', description: 'Подпись' },
+  ];
+
+  /** The contract's terms, read one or two at a time. */
+  protected readonly terms = [
+    {
+      heading: 'Штрафы и пени',
+      text: 'За каждый день просрочки поставки поставщик платит пеню 0,1% от суммы договора, но не более 10% от неё.',
+    },
+    {
+      heading: 'Форс-мажор',
+      text: 'Стороны освобождаются от ответственности за неисполнение обязательств из-за обстоятельств непреодолимой силы, о которых сообщили в течение 5 рабочих дней.',
+    },
+    {
+      heading: 'Порядок расторжения',
+      text: 'Договор расторгается по соглашению сторон или в одностороннем порядке с уведомлением за 30 календарных дней.',
+    },
   ];
 
   /** The contract's files. */

@@ -1,0 +1,75 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as AccordionStories from './accordion.stories';
+
+<Meta of={AccordionStories} />
+
+# Accordion
+
+`<ave-accordion>` is headings one under another that show and hide their sections: a contract's terms, the details of both parties (ADR 0084). It is Angular Aria's accordion, the WAI-ARIA accordion pattern.
+
+```ts
+import { AveAccordion, AveAccordionItem } from '@avelune/ui/accordion';
+```
+
+<Canvas of={AccordionStories.Default} />
+
+## When to use
+
+- For sections of one page that people read one or two at a time, in any order, where showing all would make the page long: terms, details, answers.
+
+## When not to use
+
+- For sections people switch between side by side: use tabs.
+- For steps in order: use a stepper.
+- For content everyone needs: show it; hiding it costs a click each time.
+- For a single "Show more": use a button that shows the rest in place.
+
+## Anatomy
+
+Items one under another between `border.subtle` lines. Each is a heading of the accordion's `level` (3 by default) holding a trigger as wide as the item, at least the large control's height, with the heading's words in `font.heading-sm` and a chevron at the inline end, turned over while open; under it the panel's content, 8px from its sides and 16px from the line below.
+
+```html
+<ave-accordion [level]="3">
+  <ave-accordion-item heading="Штрафы и пени" [(expanded)]="fines">…</ave-accordion-item>
+  <ave-accordion-item heading="Форс-мажор">…</ave-accordion-item>
+</ave-accordion>
+```
+
+Several items may be open at once; with `[multiple]="false"`, opening one closes the others.
+
+<Canvas of={AccordionStories.Single} />
+
+## States
+
+- **Closed** and **open**, which `expanded` holds (a model).
+- **Hover:** the hover fill on the trigger; **pressed:** the pressed fill.
+- **Disabled:** the words in the disabled colour; the heading keeps focus and does not open.
+- **Focus:** the kit's ring around the trigger.
+
+## Keyboard
+
+Tab reaches each heading. Enter or Space opens and closes it; Down and Up move to the next and the previous heading, Home and End to the first and the last.
+
+<Canvas of={AccordionStories.Keyboard} />
+
+## Content
+
+- The heading names the section in a few words; it wraps, and the chevron stays on its first line.
+- A panel's content enters the page when it first opens and stays, so what people typed or scrolled stays too.
+
+<Canvas of={AccordionStories.LongText} />
+
+## Accessibility
+
+- Each trigger is a button inside a heading, with `aria-expanded` and `aria-controls`; its panel is a region named by it, inert while closed.
+- Choose `level` so the headings continue the page's outline.
+
+## Motion
+
+The panel opens from no height to its content's and closes back on `timing.expand` (200ms, `easing.standard`), and the chevron turns over on the same: the accordion entry of the motion catalog (brief §6.3), by the grid rows of brief §6.4. Only after the person has used the item; under reduced motion it opens and closes at once.
+
+## Do and don't
+
+- Do keep the headings short and distinct.
+- Don't nest accordions.
+- Don't put the only way to finish a task inside a closed section.

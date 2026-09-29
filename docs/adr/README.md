@@ -89,6 +89,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0081](0081-multiselect-chosen-tags.md) | The multiselect's chosen values as tags inside its field | Accepted |
 | [0082](0082-avatar.md) | Avatar: initials on the neutral fill, a circle for a person and a square for an organisation, a photo over them | Accepted |
 | [0083](0083-card.md) | Card: a bordered surface without a shadow, a heading row with its end, a row of actions at its foot | Accepted |
+| [0084](0084-accordion.md) | Accordion: Angular Aria's accordion, items declared with their content, a panel that opens on `timing.expand` | Accepted |
 
 ## Template
 

@@ -1,0 +1,106 @@
+@layer components {
+  /* An item (ADR 0084): its heading's trigger and its panel, over a subtle line. */
+  :host {
+    display: block;
+    border-block-end: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  }
+
+  .heading {
+    display: block;
+  }
+
+  /* The trigger: as wide as the item, at least the large control's height, its words on the middle of their first
+     line, the chevron at the inline end (the agent's proposal), turned over while open. The hover fill. */
+  .trigger {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--ave-space-2);
+    inline-size: 100%;
+    min-block-size: var(--ave-control-height-lg);
+    margin: 0;
+    padding-block: calc((var(--ave-control-height-lg) - var(--ave-font-heading-sm-line-height)) / 2);
+    padding-inline: var(--ave-space-2);
+    border: 0;
+    border-radius: var(--ave-radius-md);
+    background-color: transparent;
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-heading-sm);
+    text-align: start;
+    cursor: pointer;
+    transition-property: background-color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+
+    &:hover {
+      background-color: var(--ave-color-bg-hover);
+    }
+
+    &:active {
+      background-color: var(--ave-color-bg-active);
+    }
+
+    &[aria-disabled='true'] {
+      color: var(--ave-color-fg-disabled);
+      cursor: not-allowed;
+
+      &:hover,
+      &:active {
+        background-color: transparent;
+      }
+    }
+  }
+
+  .words {
+    flex: 1;
+    min-inline-size: 0;
+  }
+
+  .chevron {
+    margin-block: calc((var(--ave-font-heading-sm-line-height) - var(--ave-size-icon-sm)) / 2);
+    color: var(--ave-color-fg-muted);
+    transition-property: rotate;
+    transition-duration: var(--ave-timing-expand);
+    transition-timing-function: var(--ave-easing-standard);
+  }
+
+  .trigger[aria-expanded='true'] .chevron {
+    rotate: 0.5turn;
+  }
+
+  /* The panel: its rows from none to its content's height (brief §6.4), visible until it has closed; only once the
+     person has used the item. */
+  .panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    visibility: hidden;
+
+    &:not([inert]) {
+      grid-template-rows: 1fr;
+      visibility: visible;
+    }
+
+    &[data-used] {
+      transition-property: grid-template-rows, visibility;
+      transition-duration: var(--ave-timing-expand);
+      transition-timing-function: var(--ave-easing-standard);
+      transition-behavior: allow-discrete;
+    }
+  }
+
+  .content {
+    min-block-size: 0;
+    overflow: hidden;
+  }
+
+  /* The panel's content, 8px from its sides and 16px from the line below. */
+  .inner {
+    padding-block: 0 var(--ave-space-4);
+    padding-inline: var(--ave-space-2);
+  }
+
+  @media (forced-colors: active) {
+    .trigger[aria-disabled='true'] {
+      color: GrayText;
+    }
+  }
+}

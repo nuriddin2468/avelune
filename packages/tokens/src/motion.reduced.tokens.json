@@ -66,6 +66,13 @@
         "unit": "ms"
       },
       "$description": "Nothing slides: the part jumps to its new state (brief §6.5)."
+    },
+    "expand": {
+      "$value": {
+        "value": 0,
+        "unit": "ms"
+      },
+      "$description": "Nothing grows: a panel or a row opens and closes at once (brief §6.5)."
     }
   }
 }

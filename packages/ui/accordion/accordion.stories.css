@@ -1,0 +1,12 @@
+/* The frame of the Accordion stories. Stories only; the component's own styles are accordion.css and item.css. */
+@layer components {
+  :host {
+    display: block;
+    max-inline-size: var(--ave-container-md);
+    padding: var(--ave-space-6);
+  }
+
+  .narrow {
+    max-inline-size: calc(var(--ave-space-16) * 4.5);
+  }
+}

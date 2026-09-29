@@ -65,6 +65,7 @@ One primary button per view region (a form, a dialog, a toolbar, a card): the on
 | Sidebar navigation | The product's pages and groups of pages, the same on every screen; in a drawer on a phone (ADR 0072) |
 | Breadcrumbs | Where a page deep in the hierarchy is, above its heading: a contract under the register (ADR 0070) |
 | Tabs | Sections of one page that people look at one at a time; tabs never change the address (ADR 0071) |
+| Accordion | Sections of one page that people read one or two at a time, in any order, where showing all would make it long (ADR 0084) |
 | Link (`a[aveLink]`) | A reference inside text, or a record's name that opens its page; always underlined, and it says when it opens a new tab (ADR 0073) |
 | Pagination | A list longer than a page, under the list; back to the first page when a search or a filter changes it (ADR 0074) |
 | Stepper | The steps of a long form in turn, or the stages a document passes through (an approval route); never sections people open in any order (ADR 0077) |

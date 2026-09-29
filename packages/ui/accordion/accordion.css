@@ -1,0 +1,7 @@
+@layer components {
+  /* An accordion (ADR 0084): its items one under another, between subtle lines. */
+  :host {
+    display: block;
+    border-block-start: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  }
+}

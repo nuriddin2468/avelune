@@ -57,6 +57,12 @@
     margin: 0;
   }
 
+  /* The terms' heading under the facts, 32px below them. */
+  .section {
+    margin-block: var(--ave-space-8) var(--ave-space-2);
+    font: var(--ave-font-heading-md);
+  }
+
   .amount {
     font-variant-numeric: tabular-nums;
   }
