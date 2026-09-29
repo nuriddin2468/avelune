@@ -13,7 +13,9 @@
   }
 
   /* The list overlaps the line by its width, so the chosen tab's bar covers the line. Labels never wrap: a list
-     wider than its container scrolls sideways, without a scrollbar that would sit between the tabs and the line. */
+     wider than its container scrolls sideways, without a scrollbar that would sit between the tabs and the line. It
+     takes its container's width and never gives its own, which would widen a grid's `auto` column (ADR 0071,
+     addendum). */
   .list {
     position: relative;
     display: flex;
@@ -21,6 +23,7 @@
     margin-block-end: calc(-1 * var(--ave-border-width-default));
     overflow-x: auto;
     scrollbar-width: none;
+    contain: inline-size;
   }
 
   /* A tab: the large control height, its words in the label font and the muted colour. The pointer shows a bar in the

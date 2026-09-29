@@ -50,7 +50,7 @@ A row of tabs over a subtle line, then the chosen tab's panel 16px under it. Eac
 ## Content
 
 - Tab words are short nouns in sentence case: "Сведения", "Файлы", not verbs.
-- Labels never wrap or truncate. When the tabs are wider than their container, the list scrolls sideways (the arrows, a swipe, a trackpad), and the chosen tab is scrolled into view.
+- Labels never wrap or truncate. When the tabs are wider than their container, the list scrolls sideways (the arrows, a swipe, a trackpad), and the chosen tab is scrolled into view. The tabs take their container's width and never widen it, so a container that sizes to its content (an inline block, a flex item without a basis) gives them a width.
 
 <Canvas of={TabsStories.LongText} />
 

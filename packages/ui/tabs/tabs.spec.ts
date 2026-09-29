@@ -187,12 +187,16 @@ describe('AveTabs', () => {
 
   it('scrolls a list wider than its container sideways, without wrapping a label or the page', async () => {
     const { fixture, element, tabs } = await mount();
-    element.querySelector<HTMLElement>('.frame')?.style.setProperty('inline-size', '280px');
+    // A page's grid, whose `auto` column the tabs' words must not widen.
+    const frame = element.querySelector<HTMLElement>('.frame');
+    frame?.style.setProperty('inline-size', '280px');
+    frame?.style.setProperty('display', 'grid');
     fixture.componentInstance.more.set(true);
     fixture.detectChanges();
     await fixture.whenStable();
     const list = element.querySelector<HTMLElement>('[role="tablist"]');
     if (list === null) throw new Error('No list');
+    expect(element.querySelector('ave-tabs')?.getBoundingClientRect().width).toBe(280);
     expect(list.scrollWidth).toBeGreaterThan(list.clientWidth);
     expect(new Set([...list.querySelectorAll('[role="tab"]')].map((one) => one.getBoundingClientRect().top)).size).toBe(
       1,
