@@ -83,6 +83,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0075](0075-toolbar.md) | Toolbar: Angular Aria's toolbar on the application's element, its items marked, a menu that joins it | Accepted |
 | [0076](0076-menubar.md) | Menubar: Angular Aria's menubar, menus as data, each menu moved into its overlay while it is open | Accepted |
 | [0077](0077-stepper.md) | Stepper: where a person is in a sequence of steps, drawn from data, the done steps optionally a way back | Accepted |
+| [0078](0078-data-table-native-table-pages.md) | DataTable: a native table the kit draws, not Aria's grid or CDK's table; pages, not virtual scrolling | Accepted |
 
 ## Template
 
