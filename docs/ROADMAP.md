@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below that is not marked **Deferred**, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 5, Wave 4 (navigation) built and verified on 2026-09-29: Tabs, Breadcrumbs, Pagination, SidebarNav, Menubar, Toolbar, Stepper and Link, each experimental, with the wave's baselines, invariants and summary ("Wave 4" below). Next: **STOP**, the product owner reviews Wave 4 and says whether to start Wave 5 (data). The visual reviews of brief §8.1 for Waves 2, 3 and 4, which the product owner starts, are still open. Wave 1 is closed: the product owner approved it on 2026-09-25 without the showcase review of its STOP. The release age is 16 hours since 2026-09-25 (ADR 0042). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-25.
+**Current position:** Phase 5, Wave 5 (data) next, to start in a fresh session: the product owner passed Wave 4's STOP on 2026-09-29 by asking for Wave 5 there. Wave 5's first item is the DataTable ADR (CDK Table with virtual scroll, or Aria's Grid); taste questions go to the product owner with each component's docs page. Wave 4 (navigation) is built and verified ("Wave 4" below), its components experimental. The visual reviews of brief §8.1 for Waves 2, 3 and 4, which the product owner starts, are still open. Wave 1 is closed: the product owner approved it on 2026-09-25 without the showcase review of its STOP. The release age is 16 hours since 2026-09-25 (ADR 0042). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-25.
 
 ## Parameters
 
@@ -233,7 +233,7 @@ Wave 4 (2026-09-29), built in one day after the product owner's four looks; ever
 
 Wave 4 baselines (2026-09-29), the wave's visual suite, run after its last component (product owner, 2026-09-29): `pnpm visual:update`, then every new image inspected (each story's four projects and forced colours side by side), then the full suite in compare mode, 992 passed in 21.5 minutes; after the invariants' two fixes, the Tabs and Menubar stories again, 30 passed. 108 new baselines for the 25 stories, eight of them in forced colours; none changed, since the wave added no tokens and changed no existing story. `invariants:e2e`: 28 passed once the two findings above were fixed; `test-check:e2e`: 19 passed. `ui:test`: 389 tests; `storybook:test`: 220.
 
-Wave 4 STOP: the product owner reviews the wave; its visual review joins those of Wave 2 and Wave 3.
+Wave 4 STOP passed (2026-09-29): the product owner asked to start Wave 5 in a fresh session, without a review of Wave 4's screens; its visual review stays open with those of Wave 2 and Wave 3.
 
 ## Component waves
 
@@ -242,7 +242,7 @@ Wave 4 STOP: the product owner reviews the wave; its visual review joins those o
 | 1 Calibration | Icon, Button, IconButton, Input, FormField, Checkbox | **STOP:** passed 2026-09-25 (product owner) |
 | 2 Forms | Textarea, RadioGroup, Switch, Select, Combobox/Autocomplete, Multiselect, DatePicker, DateRangePicker, FileUpload, Slider | STOP + summary |
 | 3 Overlays & feedback | Dialog, ConfirmDialog, Drawer, Popover, Tooltip, Menu, Toast, Alert, Banner, Progress, Spinner, Skeleton, EmptyState | **STOP:** passed 2026-09-29 (product owner started Wave 4) |
-| 4 Navigation | Tabs, Breadcrumbs, Pagination, SidebarNav, Menubar, Toolbar, Stepper, Link | STOP + summary |
+| 4 Navigation | Tabs, Breadcrumbs, Pagination, SidebarNav, Menubar, Toolbar, Stepper, Link | **STOP:** passed 2026-09-29 (product owner started Wave 5) |
 | 5 Data | Badge, Tag, Avatar, Card, Accordion, Tree, List, DataTable (ADR first: CDK Table + virtual scroll vs Aria Grid) | STOP + summary |
 | 6 Patterns | ListPage, ListDetail, FormPage, Dashboard, FilterPanel, SearchHeader, SettingsPage | STOP + summary |
 
