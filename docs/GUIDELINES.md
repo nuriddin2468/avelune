@@ -106,6 +106,6 @@ Dates, numbers and currency are formatted for the person's locale (uz-Latn, uz-C
 Checked on every showcase screen by `tools/invariants` (brief §8.2) as the components arrive:
 
 - Controls of the same size (Button, IconButton, Input, Select, Combobox, DatePicker) have the same height, radius, border width, font size and horizontal padding.
-- Every overlay shares elevation, radius, enter and exit motion, closes on Esc and on an outside click, and returns focus to its trigger.
+- Every overlay shares elevation, radius, enter and exit motion, closes on Esc and on an outside click, and returns focus to its trigger. The popups attached to a control share `elevation.popover`, the modal dialogs `elevation.dialog`, both `radius.lg`. The control that opens an overlay carries `aria-haspopup`: the kit's controls do, and a button of the application that opens a dialog sets `aria-haspopup="dialog"`, which also tells screen reader users (ADR 0069).
 - Every animation runs on a duration and an easing token; under reduced motion nothing moves or scales.
 - No screen scrolls horizontally at 320 px.
