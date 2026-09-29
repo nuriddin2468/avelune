@@ -1,0 +1,73 @@
+@layer components {
+  /* A row (ADR 0072): the control height, its words on their first line's middle, wrapping; the icon 8px before them
+     and a group's chevron at the end. Hover and press take the state layers. */
+  :host {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--ave-space-2);
+    inline-size: 100%;
+    min-block-size: var(--ave-control-height-md);
+    margin: 0;
+    padding-block: calc((var(--ave-control-height-md) - var(--ave-font-body-md-line-height)) / 2);
+    padding-inline: var(--ave-control-padding-inline-sm);
+    border: 0;
+    border-radius: var(--ave-radius-md);
+    background-color: transparent;
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-body-md);
+    text-align: start;
+    text-decoration-line: none;
+    cursor: pointer;
+    transition-property: background-color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+  }
+
+  :host(:hover) {
+    background-color: var(--ave-color-bg-hover);
+  }
+
+  /* The current page, a page above it, or a closed group that holds it (product owner, 2026-09-29): the neutral fill
+     of a pressed row and a 2px accent bar at the inline start, 8px short of the row's top and bottom. */
+  :host(:active),
+  :host([aria-current]),
+  :host([data-current]) {
+    background-color: var(--ave-color-bg-active);
+  }
+
+  :host([aria-current])::before,
+  :host([data-current])::before {
+    position: absolute;
+    inset-block: var(--ave-space-2);
+    inset-inline-start: 0;
+    inline-size: var(--ave-border-width-selected);
+    border-radius: var(--ave-radius-full);
+    background-color: var(--ave-color-accent-bg);
+    content: '';
+  }
+
+  /* The icons level with the first line of the words. */
+  .icon,
+  .chevron {
+    margin-block: calc((var(--ave-font-body-md-line-height) - var(--ave-size-icon-sm)) / 2);
+  }
+
+  .chevron {
+    color: var(--ave-color-fg-muted);
+  }
+
+  .label {
+    flex: 1;
+    min-inline-size: 0;
+  }
+
+  /* Forced colours paint the fills as the canvas: the bar takes the system's highlight colour. */
+  @media (forced-colors: active) {
+    :host([aria-current])::before,
+    :host([data-current])::before {
+      background-color: Highlight;
+      forced-color-adjust: none;
+    }
+  }
+}

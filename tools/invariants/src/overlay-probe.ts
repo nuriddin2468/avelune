@@ -182,9 +182,19 @@ async function probe(
   const first = await open(page, trigger);
   if (first === undefined) return failed;
   const entered = await keyframesSince(page, start);
+  // The largest corner: a drawer rounds only the corners away from its edge (ADR 0069, addendum).
   const { radius, shadow } = await first.surface.evaluate((surface) => {
     const style = getComputedStyle(surface);
-    return { radius: style.borderTopLeftRadius, shadow: style.boxShadow };
+    const corners = [
+      style.borderTopLeftRadius,
+      style.borderTopRightRadius,
+      style.borderBottomRightRadius,
+      style.borderBottomLeftRadius,
+    ];
+    return {
+      radius: `${String(Math.max(...corners.map((corner) => Number.parseFloat(corner) || 0)))}px`,
+      shadow: style.boxShadow,
+    };
   });
 
   const beforeExit = await recorded(page);

@@ -74,9 +74,10 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0066](0066-dialog-and-confirm-dialog.md) | Dialog and ConfirmDialog: a native modal dialog that is its own backdrop, the catalog's classes, an announcer inside | Accepted |
 | [0067](0067-drawer.md) | Drawer: the kit's dialog against an edge, and a token that turns its slide into a fade under reduced motion | Accepted |
 | [0068](0068-toast.md) | Toast: a service, a popover region that moves into an open modal dialog, a queue of three, F8 | Accepted |
-| [0069](0069-overlay-invariants.md) | Overlay invariants: one control per kind, opened as a person does, and CDK kept from closing on Escape | Accepted |
+| [0069](0069-overlay-invariants.md) | Overlay invariants: one control per kind, opened as a person does, and CDK kept from closing on Escape | Accepted; the largest corner in addendum (2026-09-29) |
 | [0070](0070-breadcrumbs.md) | Breadcrumbs: a trail from data, links through Angular's router, the current page as text | Accepted |
 | [0071](0071-tabs.md) | Tabs: Angular Aria's tabs, tabs declared as panels, an indicator that slides on `timing.slide` | Accepted |
+| [0072](0072-sidebar-nav.md) | SidebarNav: the product's navigation from data, current pages from the router, groups that disclose | Accepted |
 
 ## Template
 

@@ -28,3 +28,7 @@ Brief §8.2: all overlays share elevation, radius, enter and exit animation, Esc
 
 - A kit overlay that opens from a control without `aria-haspopup` is not probed; the kit's controls all carry it, and the showcase's own dialog buttons must.
 - The test takes the longest of the suite (two openings per kind per screen); its timeout is 5 minutes.
+
+## Addendum: the largest corner (2026-09-29)
+
+Wave 4 opens a drawer from a control for the first time: the showcase's navigation, from the start edge on a phone (ADR 0072). A drawer rounds only its corners away from its edge (ADR 0067), so the probe's top-left corner read 0px for a drawer from the start and would have called it square. The probe now records the largest of the four corners: a surface with square corners still reads 0px, and one with another radius still differs.

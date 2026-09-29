@@ -1,11 +1,11 @@
-/* The showcase shell: an application bar over the canvas, and the screen below it. Tokens only. */
+/* The showcase shell: an application bar over the canvas, the navigation, and the screen beside it. Tokens only. */
 @layer app {
   :host {
     display: block;
     min-block-size: 100dvb;
   }
 
-  /* The product, the screens and the view switches in one row; on a phone they wrap, in reading order. */
+  /* The navigation's button on a phone, the product and the view switches in one row. */
   .bar {
     display: flex;
     flex-wrap: wrap;
@@ -18,25 +18,8 @@
   }
 
   .product {
+    flex: 1;
     font: var(--ave-font-label-md);
-  }
-
-  /* The screens: plain links, the current one in the text colour and underlined. */
-  .nav {
-    display: flex;
-    flex: 1 0 auto;
-    gap: var(--ave-space-4);
-    font: var(--ave-font-label-md);
-  }
-
-  .nav a {
-    text-decoration: none;
-  }
-
-  .nav .current {
-    color: var(--ave-color-fg-default);
-    text-decoration: underline;
-    text-underline-offset: var(--ave-space-1);
   }
 
   .settings {
@@ -44,7 +27,38 @@
     gap: var(--ave-space-2);
   }
 
+  /* The screen beside the navigation's column from the medium breakpoint; under it alone. */
+  .body {
+    display: grid;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
   .main {
+    min-inline-size: 0;
     padding: var(--ave-space-6) var(--ave-space-4);
+  }
+
+  /* From the medium breakpoint the navigation is a column, and its button in the bar goes. */
+  @media (width >= 840px) {
+    .menu {
+      display: none;
+    }
+
+    .body {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .sidebar {
+      position: sticky;
+      inset-block-start: 0;
+      display: block;
+      align-self: start;
+      inline-size: calc(var(--ave-space-16) * 4);
+      max-block-size: 100dvb;
+      overflow-y: auto;
+    }
   }
 }

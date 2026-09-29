@@ -1,0 +1,15 @@
+/* The frame of the Sidebar navigation stories: an application's sidebar column on its surface. Stories only; the
+   navigation's styles are sidebar-nav.css. */
+@layer components {
+  :host {
+    display: block;
+    padding: var(--ave-space-6);
+  }
+
+  .column {
+    inline-size: min(100%, calc(var(--ave-space-16) * 4));
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface);
+  }
+}

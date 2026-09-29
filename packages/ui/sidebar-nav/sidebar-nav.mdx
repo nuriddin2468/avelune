@@ -1,0 +1,98 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as SidebarNavStories from './sidebar-nav.stories';
+
+<Meta of={SidebarNavStories} />
+
+# Sidebar navigation
+
+`<ave-sidebar-nav>` is the product's navigation: its pages in a column at the side of every screen, in groups and headed sections, the current page marked. Links go through Angular's router, which says which page is current (ADR 0072).
+
+```ts
+import { AveSidebarNav, type AveSidebarEntry } from '@avelune/ui/sidebar-nav';
+```
+
+<Canvas of={SidebarNavStories.Default} />
+
+## When to use
+
+- Once per product, for its top pages and the groups under them: the same navigation on every screen.
+
+## When not to use
+
+- For sections of one page: use tabs.
+- For the path to the current page: use breadcrumbs, above the page's heading.
+- For actions: use buttons or a menu; every entry here goes to a page.
+
+## Anatomy
+
+A navigation landmark named by `label`, holding a list of rows: pages (a link), groups (a button that shows or hides its pages, one level deep) and sections under a heading. A row is 36px tall (32px in compact density), with an optional 16px icon 8px before its words; a group's chevron points right when closed and down when open, and its pages are indented to its words.
+
+```html
+<ave-sidebar-nav label="Разделы" [items]="pages" />
+```
+
+```ts
+pages: AveSidebarEntry[] = [
+  { label: 'Главная', link: '/', icon: 'house', exact: true },
+  { label: 'Договоры', link: '/contracts', icon: 'file-text' },
+  {
+    label: 'Справочники',
+    icon: 'book-open',
+    items: [
+      { label: 'Контрагенты', link: '/directories/counterparties' },
+      { label: 'Подразделения', link: '/directories/departments' },
+    ],
+  },
+  { heading: 'Администрирование', items: [{ label: 'Настройки', link: '/settings', icon: 'settings' }] },
+];
+```
+
+Entries are data (`AveSidebarEntry`): a page `{ label, link, icon?, exact? }`, a group `{ label, icon?, items }` or a section `{ heading, items }`. Links go from the root; `exact` keeps the home page from being current on every page under it. Register the icons with `provideAveIcons`.
+
+## States
+
+- **Current:** the page itself, and a page above it (the register on a contract's page): the neutral fill of a pressed row and a 2px accent bar at its start, the words in the text colour.
+- **A closed group that holds the current page** looks current too. A group opens by itself when navigation reaches one of its pages; otherwise it stays as the person left it.
+- **Hover:** the hover fill. **Pressed:** the pressed fill. **Focus:** the kit's ring.
+
+<Canvas of={SidebarNavStories.InGroup} />
+
+## Content
+
+- Name pages with nouns, as their headings do: "Договоры", "Контрагенты".
+- Long names wrap in the column; nothing is cut.
+- Keep the order the same everywhere; the most used pages first.
+
+<Canvas of={SidebarNavStories.LongText} />
+
+## Keyboard
+
+Native links and buttons, per the WAI-ARIA disclosure navigation pattern:
+
+| Key   | Does                                    |
+| ----- | --------------------------------------- |
+| Tab   | moves to the next page or group         |
+| Enter | follows a link; opens or closes a group |
+| Space | opens or closes a group                 |
+
+## Accessibility
+
+- The landmark has a name; a section's heading names its list, and each list says how many entries it holds.
+- The current page is `aria-current="page"`, a page above it `aria-current="true"`: screen readers say "current page" and "current".
+- A group's button says whether it is expanded, and controls its list, which is out of the page while closed.
+- In forced colours the bar takes the system's highlight colour.
+
+## Layout
+
+The application places the navigation in its shell: a column at the inline start of wide screens, and on a phone in a drawer from the start edge, opened by a button in the application bar and closed after a link is followed. The showcase does both.
+
+## Motion
+
+Fills change in `duration.instant` (the catalog's hover entry). A group opens and closes at once.
+
+## Do and don't
+
+- Do keep one navigation per product, the same on every screen.
+- Do put pages that belong together in a group, and administration in a section of its own at the end.
+- Don't nest groups; a page with its own sections uses tabs.
+- Don't add actions ("Создать договор") to the navigation; put them on the page.

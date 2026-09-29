@@ -3,9 +3,12 @@ import { provideRouter, withComponentInputBinding } from '@angular/router';
 import {
   lucideCircleAlert,
   lucideCircleCheck,
+  lucideFileText,
+  lucideMenu,
   lucideMoon,
   lucideRows2,
   lucideRows3,
+  lucideSettings,
   lucideSun,
 } from '@avelune/icons/lucide';
 import { provideAveIcons } from '@avelune/ui/icon';
@@ -22,6 +25,16 @@ export const appConfig: ApplicationConfig = {
     provideAvelune({ theme: 'light' }),
     // A route's parameters are the inputs of its screen (a contract's `:id`).
     provideRouter(routes, withComponentInputBinding()),
-    provideAveIcons([lucideCircleAlert, lucideCircleCheck, lucideMoon, lucideRows2, lucideRows3, lucideSun]),
+    provideAveIcons([
+      lucideCircleAlert,
+      lucideCircleCheck,
+      lucideFileText,
+      lucideMenu,
+      lucideMoon,
+      lucideRows2,
+      lucideRows3,
+      lucideSettings,
+      lucideSun,
+    ]),
   ],
 };

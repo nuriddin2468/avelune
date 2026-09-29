@@ -56,6 +56,14 @@ One primary button per view region (a form, a dialog, a toolbar, a card): the on
 | Drawer | Details or a form next to the list it belongs to, where the context stays useful |
 | Page | Anything long, anything people bookmark or share, anything with its own navigation |
 
+### Navigation
+
+| Use | When |
+|---|---|
+| Sidebar navigation | The product's pages and groups of pages, the same on every screen; in a drawer on a phone (ADR 0072) |
+| Breadcrumbs | Where a page deep in the hierarchy is, above its heading: a contract under the register (ADR 0070) |
+| Tabs | Sections of one page that people look at one at a time; tabs never change the address (ADR 0071) |
+
 ### Toast, inline alert or banner
 
 | Use | When |

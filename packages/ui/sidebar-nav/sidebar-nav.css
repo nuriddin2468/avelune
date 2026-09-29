@@ -1,0 +1,34 @@
+@layer components {
+  /* The navigation (ADR 0072): rows 4px apart, 8px inside its column so their fills keep off its edge. */
+  :host {
+    display: block;
+    padding: var(--ave-space-2);
+  }
+
+  .list {
+    display: grid;
+    gap: var(--ave-space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* A group's pages, indented to its words (the icon and its gap), under its button. */
+  .pages {
+    margin-block-start: var(--ave-space-1);
+    padding-inline-start: calc(var(--ave-size-icon-sm) + var(--ave-space-2));
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  /* A section: its heading 16px over its rows, level with their words; the first section's heading stays close. */
+  .heading {
+    display: block;
+    margin-block: var(--ave-space-4) var(--ave-space-1);
+    padding-inline: var(--ave-control-padding-inline-sm);
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-label-sm);
+  }
+}
