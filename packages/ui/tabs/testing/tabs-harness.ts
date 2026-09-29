@@ -63,9 +63,8 @@ export class AveTabsHarness extends ComponentHarness {
 
   /** Gets the text of the panel the chosen tab shows, as one line. */
   async getPanelText(): Promise<string> {
-    const panels = await this.locatorForAll('[role="tabpanel"]:not([inert])')();
-    const panel = panels[0];
-    return panel === undefined ? '' : (await panel.text()).replace(/\s+/g, ' ').trim();
+    const panel = await this.locatorFor('[role="tabpanel"]:not([inert])')();
+    return (await panel.text()).replace(/\s+/g, ' ').trim();
   }
 
   private async tab(label: string | RegExp): Promise<TestElement> {

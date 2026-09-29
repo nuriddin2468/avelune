@@ -14,6 +14,11 @@ export interface AveStepState {
   readonly error: boolean;
 }
 
+/** A step's `data-state` as a state; a step without one is ahead. */
+function stateOf(state: string | null | undefined): AveStepState['state'] {
+  return state === 'done' || state === 'current' ? state : 'ahead';
+}
+
 /**
  * Filters for {@link AveStepperHarness}.
  *
@@ -51,16 +56,10 @@ export class AveStepperHarness extends ComponentHarness {
   /** Gets each step's name and where it stands, in order. */
   async getSteps(): Promise<AveStepState[]> {
     const [steps, labels] = await Promise.all([this.steps(), this.labels()]);
-    return Promise.all(
-      steps.map(async (step, index) => {
-        const state = await step.getAttribute('data-state');
-        return {
-          label: ((await labels[index]?.text()) ?? '').trim(),
-          state: state === 'done' || state === 'current' ? state : 'ahead',
-          error: (await step.getAttribute('data-error')) !== null,
-        };
-      }),
-    );
+    const names = await Promise.all(labels.map(async (label) => (await label.text()).trim()));
+    const states = await Promise.all(steps.map(async (step) => step.getAttribute('data-state')));
+    const errors = await Promise.all(steps.map(async (step) => (await step.getAttribute('data-error')) !== null));
+    return names.map((label, index) => ({ label, state: stateOf(states[index]), error: errors[index] === true }));
   }
 
   /** Gets the current step's name, or `null` when every step is done. */

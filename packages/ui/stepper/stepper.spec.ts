@@ -124,6 +124,8 @@ describe('AveStepper', () => {
   it('makes the done steps buttons back to them when it is selectable, and text when it is not', async () => {
     const { fixture, element, stepper } = await mount();
     expect(element.querySelectorAll('li button')).toHaveLength(2);
+    await stepper.goTo(/^Условия/);
+    expect(fixture.componentInstance.current()).toBe(1);
     await stepper.goTo('Стороны');
     expect(fixture.componentInstance.current()).toBe(0);
     expect(await stepper.getCurrent()).toBe('Стороны');
