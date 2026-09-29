@@ -1,0 +1,1 @@
+export { AvePagination } from './pagination';

@@ -109,6 +109,18 @@ export interface AveMessages {
   readonly breadcrumbs: string;
   /** Names the icon after a link that opens a new tab; screen readers hear it with the link's words. */
   readonly opensInNewTab: string;
+  /** The name of a list's pagination: the landmark of its pages. */
+  readonly pagination: string;
+  /** The button of a pagination to the page before. */
+  readonly previousPage: string;
+  /** The button of a pagination to the page after. */
+  readonly nextPage: string;
+  /** A page's button in a pagination, with its number written for the locale. */
+  readonly page: (page: string) => string;
+  /** A narrow pagination's words between its arrows: the current page and how many there are. */
+  readonly pageOf: (page: string, count: string) => string;
+  /** Which items a page shows, and how many there are in all. */
+  readonly itemRange: (from: string, to: string, total: string) => string;
 }
 
 /**
@@ -168,6 +180,12 @@ export const aveMessagesEn: AveMessages = {
   notifications: 'Notifications',
   breadcrumbs: 'Breadcrumb',
   opensInNewTab: 'opens in a new tab',
+  pagination: 'Pagination',
+  previousPage: 'Previous page',
+  nextPage: 'Next page',
+  page: (page) => `Page ${page}`,
+  pageOf: (page, count) => `Page ${page} of ${count}`,
+  itemRange: (from, to, total) => `${from}–${to} of ${total}`,
 };
 
 /**
@@ -229,6 +247,12 @@ export const aveMessagesRu: AveMessages = {
   notifications: 'Уведомления',
   breadcrumbs: 'Навигационная цепочка',
   opensInNewTab: 'откроется в новой вкладке',
+  pagination: 'Страницы',
+  previousPage: 'Предыдущая страница',
+  nextPage: 'Следующая страница',
+  page: (page) => `Страница ${page}`,
+  pageOf: (page, count) => `Страница ${page} из ${count}`,
+  itemRange: (from, to, total) => `${from}–${to} из ${total}`,
 };
 
 /**
@@ -288,6 +312,12 @@ export const aveMessagesUzLatn: AveMessages = {
   notifications: 'Bildirishnomalar',
   breadcrumbs: 'Navigatsiya zanjiri',
   opensInNewTab: 'yangi varaqda ochiladi',
+  pagination: 'Sahifalar',
+  previousPage: 'Oldingi sahifa',
+  nextPage: 'Keyingi sahifa',
+  page: (page) => `${page}-sahifa`,
+  pageOf: (page, count) => `${page}-sahifa, jami ${count}`,
+  itemRange: (from, to, total) => `${from}–${to}, jami ${total}`,
 };
 
 /**
@@ -347,6 +377,12 @@ export const aveMessagesUzCyrl: AveMessages = {
   notifications: 'Билдиришномалар',
   breadcrumbs: 'Навигация занжири',
   opensInNewTab: 'янги варақда очилади',
+  pagination: 'Саҳифалар',
+  previousPage: 'Олдинги саҳифа',
+  nextPage: 'Кейинги саҳифа',
+  page: (page) => `${page}-саҳифа`,
+  pageOf: (page, count) => `${page}-саҳифа, жами ${count}`,
+  itemRange: (from, to, total) => `${from}–${to}, жами ${total}`,
 };
 
 /**

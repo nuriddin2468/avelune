@@ -1,0 +1,77 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as PaginationStories from './pagination.stories';
+
+<Meta of={PaginationStories} />
+
+# Pagination
+
+`<ave-pagination>` divides a long list into pages: it says which items the page shows, and goes to the page before, the page after, or any page by its number (ADR 0074).
+
+```ts
+import { AvePagination } from '@avelune/ui/pagination';
+```
+
+<Canvas of={PaginationStories.Default} />
+
+## When to use
+
+- Under a list or a table of records that the server sends a page at a time, or that is too long to read at once.
+
+## When not to use
+
+- For a list people scroll through once, or search: show it whole, or let the search narrow it.
+- For a picker's options: a combobox loads more as people scroll (ADR 0056).
+- For the steps of a task: use a stepper.
+
+## Anatomy
+
+A navigation landmark named "Страницы" in the locale. At its start the range, "41–50 из 134"; at its end the previous page's button, the page numbers, and the next page's button. The numbers take seven places: every page when there are up to seven, otherwise the first, the last, the current page and its neighbours, and an ellipsis for each gap. The row keeps its length as people page, so the arrows stay under the pointer.
+
+```html
+<ave-pagination [total]="contracts().length" [pageSize]="10" [(page)]="page" />
+```
+
+`total` is the number of items, `pageSize` how many a page shows (20 by default), `page` the page shown, from 1, kept within the pages. The list pages in place: to keep the page in the address, write it there on `pageChange`. Nothing is drawn while `total` is 0; the list's empty state speaks then.
+
+<Canvas of={PaginationStories.FewPages} />
+
+## States
+
+- **The current page:** the accent fill, as a calendar's chosen day, and `aria-current="page"`.
+- **Other pages:** the hover fill under the pointer, the pressed fill while pressed, the kit's ring on focus.
+- **No page before or after:** the arrow is unavailable, yet keeps focus, so pressing "next" to the last page leaves focus where it was.
+
+After a page's number is pressed, focus stays on the current page's number, wherever the row put it.
+
+## Narrow containers
+
+Under 480px of its container the numbers give way to "Страница 4 из 14" between the arrows; the range wraps above them when there is no room beside.
+
+<Canvas of={PaginationStories.Narrow} />
+
+## Content
+
+- Numbers are written for the locale: "12 261–12 280, jami 12 345" in Uzbek.
+
+<Canvas of={PaginationStories.LongText} />
+
+## Keyboard
+
+Native buttons: Tab moves along the arrows and the numbers, Enter or Space goes to the page.
+
+## Accessibility
+
+- Each number is named "Страница 5", which contains what it shows; the current one is announced as the current page.
+- The range is a status: screen readers hear the new range after a page changes.
+- The ellipses are hidden from assistive technology.
+- In forced colours the current page takes the system's selection colours.
+
+## Motion
+
+Fills change in `duration.instant` (the catalog's hover entry).
+
+## Do and don't
+
+- Do put the pagination under the list it pages, as wide as the list.
+- Do go back to the first page when a search or a filter changes the list.
+- Don't page a list of a few dozen items people scan; show them all.

@@ -89,6 +89,39 @@ export interface ContractRecord {
   readonly endsOn: string;
 }
 
+/** What the older contracts of the register were for, in turn. */
+const olderSubjects = [
+  'Техническое обслуживание лифтов',
+  'Поставка канцелярских товаров',
+  'Охрана административного здания',
+  'Аренда автотранспорта с водителем',
+  'Сопровождение программного обеспечения бухгалтерского учёта',
+  'Uy-joy fondini taʼmirlash ishlari',
+  'Поставка питьевой воды',
+  'Обучение сотрудников охране труда',
+  'Aloqa xizmatlari koʻrsatish',
+  'Вывоз твёрдых бытовых отходов',
+] as const;
+
+/**
+ * The register's older contracts, ДК-2025/107 down to ДК-2025/80: made up in turn from a few subjects and the known
+ * counterparties, so the register is long enough to page.
+ */
+const olderContracts: readonly ContractRecord[] = Array.from({ length: 28 }, (_, index) => {
+  const id = 107 - index;
+  const month = String((index % 12) + 1).padStart(2, '0');
+  return {
+    id,
+    number: `ДК-2025/${String(id)}`,
+    subject: olderSubjects[index % olderSubjects.length] ?? '',
+    counterparty: counterparties[index % counterparties.length]?.label ?? '',
+    amount: 12_500_000 * ((index % 9) + 2),
+    status: 'signed',
+    signedOn: `2025-${month}-10`,
+    endsOn: `2027-${month}-28`,
+  };
+});
+
 /** The department's register of contracts. */
 export const contracts: readonly ContractRecord[] = [
   {
@@ -151,4 +184,5 @@ export const contracts: readonly ContractRecord[] = [
     signedOn: '2025-11-20',
     endsOn: '2026-11-19',
   },
+  ...olderContracts,
 ];

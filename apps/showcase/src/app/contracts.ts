@@ -1,4 +1,13 @@
-import { Component, DestroyRef, type ElementRef, computed, inject, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  type ElementRef,
+  computed,
+  inject,
+  linkedSignal,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AveAlert } from '@avelune/ui/alert';
 import { lucideCopy, lucideEllipsis, lucideFileText, lucideSearch, lucideTrash } from '@avelune/icons/lucide';
@@ -12,6 +21,7 @@ import { AveChoiceGroup } from '@avelune/ui/form-field';
 import { AveInput } from '@avelune/ui/input';
 import { AveLink } from '@avelune/ui/link';
 import { AveMenu, type AveMenuEntry } from '@avelune/ui/menu';
+import { AvePagination } from '@avelune/ui/pagination';
 import { AvePopover } from '@avelune/ui/popover';
 import { AveRadio } from '@avelune/ui/radio';
 import { AveProgress } from '@avelune/ui/progress';
@@ -50,6 +60,7 @@ const exportInterval = 400;
     AveInput,
     AveLink,
     AveMenu,
+    AvePagination,
     AvePopover,
     AveProgress,
     AveRadio,
@@ -160,7 +171,7 @@ const exportInterval = 400;
               </li>
             }
           }
-          @for (contract of shown(); track contract.id) {
+          @for (contract of pageRows(); track contract.id) {
             <li class="row">
               <div class="main">
                 <span class="number">{{ contract.number }}</span>
@@ -186,6 +197,9 @@ const exportInterval = 400;
             </li>
           }
         </ul>
+        @if (!loading()) {
+          <ave-pagination [total]="shown().length" [pageSize]="pageSize" [(page)]="page" />
+        }
       }
     </div>
 
@@ -277,6 +291,16 @@ export class ContractsPage {
       ),
     );
   });
+
+  /** The register pages ten contracts at a time; a new search or filter goes back to the first page. */
+  protected readonly pageSize = 10;
+  protected readonly page = linkedSignal({
+    source: () => [this.query(), this.shownStatuses()] as const,
+    computation: () => 1,
+  });
+  protected readonly pageRows = computed(() =>
+    this.shown().slice((this.page() - 1) * this.pageSize, this.page() * this.pageSize),
+  );
 
   /** Contracts whose term has ended: the alert above the list names them, each a link to its page. */
   protected readonly expired = computed(() => this.rows().filter((contract) => contract.status === 'expired'));

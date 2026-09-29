@@ -1,0 +1,13 @@
+/* The frame of the Pagination stories: the bottom of a list, or a narrow panel. Stories only; the pagination's
+   styles are pagination.css. */
+@layer components {
+  :host {
+    display: block;
+    max-inline-size: var(--ave-container-lg);
+    padding: var(--ave-space-6);
+  }
+
+  .narrow {
+    max-inline-size: var(--ave-container-xs);
+  }
+}
