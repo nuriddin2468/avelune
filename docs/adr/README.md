@@ -79,6 +79,8 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0071](0071-tabs.md) | Tabs: Angular Aria's tabs, tabs declared as panels, an indicator that slides on `timing.slide` | Accepted |
 | [0072](0072-sidebar-nav.md) | SidebarNav: the product's navigation from data, current pages from the router, groups that disclose | Accepted |
 | [0073](0073-link.md) | Link: a native link, always underlined, that says when it opens a new tab | Accepted |
+| [0074](0074-pagination.md) | Pagination: seven places for page numbers, the current page on the accent fill, a compact form in narrow containers | Accepted |
+| [0075](0075-toolbar.md) | Toolbar: Angular Aria's toolbar on the application's element, its items marked, a menu that joins it | Accepted |
 
 ## Template
 

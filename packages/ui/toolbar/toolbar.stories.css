@@ -1,0 +1,21 @@
+/* The frame of the Toolbar stories: over a contract or a template, and a narrow panel. Stories only; the toolbar's
+   styles are toolbar.css. */
+@layer components {
+  :host {
+    display: grid;
+    gap: var(--ave-space-4);
+    min-block-size: calc(var(--ave-space-16) * 4);
+    align-content: start;
+    padding: var(--ave-space-6);
+  }
+
+  .narrow {
+    max-inline-size: var(--ave-container-xs);
+  }
+
+  .status {
+    min-block-size: var(--ave-font-body-sm-line-height);
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+}

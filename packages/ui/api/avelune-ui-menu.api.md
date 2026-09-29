@@ -12,6 +12,7 @@ import { AveIconName } from '@avelune/ui/icon';
 import * as _avelune_icons from '@avelune/icons';
 import * as _avelune_ui_overlay from '@avelune/ui/overlay';
 import { Menu } from '@angular/aria/menu';
+import { Toolbar } from '@angular/aria/toolbar';
 
 // @alpha
 export class AveMenu<V> {
@@ -29,6 +30,7 @@ export class AveMenu<V> {
     protected readonly overlay: _angular_core.Signal<_angular_cdk_overlay.CdkConnectedOverlayConfig>;
     protected readonly presence: _avelune_ui_overlay.AveOverlayPresence;
     readonly size: _angular_core.InputSignal<AveButtonSize>;
+    protected readonly toolbar: Toolbar | null;
     protected readonly triggerId: string;
     readonly variant: _angular_core.InputSignal<AveButtonVariant>;
     // (undocumented)

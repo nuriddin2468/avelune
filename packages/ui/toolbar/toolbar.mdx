@@ -1,0 +1,91 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ToolbarStories from './toolbar.stories';
+
+<Meta of={ToolbarStories} />
+
+# Toolbar
+
+`[aveToolbar]` groups the actions of one thing into a single stop of the Tab order, whose arrows move between them. It is Angular Aria's toolbar (the WAI-ARIA toolbar pattern) on the application's element (ADR 0075).
+
+```ts
+import { AveToolbar, AveToolbarItem, AveToolbarSeparator } from '@avelune/ui/toolbar';
+```
+
+<Canvas of={ToolbarStories.Default} />
+
+## When to use
+
+- For five or more actions on one thing that people reach often: a document's or a record's actions above it, an editor's tools above the text.
+
+## When not to use
+
+- For two or three actions: show them as buttons, each a Tab stop.
+- For the actions of a form: they go at its end (GUIDELINES, "Button variants").
+- For navigation: use links, tabs or the sidebar navigation.
+
+## Anatomy
+
+The application's element with `aveToolbar` and a `label` that names it, holding its items: Buttons, IconButtons and links that look like buttons, each marked `aveToolbarItem`, and menus, which join by themselves. `aveToolbarSeparator` draws a line between groups. Items are ghost buttons, 4px apart, groups 8px apart; the toolbar has no surface of its own.
+
+```html
+<div aveToolbar label="Действия с договором">
+  <a aveButton aveToolbarItem variant="ghost" routerLink="edit">Изменить</a>
+  <button aveButton aveToolbarItem variant="ghost" type="button" [disabled]="sent()" disabledInteractive>
+    Отправить на согласование
+  </button>
+  <span aveToolbarSeparator></span>
+  <button
+    aveIconButton
+    aveToolbarItem
+    variant="ghost"
+    type="button"
+    icon="copy"
+    label="Дублировать"
+    aveTooltip="Дублировать"
+  ></button>
+  <ave-menu label="Ещё действия" icon="ellipsis" variant="ghost" [items]="more" />
+</div>
+```
+
+## States
+
+- **Disabled:** an item stays in the toolbar and focus reaches it, so people learn it exists; write `disabledInteractive` on a disabled Button, and a disabled menu does the same by itself.
+- Each item keeps its own states: hover, pressed, focus, loading.
+
+<Canvas of={ToolbarStories.Editor} />
+
+## Content
+
+- The same words as the buttons would say elsewhere: a verb and its object.
+- An icon alone is an IconButton with its label as a tooltip.
+- When the items do not fit, they wrap onto another row; order them by how often people need them.
+
+<Canvas of={ToolbarStories.Narrow} />
+
+## Keyboard
+
+Per the WAI-ARIA toolbar pattern, from Angular Aria:
+
+| Key          | Does                                                       |
+| ------------ | ---------------------------------------------------------- |
+| Tab          | moves into the toolbar, onto the item last used; out again |
+| Left, Right  | moves to the item before or after (wraps)                  |
+| Home, End    | the first, the last item                                   |
+| Enter, Space | presses the item; on a menu, opens it                      |
+| Down         | on a menu, opens it                                        |
+
+## Accessibility
+
+- The element is a `toolbar` named by `label`; name each toolbar of a page apart.
+- Only one item is a Tab stop, so a toolbar of ten actions costs one press of Tab.
+- Separators are vertical `separator`s; screen readers announce the groups.
+
+## Motion
+
+None of its own: its items' hover colours change in `duration.instant`.
+
+## Do and don't
+
+- Do put a record's most used actions first and the rest in the menu at the end.
+- Do keep one primary action out of the toolbar, where the page puts it.
+- Don't put a text field in a toolbar: its arrows move the caret, not the toolbar.

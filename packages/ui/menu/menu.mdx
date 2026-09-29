@@ -80,6 +80,8 @@ Per the WAI-ARIA menu button pattern, from Angular Aria:
 
 A press outside the menu closes it, on touch screens too.
 
+Inside a kit toolbar (`[aveToolbar]`) the menu's button is one of the toolbar's items: the toolbar's arrows reach it, and a disabled menu keeps focus there (ADR 0075).
+
 ## Accessibility
 
 - The button has `aria-haspopup` and `aria-expanded`; the menu is a `menu` named by the button, its items `menuitem`s.

@@ -46,6 +46,7 @@ One primary button per view region (a form, a dialog, a toolbar, a card): the on
 
 - Order in a row: the primary action last (at the inline end), "Cancel" before it.
 - A button that navigates is a link styled as a button (`a[aveButton]`); a button that acts is a `<button>`.
+- Five or more actions on one thing go into a toolbar (`[aveToolbar]`, ADR 0075): one Tab stop, ghost buttons, the rarest in its menu at the end.
 - A clickable icon without a visible label is an IconButton, with a label for assistive technology and the same words in its tooltip (`aveTooltip`), so everyone can read its name.
 
 ### Dialog, drawer or page
@@ -64,6 +65,7 @@ One primary button per view region (a form, a dialog, a toolbar, a card): the on
 | Breadcrumbs | Where a page deep in the hierarchy is, above its heading: a contract under the register (ADR 0070) |
 | Tabs | Sections of one page that people look at one at a time; tabs never change the address (ADR 0071) |
 | Link (`a[aveLink]`) | A reference inside text, or a record's name that opens its page; always underlined, and it says when it opens a new tab (ADR 0073) |
+| Pagination | A list longer than a page, under the list; back to the first page when a search or a filter changes it (ADR 0074) |
 
 ### Toast, inline alert or banner
 

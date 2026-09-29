@@ -1,0 +1,10 @@
+@layer components {
+  /* A toolbar (ADR 0075): its items in a row, 4px apart, wrapping onto another row when they do not fit; no surface
+     of its own. */
+  :host {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ave-space-1);
+  }
+}

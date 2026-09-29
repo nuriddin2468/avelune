@@ -1,5 +1,6 @@
 import { Component, ElementRef, booleanAttribute, computed, inject, input, output, viewChild } from '@angular/core';
 import { Menu, MenuContent, MenuItem, MenuTrigger } from '@angular/aria/menu';
+import { Toolbar, ToolbarWidget } from '@angular/aria/toolbar';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { lucideChevronDown } from '@avelune/icons/lucide';
 import { AveButton, AveIconButton, type AveButtonSize, type AveButtonVariant } from '@avelune/ui/button';
@@ -14,8 +15,8 @@ let nextMenu = 0;
  * The kit's menu (brief §9.1, ADR 0064): a button that opens a list of actions, on Angular Aria's menu (the WAI-ARIA
  * menu button) in CDK's overlay. The button looks like a Button of its variant and size; with an `icon` it is an
  * IconButton whose `label` is its name and its tooltip. Choosing an item closes the menu, returns focus to the button
- * and emits the item's value; Escape and a press outside close it. Items are data: register their icons with
- * `provideAveIcons`.
+ * and emits the item's value; Escape and a press outside close it. Inside a kit toolbar the button is one of its
+ * items (ADR 0075). Items are data: register their icons with `provideAveIcons`.
  *
  * ```html
  * <ave-menu label="Действия с договором" icon="ellipsis" variant="ghost" size="sm" [items]="actions" (itemSelected)="run($event)" />
@@ -25,10 +26,59 @@ let nextMenu = 0;
  */
 @Component({
   selector: 'ave-menu',
-  imports: [AveButton, AveIcon, AveIconButton, AveTooltip, Menu, MenuContent, MenuItem, MenuTrigger, OverlayModule],
+  imports: [
+    AveButton,
+    AveIcon,
+    AveIconButton,
+    AveTooltip,
+    Menu,
+    MenuContent,
+    MenuItem,
+    MenuTrigger,
+    OverlayModule,
+    ToolbarWidget,
+  ],
   providers: [provideAveIcons([lucideChevronDown])],
   template: `
-    @if (icon(); as name) {
+    @if (toolbar !== null) {
+      <!-- In a toolbar the trigger is one of its items (ADR 0075). -->
+      @if (icon(); as name) {
+        <button
+          #trigger="ngMenuTrigger"
+          #button
+          aveIconButton
+          ngMenuTrigger
+          ngToolbarWidget
+          type="button"
+          [id]="triggerId"
+          [icon]="name"
+          [label]="label()"
+          [aveTooltip]="label()"
+          [variant]="variant()"
+          [size]="size()"
+          [disabled]="disabled()"
+          disabledInteractive
+          [menu]="menu()"
+        ></button>
+      } @else {
+        <button
+          #trigger="ngMenuTrigger"
+          #button
+          aveButton
+          ngMenuTrigger
+          ngToolbarWidget
+          type="button"
+          [id]="triggerId"
+          [variant]="variant()"
+          [size]="size()"
+          [disabled]="disabled()"
+          disabledInteractive
+          [menu]="menu()"
+        >
+          {{ label() }}<ave-icon name="chevron-down" decorative />
+        </button>
+      }
+    } @else if (icon(); as name) {
       <button
         #trigger="ngMenuTrigger"
         #button
@@ -128,6 +178,10 @@ export class AveMenu<V> {
   protected readonly triggerId = `ave-menu-trigger-${String(nextMenu++)}`;
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+
+  /** The kit toolbar the menu stands in, if any: its trigger is then one of the toolbar's items (ADR 0075). */
+  protected readonly toolbar = inject(Toolbar, { optional: true });
+
   private readonly trigger = viewChild<MenuTrigger<V>>('trigger');
   private readonly button = viewChild<unknown, ElementRef<HTMLElement>>('button', { read: ElementRef });
   protected readonly menu = viewChild<Menu<V>>('menu');

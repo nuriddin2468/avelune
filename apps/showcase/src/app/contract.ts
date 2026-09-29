@@ -1,14 +1,27 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import type { ResolveFn } from '@angular/router';
 import { RouterLink } from '@angular/router';
-import { lucideFileX, lucidePaperclip } from '@avelune/icons/lucide';
+import {
+  lucideArchive,
+  lucideCopy,
+  lucideDownload,
+  lucideEllipsis,
+  lucideFileX,
+  lucidePaperclip,
+  lucidePencil,
+  lucidePrinter,
+} from '@avelune/icons/lucide';
 import { AveBreadcrumbs, type AveBreadcrumb } from '@avelune/ui/breadcrumbs';
-import { AveButton } from '@avelune/ui/button';
+import { AveButton, AveIconButton } from '@avelune/ui/button';
 import { AveTab, AveTabs } from '@avelune/ui/tabs';
+import { AveToaster } from '@avelune/ui/toast';
+import { AveToolbar, AveToolbarItem, AveToolbarSeparator } from '@avelune/ui/toolbar';
+import { AveTooltip } from '@avelune/ui/tooltip';
 import { AveEmptyState, AveEmptyStateActions } from '@avelune/ui/empty-state';
 import { AveLink } from '@avelune/ui/link';
 import { aveDateFormat, aveNumberFormat } from '@avelune/ui/i18n';
-import { provideAveIcons } from '@avelune/ui/icon';
+import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
+import { AveMenu, type AveMenuEntry } from '@avelune/ui/menu';
 import { contractStatuses, contracts, type ContractRecord } from './data';
 
 /** The contract a route's `:id` names, if the register holds it. */
@@ -23,13 +36,40 @@ export const contractTitle: ResolveFn<string> = (route) => {
 };
 
 /**
- * A contract's own page, under the register: where it is in the product, its subject, and its facts, approval, files
- * and history in tabs. The register links each contract's number here.
+ * A contract's own page, under the register: where it is in the product, its subject, a toolbar of its actions, and
+ * its facts, approval, files and history in tabs. The register links each contract's subject here.
  */
 @Component({
   selector: 'ave-showcase-contract',
-  imports: [AveBreadcrumbs, AveButton, AveEmptyState, AveEmptyStateActions, AveLink, AveTab, AveTabs, RouterLink],
-  providers: [provideAveIcons([lucideFileX, lucidePaperclip])],
+  imports: [
+    AveBreadcrumbs,
+    AveButton,
+    AveEmptyState,
+    AveEmptyStateActions,
+    AveIcon,
+    AveIconButton,
+    AveLink,
+    AveMenu,
+    AveTab,
+    AveTabs,
+    AveToolbar,
+    AveToolbarItem,
+    AveToolbarSeparator,
+    AveTooltip,
+    RouterLink,
+  ],
+  providers: [
+    provideAveIcons([
+      lucideArchive,
+      lucideCopy,
+      lucideDownload,
+      lucideEllipsis,
+      lucideFileX,
+      lucidePaperclip,
+      lucidePencil,
+      lucidePrinter,
+    ]),
+  ],
   template: `
     <div class="page" lang="ru">
       @if (contract(); as contract) {
@@ -38,6 +78,49 @@ export const contractTitle: ResolveFn<string> = (route) => {
           <h1 class="title">Договор {{ contract.number }}</h1>
           <p class="subject">{{ contract.subject }}</p>
         </header>
+
+        <div aveToolbar label="Действия с договором">
+          <a aveButton aveToolbarItem variant="ghost" routerLink="/"><ave-icon name="pencil" decorative />Изменить</a>
+          <button
+            aveButton
+            aveToolbarItem
+            type="button"
+            variant="ghost"
+            [disabled]="contract.status !== 'draft'"
+            disabledInteractive
+            (click)="notify('Договор ' + contract.number + ' отправлен на согласование')"
+          >
+            Отправить на согласование
+          </button>
+          <span aveToolbarSeparator></span>
+          <button
+            aveIconButton
+            aveToolbarItem
+            type="button"
+            variant="ghost"
+            icon="copy"
+            label="Дублировать"
+            aveTooltip="Дублировать"
+            (click)="notify('Создан черновик по договору ' + contract.number)"
+          ></button>
+          <button
+            aveIconButton
+            aveToolbarItem
+            type="button"
+            variant="ghost"
+            icon="printer"
+            label="Печать"
+            aveTooltip="Печать"
+            (click)="notify('Договор ' + contract.number + ' отправлен на печать')"
+          ></button>
+          <ave-menu
+            label="Ещё действия"
+            icon="ellipsis"
+            variant="ghost"
+            [items]="more"
+            (itemSelected)="act(contract, $event)"
+          />
+        </div>
 
         <ave-tabs label="Разделы договора" [(selected)]="section">
           <ave-tab value="facts" label="Сведения">
@@ -145,6 +228,25 @@ export class ContractPage {
   protected readonly statuses = contractStatuses;
   protected readonly dates = aveDateFormat('ru');
   private readonly sums = aveNumberFormat('ru');
+
+  private readonly toaster = inject(AveToaster);
+
+  /** The actions that do not fit the toolbar. */
+  protected readonly more: readonly AveMenuEntry<'pdf' | 'archive'>[] = [
+    { value: 'pdf', label: 'Выгрузить в PDF', icon: 'download' },
+    { value: 'archive', label: 'Перенести в архив', icon: 'archive' },
+  ];
+
+  /** The pretend server did what an action asked; a toast confirms it. */
+  protected notify(message: string): void {
+    this.toaster.show({ message, variant: 'success' });
+  }
+
+  protected act(contract: ContractRecord, action: 'pdf' | 'archive'): void {
+    this.notify(
+      action === 'pdf' ? `Договор ${contract.number} выгружен в PDF` : `Договор ${contract.number} перенесён в архив`,
+    );
+  }
 
   protected amount(contract: ContractRecord): string {
     return `${this.sums.format(contract.amount)} сум`;

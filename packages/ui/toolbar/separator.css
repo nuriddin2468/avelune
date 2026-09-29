@@ -1,0 +1,17 @@
+@layer components {
+  /* A separator: a subtle line as tall as a small control, with 4px more on each side, so groups are 8px apart. */
+  :host {
+    align-self: center;
+    inline-size: var(--ave-border-width-default);
+    block-size: var(--ave-control-height-sm);
+    margin-inline: var(--ave-space-1);
+    background-color: var(--ave-color-border-subtle);
+  }
+
+  @media (forced-colors: active) {
+    :host {
+      background-color: CanvasText;
+      forced-color-adjust: none;
+    }
+  }
+}
