@@ -71,7 +71,8 @@
     margin-inline-end: calc(var(--ave-space-4) - var(--ave-border-width-default));
   }
 
-  /* The content scrolls, inside the panel's padding; the focus rings of its fields keep their room. */
+  /* The content scrolls, inside the panel's padding; the focus rings of its fields keep their room. When it scrolls it
+     takes focus, and its own ring is drawn inside its edge (data-focus-ring="inset"), clear of the panel's border. */
   .body {
     display: grid;
     grid-area: body;

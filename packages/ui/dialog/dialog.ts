@@ -62,7 +62,7 @@ export class AveDialogActions {}
   template: `
     <div class="panel ave-motion-dialog-enter" [class.ave-motion-dialog-exit]="modal.closing()">
       <h2 class="heading" [id]="headingId">{{ heading() }}</h2>
-      <div #body class="body" [attr.tabindex]="overflows() ? 0 : null"><ng-content /></div>
+      <div #body class="body" data-focus-ring="inset" [attr.tabindex]="overflows() ? 0 : null"><ng-content /></div>
       <ng-content select="[aveDialogActions]" />
       <button
         aveIconButton

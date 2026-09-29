@@ -47,7 +47,7 @@ let nextDrawer = 0;
       [attr.data-side]="side()"
     >
       <h2 class="heading" [id]="headingId">{{ heading() }}</h2>
-      <div #body class="body" [attr.tabindex]="overflows() ? 0 : null"><ng-content /></div>
+      <div #body class="body" data-focus-ring="inset" [attr.tabindex]="overflows() ? 0 : null"><ng-content /></div>
       <ng-content select="[aveDialogActions]" />
       <button
         aveIconButton
