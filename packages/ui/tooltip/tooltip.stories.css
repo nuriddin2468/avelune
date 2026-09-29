@@ -23,8 +23,8 @@
     justify-items: center;
   }
 
-  /* An element at the very top of the page, with no room above it. */
+  /* An element at the top of the page, with no room above it for a tooltip; 4px down, so its focus ring shows. */
   .edge {
-    margin-block-start: calc(-1 * var(--ave-space-12));
+    margin-block-start: calc(var(--ave-space-1) - var(--ave-space-12));
   }
 }
