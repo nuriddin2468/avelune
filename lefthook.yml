@@ -25,7 +25,7 @@ pre-commit:
       run: pnpm exec nx run tokens:build --output-style=static && pnpm exec stylelint --max-warnings=0 {staged_files}
 
     - name: format
-      glob: '*.{ts,mts,cts,js,mjs,cjs,json,html,css,yml,yaml}'
+      glob: '*.{ts,mts,cts,js,mjs,cjs,json,html,css,yml,yaml,md,mdx}'
       run: pnpm exec prettier --check {staged_files}
 
 commit-msg:
