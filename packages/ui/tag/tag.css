@@ -1,0 +1,70 @@
+@layer components {
+  /* A tag (ADR 0080): an outlined rectangle on the surface, the small radius, 8px before its words, which wrap and are
+     never cut; 28px tall on one line (`md`) or 24px (`sm`, inside a field). As wide as its words, never stretched. */
+  :host {
+    display: inline-flex;
+    align-items: flex-start;
+    inline-size: fit-content;
+    max-inline-size: 100%;
+    padding-block: calc(
+      (var(--ave-size-control-xs) - var(--ave-font-label-sm-line-height)) / 2 - var(--ave-border-width-default)
+    );
+    padding-inline: calc(var(--ave-space-2) - var(--ave-border-width-default));
+    border: var(--ave-border-width-default) solid var(--ave-color-border-default);
+    border-radius: var(--ave-radius-sm);
+    background-color: var(--ave-color-bg-surface);
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-label-sm);
+  }
+
+  :host([data-size='sm']) {
+    padding-block: calc(
+      (var(--ave-size-target-min) - var(--ave-font-label-sm-line-height)) / 2 - var(--ave-border-width-default)
+    );
+  }
+
+  :host([data-removable]) {
+    padding-inline-end: 0;
+  }
+
+  .words {
+    min-inline-size: 0;
+  }
+
+  /* The remove button: a square 1px inside the border at the end, centred on the first line of the words, 4px after
+     them; 24px in `md`, 20px in `sm`. The hover fill under the pointer, the ring inside. */
+  .remove {
+    --ave-tag-remove: var(--ave-size-target-min);
+
+    display: inline-grid;
+    flex: none;
+    place-content: center;
+    inline-size: var(--ave-tag-remove);
+    block-size: var(--ave-tag-remove);
+    margin-block: calc((var(--ave-font-label-sm-line-height) - var(--ave-tag-remove)) / 2);
+    margin-inline: var(--ave-space-1)
+      calc((var(--ave-size-control-xs) - var(--ave-size-target-min)) / 2 - var(--ave-border-width-default));
+    padding: 0;
+    border: 0;
+    border-radius: calc(var(--ave-radius-sm) - 2 * var(--ave-border-width-default));
+    background-color: transparent;
+    color: var(--ave-color-fg-muted);
+    cursor: pointer;
+    transition-property: background-color, color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+
+    &:hover {
+      background-color: var(--ave-color-bg-hover);
+      color: var(--ave-color-fg-default);
+    }
+
+    &:active {
+      background-color: var(--ave-color-bg-active);
+    }
+  }
+
+  :host([data-size='sm']) .remove {
+    --ave-tag-remove: var(--ave-size-icon-md);
+  }
+}

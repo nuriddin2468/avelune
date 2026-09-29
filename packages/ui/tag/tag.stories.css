@@ -1,0 +1,38 @@
+/* The frame of the Tag stories. Stories only; the component's own styles are tag.css. */
+@layer components {
+  :host {
+    display: grid;
+    gap: var(--ave-space-4);
+    max-inline-size: var(--ave-container-md);
+    padding: var(--ave-space-6);
+  }
+
+  .filter {
+    display: grid;
+    gap: var(--ave-space-2);
+  }
+
+  .caption {
+    font: var(--ave-font-label-md);
+  }
+
+  /* Tags in a row that wraps, 8px apart. */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--ave-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .narrow {
+    flex-direction: column;
+    inline-size: calc(var(--ave-space-16) * 3);
+  }
+
+  .muted {
+    color: var(--ave-color-fg-muted);
+  }
+}

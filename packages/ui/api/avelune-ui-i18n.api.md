@@ -81,6 +81,7 @@ export interface AveMessages {
     readonly rangeThisYear: string;
     readonly rangeToday: string;
     readonly rangeYesterday: string;
+    readonly remove: string;
     readonly removeFile: (name: string) => string;
     readonly required: string;
     readonly retry: string;

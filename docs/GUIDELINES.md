@@ -91,6 +91,7 @@ One primary button per view region (a form, a dialog, a toolbar, a card): the on
 | Use | When |
 |---|---|
 | Badge | The status of a record, in its words and colour: "Подписан", "На согласовании" (ADR 0079). One status, one variant, across the product |
+| Tag | A value chosen for a filter or a field, which people take away with its button; or a record's label without one (ADR 0080). Never a status |
 | Count | How many items wait in a place, beside its name: "Входящие 12"; nothing at 0 |
 
 ## States

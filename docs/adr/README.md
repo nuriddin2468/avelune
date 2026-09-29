@@ -85,6 +85,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0077](0077-stepper.md) | Stepper: where a person is in a sequence of steps, drawn from data, the done steps optionally a way back | Accepted |
 | [0078](0078-data-table-native-table-pages.md) | DataTable: a native table the kit draws, not Aria's grid or CDK's table; pages, not virtual scrolling | Accepted |
 | [0079](0079-badge-and-count.md) | Badge and Count: a record's status in words on its tinted fill, and a number that needs attention | Accepted |
+| [0080](0080-tag.md) | Tag: a value in an outlined rectangle, a button that takes it away, focus to the next one | Accepted |
 
 ## Template
 

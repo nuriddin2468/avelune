@@ -1,0 +1,80 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as TagStories from './tag.stories';
+
+<Meta of={TagStories} />
+
+# Tag
+
+`<ave-tag>` is a value in an outlined rectangle: a region chosen for a filter, a label of a document. A removable tag has a button at its end that takes the value away (ADR 0080).
+
+```ts
+import { AveTag } from '@avelune/ui/tag';
+```
+
+<Canvas of={TagStories.Default} />
+
+## When to use
+
+- For the values chosen for a filter or a field, shown so that each can be taken away.
+- For short labels of a record ("Срочно", "Для служебного пользования"), without a remove button.
+
+## When not to use
+
+- For the status of a record: use a badge, whose colour says what the status means.
+- For an action: use a button. A tag's only action is its remove button.
+- For choosing among options: use checkboxes, a select or a multiselect, which shows its chosen values as tags itself.
+
+## Anatomy
+
+The words in `font.label-sm`, 8px from the start, in an outlined rectangle: `border.default` on the surface, `radius.sm`. A removable tag has a square button 1px inside its border at the end, 4px after the words, with Lucide's `x`. The words wrap and are never cut.
+
+```html
+<ave-tag removable (remove)="drop(region)">{{ region.label }}</ave-tag>
+```
+
+## Sizes
+
+| Size           | Height | Remove button | Use for                                                         |
+| -------------- | ------ | ------------- | --------------------------------------------------------------- |
+| `md` (default) | 28px   | 24px          | Tags on a page: a filter's values, a document's labels          |
+| `sm`           | 24px   | 20px          | Tags inside a field, as the multiselect draws its chosen values |
+
+<Canvas of={TagStories.Sizes} />
+
+## States
+
+- **Rest:** the outline on the surface; the remove button's `x` in the muted colour.
+- **Hover** on the remove button: the hover fill, the `x` in the text colour. **Pressed:** the pressed fill.
+- **Focus:** the kit's ring inside the remove button.
+
+## Keyboard
+
+Each remove button is a Tab stop; Enter or Space presses it. Once the application has removed the tag, focus goes to the remove button of the tag after it, or of the one before when it was the last; with no tag left, the application decides where focus goes (the field or the list's heading).
+
+<Canvas of={TagStories.Removing} />
+
+## Content
+
+- One value per tag, as its list or field names it: "Ташкент", "Навоийская область".
+- Sentence case, never all caps.
+- A long value wraps inside its column.
+
+<Canvas of={TagStories.LongText} />
+
+## Accessibility
+
+- A tag's words are text. Put a list of tags in a list (`ul`) named by what they are ("Регионы доставки").
+- The remove button is named "Убрать" and the tag's words ("Убрать Ташкент") in the locale (the `remove` message), so each button says which value it takes away.
+- The remove button is 24px in `md`; the 20px button of `sm` meets WCAG 2.5.8 by its spacing, since the words of each tag lie between two tags' buttons.
+- In forced colours the outline and the button's ring keep their system colours.
+
+## Motion
+
+None: a tag appears and leaves in place. A list of many values that grows and shrinks is a list (see List).
+
+## Do and don't
+
+- Do remove the value in `(remove)`; the tag goes with it, and focus moves on.
+- Do say what the tags are, with a visible heading or caption over them.
+- Don't make a tag a link or a toggle.
+- Don't use tags for statuses: their colour would say nothing.

@@ -81,6 +81,29 @@
     inline-size: min(100%, var(--ave-container-xs));
   }
 
+  /* The statuses a narrowed filter shows, as tags in a row that wraps, and the way back to all of them. */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ave-space-2);
+    margin-block-start: calc(-1 * var(--ave-space-4));
+  }
+
+  .filters-caption {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+
+  .filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ave-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
   /* A contract's card in the drawer: each fact under its name. */
   .card {
     display: grid;

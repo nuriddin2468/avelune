@@ -1,13 +1,4 @@
-import {
-  Component,
-  DestroyRef,
-  type ElementRef,
-  computed,
-  inject,
-  linkedSignal,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { Component, DestroyRef, ElementRef, computed, inject, linkedSignal, signal, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AveAlert } from '@avelune/ui/alert';
 import { AveBadge } from '@avelune/ui/badge';
@@ -27,6 +18,7 @@ import { AvePopover } from '@avelune/ui/popover';
 import { AveRadio } from '@avelune/ui/radio';
 import { AveProgress } from '@avelune/ui/progress';
 import { AveSkeleton } from '@avelune/ui/skeleton';
+import { AveTag } from '@avelune/ui/tag';
 import { AveToaster } from '@avelune/ui/toast';
 import { contractStatusVariants, contractStatuses, contracts, type ContractRecord, type ContractStatus } from './data';
 
@@ -67,6 +59,7 @@ const exportInterval = 400;
     AveProgress,
     AveRadio,
     AveSkeleton,
+    AveTag,
     RouterLink,
   ],
   providers: [provideAveIcons([lucideCopy, lucideEllipsis, lucideFileText, lucideSearch, lucideTrash])],
@@ -147,6 +140,20 @@ const exportInterval = 400;
           </div>
         </ave-popover>
       </div>
+
+      @if (narrowed()) {
+        <div class="filters">
+          <span class="filters-caption" id="shown-statuses">Показаны статусы</span>
+          <ul class="filter-tags" aria-labelledby="shown-statuses">
+            @for (status of shownList(); track status) {
+              <li>
+                <ave-tag removable (remove)="removeStatus(status)">{{ statuses[status] }}</ave-tag>
+              </li>
+            }
+          </ul>
+          <button aveButton type="button" variant="ghost" size="sm" (click)="showAllStatuses()">Все статусы</button>
+        </div>
+      }
 
       @if (!loading() && shown().length === 0) {
         <section class="empty" aria-label="Договоры подразделения">
@@ -282,6 +289,9 @@ export class ContractsPage {
   protected readonly statusList = Object.keys(contractStatuses) as ContractStatus[];
   protected readonly shownStatuses = signal<ReadonlySet<ContractStatus>>(this.allStatuses());
   protected readonly filtering = signal(false);
+  /** The statuses shown, in the popover's order, while the filter leaves some out. */
+  protected readonly shownList = computed(() => this.statusList.filter((status) => this.shownStatuses().has(status)));
+  protected readonly narrowed = computed(() => this.shownList().length < this.statusList.length);
 
   /** What the person searches for: part of a number, a subject or a counterparty. */
   protected readonly query = signal('');
@@ -339,6 +349,9 @@ export class ContractsPage {
   }
 
   private readonly searchBox = viewChild.required<ElementRef<HTMLInputElement>>('searchBox');
+  private readonly statusFilter = viewChild.required<AvePopover, ElementRef<HTMLElement>>(AvePopover, {
+    read: ElementRef,
+  });
 
   protected allStatuses(): ReadonlySet<ContractStatus> {
     return new Set(this.statusList);
@@ -349,6 +362,23 @@ export class ContractsPage {
     if (next.has(status)) next.delete(status);
     else next.add(status);
     this.shownStatuses.set(next);
+  }
+
+  /**
+   * A status's tag taken away: the list stops showing it. Without the last one the filter is gone, and focus goes to
+   * the Status button, since the tags go too.
+   */
+  protected removeStatus(status: ContractStatus): void {
+    const next = new Set(this.shownStatuses());
+    next.delete(status);
+    if (next.size > 0) this.shownStatuses.set(next);
+    else this.showAllStatuses();
+  }
+
+  /** Every status shown again; the tags go, and focus goes to the Status button. */
+  protected showAllStatuses(): void {
+    this.shownStatuses.set(this.allStatuses());
+    this.statusFilter().nativeElement.querySelector('button')?.focus();
   }
 
   /** The empty state's action: the search and the filters empty, and focus goes to the search. */

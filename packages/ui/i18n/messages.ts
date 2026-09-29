@@ -93,6 +93,8 @@ export interface AveMessages {
   readonly clear: string;
   /** The button that closes or dismisses a banner, a dialog or a notification. */
   readonly close: string;
+  /** The button of a tag that takes its value away; screen readers hear the tag's words after it. */
+  readonly remove: string;
   /** Names the icon of a message that informs: an alert, a banner or a notification. */
   readonly alertInfo: string;
   /** Names the icon of a message that confirms a success. */
@@ -176,6 +178,7 @@ export const aveMessagesEn: AveMessages = {
   upperValue: 'Maximum',
   clear: 'Clear',
   close: 'Close',
+  remove: 'Remove',
   alertInfo: 'Information',
   alertSuccess: 'Success',
   alertWarning: 'Warning',
@@ -245,6 +248,7 @@ export const aveMessagesRu: AveMessages = {
   upperValue: 'Максимум',
   clear: 'Очистить',
   close: 'Закрыть',
+  remove: 'Убрать',
   alertInfo: 'Информация',
   alertSuccess: 'Успешно',
   alertWarning: 'Предупреждение',
@@ -312,6 +316,7 @@ export const aveMessagesUzLatn: AveMessages = {
   upperValue: 'Eng koʻp',
   clear: 'Tozalash',
   close: 'Yopish',
+  remove: 'Olib tashlash',
   alertInfo: 'Maʼlumot',
   alertSuccess: 'Muvaffaqiyatli',
   alertWarning: 'Ogohlantirish',
@@ -379,6 +384,7 @@ export const aveMessagesUzCyrl: AveMessages = {
   upperValue: 'Энг кўп',
   clear: 'Тозалаш',
   close: 'Ёпиш',
+  remove: 'Олиб ташлаш',
   alertInfo: 'Маълумот',
   alertSuccess: 'Муваффақиятли',
   alertWarning: 'Огоҳлантириш',
