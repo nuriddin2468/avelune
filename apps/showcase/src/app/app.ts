@@ -89,7 +89,7 @@ export class App {
 
   /**
    * The product's pages: the contracts and their template in a group, the register with the count of its expired
-   * contracts, the settings under administration.
+   * contracts, the departments and the settings under administration.
    */
   protected readonly pages: readonly AveSidebarEntry[] = [
     {
@@ -101,7 +101,13 @@ export class App {
         { label: 'Шаблон договора', link: '/templates' },
       ],
     },
-    { heading: 'Администрирование', items: [{ label: 'Настройки', link: '/settings', icon: 'settings' }] },
+    {
+      heading: 'Администрирование',
+      items: [
+        { label: 'Подразделения', link: '/departments', icon: 'network' },
+        { label: 'Настройки', link: '/settings', icon: 'settings' },
+      ],
+    },
   ];
 
   /** Whether the navigation's drawer is open, on a phone; following a link closes it. */

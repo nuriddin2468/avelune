@@ -1,0 +1,18 @@
+/* The frame of the Tree stories. Stories only; the component's own styles are tree.css. */
+@layer components {
+  :host {
+    display: grid;
+    gap: var(--ave-space-4);
+    max-inline-size: var(--ave-container-xs);
+    padding: var(--ave-space-6);
+  }
+
+  .narrow {
+    max-inline-size: calc(var(--ave-space-16) * 3.5);
+  }
+
+  .status {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+}

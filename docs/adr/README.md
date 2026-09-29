@@ -90,6 +90,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0082](0082-avatar.md) | Avatar: initials on the neutral fill, a circle for a person and a square for an organisation, a photo over them | Accepted |
 | [0083](0083-card.md) | Card: a bordered surface without a shadow, a heading row with its end, a row of actions at its foot | Accepted |
 | [0084](0084-accordion.md) | Accordion: Angular Aria's accordion, items declared with their content, a panel that opens on `timing.expand` | Accepted |
+| [0085](0085-tree.md) | Tree: Angular Aria's tree from data, one chosen node, rows indented by level, a chevron at the start | Accepted |
 
 ## Template
 

@@ -1,0 +1,75 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as TreeStories from './tree.stories';
+
+<Meta of={TreeStories} />
+
+# Tree
+
+`<ave-tree>` is nodes under nodes, one of which people choose: an organisation's departments, a register's folders (ADR 0085). It is Angular Aria's tree, the WAI-ARIA tree view pattern, drawn from data.
+
+```ts
+import { AveTree, type AveTreeNode } from '@avelune/ui/tree';
+```
+
+<Canvas of={TreeStories.Default} />
+
+## When to use
+
+- For choosing one place in a hierarchy, whose content the page shows beside the tree: a department's staff, a folder's documents.
+
+## When not to use
+
+- For the product's pages: use the sidebar navigation, whose rows are links.
+- For a hierarchy people read rather than choose from: use nested lists, or headings.
+- For two levels of options in a field: use a select.
+
+## Anatomy
+
+A named `tree` of rows of the control height. A row is 8px from the start and 24px more a level; a node with children has a chevron at its start, pointing to the inline end while closed and down while open, and a leaf keeps the chevron's room so words line up; an optional icon 8px before the words, which wrap. The chosen row takes the pressed fill and a 2px accent bar at its inline start, as the sidebar navigation's current page.
+
+```ts
+readonly departments: AveTreeNode<string>[] = [
+  { value: 'board', label: 'Правление', icon: 'building', expanded: true, children: [
+    { value: 'legal', label: 'Юридический департамент', children: [ … ] },
+  ] },
+];
+```
+
+```html
+<ave-tree label="Подразделения" [nodes]="departments" [(selected)]="department" />
+```
+
+## States
+
+- **Closed** and **open**: a node opens when the data says `expanded`, when the chosen node is under it, and when the person opens it; new nodes from a server leave what the person closed as it is.
+- **Chosen:** `selected` holds the chosen node's value (a model).
+- **Hover** and **pressed:** the state fills. **Disabled:** the words dimmed; focus reaches it, and it cannot be chosen.
+
+<Canvas of={TreeStories.Folders} />
+
+## Keyboard
+
+Tab reaches the tree once, on its chosen or first row. Down and Up move; Right opens a node or moves to its first child; Left closes it or moves to its parent; Home and End go to the first and the last row; typing a node's first letters moves to it; Shift+\* opens every sibling. Enter or Space chooses the focused node. A click chooses a node and opens or closes it.
+
+<Canvas of={TreeStories.Keyboard} />
+
+## Content
+
+- Name each node as the organisation does; long names wrap.
+- Keep the tree shallow: past four levels, people lose their place.
+
+<Canvas of={TreeStories.LongText} />
+
+## Accessibility
+
+- The rows say their level, their place among their siblings, whether they are open and whether they are chosen (`aria-level`, `aria-posinset`, `aria-setsize`, `aria-expanded`, `aria-selected`).
+- Name the tree with `label`; the rows of a closed node are not on the page.
+
+## Motion
+
+The chevron turns on `timing.slide`; a node's rows appear and leave at once.
+
+## Do and don't
+
+- Do show the chosen node's content beside the tree, and keep the tree where it was.
+- Don't use a tree for navigation between pages.

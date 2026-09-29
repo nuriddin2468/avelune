@@ -2,6 +2,7 @@ import type { Routes } from '@angular/router';
 import { ContractPage, contractTitle } from './contract';
 import { ContractForm } from './contract-form';
 import { ContractsPage } from './contracts';
+import { DepartmentsPage } from './departments';
 import { SettingsPage } from './settings';
 import { TemplateEditor } from './template-editor';
 
@@ -11,6 +12,7 @@ export const routes: Routes = [
   { path: 'contracts', component: ContractsPage, title: 'Договоры · Avelune' },
   { path: 'contracts/:id', component: ContractPage, title: contractTitle },
   { path: 'templates', component: TemplateEditor, title: 'Шаблон договора поставки · Avelune' },
+  { path: 'departments', component: DepartmentsPage, title: 'Подразделения · Avelune' },
   { path: 'settings', component: SettingsPage, title: 'Настройки · Avelune' },
   { path: '**', redirectTo: '' },
 ];

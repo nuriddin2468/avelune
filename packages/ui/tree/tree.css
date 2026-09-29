@@ -1,0 +1,133 @@
+@layer components {
+  :host {
+    display: block;
+  }
+
+  .tree {
+    display: grid;
+    gap: var(--ave-space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* A row (ADR 0085): the control height, its words on the middle of their first line, wrapping; 8px of inline
+     padding and 24px a level (the agent's proposal); the chevron of a node with children at the start, a leaf's room
+     kept. Hover and press take the state layers. */
+  .node {
+    --ave-tree-depth: 0;
+
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--ave-space-2);
+    min-block-size: var(--ave-control-height-md);
+    padding-block: calc((var(--ave-control-height-md) - var(--ave-font-body-md-line-height)) / 2);
+    padding-inline: calc(var(--ave-space-2) + var(--ave-tree-depth) * var(--ave-space-6)) var(--ave-space-2);
+    border-radius: var(--ave-radius-md);
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-body-md);
+    cursor: pointer;
+    transition-property: background-color;
+    transition-duration: var(--ave-duration-instant);
+    transition-timing-function: var(--ave-easing-standard);
+
+    &:hover {
+      background-color: var(--ave-color-bg-hover);
+    }
+
+    &:active {
+      background-color: var(--ave-color-bg-active);
+    }
+
+    /* The chosen row, as the sidebar navigation's current one: the pressed fill and a 2px accent bar at the inline
+       start, 8px short of the row's top and bottom. */
+    &[aria-selected='true'] {
+      background-color: var(--ave-color-bg-active);
+    }
+
+    &[aria-selected='true']::before {
+      position: absolute;
+      inset-block: var(--ave-space-2);
+      inset-inline-start: 0;
+      inline-size: var(--ave-border-width-selected);
+      border-radius: var(--ave-radius-full);
+      background-color: var(--ave-color-accent-bg);
+      content: '';
+    }
+
+    &[aria-disabled='true'] {
+      color: var(--ave-color-fg-disabled);
+      cursor: not-allowed;
+    }
+  }
+
+  .node[aria-level='2'] {
+    --ave-tree-depth: 1;
+  }
+
+  .node[aria-level='3'] {
+    --ave-tree-depth: 2;
+  }
+
+  .node[aria-level='4'] {
+    --ave-tree-depth: 3;
+  }
+
+  .node[aria-level='5'] {
+    --ave-tree-depth: 4;
+  }
+
+  .node[aria-level='6'] {
+    --ave-tree-depth: 5;
+  }
+
+  .node[aria-level='7'] {
+    --ave-tree-depth: 6;
+  }
+
+  .node[aria-level='8'] {
+    --ave-tree-depth: 7;
+  }
+
+  /* The icons, and a leaf's room for the chevron, level with the first line of the words. */
+  .chevron,
+  .icon,
+  .leaf {
+    flex: none;
+    margin-block: calc((var(--ave-font-body-md-line-height) - var(--ave-size-icon-sm)) / 2);
+  }
+
+  .leaf {
+    inline-size: var(--ave-size-icon-sm);
+    block-size: var(--ave-size-icon-sm);
+  }
+
+  .chevron {
+    color: var(--ave-color-fg-muted);
+    transition-property: rotate;
+    transition-duration: var(--ave-timing-slide);
+    transition-timing-function: var(--ave-easing-standard);
+  }
+
+  .node[aria-expanded='true'] > .chevron {
+    rotate: 0.25turn;
+  }
+
+  .words {
+    flex: 1;
+    min-inline-size: 0;
+  }
+
+  /* Forced colours paint the fills as the canvas: the bar takes the system's highlight colour. */
+  @media (forced-colors: active) {
+    .node[aria-selected='true']::before {
+      background-color: Highlight;
+      forced-color-adjust: none;
+    }
+
+    .node[aria-disabled='true'] {
+      color: GrayText;
+    }
+  }
+}

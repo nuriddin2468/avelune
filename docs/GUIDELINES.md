@@ -63,6 +63,7 @@ One primary button per view region (a form, a dialog, a toolbar, a card): the on
 | Use | When |
 |---|---|
 | Sidebar navigation | The product's pages and groups of pages, the same on every screen; in a drawer on a phone (ADR 0072) |
+| Tree | One place in a hierarchy people choose, whose content the page shows beside it: a department, a folder; never the product's pages (ADR 0085) |
 | Breadcrumbs | Where a page deep in the hierarchy is, above its heading: a contract under the register (ADR 0070) |
 | Tabs | Sections of one page that people look at one at a time; tabs never change the address (ADR 0071) |
 | Accordion | Sections of one page that people read one or two at a time, in any order, where showing all would make it long (ADR 0084) |

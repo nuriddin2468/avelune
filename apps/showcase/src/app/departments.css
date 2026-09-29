@@ -1,0 +1,85 @@
+/* The departments: the page's heading over the tree and the chosen department's card, side by side from the medium
+   container. Tokens only. */
+@layer app {
+  :host {
+    display: block;
+  }
+
+  .page {
+    display: grid;
+    gap: var(--ave-space-6);
+    max-inline-size: var(--ave-container-lg);
+    margin-inline: auto;
+    container-type: inline-size;
+  }
+
+  .header {
+    display: grid;
+    gap: var(--ave-space-1);
+  }
+
+  .title {
+    font: var(--ave-font-heading-xl);
+  }
+
+  .note {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+
+  .split {
+    display: grid;
+    gap: var(--ave-space-6);
+    align-items: start;
+  }
+
+  @container (min-width: 640px) {
+    .split {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+    }
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(calc(var(--ave-space-16) * 2.5), 1fr));
+    gap: var(--ave-space-3) var(--ave-space-6);
+    margin: 0;
+  }
+
+  .facts dt {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+
+  .facts dd {
+    margin: 0;
+  }
+
+  .phone {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The staff: an avatar 12px before each name, the role under it. */
+  .staff {
+    display: grid;
+    gap: var(--ave-space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .person {
+    display: flex;
+    align-items: center;
+    gap: var(--ave-space-3);
+  }
+
+  .who {
+    display: grid;
+  }
+
+  .role {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+}
