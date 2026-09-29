@@ -131,7 +131,7 @@ import type { AveOption, AveSelectSize } from './types';
           [attr.data-clear]="clearable() ? '' : null"
           [attr.aria-disabled]="isDisabled() ? 'true' : null"
         >
-          @for (option of chosen(); track option) {
+          @for (option of chosen(); track option.value) {
             <li>
               <ave-tag size="sm" [removable]="changeable()" (remove)="uncheck(option.value)">{{
                 option.label

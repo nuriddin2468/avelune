@@ -1,0 +1,52 @@
+/* The frame of the Card stories. Stories only; the card's own styles are card.css and its parts'. */
+@layer components {
+  :host {
+    display: grid;
+    gap: var(--ave-space-4);
+    max-inline-size: var(--ave-container-md);
+    padding: var(--ave-space-6);
+  }
+
+  /* Cards in a grid that wraps. */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--ave-space-16) * 3.5)), 1fr));
+    gap: var(--ave-space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .grid > li {
+    display: grid;
+  }
+
+  .narrow {
+    max-inline-size: calc(var(--ave-space-16) * 4.5);
+  }
+
+  .muted {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(calc(var(--ave-space-16) * 2.5), 1fr));
+    gap: var(--ave-space-3) var(--ave-space-6);
+    margin: 0;
+  }
+
+  .facts dt {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+
+  .facts dd {
+    margin: 0;
+  }
+
+  .sum {
+    font-variant-numeric: tabular-nums;
+  }
+}

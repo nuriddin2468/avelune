@@ -1,19 +1,15 @@
-/* The settings screen: one card of settings. Tokens only. */
+/* The settings screen: the page's heading over a card of settings. Tokens only. */
 @layer app {
   :host {
     display: block;
   }
 
-  .card {
+  /* The page's heading over its cards, as wide as a form. */
+  .page {
     display: grid;
     gap: var(--ave-space-6);
     max-inline-size: var(--ave-container-md);
     margin-inline: auto;
-    padding: var(--ave-space-6);
-    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
-    border-radius: var(--ave-radius-lg);
-    background-color: var(--ave-color-bg-surface);
-    box-shadow: var(--ave-elevation-raised);
   }
 
   .header {
@@ -22,7 +18,7 @@
   }
 
   .title {
-    font: var(--ave-font-heading-lg);
+    font: var(--ave-font-heading-xl);
   }
 
   .note {

@@ -1,0 +1,9 @@
+@layer components {
+  /* A card's actions (ADR 0083): a row at the inline end, 8px apart, wrapping; the primary action last. */
+  :host {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--ave-space-2);
+  }
+}

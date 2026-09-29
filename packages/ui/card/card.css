@@ -1,0 +1,34 @@
+@layer components {
+  /* A card (ADR 0083): the surface with a subtle border and the large radius, no shadow (the agent's proposal, not
+     objected to); 16px from its edge, the border included, so it keeps the 4px grid, and 16px between its parts. Its
+     content lays itself out. */
+  :host {
+    display: grid;
+    align-content: start;
+    gap: var(--ave-space-4);
+    min-inline-size: 0;
+    padding: calc(var(--ave-space-4) - var(--ave-border-width-default));
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface);
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-body-md);
+  }
+
+  /* The heading's row: the title at the start and its end at the inline end of the first line; it wraps. */
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--ave-space-2) var(--ave-space-4);
+  }
+
+  /* The end of the heading's row: at the inline end, never shrunk. */
+  .end {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--ave-space-2);
+    margin-inline-start: auto;
+  }
+}

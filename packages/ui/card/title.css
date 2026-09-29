@@ -1,0 +1,9 @@
+@layer components {
+  /* A card's title (ADR 0083): the small heading role at any level, taking the room its row leaves. */
+  :host {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    margin: 0;
+    font: var(--ave-font-heading-sm);
+  }
+}

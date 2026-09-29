@@ -1,0 +1,77 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as CardStories from './card.stories';
+
+<Meta of={CardStories} />
+
+# Card
+
+`<ave-card>` is a bordered surface for one record or one group of settings: its heading and what stands at the end of the heading's row, its content, and its actions at the foot (ADR 0083).
+
+```ts
+import { AveCard, AveCardEnd, AveCardFooter, AveCardTitle } from '@avelune/ui/card';
+```
+
+<Canvas of={CardStories.Default} />
+
+## When to use
+
+- For records shown side by side, in a grid on a dashboard or a board.
+- For a group of settings or facts that belong together on a page.
+
+## When not to use
+
+- For many records to compare or sort: use a table, or a list.
+- For a notice: use an alert. For something over the page: a popover or a dialog.
+- Around every block of a page: space groups most things without a border (`docs/GUIDELINES.md`, "Spacing rhythm").
+
+## Anatomy
+
+The surface in `bg.surface` with a `border.subtle` border and `radius.lg`, no shadow; 16px of padding and 16px between its parts.
+
+- `[aveCardTitle]` on the application's heading, at the page's level (`h2`, `h3`), in `font.heading-sm`.
+- `[aveCardEnd]` on what stands at the end of the heading's row: a badge, a menu. It stays on the first line, at the inline end.
+- The content, laid out by the application.
+- `[aveCardFooter]` on a row of actions at the foot, at the inline end, 8px apart; the primary action last.
+
+The heading's row is drawn only when the card has a title or an end.
+
+```html
+<ave-card>
+  <h3 aveCardTitle>Поставка офисной мебели</h3>
+  <ave-badge aveCardEnd variant="success">Подписан</ave-badge>
+  <dl>…</dl>
+  <div aveCardFooter>
+    <button aveButton type="button">Продлить</button>
+    <a aveButton variant="primary" routerLink="/contracts/114">Открыть договор</a>
+  </div>
+</ave-card>
+```
+
+## A card for a record
+
+A card is a surface, not a control: it has no click of its own. A card that stands for a record links it from its title (`a[aveLink]` inside the heading), so the link's name is the record's and the card's buttons stay buttons. Put a list of cards in a `ul`, one card per `li`.
+
+<Canvas of={CardStories.Grid} />
+
+## Content
+
+- The title names the record or the group, in a few words; it wraps.
+- The footer holds the card's own actions; one primary at most.
+
+<Canvas of={CardStories.LongText} />
+
+## Accessibility
+
+- The title is a real heading, so screen reader users move from card to card by headings.
+- A card has no role; a list of cards is a list.
+- In forced colours the border stays.
+
+## Motion
+
+None.
+
+## Do and don't
+
+- Do give every card of a grid the same parts in the same places.
+- Don't nest cards in cards.
+- Don't make the whole card clickable; link its title.

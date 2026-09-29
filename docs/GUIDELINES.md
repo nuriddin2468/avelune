@@ -69,6 +69,14 @@ One primary button per view region (a form, a dialog, a toolbar, a card): the on
 | Pagination | A list longer than a page, under the list; back to the first page when a search or a filter changes it (ADR 0074) |
 | Stepper | The steps of a long form in turn, or the stages a document passes through (an approval route); never sections people open in any order (ADR 0077) |
 
+### Card, list or table
+
+| Use | When |
+|---|---|
+| Card | A few records or groups side by side, each read on its own: a dashboard, a board, a page's groups of settings (ADR 0083) |
+| List | Records one under another, read in order, each with its few facts |
+| Table | Many records to compare, sort and choose from, by the same columns (ADR 0078) |
+
 ### Toast, inline alert or banner
 
 | Use | When |
