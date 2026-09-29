@@ -1,0 +1,71 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as LinkStories from './link.stories';
+
+<Meta of={LinkStories} />
+
+# Link
+
+`a[aveLink]` is the kit's link: a native `<a>` in the link colour, always underlined, that goes to a page or a document (ADR 0073).
+
+```ts
+import { AveLink } from '@avelune/ui/link';
+```
+
+<Canvas of={LinkStories.Default} />
+
+## When to use
+
+- For a reference inside text: a record, a department, a document.
+- For a record's name in a list or a table that opens its page.
+
+## When not to use
+
+- For an action (save, send, delete): use a button.
+- For a page's main way forward ("Новый договор"): use a link that looks like a button, `a[aveButton]`.
+- For the product's pages or a page's place in it: use the sidebar navigation or breadcrumbs.
+
+## Anatomy
+
+The words, in the link colour and the font of the text around them, underlined 1px at the font's own offset. A link that opens a new tab (`target="_blank"`) shows an icon 4px after its words, named "откроется в новой вкладке" in the locale, so its name says where it goes.
+
+```html
+Договор отправлен в <a aveLink routerLink="/departments/legal">юридический отдел</a>.
+<a aveLink href="https://lex.uz/docs/1234" target="_blank">Регламент документооборота</a>
+```
+
+`aveLink` works with `href` and `routerLink`; write `target` as an attribute, not a binding.
+
+## States
+
+- **Hover:** the underline thickens to 2px; the colour stays.
+- **Focus:** the kit's ring, with a small radius.
+- Links are never disabled: a link that leads nowhere is text.
+
+<Canvas of={LinkStories.Places} />
+
+## Content
+
+- The words say where the link goes: "договор ДК-2025/109", "регламент документооборота", never "здесь" or "по ссылке".
+- A long link wraps with its text, underlined on every line.
+
+<Canvas of={LinkStories.LongText} />
+
+## Keyboard
+
+Native: Tab reaches the link, Enter follows it.
+
+## Accessibility
+
+- The underline, not only the colour, sets a link apart from the text around it (WCAG 1.4.1).
+- The link colour passes 4.5:1 on every surface and on the tinted fills of alerts and banners, in both themes.
+- In forced colours the link takes the system's link colour.
+
+## Motion
+
+None: the underline thickens at once under the pointer.
+
+## Do and don't
+
+- Do link the words that name the destination, not a whole sentence.
+- Don't open a new tab unless people need the page they are on; when you do, the link says so.
+- Don't style a link as a button with CSS; use `a[aveButton]`.

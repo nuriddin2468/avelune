@@ -6,6 +6,7 @@ import { AveBreadcrumbs, type AveBreadcrumb } from '@avelune/ui/breadcrumbs';
 import { AveButton } from '@avelune/ui/button';
 import { AveTab, AveTabs } from '@avelune/ui/tabs';
 import { AveEmptyState, AveEmptyStateActions } from '@avelune/ui/empty-state';
+import { AveLink } from '@avelune/ui/link';
 import { aveDateFormat, aveNumberFormat } from '@avelune/ui/i18n';
 import { provideAveIcons } from '@avelune/ui/icon';
 import { contractStatuses, contracts, type ContractRecord } from './data';
@@ -27,7 +28,7 @@ export const contractTitle: ResolveFn<string> = (route) => {
  */
 @Component({
   selector: 'ave-showcase-contract',
-  imports: [AveBreadcrumbs, AveButton, AveEmptyState, AveEmptyStateActions, AveTab, AveTabs, RouterLink],
+  imports: [AveBreadcrumbs, AveButton, AveEmptyState, AveEmptyStateActions, AveLink, AveTab, AveTabs, RouterLink],
   providers: [provideAveIcons([lucideFileX, lucidePaperclip])],
   template: `
     <div class="page" lang="ru">
@@ -64,6 +65,10 @@ export const contractTitle: ResolveFn<string> = (route) => {
             </dl>
           </ave-tab>
           <ave-tab value="approval" label="Согласование">
+            <p class="note">
+              Договор согласуют по порядку, описанному в
+              <a aveLink href="https://lex.uz/docs/6134567" target="_blank">регламенте документооборота</a>.
+            </p>
             <ol class="events">
               @for (step of approval; track step.department) {
                 <li class="event">

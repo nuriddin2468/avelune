@@ -61,6 +61,11 @@
     font-variant-numeric: tabular-nums;
   }
 
+  .note {
+    margin-block-end: var(--ave-space-2);
+    color: var(--ave-color-fg-muted);
+  }
+
   /* A panel's list: a row per step, file or event, what it is and its date or size at the end. */
   .events {
     display: grid;

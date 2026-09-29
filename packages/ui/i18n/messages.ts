@@ -107,6 +107,8 @@ export interface AveMessages {
   readonly notifications: string;
   /** The name of a page's breadcrumbs: the path from the top of the product to the page. */
   readonly breadcrumbs: string;
+  /** Names the icon after a link that opens a new tab; screen readers hear it with the link's words. */
+  readonly opensInNewTab: string;
 }
 
 /**
@@ -165,6 +167,7 @@ export const aveMessagesEn: AveMessages = {
   cancel: 'Cancel',
   notifications: 'Notifications',
   breadcrumbs: 'Breadcrumb',
+  opensInNewTab: 'opens in a new tab',
 };
 
 /**
@@ -225,6 +228,7 @@ export const aveMessagesRu: AveMessages = {
   cancel: 'Отмена',
   notifications: 'Уведомления',
   breadcrumbs: 'Навигационная цепочка',
+  opensInNewTab: 'откроется в новой вкладке',
 };
 
 /**
@@ -283,6 +287,7 @@ export const aveMessagesUzLatn: AveMessages = {
   cancel: 'Bekor qilish',
   notifications: 'Bildirishnomalar',
   breadcrumbs: 'Navigatsiya zanjiri',
+  opensInNewTab: 'yangi varaqda ochiladi',
 };
 
 /**
@@ -341,6 +346,7 @@ export const aveMessagesUzCyrl: AveMessages = {
   cancel: 'Бекор қилиш',
   notifications: 'Билдиришномалар',
   breadcrumbs: 'Навигация занжири',
+  opensInNewTab: 'янги варақда очилади',
 };
 
 /**

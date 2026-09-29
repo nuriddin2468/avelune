@@ -1,0 +1,20 @@
+@layer components {
+  /* A link (ADR 0073): the link colour and the font around it, always underlined (product owner, 2026-09-29), at
+     the font's own offset; the underline thickens under the pointer. The ring takes the small radius. */
+  :host {
+    border-radius: var(--ave-radius-sm);
+    color: var(--ave-color-fg-link);
+    text-decoration-line: underline;
+    text-decoration-thickness: var(--ave-border-width-default);
+    text-underline-offset: auto;
+  }
+
+  :host(:hover) {
+    text-decoration-thickness: var(--ave-border-width-selected);
+  }
+
+  /* After the words, 4px from them, on the middle of the lowercase letters. */
+  .new-tab {
+    margin-inline-start: var(--ave-space-1);
+  }
+}

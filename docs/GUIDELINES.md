@@ -63,6 +63,7 @@ One primary button per view region (a form, a dialog, a toolbar, a card): the on
 | Sidebar navigation | The product's pages and groups of pages, the same on every screen; in a drawer on a phone (ADR 0072) |
 | Breadcrumbs | Where a page deep in the hierarchy is, above its heading: a contract under the register (ADR 0070) |
 | Tabs | Sections of one page that people look at one at a time; tabs never change the address (ADR 0071) |
+| Link (`a[aveLink]`) | A reference inside text, or a record's name that opens its page; always underlined, and it says when it opens a new tab (ADR 0073) |
 
 ### Toast, inline alert or banner
 
@@ -95,6 +96,7 @@ One primary button per view region (a form, a dialog, a toolbar, a card): the on
 - **One verb through the flow:** "Publish" on the button, "Publish document?" in the confirmation, "Published" in the result.
 - **Errors say what happened and how to fix it**, without apology or blame: "The file is larger than 20 MB. Choose a smaller file." Never "Something went wrong" alone.
 - **Destructive confirmations name the action:** "Delete document", not "Yes".
+- **Links name their destination:** "договор ДК-2025/109", "регламент документооборота", never "здесь" or "по ссылке".
 - **Empty states explain why** the place is empty and offer the next action.
 
 ## Formatting

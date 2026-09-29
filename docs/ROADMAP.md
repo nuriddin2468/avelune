@@ -257,7 +257,7 @@ Wave 4 plan (2026-09-29), in this order: Breadcrumbs (and the showcase's contrac
 | Menubar | 4 | composites | planned | | Aria MenuBar |
 | Toolbar | 4 | composites | planned | | Aria Toolbar |
 | Stepper | 4 | composites | planned | | |
-| Link | 4 | components | planned | | `a[aveLink]` |
+| Link | 4 | components | experimental | | `@avelune/ui/link` (ADR 0073): `a[aveLink]`, no inputs; `fg.link`, always underlined, 1px and 2px under the pointer (product owner, 2026-09-29); `target="_blank"` adds Lucide's `external-link`, named "откроется в новой вкладке" (`opensInNewTab`); `a` joins `avelune/no-raw-elements` (`aveButton`, `aveIconButton`, `aveLink`); the showcase's register titles, its expired-contract alert and a contract's approval tab; 1.07 kB of 1.2 kB; beta after the Wave 4 visual review |
 | Badge | 5 | components | planned | | |
 | Tag | 5 | components | planned | | |
 | Avatar | 5 | components | planned | | |

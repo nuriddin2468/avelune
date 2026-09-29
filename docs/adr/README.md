@@ -78,6 +78,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0070](0070-breadcrumbs.md) | Breadcrumbs: a trail from data, links through Angular's router, the current page as text | Accepted |
 | [0071](0071-tabs.md) | Tabs: Angular Aria's tabs, tabs declared as panels, an indicator that slides on `timing.slide` | Accepted |
 | [0072](0072-sidebar-nav.md) | SidebarNav: the product's navigation from data, current pages from the router, groups that disclose | Accepted |
+| [0073](0073-link.md) | Link: a native link, always underlined, that says when it opens a new tab | Accepted |
 
 ## Template
 

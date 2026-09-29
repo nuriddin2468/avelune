@@ -1,0 +1,26 @@
+/* The frame of the Link stories: text on a page. Stories only; the link's styles are link.css. */
+@layer components {
+  :host {
+    display: block;
+    max-inline-size: var(--ave-container-md);
+    padding: var(--ave-space-6);
+  }
+
+  .places {
+    display: grid;
+    gap: var(--ave-space-6);
+  }
+
+  .rows {
+    display: grid;
+    gap: var(--ave-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .hint {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-caption);
+  }
+}

@@ -10,6 +10,7 @@ import { aveDateFormat, aveNumberFormat } from '@avelune/ui/i18n';
 import { provideAveIcons } from '@avelune/ui/icon';
 import { AveChoiceGroup } from '@avelune/ui/form-field';
 import { AveInput } from '@avelune/ui/input';
+import { AveLink } from '@avelune/ui/link';
 import { AveMenu, type AveMenuEntry } from '@avelune/ui/menu';
 import { AvePopover } from '@avelune/ui/popover';
 import { AveRadio } from '@avelune/ui/radio';
@@ -47,6 +48,7 @@ const exportInterval = 400;
     AveEmptyState,
     AveEmptyStateActions,
     AveInput,
+    AveLink,
     AveMenu,
     AvePopover,
     AveProgress,
@@ -95,7 +97,11 @@ const exportInterval = 400;
 
       @if (expired().length > 0) {
         <ave-alert variant="warning" heading="Есть истёкшие договоры">
-          {{ expiredText() }} Продлите или закройте истёкшие договоры, чтобы они не попадали в отчёты.
+          @for (contract of expired(); track contract.id) {
+            Договор <a aveLink [routerLink]="['/contracts', contract.id]">{{ contract.number }}</a> истёк
+            {{ dates.numeric(contract.endsOn) }}.
+          }
+          Продлите или закройте истёкшие договоры, чтобы они не попадали в отчёты.
         </ave-alert>
       }
 
@@ -157,8 +163,10 @@ const exportInterval = 400;
           @for (contract of shown(); track contract.id) {
             <li class="row">
               <div class="main">
-                <a class="number" [routerLink]="['/contracts', contract.id]">{{ contract.number }}</a>
-                <span class="subject">{{ contract.subject }}</span>
+                <span class="number">{{ contract.number }}</span>
+                <span class="subject">
+                  <a aveLink [routerLink]="['/contracts', contract.id]">{{ contract.subject }}</a>
+                </span>
                 <span class="counterparty">{{ contract.counterparty }}</span>
               </div>
               <div class="facts">
@@ -270,13 +278,8 @@ export class ContractsPage {
     );
   });
 
-  /** Contracts whose term has ended: the alert above the list names them. */
+  /** Contracts whose term has ended: the alert above the list names them, each a link to its page. */
   protected readonly expired = computed(() => this.rows().filter((contract) => contract.status === 'expired'));
-  protected readonly expiredText = computed(() =>
-    this.expired()
-      .map((contract) => `Договор ${contract.number} истёк ${this.dates.numeric(contract.endsOn)}.`)
-      .join(' '),
-  );
 
   /** How many contracts the list shows, in Russian: 1 договор, 2 договора, 5 договоров. */
   protected readonly count = computed(() => {

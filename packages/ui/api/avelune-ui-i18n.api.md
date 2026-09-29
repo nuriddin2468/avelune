@@ -57,6 +57,7 @@ export interface AveMessages {
     readonly nextYears: string;
     readonly noResults: string;
     readonly notifications: string;
+    readonly opensInNewTab: string;
     readonly optionsFound: (count: number) => string;
     readonly previousMonth: string;
     readonly previousYear: string;
