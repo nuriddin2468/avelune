@@ -31,7 +31,14 @@ import { AveTooltip } from '@avelune/ui/tooltip';
 A small bubble in `color.bg.tooltip` (dark in light, lighter than every surface in dark) with 12/16 text in `color.fg.on-tooltip`, `radius.md`, the popover elevation, 8px from the element (clear of its focus ring), at most 320px wide, wrapping. It is centred on the element's side, aligned with its start or end when the text is wider than the room there, and kept 8px inside the viewport.
 
 ```html
-<button aveIconButton type="button" variant="ghost" icon="download" label="Выгрузить" aveTooltip="Выгрузить в Excel"></button>
+<button
+  aveIconButton
+  type="button"
+  variant="ghost"
+  icon="download"
+  label="Выгрузить"
+  aveTooltip="Выгрузить в Excel"
+></button>
 ```
 
 ## Sides
@@ -44,15 +51,15 @@ A small bubble in `color.bg.tooltip` (dark in light, lighter than every surface 
 
 ## Behaviour
 
-| When                                             | The tooltip                                       |
-| ------------------------------------------------ | ------------------------------------------------- |
-| The pointer rests on the element for 500ms       | shows                                             |
-| The element takes keyboard focus                 | shows at once                                     |
-| Another tooltip hid less than 500ms ago          | shows at once (moving along a toolbar)            |
-| The pointer moves onto the tooltip's text        | stays, so the text can be read (WCAG 1.4.13)      |
-| The pointer leaves both, focus leaves, a press   | hides at once                                     |
-| Escape                                           | hides, and nothing else hears that Escape          |
-| The element scrolls out of sight                 | hides                                             |
+| When                                           | The tooltip                                  |
+| ---------------------------------------------- | -------------------------------------------- |
+| The pointer rests on the element for 500ms     | shows                                        |
+| The element takes keyboard focus               | shows at once                                |
+| Another tooltip hid less than 500ms ago        | shows at once (moving along a toolbar)       |
+| The pointer moves onto the tooltip's text      | stays, so the text can be read (WCAG 1.4.13) |
+| The pointer leaves both, focus leaves, a press | hides at once                                |
+| Escape                                         | hides, and nothing else hears that Escape    |
+| The element scrolls out of sight               | hides                                        |
 
 The delay is `timing.tooltip-delay`. An empty text shows no tooltip.
 
