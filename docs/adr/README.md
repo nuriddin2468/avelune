@@ -96,6 +96,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0088](0088-font-check-without-white-space.md) | The visual suite's font check leaves white space out of the text it checks | Accepted |
 | [0089](0089-brand-themes.md) | Brand themes: a product's accent at build time, a tenant's at runtime, one generator | Accepted; the generator as built in addendum (Wave 6) |
 | [0090](0090-storybook-mcp-and-the-components-manifest.md) | Storybook MCP: the components manifest, the kit's component in every story file, snippets an application writes | Accepted |
+| [0091](0091-patterns.md) | Patterns: page layouts the application fills, in their own layer, adapting to their container | Accepted |
 
 ## Template
 
