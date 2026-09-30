@@ -11,36 +11,6 @@
     margin-inline: auto;
   }
 
-  /* The heading and the page's actions in one row; on a phone the actions wrap under it, the primary one last. */
-  .header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--ave-space-4);
-  }
-
-  .heading {
-    display: grid;
-    gap: var(--ave-space-1);
-  }
-
-  .title {
-    font: var(--ave-font-heading-xl);
-  }
-
-  /* Under the title: that the register loads, then how many contracts it holds; one line either way. */
-  .count {
-    color: var(--ave-color-fg-muted);
-    font: var(--ave-font-body-sm);
-  }
-
-  .actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--ave-space-2);
-  }
-
   /* The export: its name and state in a row over the bar. */
   .export {
     display: grid;
@@ -70,15 +40,11 @@
     }
   }
 
-  /* The search over the table, as wide as a field. */
+  /* The status filter under the header, until the filter panel takes its place. */
   .toolbar {
     display: flex;
     flex-wrap: wrap;
     gap: var(--ave-space-2);
-  }
-
-  .search {
-    inline-size: min(100%, var(--ave-container-xs));
   }
 
   /* The statuses a narrowed filter shows, as tags in a row that wraps, and the way back to all of them. */

@@ -1,0 +1,49 @@
+@layer patterns {
+  /* A list page's header (ADR 0093): the heading's row over the search's, 16px apart. */
+  :host {
+    display: grid;
+    gap: var(--ave-space-4);
+    min-inline-size: 0;
+  }
+
+  /* The heading and its count at the start, the actions at the inline end; on a narrow page the actions wrap
+     under the heading. */
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ave-space-4);
+  }
+
+  /* The count on the heading's baseline, 12px after it; a long heading pushes it to the next line. */
+  .title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--ave-space-1) var(--ave-space-3);
+    min-inline-size: 0;
+  }
+
+  .heading {
+    margin: 0;
+    font: var(--ave-font-heading-xl);
+  }
+
+  .summary {
+    margin: 0;
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-md);
+  }
+
+  /* The search fills the row; the filters' button, in a column of its own only when there is one, keeps its words
+     at its end, 8px from it. */
+  .search {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-columns: auto;
+    grid-auto-flow: column;
+    align-items: center;
+    gap: var(--ave-space-2);
+  }
+}

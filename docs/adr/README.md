@@ -98,6 +98,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0090](0090-storybook-mcp-and-the-components-manifest.md) | Storybook MCP: the components manifest, the kit's component in every story file, snippets an application writes | Accepted |
 | [0091](0091-patterns.md) | Patterns: page layouts the application fills, in their own layer, adapting to their container | Accepted |
 | [0092](0092-app-shell.md) | App shell: the application bar with the logo, the navigation as a column or a drawer, one main | Accepted |
+| [0093](0093-search-header.md) | SearchHeader: a list page's heading, count and main action over the search and the filters' button | Accepted |
 
 ## Template
 

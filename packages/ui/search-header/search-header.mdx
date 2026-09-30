@@ -1,0 +1,89 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as SearchHeaderStories from './search-header.stories';
+
+<Meta of={SearchHeaderStories} />
+
+# Search header
+
+`<ave-search-header>` is the header of a list page: the page's heading, the count of its records and its main action on the first row, then the search across the width with the button that shows and hides its filters (ADR 0093).
+
+```ts
+import {
+  AveSearchHeader,
+  AveSearchHeaderActions,
+  AveSearchHeaderSearch,
+  type AveSearchFilters,
+} from '@avelune/ui/search-header';
+```
+
+<Canvas of={SearchHeaderStories.Default} />
+
+## When to use
+
+- At the top of a page whose content is a list people search: a register, a directory.
+- Inside the List page pattern, which places it over its filters and the list.
+
+## When not to use
+
+- For a page without a search: give it a plain `h1`, or the header of its own page pattern (Form page, Settings page).
+- For a search inside a region of a page, such as a card or a list beside a detail: an `input[aveInput]` of type `search` in that region.
+
+## Anatomy
+
+- **The first row:** the page's `h1` from `heading`, in `font.heading-xl`; the count from `summary`, muted, 12px after it on its baseline; `[aveSearchHeaderActions]` at the inline end, 8px apart. The row wraps, so on a narrow page the actions go under the heading.
+- **The second row**, 16px under the first: the search landmark (`<search>`, named by `searchLabel`) around the application's `input[aveInput][aveSearchHeaderSearch]`, which fills the row, and the filters' button 8px after it.
+- **The filters' button:** a secondary Button with Lucide's `list-filter`, the filters' label ("Фильтры") and a Count of the applied filters, which says nothing at 0.
+
+```html
+<ave-search-header heading="Договоры" [summary]="summary()" searchLabel="Поиск договоров" [filters]="filters">
+  <div aveSearchHeaderActions>
+    <button aveButton type="button">Выгрузить в Excel</button>
+    <a aveButton variant="primary" routerLink="/contracts/new">Новый договор</a>
+  </div>
+  <input aveInput aveSearchHeaderSearch type="search" aria-label="Поиск договоров" (input)="search($event)" />
+</ave-search-header>
+```
+
+## Filters
+
+`filters` takes what the button shows and hides: a FilterPanel (`[filters]="panel"` with `<ave-filter-panel #panel>`), or an application's own filters that keep the `AveSearchFilters` contract: `id`, `label`, `count`, `open`, `modal` and `toggle()`. Without `filters` there is no button, and the search fills its row.
+
+<Canvas of={SearchHeaderStories.WithoutFilters} />
+
+## States
+
+- **Loading:** `summary` says so ("Загрузка договоров…"); it is a status, so screen readers hear the count when it comes. The "Loading" story shows it.
+- **No results:** the list below says why, with an empty state; the count says "Ничего не найдено" or "0 договоров".
+
+## Content
+
+- `heading` names the page's records: "Договоры", "Контрагенты".
+- `summary` counts them in the application's words, with the noun in its right form: "34 договора", "1 204 ta shartnoma". The kit does not decline nouns.
+- One primary action, the page's main one, last in the actions; at most one more.
+- The search's `aria-label` and placeholder say what it searches: "Номер, предмет или контрагент".
+
+<Canvas of={SearchHeaderStories.LongText} />
+
+## Keyboard
+
+| Key                                   | Does                                                                    |
+| ------------------------------------- | ----------------------------------------------------------------------- |
+| Tab                                   | The actions, the search, then the filters' button                       |
+| Enter or Space on the filters' button | Shows or hides the filters' column; on a narrow page opens their drawer |
+
+## Accessibility
+
+- The heading is the page's only `h1`; the page pattern around it draws none.
+- The count is a `status`: it is announced when it changes, not when the page opens.
+- The search is a landmark. Name it with `searchLabel` when the page has another search, so the names differ.
+- The filters' button says what it does in each mode: `aria-expanded` and `aria-controls` for the column, `aria-haspopup="dialog"` for the drawer, which returns focus to it.
+
+## Motion
+
+None of its own; the filters' drawer uses the catalog's drawer classes.
+
+## Do and don't
+
+- Do bind the search's value and filter the list as people type, with a short delay for a server.
+- Do say the count after every search.
+- Don't put the page's rarer actions here: they belong in a menu or a toolbar over the list.

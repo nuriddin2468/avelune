@@ -1,0 +1,14 @@
+/* The frame of the Search header stories: the top of a list page, with the shell's padding. Stories only; the
+   header's styles are search-header.css. */
+@layer patterns {
+  :host {
+    display: block;
+    padding: var(--ave-space-6);
+  }
+
+  /* A stand-in for the filters the button shows: the next pattern, FilterPanel. */
+  .filters {
+    margin-block-start: var(--ave-space-4);
+    color: var(--ave-color-fg-muted);
+  }
+}

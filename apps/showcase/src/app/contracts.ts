@@ -16,6 +16,7 @@ import { AveLink } from '@avelune/ui/link';
 import { AveMenu, type AveMenuEntry } from '@avelune/ui/menu';
 import { AvePopover } from '@avelune/ui/popover';
 import { AveRadio } from '@avelune/ui/radio';
+import { AveSearchHeader, AveSearchHeaderActions, AveSearchHeaderSearch } from '@avelune/ui/search-header';
 import { AveProgress } from '@avelune/ui/progress';
 import { AveTag } from '@avelune/ui/tag';
 import { AveToaster } from '@avelune/ui/toast';
@@ -58,18 +59,21 @@ const exportInterval = 400;
     AvePopover,
     AveProgress,
     AveRadio,
+    AveSearchHeader,
+    AveSearchHeaderActions,
+    AveSearchHeaderSearch,
     AveTag,
     RouterLink,
   ],
   providers: [provideAveIcons([lucideCopy, lucideEllipsis, lucideFileText, lucideSearch, lucideTrash])],
   template: `
     <div class="page" lang="ru">
-      <header class="header">
-        <div class="heading">
-          <h1 class="title">Договоры</h1>
-          <p class="count" role="status">{{ loading() ? 'Загрузка договоров…' : count() }}</p>
-        </div>
-        <div class="actions">
+      <ave-search-header
+        heading="Договоры"
+        searchLabel="Поиск договоров"
+        [summary]="loading() ? 'Загрузка договоров…' : count()"
+      >
+        <div aveSearchHeaderActions>
           <button
             aveButton
             type="button"
@@ -81,7 +85,18 @@ const exportInterval = 400;
           </button>
           <a aveButton variant="primary" routerLink="/">Новый договор</a>
         </div>
-      </header>
+        <input
+          #searchBox
+          aveInput
+          aveSearchHeaderSearch
+          type="search"
+          autocomplete="off"
+          aria-label="Поиск договоров"
+          placeholder="Номер, предмет или контрагент"
+          [value]="query()"
+          (input)="search($event)"
+        />
+      </ave-search-header>
 
       @if (exported() !== null) {
         <section class="export" aria-label="Выгрузка реестра">
@@ -111,17 +126,6 @@ const exportInterval = 400;
       }
 
       <div class="toolbar">
-        <input
-          #searchBox
-          aveInput
-          class="search"
-          type="search"
-          autocomplete="off"
-          aria-label="Поиск договоров"
-          placeholder="Номер, предмет или контрагент"
-          [value]="query()"
-          (input)="search($event)"
-        />
         <ave-popover label="Статус" heading="Статус договора" [(open)]="filtering">
           <fieldset aveChoiceGroup legend="Показывать договоры">
             @for (status of statusList; track status) {

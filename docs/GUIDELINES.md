@@ -57,6 +57,7 @@ Every screen of a product sits in the application shell (`<ave-app-shell>`, ADR 
 - The bar holds the product: its logo and name, which lead home, and at most three of the application's items (the view's switches, notifications, the person's menu). A page's actions belong to the page's header, never to the bar.
 - The logo is the product's or the tenant's image: give it a dark source when its dark parts would vanish on the dark bar, and an `alt` that names the organisation, or `''` when the product's name says the same.
 - One `main`, one banner landmark and one navigation per screen: the shell draws them, and a page never draws them again. A page's heading is its `h1`.
+- A list people search starts with the search header (ADR 0093): the heading, the count in words ("34 договора", declined by the application), the main action last, then the search and its filters. The count changes after every search.
 
 ### Dialog, drawer or page
 

@@ -1,0 +1,9 @@
+@layer patterns {
+  /* A search header's actions (ADR 0093): a row 8px apart that wraps, the primary last. */
+  :host {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ave-space-2);
+  }
+}
