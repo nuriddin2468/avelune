@@ -1,0 +1,27 @@
+{
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/.nx/**": true,
+    "**/.angular/**": true,
+    "**/coverage/**": true,
+    "**/__screenshots__/**": true,
+    "**/test-results/**": true,
+    "**/playwright-report/**": true,
+    "**/storybook-static/**": true,
+    "**/.vitest-attachments/**": true,
+    "tools/visual/baselines/**": true
+  },
+  "search.exclude": {
+    "**/dist": true,
+    "**/.nx": true,
+    "**/.angular": true,
+    "**/coverage": true,
+    "**/__screenshots__": true,
+    "**/test-results": true,
+    "**/playwright-report": true,
+    "**/storybook-static": true,
+    "**/.vitest-attachments": true,
+    "tools/visual/baselines": true
+  }
+}
