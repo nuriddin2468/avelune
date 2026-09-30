@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below that is not marked **Deferred**, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 5, Wave 5 (data) built and its visual suite run (2026-09-30): Badge and Count, Tag, the Multiselect's tags, Avatar, Card, Accordion, Tree, List and DataTable, one commit each with its ADR, then the wave's visual suite with its review's fixes ("Wave 5" and "Wave 5 baselines" below). **STOP:** the product owner reviews the wave, or passes its STOP, and says whether to continue in this session or a fresh one; Wave 6 (patterns) is next, and the product owner has already decided two of its items: brand themes (ADR 0089) and Storybook MCP ("Wave 6 decisions" below). The wave's components are experimental until its visual review. The visual reviews of brief §8.1 for Waves 2, 3 and 4, which the product owner starts, are still open. Wave 1 is closed: the product owner approved it on 2026-09-25 without the showcase review of its STOP. The release age is 16 hours since 2026-09-25 (ADR 0042). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-25.
+**Current position:** Phase 5, Wave 6 (patterns) in progress (2026-09-30): the product owner passed Wave 5's STOP and chose four looks of the patterns ("Wave 6 decisions" below); the wave's plan is in "Wave 6 plan". Its first item is Storybook MCP. The components of Waves 2 to 5 are experimental until their visual reviews of brief §8.1, which the product owner starts; Wave 1 is closed (2026-09-25). The release age is 16 hours since 2026-09-25 (ADR 0042). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-25.
 
 ## Parameters
 
@@ -289,6 +289,21 @@ Wave 6 decisions (product owner, 2026-09-30, before the wave starts):
 - **Brand themes** (ADR 0089): a tenant changes the brand colour and the logo only; presets and an own colour; a colour that fails contrast is adapted and the change shown; one generator, `@avelune/tokens/brand`, built in this wave with the showcase SettingsPage's branding screen. The presets and the danger-distance thresholds are the agent's, for the product owner's taste at the wave's review.
 - **Storybook MCP**, first in the wave so the wave's own agents use it: a spike that turns on `features.componentsManifest` and reads how the manifest shows attribute directives (`button[aveButton]`), element components and their JSDoc, with the `angular-vite` patch (ADR 0035) and JIT stories (ADR 0025); then an ADR; then `@storybook/addon-mcp` 10.6.0 (peers `storybook ^10.6.0`, our pin; checked on the registry 2026-09-30) in `.mcp.json`, and a check in `tools` that the manifest holds every component and every public input. Storybook calls its AI features a preview and its manifest not a public API, so nothing heavy is built on it. Hosting it for consumers is Phase 6.
 
+Wave 5 STOP passed (2026-09-30): the product owner started Wave 6 without a review of Wave 5's screens; its visual review stays open with those of Waves 2, 3 and 4.
+
+Wave 6 looks (product owner, 2026-09-30, chosen from layouts sketched as text before the patterns; every other decision of the wave the agent's, for the product owner's taste at its end):
+- **FilterPanel:** a column of filters at the start of the list on wide containers, collapsed and opened by a "Фильтры" button; a drawer on a phone; the applied filters as tags above the list. A vertical form lets long Russian and Uzbek labels wrap and holds many filters.
+- **SearchHeader:** the header of a list page: the heading, the count of records and the main action on the first row, the search across the width under them with the filters' button. The logo has its place in the application bar, which becomes a pattern too (ADR 0089).
+- **FormPage:** the actions under the form, in a bar that sticks to the bottom of the window while the form is longer than it.
+- **SettingsPage:** the sections in a column at the start (Profile, Appearance, Brand, Notifications…), each a page with its own address; on a phone the list of sections, then a section. The tenant's brand screen is one of them.
+
+Wave 6 plan (2026-09-30), in this order:
+1. Storybook MCP: the spike's findings and an ADR; every component's stories with the kit's component as their `component` and a snippet an application writes; `@storybook/addon-mcp` in `.mcp.json`; a check in `tools` that the manifest holds every component and every public input.
+2. The showcase's screens as lazy routes (tracked risk: its initial bundle).
+3. Brand themes (ADR 0089): the generator `@avelune/tokens/brand`, the presets and their static files, the property test, `AveTheme.setBrand` with the pre-paint script, the Foundations "Brand" page.
+4. The patterns' base ADR (the `patterns` layer, container queries, the application bar with the logo), then SearchHeader, FilterPanel, ListPage (the register), ListDetail, FormPage (the new contract), Dashboard, SettingsPage with the branding screen, one commit each with its ADR and the showcase's screen.
+5. The wave's visual suite, invariants and summary; STOP.
+
 ## Component waves
 
 | Wave | Components | Gate |
@@ -297,7 +312,7 @@ Wave 6 decisions (product owner, 2026-09-30, before the wave starts):
 | 2 Forms | Textarea, RadioGroup, Switch, Select, Combobox/Autocomplete, Multiselect, DatePicker, DateRangePicker, FileUpload, Slider | STOP + summary |
 | 3 Overlays & feedback | Dialog, ConfirmDialog, Drawer, Popover, Tooltip, Menu, Toast, Alert, Banner, Progress, Spinner, Skeleton, EmptyState | **STOP:** passed 2026-09-29 (product owner started Wave 4) |
 | 4 Navigation | Tabs, Breadcrumbs, Pagination, SidebarNav, Menubar, Toolbar, Stepper, Link | **STOP:** passed 2026-09-29 (product owner started Wave 5) |
-| 5 Data | Badge, Tag, Avatar, Card, Accordion, Tree, List, DataTable (base first: ADR 0078, a native table, pages) | **STOP:** built and its visual suite run (2026-09-30); waiting for the product owner |
+| 5 Data | Badge, Tag, Avatar, Card, Accordion, Tree, List, DataTable (base first: ADR 0078, a native table, pages) | **STOP:** passed 2026-09-30 (product owner started Wave 6) |
 | 6 Patterns | ListPage, ListDetail, FormPage, Dashboard, FilterPanel, SearchHeader, SettingsPage; brand themes (ADR 0089) and Storybook MCP ("Wave 6 decisions") | STOP + summary |
 
 ## Component status
