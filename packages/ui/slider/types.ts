@@ -1,7 +1,7 @@
 /**
  * The value of a range slider: its lower and upper end, `start` never above `end`.
  *
- * @alpha
+ * @beta
  */
 export interface AveNumberRange {
   /** The lower end. */

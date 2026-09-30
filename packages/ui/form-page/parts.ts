@@ -14,7 +14,7 @@ import { Component, DestroyRef, Directive, ElementRef, afterNextRender, inject }
  * </div>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: '[aveFormPageActions]',
@@ -55,7 +55,7 @@ export class AveFormPageActions {
  * <p aveFormPageActionsStart role="status">Черновик сохранён.</p>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Directive({ selector: '[aveFormPageActionsStart]' })
 export class AveFormPageActionsStart {}

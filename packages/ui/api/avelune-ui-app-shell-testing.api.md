@@ -7,7 +7,7 @@
 import { AveSidebarNavHarness } from '@avelune/ui/sidebar-nav/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveAppShellHarness extends ComponentHarness {
     getHome(): Promise<string | null>;
     getLogo(): Promise<AveAppShellLogo | null>;
@@ -24,7 +24,7 @@ export class AveAppShellHarness extends ComponentHarness {
     skipToContent(): Promise<void>;
 }
 
-// @alpha
+// @beta
 export interface AveAppShellLogo {
     readonly alt: string;
     readonly src: string;

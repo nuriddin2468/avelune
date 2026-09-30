@@ -1,14 +1,14 @@
 /**
  * What a toast is about: `info` (default), `success`, `warning` or `danger`, each with its icon.
  *
- * @alpha
+ * @beta
  */
 export type AveToastVariant = 'info' | 'success' | 'warning' | 'danger';
 
 /**
  * The one action a toast may offer, such as Undo: its words and what it does. Choosing it closes the toast.
  *
- * @alpha
+ * @beta
  */
 export interface AveToastAction {
   /** The words: a verb ("Отменить"). */
@@ -20,7 +20,7 @@ export interface AveToastAction {
 /**
  * A toast to show (ADR 0068).
  *
- * @alpha
+ * @beta
  */
 export interface AveToastOptions {
   /** What happened, in one sentence ("Договор удалён"). */
@@ -34,7 +34,7 @@ export interface AveToastOptions {
 /**
  * A toast that was shown, or waits its turn.
  *
- * @alpha
+ * @beta
  */
 export interface AveToastRef {
   /** Closes the toast, or takes it out of the queue. */

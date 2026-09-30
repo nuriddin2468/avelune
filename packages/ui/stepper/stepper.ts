@@ -13,7 +13,7 @@ import type { AveStep, AveStepperOrientation } from './types';
  * <ave-stepper label="Оформление договора" [steps]="steps" [current]="1" selectable (stepSelected)="go($event)" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-stepper',

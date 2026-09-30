@@ -1,7 +1,7 @@
 /**
  * A filter applied to a list, as the applied filters above it show it (ADR 0094).
  *
- * @alpha
+ * @beta
  */
 export interface AveAppliedFilter {
   /** What the application knows the filter by; `remove` emits it. */

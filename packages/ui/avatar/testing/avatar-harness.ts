@@ -4,7 +4,7 @@ import type { AveAvatarKind, AveAvatarSize } from '@avelune/ui/avatar';
 /**
  * Filters for {@link AveAvatarHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveAvatarHarnessFilters extends BaseHarnessFilters {
   /** Only match avatars of this name, or whose name matches this pattern. */
@@ -14,7 +14,7 @@ export interface AveAvatarHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-avatar>` from `@avelune/ui/avatar`.
  *
- * @alpha
+ * @beta
  */
 export class AveAvatarHarness extends ComponentHarness {
   /** Selector that finds kit avatars. */

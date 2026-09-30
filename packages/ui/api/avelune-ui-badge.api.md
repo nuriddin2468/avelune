@@ -6,7 +6,7 @@
 
 import * as _angular_core from '@angular/core';
 
-// @alpha
+// @beta
 export class AveBadge {
     readonly variant: _angular_core.InputSignal<AveBadgeVariant>;
     // (undocumented)
@@ -15,10 +15,10 @@ export class AveBadge {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveBadge, never>;
 }
 
-// @alpha
+// @beta
 export type AveBadgeVariant = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 
-// @alpha
+// @beta
 export class AveCount {
     // (undocumented)
     protected readonly empty: _angular_core.Signal<boolean>;

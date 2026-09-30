@@ -17,7 +17,7 @@ function cssUrl(url: string): string {
  * <ave-avatar name="ООО «Мебель Сервис»" kind="organization" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-avatar',

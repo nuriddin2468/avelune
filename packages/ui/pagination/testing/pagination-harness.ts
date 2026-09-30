@@ -4,7 +4,7 @@ import { AveSelectHarness } from '@avelune/ui/select/testing';
 /**
  * Filters for {@link AvePaginationHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AvePaginationHarnessFilters extends BaseHarnessFilters {
   /** Only match paginations whose current page is this number. */
@@ -15,7 +15,7 @@ export interface AvePaginationHarnessFilters extends BaseHarnessFilters {
  * Harness for `<ave-pagination>` from `@avelune/ui/pagination`: the range, the pages shown, going to a page, and the
  * page size.
  *
- * @alpha
+ * @beta
  */
 export class AvePaginationHarness extends ComponentHarness {
   /** Selector that finds kit paginations. */

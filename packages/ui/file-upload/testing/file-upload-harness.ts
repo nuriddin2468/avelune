@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters, type TestE
 /**
  * Filters for {@link AveFileUploadHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveFileUploadHarnessFilters extends BaseHarnessFilters {
   /** Only match file uploads that list a file of this name, or one matching this pattern. */
@@ -13,7 +13,7 @@ export interface AveFileUploadHarnessFilters extends BaseHarnessFilters {
 /**
  * A file the field did not take, as its row shows it.
  *
- * @alpha
+ * @beta
  */
 export interface AveRejectedFileRow {
   /** The file's name. */
@@ -27,7 +27,7 @@ export interface AveRejectedFileRow {
  * are chosen through the system's dialog or dropped, which a harness cannot do; tests set the files on the field's
  * `input[type=file]` or dispatch a `drop` on its zone.
  *
- * @alpha
+ * @beta
  */
 export class AveFileUploadHarness extends ComponentHarness {
   /** Selector that finds kit file uploads. */

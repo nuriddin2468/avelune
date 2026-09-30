@@ -12,16 +12,16 @@ import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
-// @alpha
+// @beta
 export const AVE_FILTER_PANEL_LAYOUT: InjectionToken<AveFilterPanelLayout>;
 
-// @alpha
+// @beta
 export interface AveAppliedFilter {
     readonly key: string;
     readonly label: string;
 }
 
-// @alpha
+// @beta
 export class AveAppliedFilters {
     readonly clear: _angular_core.OutputEmitterRef<void>;
     readonly filters: _angular_core.InputSignal<readonly AveAppliedFilter[]>;
@@ -35,7 +35,7 @@ export class AveAppliedFilters {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveAppliedFilters, never>;
 }
 
-// @alpha
+// @beta
 export class AveFilterPanel implements AveSearchFilters {
     constructor();
     readonly clear: _angular_core.OutputEmitterRef<void>;
@@ -57,7 +57,7 @@ export class AveFilterPanel implements AveSearchFilters {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveFilterPanel, never>;
 }
 
-// @alpha
+// @beta
 export class AveFilterPanelContent {
     // @internal
     readonly template: TemplateRef<unknown>;
@@ -67,12 +67,12 @@ export class AveFilterPanelContent {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveFilterPanelContent, never>;
 }
 
-// @alpha
+// @beta
 export interface AveFilterPanelLayout {
     readonly panel: WritableSignal<AveFilterPanelState | null>;
 }
 
-// @alpha
+// @beta
 export interface AveFilterPanelState {
     readonly modal: Signal<boolean>;
     readonly open: Signal<boolean>;

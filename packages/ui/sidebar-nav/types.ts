@@ -3,7 +3,7 @@ import type { AveIconName } from '@avelune/ui/icon';
 /**
  * A page of the product's navigation (ADR 0072): its name, where it is, and optionally an icon.
  *
- * @alpha
+ * @beta
  */
 export interface AveSidebarLink {
   /** The page's name, as its heading says it: "Договоры". */
@@ -24,7 +24,7 @@ export interface AveSidebarLink {
 /**
  * A group of pages under one name, which opens and closes (ADR 0072): one level deep.
  *
- * @alpha
+ * @beta
  */
 export interface AveSidebarGroup {
   /** The group's name: "Справочники". Unique among the navigation's groups. */
@@ -38,7 +38,7 @@ export interface AveSidebarGroup {
 /**
  * A headed part of the navigation (ADR 0072): pages and groups under a heading, such as "Администрирование".
  *
- * @alpha
+ * @beta
  */
 export interface AveSidebarSection {
   /** The heading over the section's pages; it names their list. */
@@ -50,6 +50,6 @@ export interface AveSidebarSection {
 /**
  * An entry of the navigation: a page, a group of pages, or a headed section.
  *
- * @alpha
+ * @beta
  */
 export type AveSidebarEntry = AveSidebarLink | AveSidebarGroup | AveSidebarSection;

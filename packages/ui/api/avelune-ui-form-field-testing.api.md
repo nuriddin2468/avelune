@@ -8,7 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ContentContainerComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveChoiceGroupHarness extends ContentContainerComponentHarness {
     getDescribedBy(): Promise<string[]>;
     getError(): Promise<string | null>;
@@ -20,7 +20,7 @@ export class AveChoiceGroupHarness extends ContentContainerComponentHarness {
     static with(options?: AveChoiceGroupHarnessFilters): HarnessPredicate<AveChoiceGroupHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveChoiceGroupHarnessFilters extends BaseHarnessFilters {
     legend?: string | RegExp;
 }

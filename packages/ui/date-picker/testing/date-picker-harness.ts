@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, TestKey, type BaseHarnessFilters } 
 /**
  * Filters for {@link AveDatePickerHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveDatePickerHarnessFilters extends BaseHarnessFilters {
   /** Only match date fields whose input says this, or matches this pattern. */
@@ -13,7 +13,7 @@ export interface AveDatePickerHarnessFilters extends BaseHarnessFilters {
 /**
  * A key a calendar follows.
  *
- * @alpha
+ * @beta
  */
 export type AveCalendarKey =
   'left' | 'right' | 'up' | 'down' | 'home' | 'end' | 'pageUp' | 'pageDown' | 'enter' | 'escape';
@@ -35,7 +35,7 @@ const keys: Readonly<Record<AveCalendarKey, TestKey>> = {
  * Harness for `<ave-date-picker>` from `@avelune/ui/date-picker`: its input, its button and the calendar it opens
  * (in the page, inside the field, while it is open).
  *
- * @alpha
+ * @beta
  */
 export class AveDatePickerHarness extends ComponentHarness {
   /** Selector that finds kit date fields. */

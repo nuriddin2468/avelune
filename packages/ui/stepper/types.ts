@@ -1,7 +1,7 @@
 /**
  * One step of a stepper (ADR 0077): its words, and whether it needs attention.
  *
- * @alpha
+ * @beta
  */
 export interface AveStep {
   /** The step's name, a noun or what the step does: "Стороны договора", "Юридический отдел". */
@@ -15,6 +15,6 @@ export interface AveStep {
 /**
  * How a stepper lays out its steps: in a row, or in a column.
  *
- * @alpha
+ * @beta
  */
 export type AveStepperOrientation = 'horizontal' | 'vertical';

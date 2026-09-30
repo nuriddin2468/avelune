@@ -33,7 +33,7 @@ interface GroupControl {
  * </fieldset>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'fieldset[aveChoiceGroup]',

@@ -4,7 +4,7 @@ import type { AveOption } from './types';
 /**
  * What an option template or a value template draws: the option.
  *
- * @alpha
+ * @beta
  */
 export interface AveOptionContext<V> {
   /** The option, as `let-option`. */
@@ -19,7 +19,7 @@ export interface AveOptionContext<V> {
  * <ng-template aveOption [aveOptionOf]="accounts" let-option>{{ option.label }} <b>{{ option.value.balance }}</b></ng-template>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Directive({ selector: 'ng-template[aveOption]' })
 export class AveOptionTemplate<V> {
@@ -43,7 +43,7 @@ export class AveOptionTemplate<V> {
  * <ng-template aveSelectValue [aveSelectValueOf]="accounts" let-option>{{ option.value.number }}</ng-template>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Directive({ selector: 'ng-template[aveSelectValue]' })
 export class AveSelectValueTemplate<V> {

@@ -6,7 +6,7 @@
 
 import * as i0 from '@angular/core';
 
-// @alpha
+// @beta
 export class AveListDetail {
     constructor();
     readonly backLabel: i0.InputSignal<string | undefined>;
@@ -21,7 +21,7 @@ export class AveListDetail {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveListDetail, never>;
 }
 
-// @alpha
+// @beta
 export class AveListDetailDetail {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<AveListDetailDetail, "[aveListDetailDetail]", never, {}, {}, never, never, true, never>;
@@ -29,7 +29,7 @@ export class AveListDetailDetail {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveListDetailDetail, never>;
 }
 
-// @alpha
+// @beta
 export class AveListDetailList {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<AveListDetailList, "[aveListDetailList]", never, {}, {}, never, never, true, never>;

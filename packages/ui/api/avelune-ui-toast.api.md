@@ -6,13 +6,13 @@
 
 import * as i0 from '@angular/core';
 
-// @alpha
+// @beta
 export interface AveToastAction {
     readonly label: string;
     readonly run: () => void;
 }
 
-// @alpha
+// @beta
 export class AveToaster {
     constructor();
     show(toast: string | AveToastOptions): AveToastRef;
@@ -22,19 +22,19 @@ export class AveToaster {
     static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
-// @alpha
+// @beta
 export interface AveToastOptions {
     readonly action?: AveToastAction;
     readonly message: string;
     readonly variant?: AveToastVariant;
 }
 
-// @alpha
+// @beta
 export interface AveToastRef {
     dismiss(): void;
 }
 
-// @alpha
+// @beta
 export type AveToastVariant = 'info' | 'success' | 'warning' | 'danger';
 
 // (No @packageDocumentation comment for this package)

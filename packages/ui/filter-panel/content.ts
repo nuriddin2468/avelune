@@ -12,7 +12,7 @@ import { Directive, TemplateRef, inject } from '@angular/core';
  * </ave-filter-panel>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Directive({ selector: 'ng-template[aveFilterPanelContent]' })
 export class AveFilterPanelContent {

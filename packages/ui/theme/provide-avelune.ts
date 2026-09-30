@@ -15,7 +15,7 @@ import { AVE_OPTIONS, AveTheme, type AveOptions } from './theme';
  * bootstrapApplication(App, { providers: [provideAvelune({ density: 'compact' })] });
  * ```
  *
- * @alpha
+ * @beta
  */
 export function provideAvelune(options: AveOptions = {}): EnvironmentProviders {
   return makeEnvironmentProviders([

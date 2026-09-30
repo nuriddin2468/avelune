@@ -9,7 +9,7 @@ import { AveControlState } from '@avelune/ui/forms';
 import { AveFieldContext } from '@avelune/ui/forms';
 import { Signal } from '@angular/core';
 
-// @alpha
+// @beta
 export class AveChoiceGroup implements AveFieldContext {
     // @internal
     add(kind: 'hint' | 'error', id: string): () => void;

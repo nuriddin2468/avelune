@@ -13,7 +13,7 @@ export function variantOf(value: string | null, harness: string): AveAlertVarian
 /**
  * Filters for {@link AveAlertHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveAlertHarnessFilters extends BaseHarnessFilters {
   /** Only match alerts of this variant. */
@@ -25,7 +25,7 @@ export interface AveAlertHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-alert>` from `@avelune/ui/alert`.
  *
- * @alpha
+ * @beta
  */
 export class AveAlertHarness extends ComponentHarness {
   /** Selector that finds kit alerts. */

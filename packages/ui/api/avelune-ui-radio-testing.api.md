@@ -8,7 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveRadioHarness extends ComponentHarness {
     blur(): Promise<void>;
     check(): Promise<void>;
@@ -24,7 +24,7 @@ export class AveRadioHarness extends ComponentHarness {
     static with(options?: AveRadioHarnessFilters): HarnessPredicate<AveRadioHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveRadioHarnessFilters extends BaseHarnessFilters {
     checked?: boolean;
     label?: string | RegExp;

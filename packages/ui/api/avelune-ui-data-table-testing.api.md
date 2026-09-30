@@ -9,7 +9,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveDataTableHarness extends ComponentHarness {
     getColumnWidth(header: string | RegExp): Promise<number>;
     getHeaders(): Promise<string[]>;
@@ -33,12 +33,12 @@ export class AveDataTableHarness extends ComponentHarness {
     static with(options?: AveDataTableHarnessFilters): HarnessPredicate<AveDataTableHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveDataTableHarnessFilters extends BaseHarnessFilters {
     label?: string | RegExp;
 }
 
-// @alpha
+// @beta
 export interface AveDataTableSortState {
     readonly direction: 'ascending' | 'descending';
     readonly header: string;

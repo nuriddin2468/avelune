@@ -9,10 +9,10 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export type AveCalendarKey = 'left' | 'right' | 'up' | 'down' | 'home' | 'end' | 'pageUp' | 'pageDown' | 'enter' | 'escape';
 
-// @alpha
+// @beta
 export class AveDatePickerHarness extends ComponentHarness {
     blur(): Promise<void>;
     canClear(): Promise<boolean>;
@@ -52,12 +52,12 @@ export class AveDatePickerHarness extends ComponentHarness {
     static with(options?: AveDatePickerHarnessFilters): HarnessPredicate<AveDatePickerHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveDatePickerHarnessFilters extends BaseHarnessFilters {
     text?: string | RegExp;
 }
 
-// @alpha
+// @beta
 export class AveDateRangePickerHarness extends AveDatePickerHarness {
     choosePreset(label: string | RegExp): Promise<void>;
     getCheckedPreset(): Promise<string | null>;

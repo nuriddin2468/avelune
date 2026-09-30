@@ -9,12 +9,12 @@ import { AveIconName } from '@avelune/ui/icon';
 import * as _avelune_ui_i18n from '@avelune/ui/i18n';
 import { TemplateRef } from '@angular/core';
 
-// @alpha
+// @beta
 export interface AveCellContext<R> {
     readonly $implicit: R;
 }
 
-// @alpha
+// @beta
 export class AveCellTemplate<R> {
     readonly aveCell: _angular_core.InputSignal<string>;
     readonly aveCellOf: _angular_core.InputSignal<readonly R[] | undefined>;
@@ -27,10 +27,10 @@ export class AveCellTemplate<R> {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveCellTemplate<any>, never>;
 }
 
-// @alpha
+// @beta
 export type AveCellValue = string | number | null;
 
-// @alpha
+// @beta
 export interface AveColumn<R> {
     readonly header: string;
     readonly hideHeader?: boolean;
@@ -41,7 +41,7 @@ export interface AveColumn<R> {
     readonly value?: (row: R) => AveCellValue;
 }
 
-// @alpha
+// @beta
 export class AveDataTable<R, K = unknown> {
     constructor();
     protected arrowOf(column: AveColumn<R>): AveIconName;
@@ -101,16 +101,16 @@ export class AveDataTable<R, K = unknown> {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveDataTable<any, any>, never>;
 }
 
-// @alpha
+// @beta
 export type AveDataTableSource = 'local' | 'server';
 
-// @alpha
+// @beta
 export interface AveSort {
     readonly column: string;
     readonly direction: AveSortDirection;
 }
 
-// @alpha
+// @beta
 export type AveSortDirection = 'ascending' | 'descending';
 
 // (No @packageDocumentation comment for this package)

@@ -65,7 +65,7 @@ interface Drag {
  * </ave-data-table>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-data-table',

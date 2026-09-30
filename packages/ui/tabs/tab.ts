@@ -11,7 +11,7 @@ import type { AveIconName } from '@avelune/ui/icon';
  * <ave-tab value="files" label="Файлы">…</ave-tab>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-tab',

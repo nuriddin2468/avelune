@@ -3,7 +3,7 @@ import { afterRenderEffect, computed, effect, signal, type Signal } from '@angul
 /**
  * Whether a CDK overlay is open, and whether its content plays its exit.
  *
- * @alpha
+ * @beta
  */
 export interface AveOverlayPresence {
   /** Whether the overlay is open: while its content is shown, and while it plays its exit. */
@@ -26,7 +26,7 @@ export interface AveOverlayPresence {
  * </ng-template>
  * ```
  *
- * @alpha
+ * @beta
  */
 export function aveOverlayPresence(
   expanded: Signal<boolean>,

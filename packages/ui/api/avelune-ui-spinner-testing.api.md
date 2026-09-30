@@ -9,7 +9,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveSpinnerHarness extends ComponentHarness {
     getLabel(): Promise<string>;
     getSize(): Promise<AveSpinnerSize>;
@@ -18,7 +18,7 @@ export class AveSpinnerHarness extends ComponentHarness {
     static with(options?: AveSpinnerHarnessFilters): HarnessPredicate<AveSpinnerHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveSpinnerHarnessFilters extends BaseHarnessFilters {
     shown?: boolean;
 }

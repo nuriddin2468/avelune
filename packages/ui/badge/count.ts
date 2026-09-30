@@ -10,7 +10,7 @@ import { aveNumberFormat } from '@avelune/ui/i18n';
  * <a aveLink routerLink="/inbox">Входящие <ave-count [value]="unread()" /></a>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-count',

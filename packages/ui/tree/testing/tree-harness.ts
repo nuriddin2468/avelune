@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters, type TestE
 /**
  * Filters for {@link AveTreeHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveTreeHarnessFilters extends BaseHarnessFilters {
   /** Only match trees named by this string, or by a name that matches this pattern. */
@@ -13,7 +13,7 @@ export interface AveTreeHarnessFilters extends BaseHarnessFilters {
 /**
  * A row of a tree as the harness reads it: its words and its level, 1 at the top.
  *
- * @alpha
+ * @beta
  */
 export interface AveTreeRow {
   /** The row's words. */
@@ -25,7 +25,7 @@ export interface AveTreeRow {
 /**
  * Harness for `<ave-tree>` from `@avelune/ui/tree`: its shown rows, the chosen one, and opening and closing nodes.
  *
- * @alpha
+ * @beta
  */
 export class AveTreeHarness extends ComponentHarness {
   /** Selector that finds kit trees. */

@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters } from '@an
 /**
  * Filters for {@link AveListDetailHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveListDetailHarnessFilters extends BaseHarnessFilters {
   /** Only match pages whose heading is this string, or matches this pattern. */
@@ -13,7 +13,7 @@ export interface AveListDetailHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-list-detail>` from `@avelune/ui/list-detail`.
  *
- * @alpha
+ * @beta
  */
 export class AveListDetailHarness extends ComponentHarness {
   /** Selector that finds kit list–detail pages. */

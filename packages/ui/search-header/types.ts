@@ -4,7 +4,7 @@ import type { Signal } from '@angular/core';
  * The filters a search header's button shows and hides (ADR 0093): a FilterPanel (ADR 0094), or an application's
  * own filters that keep this contract.
  *
- * @alpha
+ * @beta
  */
 export interface AveSearchFilters {
   /** The id of the element the button shows and hides while the filters open in a column (`aria-controls`). */

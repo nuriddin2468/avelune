@@ -3,7 +3,7 @@ import { InjectionToken, type Signal } from '@angular/core';
 /**
  * The heading level of an accordion's items, the page's next level under the heading above them.
  *
- * @alpha
+ * @beta
  */
 export type AveAccordionLevel = 2 | 3 | 4 | 5 | 6;
 

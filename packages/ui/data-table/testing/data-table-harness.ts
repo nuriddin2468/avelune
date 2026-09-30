@@ -4,7 +4,7 @@ import { AvePaginationHarness } from '@avelune/ui/pagination/testing';
 /**
  * Filters for {@link AveDataTableHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveDataTableHarnessFilters extends BaseHarnessFilters {
   /** Only match tables named by this string, or by a name that matches this pattern. */
@@ -14,7 +14,7 @@ export interface AveDataTableHarnessFilters extends BaseHarnessFilters {
 /**
  * How a table is sorted, as the harness reads it: by the header with these words, in this order.
  *
- * @alpha
+ * @beta
  */
 export interface AveDataTableSortState {
   /** The sorted column's header. */
@@ -30,7 +30,7 @@ const rows = 'tbody > tr:not([data-placeholder], .state)';
  * Harness for `<ave-data-table>` from `@avelune/ui/data-table`: its headers and cells, sorting, choosing rows, its
  * states, a column's width and its pagination.
  *
- * @alpha
+ * @beta
  */
 export class AveDataTableHarness extends ComponentHarness {
   /** Selector that finds kit data tables. */

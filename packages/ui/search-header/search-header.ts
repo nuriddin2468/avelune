@@ -16,7 +16,7 @@ import type { AveSearchFilters } from './types';
  * </ave-search-header>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-search-header',

@@ -43,7 +43,7 @@ function pagesToShow(current: number, count: number): number[] {
  * <ave-pagination [total]="134" [pageSizes]="[10, 20, 50]" [(pageSize)]="size" [(page)]="page" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-pagination',

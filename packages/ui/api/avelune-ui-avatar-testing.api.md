@@ -10,7 +10,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveAvatarHarness extends ComponentHarness {
     getInitials(): Promise<string>;
     getKind(): Promise<AveAvatarKind>;
@@ -21,7 +21,7 @@ export class AveAvatarHarness extends ComponentHarness {
     static with(options?: AveAvatarHarnessFilters): HarnessPredicate<AveAvatarHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveAvatarHarnessFilters extends BaseHarnessFilters {
     name?: string | RegExp;
 }

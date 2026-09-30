@@ -11,7 +11,7 @@ import { AveButtonVariant } from '@avelune/ui/button';
 import * as _avelune_icons from '@avelune/icons';
 import * as _avelune_ui_overlay from '@avelune/ui/overlay';
 
-// @alpha
+// @beta
 export class AvePopover {
     constructor();
     // (undocumented)

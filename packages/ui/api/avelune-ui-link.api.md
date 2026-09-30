@@ -7,7 +7,7 @@
 import * as _avelune_ui_i18n from '@avelune/ui/i18n';
 import * as i0 from '@angular/core';
 
-// @alpha
+// @beta
 export class AveLink {
     // (undocumented)
     protected readonly messages: _avelune_ui_i18n.AveMessages;

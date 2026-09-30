@@ -8,14 +8,14 @@ import * as _angular_core from '@angular/core';
 import * as _avelune_ui_i18n from '@avelune/ui/i18n';
 import { AveSidebarEntry } from '@avelune/ui/sidebar-nav';
 
-// @alpha
+// @beta
 export interface AveAppLogo {
     readonly alt: string;
     readonly darkSrc?: string;
     readonly src: string;
 }
 
-// @alpha
+// @beta
 export class AveAppShell {
     constructor();
     protected readonly dark: _angular_core.Signal<boolean>;
@@ -38,7 +38,7 @@ export class AveAppShell {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveAppShell, never>;
 }
 
-// @alpha
+// @beta
 export class AveAppShellActions {
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveAppShellActions, "[aveAppShellActions]", never, {}, {}, never, ["*"], true, never>;
@@ -46,7 +46,7 @@ export class AveAppShellActions {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveAppShellActions, never>;
 }
 
-// @alpha
+// @beta
 export class AveAppShellBanner {
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AveAppShellBanner, "[aveAppShellBanner]", never, {}, {}, never, never, true, never>;

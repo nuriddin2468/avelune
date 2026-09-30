@@ -12,7 +12,7 @@ import type { AveAlertVariant } from './types';
  * <div aveAlertActions><button aveButton type="button" size="sm" (click)="reload()">Повторить</button></div>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: '[aveAlertActions]',
@@ -34,7 +34,7 @@ export class AveAlertActions {}
  * </ave-alert>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-alert',

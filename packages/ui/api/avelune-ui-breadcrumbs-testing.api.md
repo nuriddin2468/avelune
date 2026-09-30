@@ -8,7 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveBreadcrumbsHarness extends ComponentHarness {
     follow(label: string | RegExp): Promise<void>;
     getAddresses(): Promise<(string | null)[]>;
@@ -19,7 +19,7 @@ export class AveBreadcrumbsHarness extends ComponentHarness {
     static with(options?: AveBreadcrumbsHarnessFilters): HarnessPredicate<AveBreadcrumbsHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveBreadcrumbsHarnessFilters extends BaseHarnessFilters {
     current?: string | RegExp;
 }

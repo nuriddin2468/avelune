@@ -9,7 +9,7 @@ import { AveIconName } from '@avelune/ui/icon';
 import * as _avelune_icons from '@avelune/icons';
 import * as _avelune_ui_i18n from '@avelune/ui/i18n';
 
-// @alpha
+// @beta
 export class AveAlert {
     readonly heading: _angular_core.InputSignal<string>;
     // (undocumented)
@@ -25,7 +25,7 @@ export class AveAlert {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveAlert, never>;
 }
 
-// @alpha
+// @beta
 export class AveAlertActions {
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveAlertActions, "[aveAlertActions]", never, {}, {}, never, ["*"], true, never>;
@@ -33,10 +33,10 @@ export class AveAlertActions {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveAlertActions, never>;
 }
 
-// @alpha
+// @beta
 export type AveAlertVariant = 'info' | 'success' | 'warning' | 'danger';
 
-// @alpha
+// @beta
 export class AveBanner {
     readonly dismiss: _angular_core.OutputEmitterRef<void>;
     readonly dismissible: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -55,16 +55,16 @@ export class AveBanner {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveBanner, never>;
 }
 
-// @alpha
+// @beta
 export const aveStatusIcon: Readonly<Record<AveAlertVariant, AveIconName>>;
 
-// @alpha
+// @beta
 export const aveStatusIcons: (_avelune_icons.IconDefinition<"info"> | _avelune_icons.IconDefinition<"circle-check"> | _avelune_icons.IconDefinition<"triangle-alert"> | _avelune_icons.IconDefinition<"circle-alert">)[];
 
-// @alpha
+// @beta
 export const aveStatusLabel: Readonly<Record<AveAlertVariant, 'alertInfo' | 'alertSuccess' | 'alertWarning' | 'alertDanger'>>;
 
-// @alpha
+// @beta
 export function aveStatusRole(variant: AveAlertVariant): 'alert' | 'status';
 
 // (No @packageDocumentation comment for this package)

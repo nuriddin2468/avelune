@@ -6,7 +6,7 @@ const VARIANTS: readonly AveBadgeVariant[] = ['neutral', 'info', 'success', 'war
 /**
  * Filters for {@link AveBadgeHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveBadgeHarnessFilters extends BaseHarnessFilters {
   /** Only match badges of this variant. */
@@ -18,7 +18,7 @@ export interface AveBadgeHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-badge>` from `@avelune/ui/badge`.
  *
- * @alpha
+ * @beta
  */
 export class AveBadgeHarness extends ComponentHarness {
   /** Selector that finds kit badges. */

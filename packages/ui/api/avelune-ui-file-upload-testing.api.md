@@ -8,7 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveFileUploadHarness extends ComponentHarness {
     blur(): Promise<void>;
     focus(): Promise<void>;
@@ -25,12 +25,12 @@ export class AveFileUploadHarness extends ComponentHarness {
     static with(options?: AveFileUploadHarnessFilters): HarnessPredicate<AveFileUploadHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveFileUploadHarnessFilters extends BaseHarnessFilters {
     fileName?: string | RegExp;
 }
 
-// @alpha
+// @beta
 export interface AveRejectedFileRow {
     readonly name: string;
     readonly reason: string;

@@ -27,7 +27,7 @@ let nextToast = 0;
  * this.toaster.show({ message: 'Договор удалён', variant: 'success', action: { label: 'Отменить', run: () => this.restore() } });
  * ```
  *
- * @alpha
+ * @beta
  */
 @Injectable({ providedIn: 'root' })
 export class AveToaster {

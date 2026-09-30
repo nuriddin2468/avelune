@@ -21,7 +21,7 @@ import { aveDelayedSpinner, aveDurationToken } from '@avelune/ui/theme';
  * Where a combobox's options come from (ADR 0056): `local`, the options given, filtered by label as people type;
  * `server`, the server's answer to the combobox's `query`, shown as given.
  *
- * @alpha
+ * @beta
  */
 export type AveSearchMode = 'local' | 'server';
 

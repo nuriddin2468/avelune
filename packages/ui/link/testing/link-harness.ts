@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters } from '@an
 /**
  * Filters for {@link AveLinkHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveLinkHarnessFilters extends BaseHarnessFilters {
   /** Only match links whose words are this string, or match this pattern. */
@@ -13,7 +13,7 @@ export interface AveLinkHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `a[aveLink]` from `@avelune/ui/link`.
  *
- * @alpha
+ * @beta
  */
 export class AveLinkHarness extends ComponentHarness {
   /** Selector that finds kit links. */

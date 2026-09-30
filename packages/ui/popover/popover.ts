@@ -35,7 +35,7 @@ let nextPopover = 0;
  * </ave-popover>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-popover',

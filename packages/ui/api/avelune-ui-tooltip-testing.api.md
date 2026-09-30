@@ -8,7 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveTooltipHarness extends ComponentHarness {
     getSide(): Promise<string | null>;
     getText(): Promise<string>;
@@ -19,7 +19,7 @@ export class AveTooltipHarness extends ComponentHarness {
     static with(options?: AveTooltipHarnessFilters): HarnessPredicate<AveTooltipHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveTooltipHarnessFilters extends BaseHarnessFilters {
     open?: boolean;
 }

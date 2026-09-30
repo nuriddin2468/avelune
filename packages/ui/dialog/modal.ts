@@ -17,7 +17,7 @@ import { isPlatformBrowser } from '@angular/common';
  * What a kit dialog's host binds: the exit, and the native events that close it. Exported for the type of the dialogs'
  * protected `modal` member.
  *
- * @alpha
+ * @beta
  */
 export interface AveModal {
   /** Whether the dialog plays its exit, before it closes. */

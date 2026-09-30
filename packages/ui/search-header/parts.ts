@@ -11,7 +11,7 @@ import { Component, Directive } from '@angular/core';
  * </div>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: '[aveSearchHeaderActions]',
@@ -28,7 +28,7 @@ export class AveSearchHeaderActions {}
  * <input aveInput aveSearchHeaderSearch type="search" aria-label="Поиск договоров" (input)="search($event)" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Directive({ selector: 'input[aveSearchHeaderSearch]' })
 export class AveSearchHeaderSearch {}

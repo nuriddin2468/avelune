@@ -33,7 +33,7 @@ function openedByData<V>(nodes: readonly AveTreeNode<V>[]): V[] {
  * <ave-tree label="Подразделения" [nodes]="departments" [(selected)]="department" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-tree',

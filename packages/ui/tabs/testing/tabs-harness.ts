@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters, type TestE
 /**
  * Filters for {@link AveTabsHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveTabsHarnessFilters extends BaseHarnessFilters {
   /** Only match tabs whose list is named by this string, or matches this pattern. */
@@ -13,7 +13,7 @@ export interface AveTabsHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-tabs>` from `@avelune/ui/tabs`: its tabs, the chosen one, and the panel it shows.
  *
- * @alpha
+ * @beta
  */
 export class AveTabsHarness extends ComponentHarness {
   /** Selector that finds kit tabs. */

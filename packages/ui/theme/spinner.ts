@@ -4,7 +4,7 @@ import { isPlatformBrowser } from '@angular/common';
 /**
  * A duration token (`300ms` or `0.3s`) as the element computes it, in milliseconds; 0 when it is not set.
  *
- * @alpha
+ * @beta
  */
 export function aveDurationToken(element: Element, name: `--ave-${string}`): number {
   const match = /^(\d+(?:\.\d+)?)(ms|s)$/.exec(getComputedStyle(element).getPropertyValue(name).trim());
@@ -20,7 +20,7 @@ export function aveDurationToken(element: Element, name: `--ave-${string}`): num
  * the spinner never shows and nothing is scheduled. Call it in an injection context. Shared by Button and the select
  * family's lists (ADR 0056).
  *
- * @alpha
+ * @beta
  */
 export function aveDelayedSpinner(waiting: Signal<boolean>): Signal<boolean> {
   const shown = signal(false);

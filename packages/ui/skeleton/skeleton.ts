@@ -14,7 +14,7 @@ import type { AveSkeletonShape } from './types';
  * </section>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-skeleton',

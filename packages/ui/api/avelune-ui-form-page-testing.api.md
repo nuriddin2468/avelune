@@ -8,7 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveFormPageHarness extends ComponentHarness {
     getActions(): Promise<string[]>;
     getDescription(): Promise<string>;
@@ -19,7 +19,7 @@ export class AveFormPageHarness extends ComponentHarness {
     static with(options?: AveFormPageHarnessFilters): HarnessPredicate<AveFormPageHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveFormPageHarnessFilters extends BaseHarnessFilters {
     heading?: string | RegExp;
 }

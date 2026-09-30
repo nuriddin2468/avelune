@@ -9,7 +9,7 @@ import * as _avelune_ui_forms from '@avelune/ui/forms';
 import * as _avelune_ui_i18n from '@avelune/ui/i18n';
 import { ControlValueAccessor } from '@angular/forms';
 
-// @alpha
+// @beta
 export class AveFileUpload implements ControlValueAccessor {
     constructor();
     readonly accept: _angular_core.InputSignal<string>;

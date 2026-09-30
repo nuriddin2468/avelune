@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters } from '@an
 /**
  * A key figure as {@link AveDashboardHarness.getMetrics} reads it.
  *
- * @alpha
+ * @beta
  */
 export interface AveDashboardMetricText {
   /** What the figure counts. */
@@ -17,7 +17,7 @@ export interface AveDashboardMetricText {
 /**
  * Harness for `<ave-dashboard-metric>` from `@avelune/ui/dashboard`.
  *
- * @alpha
+ * @beta
  */
 export class AveDashboardMetricHarness extends ComponentHarness {
   /** Selector that finds kit key figures. */
@@ -41,7 +41,7 @@ export class AveDashboardMetricHarness extends ComponentHarness {
 /**
  * Filters for {@link AveDashboardHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveDashboardHarnessFilters extends BaseHarnessFilters {
   /** Only match dashboards whose heading is this string, or matches this pattern. */
@@ -51,7 +51,7 @@ export interface AveDashboardHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-dashboard>` from `@avelune/ui/dashboard`.
  *
- * @alpha
+ * @beta
  */
 export class AveDashboardHarness extends ComponentHarness {
   /** Selector that finds kit dashboards. */

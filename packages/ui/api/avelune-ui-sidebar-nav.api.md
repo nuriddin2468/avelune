@@ -7,17 +7,17 @@
 import * as _angular_core from '@angular/core';
 import { AveIconName } from '@avelune/ui/icon';
 
-// @alpha
+// @beta
 export type AveSidebarEntry = AveSidebarLink | AveSidebarGroup | AveSidebarSection;
 
-// @alpha
+// @beta
 export interface AveSidebarGroup {
     readonly icon?: AveIconName;
     readonly items: readonly AveSidebarLink[];
     readonly label: string;
 }
 
-// @alpha
+// @beta
 export interface AveSidebarLink {
     readonly count?: number;
     readonly exact?: boolean;
@@ -26,7 +26,7 @@ export interface AveSidebarLink {
     readonly link: string | readonly unknown[];
 }
 
-// @alpha
+// @beta
 export class AveSidebarNav {
     constructor();
     protected current(link: AveSidebarLink): 'page' | 'true' | null;
@@ -46,7 +46,7 @@ export class AveSidebarNav {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveSidebarNav, never>;
 }
 
-// @alpha
+// @beta
 export interface AveSidebarSection {
     readonly heading: string;
     readonly items: readonly (AveSidebarLink | AveSidebarGroup)[];

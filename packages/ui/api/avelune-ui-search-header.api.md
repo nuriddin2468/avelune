@@ -7,7 +7,7 @@
 import * as i0 from '@angular/core';
 import { Signal } from '@angular/core';
 
-// @alpha
+// @beta
 export interface AveSearchFilters {
     readonly count: Signal<number>;
     readonly id: string;
@@ -17,7 +17,7 @@ export interface AveSearchFilters {
     toggle(): void;
 }
 
-// @alpha
+// @beta
 export class AveSearchHeader {
     readonly filters: i0.InputSignal<AveSearchFilters | null>;
     readonly heading: i0.InputSignal<string>;
@@ -29,7 +29,7 @@ export class AveSearchHeader {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveSearchHeader, never>;
 }
 
-// @alpha
+// @beta
 export class AveSearchHeaderActions {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<AveSearchHeaderActions, "[aveSearchHeaderActions]", never, {}, {}, never, ["*"], true, never>;
@@ -37,7 +37,7 @@ export class AveSearchHeaderActions {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveSearchHeaderActions, never>;
 }
 
-// @alpha
+// @beta
 export class AveSearchHeaderSearch {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<AveSearchHeaderSearch, "input[aveSearchHeaderSearch]", never, {}, {}, never, never, true, never>;

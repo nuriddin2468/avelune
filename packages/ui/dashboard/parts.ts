@@ -8,7 +8,7 @@ import { Component, input } from '@angular/core';
  * <ave-dashboard-metric label="Истекают в этом месяце" value="3" note="до 31 октября" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-dashboard-metric',
@@ -41,7 +41,7 @@ export class AveDashboardMetric {
  * <div aveDashboardWide><ave-card>…</ave-card></div>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: '[aveDashboardWide]',
@@ -58,7 +58,7 @@ export class AveDashboardWide {}
  * <div aveDashboardActions><ave-select [options]="periods" [(value)]="period" /></div>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: '[aveDashboardActions]',

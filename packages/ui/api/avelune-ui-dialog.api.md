@@ -9,7 +9,7 @@ import * as _avelune_ui_dialog from '@avelune/ui/dialog';
 import * as _avelune_ui_i18n from '@avelune/ui/i18n';
 import { Signal } from '@angular/core';
 
-// @alpha
+// @beta
 export class AveConfirmDialog {
     readonly action: _angular_core.InputSignal<string>;
     readonly cancel: _angular_core.InputSignal<string>;
@@ -33,10 +33,10 @@ export class AveConfirmDialog {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveConfirmDialog, never>;
 }
 
-// @alpha
+// @beta
 export type AveConfirmVariant = 'danger' | 'primary';
 
-// @alpha
+// @beta
 export class AveDialog {
     readonly heading: _angular_core.InputSignal<string>;
     // (undocumented)
@@ -54,7 +54,7 @@ export class AveDialog {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveDialog, never>;
 }
 
-// @alpha
+// @beta
 export class AveDialogActions {
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveDialogActions, "[aveDialogActions]", never, {}, {}, never, ["*"], true, never>;
@@ -62,10 +62,10 @@ export class AveDialogActions {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveDialogActions, never>;
 }
 
-// @alpha
+// @beta
 export type AveDialogSize = 'sm' | 'md' | 'lg';
 
-// @alpha
+// @beta
 export class AveDrawer {
     readonly heading: _angular_core.InputSignal<string>;
     // (undocumented)
@@ -84,13 +84,13 @@ export class AveDrawer {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveDrawer, never>;
 }
 
-// @alpha
+// @beta
 export type AveDrawerSide = 'end' | 'start';
 
-// @alpha
+// @beta
 export type AveDrawerSize = 'sm' | 'md' | 'lg';
 
-// @alpha
+// @beta
 export interface AveModal {
     cancel(event: Event): void;
     clicked(event: MouseEvent): void;

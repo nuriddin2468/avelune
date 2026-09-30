@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters } from '@an
 /**
  * Where a step stands: done, current or ahead, and whether it needs attention.
  *
- * @alpha
+ * @beta
  */
 export interface AveStepState {
   /** The step's name. */
@@ -22,7 +22,7 @@ function stateOf(state: string | null | undefined): AveStepState['state'] {
 /**
  * Filters for {@link AveStepperHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveStepperHarnessFilters extends BaseHarnessFilters {
   /** Only match steppers whose list is named by this string, or matches this pattern. */
@@ -32,7 +32,7 @@ export interface AveStepperHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-stepper>` from `@avelune/ui/stepper`: its steps and where each stands.
  *
- * @alpha
+ * @beta
  */
 export class AveStepperHarness extends ComponentHarness {
   /** Selector that finds kit steppers. */

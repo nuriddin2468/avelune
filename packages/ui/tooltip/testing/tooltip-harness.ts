@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters, type TestE
 /**
  * Filters for {@link AveTooltipHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveTooltipHarnessFilters extends BaseHarnessFilters {
   /** Only match elements whose tooltip shows, or does not. */
@@ -14,7 +14,7 @@ export interface AveTooltipHarnessFilters extends BaseHarnessFilters {
  * Harness for an element with `aveTooltip` from `@avelune/ui/tooltip`. Its tooltip shows after the pointer rests on
  * it for `timing.tooltip-delay`; set that token to `0ms` in unit tests, and the harness waits for the rest.
  *
- * @alpha
+ * @beta
  */
 export class AveTooltipHarness extends ComponentHarness {
   /** Selector that finds elements with a kit tooltip. */

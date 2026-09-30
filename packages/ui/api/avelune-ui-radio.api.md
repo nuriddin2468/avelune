@@ -6,7 +6,7 @@
 
 import * as i0 from '@angular/core';
 
-// @alpha
+// @beta
 export class AveRadio {
     constructor();
     // (undocumented)

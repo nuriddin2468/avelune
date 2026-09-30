@@ -4,7 +4,7 @@ import { ComponentHarness, HarnessPredicate, TestKey, type BaseHarnessFilters } 
 /**
  * Filters for {@link AveSelectHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveSelectHarnessFilters extends BaseHarnessFilters {
   /** Only match selects whose trigger says this (the chosen option, or the placeholder), or matches this pattern. */
@@ -15,7 +15,7 @@ export interface AveSelectHarnessFilters extends BaseHarnessFilters {
  * Harness for `<ave-select>` from `@avelune/ui/select`. Its list opens in the overlay at the end of the document,
  * so the options are found from the document root, through the trigger's `aria-controls`.
  *
- * @alpha
+ * @beta
  */
 export class AveSelectHarness extends ComponentHarness {
   /** Selector that finds kit selects. */

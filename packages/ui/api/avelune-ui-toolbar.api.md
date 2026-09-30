@@ -7,7 +7,7 @@
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/aria/toolbar';
 
-// @alpha
+// @beta
 export class AveToolbar {
     readonly label: i0.InputSignal<string>;
     // (undocumented)
@@ -16,7 +16,7 @@ export class AveToolbar {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveToolbar, never>;
 }
 
-// @alpha
+// @beta
 export class AveToolbarItem {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<AveToolbarItem, "[aveToolbarItem]", never, {}, {}, never, never, true, [{ directive: typeof i1.ToolbarWidget; inputs: { "disabled": "disabled"; }; outputs: {}; }]>;
@@ -24,7 +24,7 @@ export class AveToolbarItem {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveToolbarItem, never>;
 }
 
-// @alpha
+// @beta
 export class AveToolbarSeparator {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<AveToolbarSeparator, "[aveToolbarSeparator]", never, {}, {}, never, never, true, never>;

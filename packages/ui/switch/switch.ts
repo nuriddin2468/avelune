@@ -12,7 +12,7 @@ import { connectToField, injectControlState } from '@avelune/ui/forms';
  * <label aveChoice><input type="checkbox" aveSwitch [formField]="settings.emailNotices" /> Email notices</label>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'input[type=checkbox][aveSwitch]',

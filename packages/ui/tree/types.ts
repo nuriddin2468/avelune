@@ -3,7 +3,7 @@ import type { AveIconName } from '@avelune/ui/icon';
 /**
  * A node of a tree (ADR 0085): its value, its words, and the nodes under it.
  *
- * @alpha
+ * @beta
  */
 export interface AveTreeNode<V> {
   /** Names the node among all the tree's nodes; `selected` holds it while the node is chosen. */

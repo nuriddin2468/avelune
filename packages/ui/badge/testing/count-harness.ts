@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters } from '@an
 /**
  * Filters for {@link AveCountHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveCountHarnessFilters extends BaseHarnessFilters {
   /** Only match counts whose text is this string ("12", "99+"), or matches this pattern. */
@@ -13,7 +13,7 @@ export interface AveCountHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-count>` from `@avelune/ui/badge`.
  *
- * @alpha
+ * @beta
  */
 export class AveCountHarness extends ComponentHarness {
   /** Selector that finds kit counts. */

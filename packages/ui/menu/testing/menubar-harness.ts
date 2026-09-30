@@ -9,7 +9,7 @@ import {
 /**
  * Filters for {@link AveMenubarHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveMenubarHarnessFilters extends BaseHarnessFilters {
   /** Only match menubars named by this string, or matching this pattern. */
@@ -19,7 +19,7 @@ export interface AveMenubarHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-menubar>` from `@avelune/ui/menu`: its menus, and the items of the one that is open.
  *
- * @alpha
+ * @beta
  */
 export class AveMenubarHarness extends ComponentHarness {
   /** Selector that finds kit menubars. */

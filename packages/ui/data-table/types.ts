@@ -2,7 +2,7 @@
  * What a cell shows without a template, and what sorting compares: text, a number (written for the locale), or
  * nothing.
  *
- * @alpha
+ * @beta
  */
 export type AveCellValue = string | number | null;
 
@@ -10,7 +10,7 @@ export type AveCellValue = string | number | null;
  * A column of a DataTable (ADR 0087), declared as data; a cell with rich content is the application's template
  * (`ng-template aveCell="key"`).
  *
- * @alpha
+ * @beta
  */
 export interface AveColumn<R> {
   /** Names the column: its cell template's name, its sort and its width. */
@@ -32,14 +32,14 @@ export interface AveColumn<R> {
 /**
  * The order of a sorted column.
  *
- * @alpha
+ * @beta
  */
 export type AveSortDirection = 'ascending' | 'descending';
 
 /**
  * How a DataTable is sorted: by which column, in which order.
  *
- * @alpha
+ * @beta
  */
 export interface AveSort {
   /** The key of the column the rows are sorted by. */
@@ -51,6 +51,6 @@ export interface AveSort {
 /**
  * Who sorts and pages the rows: `local`, the table itself; `server`, the server, which sends a page in its order.
  *
- * @alpha
+ * @beta
  */
 export type AveDataTableSource = 'local' | 'server';

@@ -10,7 +10,7 @@ import { Component, Directive } from '@angular/core';
  * </div>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: '[aveAppShellActions]',
@@ -27,7 +27,7 @@ export class AveAppShellActions {}
  * <ave-banner aveAppShellBanner variant="warning">В субботу с 22:00 до 02:00 система будет недоступна.</ave-banner>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Directive({ selector: '[aveAppShellBanner]' })
 export class AveAppShellBanner {}

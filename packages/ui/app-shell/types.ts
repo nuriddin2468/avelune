@@ -1,7 +1,7 @@
 /**
  * The logo at the start of the application bar (ADR 0092): the product's or the tenant's image, never a token.
  *
- * @alpha
+ * @beta
  */
 export interface AveAppLogo {
   /** The image's address on the light bar: a URL, or a `data:` URL the tenant uploaded. */

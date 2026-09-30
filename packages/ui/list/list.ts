@@ -18,7 +18,7 @@ const lastPlace = 4;
  * </ave-list>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-list',

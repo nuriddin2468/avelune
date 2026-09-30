@@ -10,29 +10,29 @@ import { Injector } from '@angular/core';
 import { Provider } from '@angular/core';
 import { Signal } from '@angular/core';
 
-// @alpha
+// @beta
 export function aveConnectedOverlay(origin: HTMLElement, options?: {
     readonly matchWidth?: boolean;
     readonly transformOrigin?: string;
     readonly align?: 'start' | 'either';
 }): CdkConnectedOverlayConfig;
 
-// @alpha
+// @beta
 export function aveConnectedStrategy(injector: Injector, origin: HTMLElement, options?: {
     readonly transformOrigin?: string;
     readonly align?: 'start' | 'either';
 }): FlexibleConnectedPositionStrategy;
 
-// @alpha
+// @beta
 export const aveHostAnnouncer: Provider[];
 
-// @alpha
+// @beta
 export interface AveOverlayPresence {
     readonly closing: Signal<boolean>;
     readonly open: Signal<boolean>;
 }
 
-// @alpha
+// @beta
 export function aveOverlayPresence(expanded: Signal<boolean>, popup: Signal<HTMLElement | undefined>): AveOverlayPresence;
 
 // (No @packageDocumentation comment for this package)

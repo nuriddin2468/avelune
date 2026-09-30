@@ -6,7 +6,7 @@ const SIZES: readonly AveTextareaSize[] = ['sm', 'md', 'lg'];
 /**
  * Filters for {@link AveTextareaHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveTextareaHarnessFilters extends BaseHarnessFilters {
   /** Only match textareas whose value is this string, or matches this pattern. */
@@ -18,7 +18,7 @@ export interface AveTextareaHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `textarea[aveTextarea]` from `@avelune/ui/textarea`.
  *
- * @alpha
+ * @beta
  */
 export class AveTextareaHarness extends ComponentHarness {
   /** Selector that finds kit textareas. */

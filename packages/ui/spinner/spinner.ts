@@ -16,7 +16,7 @@ import type { AveSpinnerSize } from './types';
  * <ave-spinner [loading]="documents.isLoading()" label="Загрузка договоров" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-spinner',

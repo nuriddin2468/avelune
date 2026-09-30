@@ -10,7 +10,7 @@ import {
 /**
  * Filters for {@link AvePopoverHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AvePopoverHarnessFilters extends BaseHarnessFilters {
   /** Only match popovers whose button is named by this string, or matches this pattern. */
@@ -20,7 +20,7 @@ export interface AvePopoverHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-popover>` from `@avelune/ui/popover`: its button, and its panel while it is open.
  *
- * @alpha
+ * @beta
  */
 export class AvePopoverHarness extends ComponentHarness {
   /** Selector that finds kit popovers. */

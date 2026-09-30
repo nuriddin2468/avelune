@@ -21,7 +21,7 @@ let nextDialog = 0;
  * </div>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: '[aveDialogActions]',
@@ -43,7 +43,7 @@ export class AveDialogActions {}
  * </dialog>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'dialog[aveDialog]',

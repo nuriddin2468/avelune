@@ -9,7 +9,7 @@ import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 import { TestElement } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveRangeSliderHarness extends AveSliderHarness {
     focusEnd(): Promise<void>;
     getEndText(): Promise<string | null>;
@@ -24,7 +24,7 @@ export class AveRangeSliderHarness extends AveSliderHarness {
     static with(options?: AveSliderHarnessFilters): HarnessPredicate<AveRangeSliderHarness>;
 }
 
-// @alpha
+// @beta
 export class AveSliderHarness extends ComponentHarness {
     blur(): Promise<void>;
     focus(): Promise<void>;
@@ -40,7 +40,7 @@ export class AveSliderHarness extends ComponentHarness {
     static with(options?: AveSliderHarnessFilters): HarnessPredicate<AveSliderHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveSliderHarnessFilters extends BaseHarnessFilters {
     valueText?: string | RegExp;
 }

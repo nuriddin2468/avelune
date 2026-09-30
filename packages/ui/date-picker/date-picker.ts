@@ -38,7 +38,7 @@ import type { AveDatePickerSize } from './types';
  * <ave-date-picker [formField]="contract.signedOn" maxDate="2026-12-31" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-date-picker',

@@ -26,7 +26,7 @@ import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
  * <ave-tree aveListDetailList label="Подразделения" [nodes]="nodes" [(selected)]="selected" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Directive({ selector: '[aveListDetailList]' })
 export class AveListDetailList {}
@@ -39,7 +39,7 @@ export class AveListDetailList {}
  * <ave-card aveListDetailDetail>…</ave-card>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Directive({ selector: '[aveListDetailDetail]' })
 export class AveListDetailDetail {}
@@ -56,7 +56,7 @@ export class AveListDetailDetail {}
  * </ave-list-detail>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-list-detail',

@@ -38,7 +38,7 @@ let nextShell = 0;
  * </ave-app-shell>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-app-shell',

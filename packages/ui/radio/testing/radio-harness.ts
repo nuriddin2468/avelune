@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters } from '@an
 /**
  * Filters for {@link AveRadioHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveRadioHarnessFilters extends BaseHarnessFilters {
   /** Only match radios whose label is this string, or matches this pattern. */
@@ -17,7 +17,7 @@ export interface AveRadioHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `input[type=radio][aveRadio]` from `@avelune/ui/radio`.
  *
- * @alpha
+ * @beta
  */
 export class AveRadioHarness extends ComponentHarness {
   /** Selector that finds kit radios. */

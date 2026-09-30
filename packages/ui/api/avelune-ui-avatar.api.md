@@ -6,7 +6,7 @@
 
 import * as _angular_core from '@angular/core';
 
-// @alpha
+// @beta
 export class AveAvatar {
     constructor();
     readonly decorative: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -24,10 +24,10 @@ export class AveAvatar {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveAvatar, never>;
 }
 
-// @alpha
+// @beta
 export type AveAvatarKind = 'person' | 'organization';
 
-// @alpha
+// @beta
 export type AveAvatarSize = 'sm' | 'md' | 'lg';
 
 // (No @packageDocumentation comment for this package)

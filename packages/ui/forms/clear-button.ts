@@ -18,7 +18,7 @@ let nextClear = 0;
  * </button>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'button[aveClearButton]',

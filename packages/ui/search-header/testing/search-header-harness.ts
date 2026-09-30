@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters } from '@an
 /**
  * Filters for {@link AveSearchHeaderHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveSearchHeaderHarnessFilters extends BaseHarnessFilters {
   /** Only match headers whose heading is this string, or matches this pattern. */
@@ -13,7 +13,7 @@ export interface AveSearchHeaderHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-search-header>` from `@avelune/ui/search-header`.
  *
- * @alpha
+ * @beta
  */
 export class AveSearchHeaderHarness extends ComponentHarness {
   /** Selector that finds kit search headers. */

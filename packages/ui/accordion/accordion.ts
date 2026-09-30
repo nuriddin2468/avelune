@@ -17,7 +17,7 @@ import { AVE_ACCORDION, type AveAccordionLevel } from './types';
  * </ave-accordion>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-accordion',

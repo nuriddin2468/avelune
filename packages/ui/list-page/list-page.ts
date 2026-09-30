@@ -9,7 +9,7 @@ import { AVE_FILTER_PANEL_LAYOUT, type AveFilterPanelLayout, type AveFilterPanel
  * <ave-alert aveListPageNotice variant="warning" heading="Есть истёкшие договоры">…</ave-alert>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Directive({ selector: '[aveListPageNotice]' })
 export class AveListPageNotice {}
@@ -28,7 +28,7 @@ export class AveListPageNotice {}
  * </ave-list-page>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-list-page',

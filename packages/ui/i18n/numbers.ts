@@ -10,7 +10,7 @@ import { isUzbekLatin, localeTags } from './locale';
  * aveNumberFormat('uz-Latn', { maximumFractionDigits: 1 }).format(1234.56); // "1 234,6"
  * ```
  *
- * @alpha
+ * @beta
  */
 export function aveNumberFormat(locale: string, options: Intl.NumberFormatOptions = {}): Intl.NumberFormat {
   const style = options.style ?? 'decimal';
@@ -28,7 +28,7 @@ const units = {
  * A file size as people read it (ADR 0050): bytes, kilobytes, megabytes or gigabytes of 1024, with one decimal under
  * 10 and none above, a no-break space before the unit: `2,4 МБ` (ru), `2,4 MB` (uz-Latn), `2.4 MB` (en), `512 Б`.
  *
- * @alpha
+ * @beta
  */
 export function aveFileSize(bytes: number, locale: string): string {
   let value = Math.max(0, bytes);

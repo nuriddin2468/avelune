@@ -6,7 +6,7 @@
 
 import * as i0 from '@angular/core';
 
-// @alpha
+// @beta
 export class AveList {
     constructor();
     readonly label: i0.InputSignal<string>;
@@ -20,7 +20,7 @@ export class AveList {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveList, never>;
 }
 
-// @alpha
+// @beta
 export class AveListItem {
     // (undocumented)
     protected readonly enter: string;

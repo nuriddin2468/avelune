@@ -8,7 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveMenubarHarness extends ComponentHarness {
     close(menu: string | RegExp): Promise<void>;
     getItems(menu: string | RegExp): Promise<string[]>;
@@ -21,12 +21,12 @@ export class AveMenubarHarness extends ComponentHarness {
     static with(options?: AveMenubarHarnessFilters): HarnessPredicate<AveMenubarHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveMenubarHarnessFilters extends BaseHarnessFilters {
     label?: string | RegExp;
 }
 
-// @alpha
+// @beta
 export class AveMenuHarness extends ComponentHarness {
     close(): Promise<void>;
     getDisabledItems(): Promise<string[]>;
@@ -40,7 +40,7 @@ export class AveMenuHarness extends ComponentHarness {
     static with(options?: AveMenuHarnessFilters): HarnessPredicate<AveMenuHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveMenuHarnessFilters extends BaseHarnessFilters {
     label?: string | RegExp;
 }

@@ -28,7 +28,7 @@ function present(part: keyof AveCardParts): void {
  * <h3 aveCardTitle><a aveLink routerLink="/contracts/114">Поставка офисной мебели</a></h3>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: '[aveCardTitle]',
@@ -49,7 +49,7 @@ export class AveCardTitle {
  * <ave-badge aveCardEnd variant="success">Подписан</ave-badge>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Directive({ selector: '[aveCardEnd]' })
 export class AveCardEnd {
@@ -65,7 +65,7 @@ export class AveCardEnd {
  * <div aveCardFooter><a aveButton routerLink="/contracts/114">Открыть договор</a></div>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: '[aveCardFooter]',

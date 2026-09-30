@@ -31,7 +31,7 @@ import { clamp, ratio } from './scale';
  * </ave-form-field>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-slider',

@@ -14,7 +14,7 @@ import type { AveBreadcrumb } from './types';
  * <ave-breadcrumbs [items]="[{ label: 'Договоры', link: '/contracts' }]" current="ДК-2026/114" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-breadcrumbs',

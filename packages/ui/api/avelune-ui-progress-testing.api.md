@@ -10,7 +10,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveProgressHarness extends ComponentHarness {
     getLabel(): Promise<string>;
     getMax(): Promise<number>;
@@ -22,7 +22,7 @@ export class AveProgressHarness extends ComponentHarness {
     static with(options?: AveProgressHarnessFilters): HarnessPredicate<AveProgressHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveProgressHarnessFilters extends BaseHarnessFilters {
     label?: string | RegExp;
 }

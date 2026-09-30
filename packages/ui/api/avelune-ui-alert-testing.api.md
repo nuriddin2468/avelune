@@ -9,7 +9,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveAlertHarness extends ComponentHarness {
     getHeading(): Promise<string>;
     getKind(): Promise<string>;
@@ -21,13 +21,13 @@ export class AveAlertHarness extends ComponentHarness {
     static with(options?: AveAlertHarnessFilters): HarnessPredicate<AveAlertHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveAlertHarnessFilters extends BaseHarnessFilters {
     text?: string | RegExp;
     variant?: AveAlertVariant;
 }
 
-// @alpha
+// @beta
 export class AveBannerHarness extends ComponentHarness {
     dismiss(): Promise<void>;
     getRole(): Promise<string | null>;
@@ -38,7 +38,7 @@ export class AveBannerHarness extends ComponentHarness {
     static with(options?: AveBannerHarnessFilters): HarnessPredicate<AveBannerHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveBannerHarnessFilters extends BaseHarnessFilters {
     text?: string | RegExp;
     variant?: AveAlertVariant;

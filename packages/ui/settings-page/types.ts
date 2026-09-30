@@ -3,7 +3,7 @@ import type { AveIconName } from '@avelune/ui/icon';
 /**
  * A section of a settings page (ADR 0099): a page of its own, with its own address.
  *
- * @alpha
+ * @beta
  */
 export interface AveSettingsSection {
   /** The section's name in the list: "Оформление". */

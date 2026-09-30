@@ -9,7 +9,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveToastHarness extends ComponentHarness {
     dismiss(): Promise<void>;
     getActionLabel(): Promise<string | null>;
@@ -20,7 +20,7 @@ export class AveToastHarness extends ComponentHarness {
     static with(options?: AveToastHarnessFilters): HarnessPredicate<AveToastHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveToastHarnessFilters extends BaseHarnessFilters {
     message?: string | RegExp;
     variant?: AveToastVariant;

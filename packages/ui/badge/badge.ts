@@ -10,7 +10,7 @@ import type { AveBadgeVariant } from './types';
  * <ave-badge variant="success">Подписан</ave-badge>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-badge',

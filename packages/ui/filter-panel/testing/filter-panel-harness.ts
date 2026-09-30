@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters } from '@an
 /**
  * Filters for {@link AveFilterPanelHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveFilterPanelHarnessFilters extends BaseHarnessFilters {
   /** Only match panels whose heading is this string, or matches this pattern. */
@@ -13,7 +13,7 @@ export interface AveFilterPanelHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-filter-panel>` from `@avelune/ui/filter-panel`.
  *
- * @alpha
+ * @beta
  */
 export class AveFilterPanelHarness extends ComponentHarness {
   /** Selector that finds kit filter panels. */

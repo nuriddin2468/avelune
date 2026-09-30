@@ -5,14 +5,14 @@ import type { AveAlertVariant } from './types';
 /**
  * The icons of the four variants, registered by the components that draw them: the alert, the banner and the toast.
  *
- * @alpha
+ * @beta
  */
 export const aveStatusIcons = [lucideInfo, lucideCircleCheck, lucideTriangleAlert, lucideCircleAlert];
 
 /**
  * Each variant's icon, a shape of its own, so the kind never rests on colour alone.
  *
- * @alpha
+ * @beta
  */
 export const aveStatusIcon: Readonly<Record<AveAlertVariant, AveIconName>> = {
   info: 'info',
@@ -24,7 +24,7 @@ export const aveStatusIcon: Readonly<Record<AveAlertVariant, AveIconName>> = {
 /**
  * Each variant's word in the kit's messages, which names its icon for assistive technology.
  *
- * @alpha
+ * @beta
  */
 export const aveStatusLabel: Readonly<
   Record<AveAlertVariant, 'alertInfo' | 'alertSuccess' | 'alertWarning' | 'alertDanger'>
@@ -39,7 +39,7 @@ export const aveStatusLabel: Readonly<
  * The live role of a message: a warning or an error interrupts (`alert`), information and success wait their turn
  * (`status`). Either is announced when the message appears, not when the page loads with it.
  *
- * @alpha
+ * @beta
  */
 export function aveStatusRole(variant: AveAlertVariant): 'alert' | 'status' {
   return variant === 'warning' || variant === 'danger' ? 'alert' : 'status';

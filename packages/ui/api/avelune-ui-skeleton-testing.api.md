@@ -9,7 +9,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveSkeletonHarness extends ComponentHarness {
     getParts(): Promise<number>;
     getShape(): Promise<AveSkeletonShape>;
@@ -18,7 +18,7 @@ export class AveSkeletonHarness extends ComponentHarness {
     static with(options?: AveSkeletonHarnessFilters): HarnessPredicate<AveSkeletonHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveSkeletonHarnessFilters extends BaseHarnessFilters {
     shape?: AveSkeletonShape;
 }

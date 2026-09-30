@@ -42,7 +42,7 @@ const within: IsActiveMatchOptions = {
  * </ave-settings-page>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-settings-page',

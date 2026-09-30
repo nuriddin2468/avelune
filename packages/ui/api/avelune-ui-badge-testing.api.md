@@ -9,7 +9,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveBadgeHarness extends ComponentHarness {
     getText(): Promise<string>;
     getVariant(): Promise<AveBadgeVariant>;
@@ -17,13 +17,13 @@ export class AveBadgeHarness extends ComponentHarness {
     static with(options?: AveBadgeHarnessFilters): HarnessPredicate<AveBadgeHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveBadgeHarnessFilters extends BaseHarnessFilters {
     text?: string | RegExp;
     variant?: AveBadgeVariant;
 }
 
-// @alpha
+// @beta
 export class AveCountHarness extends ComponentHarness {
     getText(): Promise<string>;
     static hostSelector: string;
@@ -31,7 +31,7 @@ export class AveCountHarness extends ComponentHarness {
     static with(options?: AveCountHarnessFilters): HarnessPredicate<AveCountHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveCountHarnessFilters extends BaseHarnessFilters {
     text?: string | RegExp;
 }

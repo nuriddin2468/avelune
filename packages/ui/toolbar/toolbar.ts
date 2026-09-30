@@ -15,7 +15,7 @@ import { Toolbar, ToolbarWidget } from '@angular/aria/toolbar';
  * </div>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: '[aveToolbar]',
@@ -33,7 +33,7 @@ export class AveToolbar {
  * An item of a kit toolbar (ADR 0075): a Button, an IconButton or a link that looks like one, reached by the
  * toolbar's arrows. Its `disabled` is the Button's too.
  *
- * @alpha
+ * @beta
  */
 @Directive({
   selector: '[aveToolbarItem]',
@@ -44,7 +44,7 @@ export class AveToolbarItem {}
 /**
  * A line between groups of a toolbar's items (ADR 0075): a vertical `separator`.
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: '[aveToolbarSeparator]',

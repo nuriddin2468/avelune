@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters } from '@an
 /**
  * Filters for {@link AveCardHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveCardHarnessFilters extends BaseHarnessFilters {
   /** Only match cards whose title is this string, or matches this pattern. */
@@ -13,7 +13,7 @@ export interface AveCardHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-card>` from `@avelune/ui/card`.
  *
- * @alpha
+ * @beta
  */
 export class AveCardHarness extends ComponentHarness {
   /** Selector that finds kit cards. */

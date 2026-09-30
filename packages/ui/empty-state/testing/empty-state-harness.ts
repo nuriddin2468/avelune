@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters } from '@an
 /**
  * Filters for {@link AveEmptyStateHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveEmptyStateHarnessFilters extends BaseHarnessFilters {
   /** Only match empty states whose heading is this string, or matches this pattern. */
@@ -13,7 +13,7 @@ export interface AveEmptyStateHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-empty-state>` from `@avelune/ui/empty-state`.
  *
- * @alpha
+ * @beta
  */
 export class AveEmptyStateHarness extends ComponentHarness {
   /** Selector that finds kit empty states. */

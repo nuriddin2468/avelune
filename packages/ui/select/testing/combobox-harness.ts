@@ -4,7 +4,7 @@ import { ComponentHarness, HarnessPredicate, TestKey, type BaseHarnessFilters } 
 /**
  * Filters for {@link AveComboboxHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveComboboxHarnessFilters extends BaseHarnessFilters {
   /** Only match comboboxes whose input says this, or matches this pattern. */
@@ -15,7 +15,7 @@ export interface AveComboboxHarnessFilters extends BaseHarnessFilters {
  * Harness for `<ave-combobox>` from `@avelune/ui/select`. Its list opens in the overlay at the end of the document,
  * so the options are found from the document root, through the input's `aria-controls`.
  *
- * @alpha
+ * @beta
  */
 export class AveComboboxHarness extends ComponentHarness {
   /** Selector that finds kit comboboxes. */

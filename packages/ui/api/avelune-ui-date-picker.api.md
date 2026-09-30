@@ -13,7 +13,7 @@ import { AvePlainDate } from '@avelune/ui/i18n';
 import { ControlValueAccessor } from '@angular/forms';
 import { Signal } from '@angular/core';
 
-// @alpha
+// @beta
 export class AveDatePicker implements ControlValueAccessor {
     constructor();
     protected readonly canClear: _angular_core.Signal<boolean>;
@@ -70,23 +70,23 @@ export class AveDatePicker implements ControlValueAccessor {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveDatePicker, never>;
 }
 
-// @alpha
+// @beta
 export type AveDatePickerSize = 'sm' | 'md' | 'lg';
 
-// @alpha
+// @beta
 export interface AveDateRange {
     readonly end: AvePlainDate | null;
     readonly start: AvePlainDate | null;
 }
 
-// @alpha
+// @beta
 export interface AveDateRangeCustomPreset {
     readonly end: AvePlainDate;
     readonly label: string;
     readonly start: AvePlainDate;
 }
 
-// @alpha
+// @beta
 export class AveDateRangePicker implements ControlValueAccessor {
     constructor();
     protected applyPreset(chosen: number[]): void;
@@ -169,10 +169,10 @@ export class AveDateRangePicker implements ControlValueAccessor {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveDateRangePicker, never>;
 }
 
-// @alpha
+// @beta
 export type AveDateRangePreset = AveDateRangePresetName | AveDateRangeCustomPreset;
 
-// @alpha
+// @beta
 export type AveDateRangePresetName = 'today' | 'yesterday' | 'thisWeek' | 'lastWeek' | 'thisMonth' | 'lastMonth' | 'thisQuarter' | 'thisYear' | 'last7Days' | 'last30Days';
 
 // (No @packageDocumentation comment for this package)

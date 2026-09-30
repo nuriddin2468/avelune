@@ -4,7 +4,7 @@ import { isUzbekLatin, localeTags } from './locale';
  * A calendar date without a time or a time zone, in ISO 8601 form: `2026-09-23`. The date picker's value
  * (ADR 0048): a string, so it survives JSON and time zones unchanged.
  *
- * @alpha
+ * @beta
  */
 export type AvePlainDate = string;
 
@@ -12,7 +12,7 @@ export type AvePlainDate = string;
  * How dates are written and named in a locale (ADR 0048): the names a calendar shows, the formats of a date, and how
  * a typed date is read.
  *
- * @alpha
+ * @beta
  */
 export interface AveDateFormat {
   /** The locale the format is for. */
@@ -63,7 +63,7 @@ const uzLatn = {
 /**
  * The parts of an ISO date (month 1–12), or null when the string is not one or not a real date.
  *
- * @alpha
+ * @beta
  */
 export function plainDateParts(date: AvePlainDate): { year: number; month: number; day: number } | null {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
@@ -75,7 +75,7 @@ export function plainDateParts(date: AvePlainDate): { year: number; month: numbe
 /**
  * An ISO date from its parts (month 1–12).
  *
- * @alpha
+ * @beta
  */
 export function toPlainDate(year: number, month: number, day: number): AvePlainDate {
   return `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
@@ -103,7 +103,7 @@ function firstDayOf(locale: string): AveDateFormat['firstDayOfWeek'] {
  * The date format of a locale (ADR 0048). Intl writes Russian, English and Uzbek in Cyrillic; the kit writes Uzbek in
  * Latin script itself, from CLDR, because Chromium has no data for it and falls back to `2026 M09 23`.
  *
- * @alpha
+ * @beta
  */
 export function aveDateFormat(locale: string): AveDateFormat {
   const uz = isUzbekLatin(locale);

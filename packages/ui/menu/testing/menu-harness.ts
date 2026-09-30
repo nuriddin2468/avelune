@@ -9,7 +9,7 @@ import {
 /**
  * Filters for {@link AveMenuHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveMenuHarnessFilters extends BaseHarnessFilters {
   /** Only match menus whose button is named by this string, or matches this pattern. */
@@ -19,7 +19,7 @@ export interface AveMenuHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-menu>` from `@avelune/ui/menu`: its button, and the items of its menu while it is open.
  *
- * @alpha
+ * @beta
  */
 export class AveMenuHarness extends ComponentHarness {
   /** Selector that finds kit menus. */

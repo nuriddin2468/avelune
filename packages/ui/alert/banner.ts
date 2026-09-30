@@ -19,7 +19,7 @@ import type { AveAlertVariant } from './types';
  * </ave-banner>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-banner',

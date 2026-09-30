@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters } from '@an
 /**
  * Filters for {@link AveFormPageHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveFormPageHarnessFilters extends BaseHarnessFilters {
   /** Only match form pages whose heading is this string, or matches this pattern. */
@@ -13,7 +13,7 @@ export interface AveFormPageHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `form[aveFormPage]` from `@avelune/ui/form-page`.
  *
- * @alpha
+ * @beta
  */
 export class AveFormPageHarness extends ComponentHarness {
   /** Selector that finds kit form pages. */

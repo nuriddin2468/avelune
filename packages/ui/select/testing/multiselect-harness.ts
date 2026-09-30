@@ -7,7 +7,7 @@ import { AveSelectHarness, type AveSelectHarnessFilters } from './select-harness
  * Harness for `<ave-multiselect>` from `@avelune/ui/select`: a select whose options toggle, and whose list stays
  * open while they do.
  *
- * @alpha
+ * @beta
  */
 export class AveMultiselectHarness extends AveSelectHarness {
   /** Selector that finds kit multiselects. */

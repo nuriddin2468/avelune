@@ -37,7 +37,7 @@ let nextPanel = 0;
  * </ave-filter-panel>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-filter-panel',

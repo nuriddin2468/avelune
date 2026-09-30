@@ -8,7 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveTagHarness extends ComponentHarness {
     getRemoveLabel(): Promise<string | null>;
     getText(): Promise<string>;
@@ -19,7 +19,7 @@ export class AveTagHarness extends ComponentHarness {
     static with(options?: AveTagHarnessFilters): HarnessPredicate<AveTagHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveTagHarnessFilters extends BaseHarnessFilters {
     text?: string | RegExp;
 }

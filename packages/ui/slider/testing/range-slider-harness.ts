@@ -5,7 +5,7 @@ import { AveSliderHarness, type AveSliderHarnessFilters } from './slider-harness
  * Harness for `<ave-range-slider>` from `@avelune/ui/slider`: its two thumbs, the lower and the upper. The slider's
  * own methods act on the lower thumb.
  *
- * @alpha
+ * @beta
  */
 export class AveRangeSliderHarness extends AveSliderHarness {
   /** Selector that finds kit range sliders. */

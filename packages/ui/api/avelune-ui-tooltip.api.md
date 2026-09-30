@@ -6,7 +6,7 @@
 
 import * as _angular_core from '@angular/core';
 
-// @alpha
+// @beta
 export class AveTooltip {
     constructor();
     readonly aveTooltip: _angular_core.InputSignal<string>;
@@ -22,7 +22,7 @@ export class AveTooltip {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveTooltip, never>;
 }
 
-// @alpha
+// @beta
 export type AveTooltipSide = 'top' | 'bottom' | 'start' | 'end';
 
 // (No @packageDocumentation comment for this package)

@@ -8,7 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveEmptyStateHarness extends ComponentHarness {
     getActions(): Promise<string[]>;
     getHeading(): Promise<string>;
@@ -18,7 +18,7 @@ export class AveEmptyStateHarness extends ComponentHarness {
     static with(options?: AveEmptyStateHarnessFilters): HarnessPredicate<AveEmptyStateHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveEmptyStateHarnessFilters extends BaseHarnessFilters {
     heading?: string | RegExp;
 }

@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters, type TestE
 /**
  * Filters for {@link AveSidebarNavHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveSidebarNavHarnessFilters extends BaseHarnessFilters {
   /** Only match navigations whose landmark is named by this string, or matches this pattern. */
@@ -13,7 +13,7 @@ export interface AveSidebarNavHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-sidebar-nav>` from `@avelune/ui/sidebar-nav`: its links, the current page, and its groups.
  *
- * @alpha
+ * @beta
  */
 export class AveSidebarNavHarness extends ComponentHarness {
   /** Selector that finds kit sidebar navigations. */

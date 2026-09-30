@@ -9,13 +9,13 @@ import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { Signal } from '@angular/core';
 
-// @alpha
+// @beta
 export const AVE_CONTROL_OWNER: InjectionToken<AveControlOwner>;
 
 // @beta
 export const AVE_FIELD: InjectionToken<AveFieldContext>;
 
-// @alpha
+// @beta
 export class AveClearButton {
     protected keepFocus(event: Event): void;
     readonly label: i0.InputSignal<string>;
@@ -33,7 +33,7 @@ export class AveClearButton {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveClearButton, never>;
 }
 
-// @alpha
+// @beta
 export interface AveControlOwner {
     readonly controlDescriptions?: Signal<readonly string[]>;
     readonly controlDisabled: Signal<boolean>;
@@ -50,7 +50,7 @@ export interface AveControlState {
     readonly touched: Signal<boolean>;
 }
 
-// @alpha
+// @beta
 export class AveControlTarget {
     constructor();
     // (undocumented)

@@ -5,7 +5,7 @@ import { AveDatePickerHarness, type AveDatePickerHarnessFilters } from './date-p
  * Harness for `<ave-date-range-picker>` from `@avelune/ui/date-picker`: its two inputs and the calendar it opens. The
  * calendar's methods are the date field's.
  *
- * @alpha
+ * @beta
  */
 export class AveDateRangePickerHarness extends AveDatePickerHarness {
   /** Selector that finds kit date range fields. */

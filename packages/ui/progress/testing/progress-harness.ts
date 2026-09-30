@@ -7,7 +7,7 @@ const SIZES: readonly AveProgressSize[] = ['sm', 'md'];
 /**
  * Filters for {@link AveProgressHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveProgressHarnessFilters extends BaseHarnessFilters {
   /** Only match progress bars whose accessible name is this string, or matches this pattern. */
@@ -17,7 +17,7 @@ export interface AveProgressHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `progress[aveProgress]` from `@avelune/ui/progress`.
  *
- * @alpha
+ * @beta
  */
 export class AveProgressHarness extends ComponentHarness {
   /** Selector that finds kit progress bars. */

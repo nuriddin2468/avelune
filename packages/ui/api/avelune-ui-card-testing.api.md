@@ -8,7 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveCardHarness extends ComponentHarness {
     getFooterActions(): Promise<string[]>;
     getText(): Promise<string>;
@@ -17,7 +17,7 @@ export class AveCardHarness extends ComponentHarness {
     static with(options?: AveCardHarnessFilters): HarnessPredicate<AveCardHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveCardHarnessFilters extends BaseHarnessFilters {
     title?: string | RegExp;
 }

@@ -8,7 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveTreeHarness extends ComponentHarness {
     collapse(label: string | RegExp): Promise<void>;
     expand(label: string | RegExp): Promise<void>;
@@ -21,12 +21,12 @@ export class AveTreeHarness extends ComponentHarness {
     static with(options?: AveTreeHarnessFilters): HarnessPredicate<AveTreeHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveTreeHarnessFilters extends BaseHarnessFilters {
     label?: string | RegExp;
 }
 
-// @alpha
+// @beta
 export interface AveTreeRow {
     readonly label: string;
     readonly level: number;

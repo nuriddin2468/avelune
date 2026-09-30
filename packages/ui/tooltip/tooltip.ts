@@ -84,7 +84,7 @@ let lastHidden = Number.NEGATIVE_INFINITY;
  * <button aveIconButton type="button" icon="download" label="Выгрузить в Excel" aveTooltip="Выгрузить в Excel"></button>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Directive({
   selector: '[aveTooltip]',

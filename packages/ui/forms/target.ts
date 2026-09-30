@@ -6,7 +6,7 @@ import { connectToField } from './connect';
  * What a component shares with the element people focus inside its template: its form state, read on its host,
  * where the form binding is.
  *
- * @alpha
+ * @beta
  */
 export interface AveControlOwner {
   /** The form state of the component, read on its host, where the form binding is. */
@@ -27,7 +27,7 @@ export interface AveControlOwner {
  * Provided by a component whose focusable element is inside its template (a select's trigger, a date field's input),
  * for `aveControlTarget` on that element.
  *
- * @alpha
+ * @beta
  */
 export const AVE_CONTROL_OWNER = new InjectionToken<AveControlOwner>('AVE_CONTROL_OWNER');
 
@@ -36,7 +36,7 @@ export const AVE_CONTROL_OWNER = new InjectionToken<AveControlOwner>('AVE_CONTRO
  * around the component, with the component's state (ADR 0046): the element takes the field's id, is described by its
  * hint and error, and says invalid and required. The component provides `AVE_CONTROL_OWNER`.
  *
- * @alpha
+ * @beta
  */
 @Directive({ selector: '[aveControlTarget]' })
 export class AveControlTarget {

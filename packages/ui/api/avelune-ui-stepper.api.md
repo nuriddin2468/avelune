@@ -7,14 +7,14 @@
 import * as _angular_core from '@angular/core';
 import * as _avelune_ui_i18n from '@avelune/ui/i18n';
 
-// @alpha
+// @beta
 export interface AveStep {
     readonly description?: string;
     readonly error?: boolean;
     readonly label: string;
 }
 
-// @alpha
+// @beta
 export class AveStepper {
     readonly current: _angular_core.InputSignalWithTransform<number, unknown>;
     readonly label: _angular_core.InputSignal<string>;
@@ -31,7 +31,7 @@ export class AveStepper {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveStepper, never>;
 }
 
-// @alpha
+// @beta
 export type AveStepperOrientation = 'horizontal' | 'vertical';
 
 // (No @packageDocumentation comment for this package)

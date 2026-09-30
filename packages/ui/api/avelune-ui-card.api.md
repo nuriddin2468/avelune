@@ -6,7 +6,7 @@
 
 import * as i0 from '@angular/core';
 
-// @alpha
+// @beta
 export class AveCard {
     // @internal
     readonly ends: i0.WritableSignal<number>;
@@ -18,7 +18,7 @@ export class AveCard {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveCard, never>;
 }
 
-// @alpha
+// @beta
 export class AveCardEnd {
     constructor();
     // (undocumented)
@@ -27,7 +27,7 @@ export class AveCardEnd {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveCardEnd, never>;
 }
 
-// @alpha
+// @beta
 export class AveCardFooter {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<AveCardFooter, "[aveCardFooter]", never, {}, {}, never, ["*"], true, never>;
@@ -35,7 +35,7 @@ export class AveCardFooter {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveCardFooter, never>;
 }
 
-// @alpha
+// @beta
 export class AveCardTitle {
     constructor();
     // (undocumented)

@@ -23,7 +23,7 @@ const above: Partial<IsActiveMatchOptions> = { paths: 'subset', queryParams: 'ig
  * <ave-sidebar-nav label="Разделы" [items]="pages" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-sidebar-nav',

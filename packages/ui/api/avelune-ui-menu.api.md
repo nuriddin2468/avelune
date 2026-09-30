@@ -14,7 +14,7 @@ import * as _avelune_ui_overlay from '@avelune/ui/overlay';
 import { Menu } from '@angular/aria/menu';
 import { Toolbar } from '@angular/aria/toolbar';
 
-// @alpha
+// @beta
 export class AveMenu<V> {
     protected chosen(value: V | undefined): void;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -39,7 +39,7 @@ export class AveMenu<V> {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveMenu<any>, never>;
 }
 
-// @alpha
+// @beta
 export class AveMenubar<V> {
     constructor();
     protected chosen(value: V | undefined): void;
@@ -57,16 +57,16 @@ export class AveMenubar<V> {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveMenubar<any>, never>;
 }
 
-// @alpha
+// @beta
 export interface AveMenubarMenu<V> {
     readonly items: readonly AveMenuEntry<V>[];
     readonly label: string;
 }
 
-// @alpha
+// @beta
 export type AveMenuEntry<V> = AveMenuItem<V> | AveMenuSeparator;
 
-// @alpha
+// @beta
 export interface AveMenuItem<V> {
     readonly danger?: boolean;
     readonly disabled?: boolean;
@@ -75,7 +75,7 @@ export interface AveMenuItem<V> {
     readonly value: V;
 }
 
-// @alpha
+// @beta
 export interface AveMenuSeparator {
     readonly separator: true;
 }

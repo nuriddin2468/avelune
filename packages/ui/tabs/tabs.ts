@@ -40,7 +40,7 @@ interface Measure {
  * </ave-tabs>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-tabs',

@@ -21,7 +21,7 @@ let nextTag = 0;
  * Provided by a field that draws tags inside it, as the multiselect does its chosen values (ADR 0081): the tags'
  * remove buttons are not Tab stops, a press on one leaves focus where it is, and the field decides where it goes.
  *
- * @alpha
+ * @beta
  */
 export const AVE_TAG_FIELD = new InjectionToken<true>('AVE_TAG_FIELD');
 
@@ -37,7 +37,7 @@ export const AVE_TAG_FIELD = new InjectionToken<true>('AVE_TAG_FIELD');
  * }
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-tag',

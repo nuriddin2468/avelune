@@ -15,7 +15,7 @@ import { Combobox } from '@angular/aria/combobox';
 import { ControlValueAccessor } from '@angular/forms';
 import { TemplateRef } from '@angular/core';
 
-// @alpha
+// @beta
 export class AveCombobox<V> implements ControlValueAccessor {
     constructor();
     protected choose(values: V[]): void;
@@ -74,7 +74,7 @@ export class AveCombobox<V> implements ControlValueAccessor {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveCombobox<any>, never>;
 }
 
-// @alpha
+// @beta
 export class AveMultiselect<V> implements ControlValueAccessor {
     constructor();
     protected readonly changeable: _angular_core.Signal<boolean>;
@@ -143,7 +143,7 @@ export class AveMultiselect<V> implements ControlValueAccessor {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveMultiselect<any>, never>;
 }
 
-// @alpha
+// @beta
 export type AveOption<V> = {
     readonly value: V;
     readonly label: string;
@@ -158,12 +158,12 @@ export type AveOption<V> = {
     readonly icon?: never;
 });
 
-// @alpha
+// @beta
 export interface AveOptionContext<V> {
     readonly $implicit: AveOption<V>;
 }
 
-// @alpha
+// @beta
 export class AveOptionTemplate<V> {
     readonly aveOptionOf: _angular_core.InputSignal<readonly AveOption<V>[] | undefined>;
     static ngTemplateContextGuard<V>(_directive: AveOptionTemplate<V>, context: unknown): context is AveOptionContext<V>;
@@ -175,10 +175,10 @@ export class AveOptionTemplate<V> {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveOptionTemplate<any>, never>;
 }
 
-// @alpha
+// @beta
 export type AveSearchMode = 'local' | 'server';
 
-// @alpha
+// @beta
 export class AveSelect<V> implements ControlValueAccessor {
     constructor();
     protected choose(values: V[]): void;
@@ -226,10 +226,10 @@ export class AveSelect<V> implements ControlValueAccessor {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveSelect<any>, never>;
 }
 
-// @alpha
+// @beta
 export type AveSelectSize = 'sm' | 'md' | 'lg';
 
-// @alpha
+// @beta
 export class AveSelectValueTemplate<V> {
     readonly aveSelectValueOf: _angular_core.InputSignal<readonly AveOption<V>[] | undefined>;
     static ngTemplateContextGuard<V>(_directive: AveSelectValueTemplate<V>, context: unknown): context is AveOptionContext<V>;

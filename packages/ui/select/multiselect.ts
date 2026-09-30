@@ -47,7 +47,7 @@ import type { AveOption, AveSelectSize } from './types';
  * <ave-multiselect [options]="approvers" placeholder="Choose approvers" [formField]="contract.approvers" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-multiselect',

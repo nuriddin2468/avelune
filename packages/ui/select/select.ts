@@ -44,7 +44,7 @@ import type { AveOption, AveSelectSize } from './types';
  * <ave-select [options]="kinds" placeholder="Choose a kind" [formField]="contract.kind" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-select',

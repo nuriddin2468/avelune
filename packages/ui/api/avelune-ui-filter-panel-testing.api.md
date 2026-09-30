@@ -8,7 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveAppliedFiltersHarness extends ComponentHarness {
     clear(): Promise<void>;
     getFilters(): Promise<string[]>;
@@ -17,7 +17,7 @@ export class AveAppliedFiltersHarness extends ComponentHarness {
     remove(label: string | RegExp): Promise<void>;
 }
 
-// @alpha
+// @beta
 export class AveFilterPanelHarness extends ComponentHarness {
     canClear(): Promise<boolean>;
     clear(): Promise<void>;
@@ -30,7 +30,7 @@ export class AveFilterPanelHarness extends ComponentHarness {
     static with(options?: AveFilterPanelHarnessFilters): HarnessPredicate<AveFilterPanelHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveFilterPanelHarnessFilters extends BaseHarnessFilters {
     label?: string | RegExp;
 }

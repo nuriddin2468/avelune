@@ -7,7 +7,7 @@
 import * as _avelune_icons from '@avelune/icons';
 import * as i0 from '@angular/core';
 
-// @alpha
+// @beta
 export class AveEmptyState {
     readonly heading: i0.InputSignal<string>;
     readonly icon: i0.InputSignal<keyof _avelune_icons.IconNames | undefined>;
@@ -17,7 +17,7 @@ export class AveEmptyState {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveEmptyState, never>;
 }
 
-// @alpha
+// @beta
 export class AveEmptyStateActions {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<AveEmptyStateActions, "[aveEmptyStateActions]", never, {}, {}, never, ["*"], true, never>;

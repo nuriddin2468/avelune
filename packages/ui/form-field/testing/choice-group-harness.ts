@@ -3,7 +3,7 @@ import { ContentContainerComponentHarness, HarnessPredicate, type BaseHarnessFil
 /**
  * Filters for {@link AveChoiceGroupHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveChoiceGroupHarnessFilters extends BaseHarnessFilters {
   /** Only match groups whose legend is this string, or matches this pattern. */
@@ -14,7 +14,7 @@ export interface AveChoiceGroupHarnessFilters extends BaseHarnessFilters {
  * Harness for `fieldset[aveChoiceGroup]` from `@avelune/ui/form-field`. Get its radios or checkboxes with their own
  * harnesses, loaded from this one: `group.getAllHarnesses(AveRadioHarness)`.
  *
- * @alpha
+ * @beta
  */
 export class AveChoiceGroupHarness extends ContentContainerComponentHarness {
   /** Selector that finds groups of choices. */

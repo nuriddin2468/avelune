@@ -12,7 +12,7 @@ import { Component, input } from '@angular/core';
  * </ave-dashboard>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-dashboard',

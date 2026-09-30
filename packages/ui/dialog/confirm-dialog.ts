@@ -20,7 +20,7 @@ let nextConfirm = 0;
  * </dialog>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'dialog[aveConfirmDialog]',

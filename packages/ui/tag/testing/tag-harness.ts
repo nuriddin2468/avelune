@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters } from '@an
 /**
  * Filters for {@link AveTagHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveTagHarnessFilters extends BaseHarnessFilters {
   /** Only match tags whose words are this string, or match this pattern. */
@@ -13,7 +13,7 @@ export interface AveTagHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-tag>` from `@avelune/ui/tag`.
  *
- * @alpha
+ * @beta
  */
 export class AveTagHarness extends ComponentHarness {
   /** Selector that finds kit tags. */

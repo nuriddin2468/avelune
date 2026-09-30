@@ -23,7 +23,7 @@ function rowsAttribute(value: unknown): number {
  * <textarea aveTextarea formControlName="comment" rows="5" size="sm"></textarea>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'textarea[aveTextarea]',

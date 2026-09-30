@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters, type TestE
 /**
  * Filters for {@link AveToolbarHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveToolbarHarnessFilters extends BaseHarnessFilters {
   /** Only match toolbars named by this string, or matching this pattern. */
@@ -13,7 +13,7 @@ export interface AveToolbarHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `[aveToolbar]` from `@avelune/ui/toolbar`: its items, in order, and the one the arrows reached.
  *
- * @alpha
+ * @beta
  */
 export class AveToolbarHarness extends ComponentHarness {
   /** Selector that finds kit toolbars. */

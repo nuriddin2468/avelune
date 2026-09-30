@@ -3,7 +3,7 @@ import { Directive, TemplateRef, inject, input } from '@angular/core';
 /**
  * What a cell template draws: its row.
  *
- * @alpha
+ * @beta
  */
 export interface AveCellContext<R> {
   /** The row, as `let-row`. */
@@ -20,7 +20,7 @@ export interface AveCellContext<R> {
  * </ng-template>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Directive({ selector: 'ng-template[aveCell]' })
 export class AveCellTemplate<R> {

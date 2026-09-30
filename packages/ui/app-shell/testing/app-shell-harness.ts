@@ -4,7 +4,7 @@ import { AveSidebarNavHarness } from '@avelune/ui/sidebar-nav/testing';
 /**
  * The logo an application shell shows, as {@link AveAppShellHarness.getLogo} reads it.
  *
- * @alpha
+ * @beta
  */
 export interface AveAppShellLogo {
   /** The address the image shows for the theme the page shows, resolved against the page. */
@@ -16,7 +16,7 @@ export interface AveAppShellLogo {
 /**
  * Harness for `<ave-app-shell>` from `@avelune/ui/app-shell`.
  *
- * @alpha
+ * @beta
  */
 export class AveAppShellHarness extends ComponentHarness {
   /** Selector that finds kit application shells. */

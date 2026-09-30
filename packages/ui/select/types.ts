@@ -5,7 +5,7 @@ import type { AveIconName } from '@avelune/ui/icon';
  * whether it can be chosen, and what else its row says: a second line, an icon or an image at the start (never
  * both), and a short text at the end.
  *
- * @alpha
+ * @beta
  */
 export type AveOption<V> = {
   /** The value the option stands for; the form gets this. */
@@ -35,6 +35,6 @@ export type AveOption<V> = {
  * The sizes of a select, a combobox and a multiselect: the control sizes shared with every control
  * (`control.height.*`): `sm` 32px, `md` 36px, `lg` 40px, one step smaller in compact density.
  *
- * @alpha
+ * @beta
  */
 export type AveSelectSize = 'sm' | 'md' | 'lg';

@@ -9,7 +9,7 @@ import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AvePopoverHarness extends ComponentHarness {
     close(): Promise<void>;
     getHeading(): Promise<string>;
@@ -23,7 +23,7 @@ export class AvePopoverHarness extends ComponentHarness {
     static with(options?: AvePopoverHarnessFilters): HarnessPredicate<AvePopoverHarness>;
 }
 
-// @alpha
+// @beta
 export interface AvePopoverHarnessFilters extends BaseHarnessFilters {
     label?: string | RegExp;
 }

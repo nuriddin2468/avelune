@@ -7,7 +7,7 @@
 import * as _angular_core from '@angular/core';
 import { AveIconName } from '@avelune/ui/icon';
 
-// @alpha
+// @beta
 export class AveTree<V> {
     protected choose(values: V[]): void;
     protected readonly chosen: _angular_core.Signal<(V & ({} | null))[]>;
@@ -24,7 +24,7 @@ export class AveTree<V> {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveTree<any>, never>;
 }
 
-// @alpha
+// @beta
 export interface AveTreeNode<V> {
     readonly children?: readonly AveTreeNode<V>[];
     readonly disabled?: boolean;

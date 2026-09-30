@@ -12,7 +12,7 @@ import { connectToField, injectControlState } from '@avelune/ui/forms';
  * <label aveChoice><input type="radio" aveRadio value="courier" [formField]="order.delivery" /> Courier</label>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'input[type=radio][aveRadio]',

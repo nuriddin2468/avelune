@@ -12,7 +12,7 @@ import type { AveAppliedFilter } from './types';
  * <ave-applied-filters [filters]="applied()" (remove)="removeFilter($event)" (clear)="clearFilters()" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-applied-filters',

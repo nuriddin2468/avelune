@@ -6,7 +6,7 @@ const VARIANTS: readonly AveToastVariant[] = ['info', 'success', 'warning', 'dan
 /**
  * Filters for {@link AveToastHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveToastHarnessFilters extends BaseHarnessFilters {
   /** Only match toasts whose message is this string, or matches this pattern. */
@@ -20,7 +20,7 @@ export interface AveToastHarnessFilters extends BaseHarnessFilters {
  * it with `TestbedHarnessEnvironment.documentRootLoader(fixture)`. A toast that plays its exit no longer matches. Each
  * stays for `timing.toast`; set that token in unit tests that wait for one to go.
  *
- * @alpha
+ * @beta
  */
 export class AveToastHarness extends ComponentHarness {
   /** Selector that finds the kit's toasts on screen, not those leaving. */

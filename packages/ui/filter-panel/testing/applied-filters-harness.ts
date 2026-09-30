@@ -4,7 +4,7 @@ import { AveTagHarness } from '@avelune/ui/tag/testing';
 /**
  * Harness for `<ave-applied-filters>` from `@avelune/ui/filter-panel`.
  *
- * @alpha
+ * @beta
  */
 export class AveAppliedFiltersHarness extends ComponentHarness {
   /** Selector that finds kit applied filters. */

@@ -31,7 +31,7 @@ const eitherEdge: ConnectedPosition[] = [
  * closes it on Escape itself (`disableClose`), which would take it away at once, without its exit: the component
  * closes it, through `aveOverlayPresence`.
  *
- * @alpha
+ * @beta
  */
 export function aveConnectedOverlay(
   origin: HTMLElement,
@@ -59,7 +59,7 @@ export function aveConnectedOverlay(
  * (`createOverlayRef`): the menubar's, whose menus exist before they open and move into their overlays (ADR 0076).
  * Its popover goes right after the origin.
  *
- * @alpha
+ * @beta
  */
 export function aveConnectedStrategy(
   injector: Injector,

@@ -9,7 +9,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveTextareaHarness extends ComponentHarness {
     blur(): Promise<void>;
     focus(): Promise<void>;
@@ -28,7 +28,7 @@ export class AveTextareaHarness extends ComponentHarness {
     static with(options?: AveTextareaHarnessFilters): HarnessPredicate<AveTextareaHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveTextareaHarnessFilters extends BaseHarnessFilters {
     placeholder?: string | RegExp;
     value?: string | RegExp;

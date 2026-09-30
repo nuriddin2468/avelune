@@ -4,7 +4,7 @@ import type { AvePlainDate } from '@avelune/ui/i18n';
  * The sizes of a date field: the control sizes shared with every control (`control.height.*`), `sm` 32px, `md`
  * 36px, `lg` 40px, one step smaller in compact density.
  *
- * @alpha
+ * @beta
  */
 export type AveDatePickerSize = 'sm' | 'md' | 'lg';
 
@@ -12,7 +12,7 @@ export type AveDatePickerSize = 'sm' | 'md' | 'lg';
  * The value of a date range field: its first and last date, either of which may still be missing. The field's value
  * is `null` while both are.
  *
- * @alpha
+ * @beta
  */
 export interface AveDateRange {
   /** The first date of the range. */
@@ -26,7 +26,7 @@ export interface AveDateRange {
  * today in the browser's time zone: a week from the locale's first day, a month, a quarter (from January, April, July,
  * October) or a year; the last 7 and 30 days end today.
  *
- * @alpha
+ * @beta
  */
 export type AveDateRangePresetName =
   | 'today'
@@ -43,7 +43,7 @@ export type AveDateRangePresetName =
 /**
  * A date range preset of the application's own: its label and its dates.
  *
- * @alpha
+ * @beta
  */
 export interface AveDateRangeCustomPreset {
   /** What the preset says, in the application's language ("Первое полугодие"). */
@@ -57,6 +57,6 @@ export interface AveDateRangeCustomPreset {
 /**
  * A preset of a date range field: one the kit names, or one of the application's own.
  *
- * @alpha
+ * @beta
  */
 export type AveDateRangePreset = AveDateRangePresetName | AveDateRangeCustomPreset;

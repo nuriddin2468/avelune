@@ -9,13 +9,13 @@ import * as _avelune_ui_forms from '@avelune/ui/forms';
 import * as _avelune_ui_i18n from '@avelune/ui/i18n';
 import { ControlValueAccessor } from '@angular/forms';
 
-// @alpha
+// @beta
 export interface AveNumberRange {
     readonly end: number;
     readonly start: number;
 }
 
-// @alpha
+// @beta
 export class AveRangeSlider implements ControlValueAccessor {
     constructor();
     // @internal
@@ -69,7 +69,7 @@ export class AveRangeSlider implements ControlValueAccessor {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveRangeSlider, never>;
 }
 
-// @alpha
+// @beta
 export class AveSlider implements ControlValueAccessor {
     constructor();
     // @internal

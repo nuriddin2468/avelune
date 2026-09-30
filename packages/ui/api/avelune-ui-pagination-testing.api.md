@@ -8,7 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AvePaginationHarness extends ComponentHarness {
     getCurrentPage(): Promise<number | null>;
     getPages(): Promise<string[]>;
@@ -25,7 +25,7 @@ export class AvePaginationHarness extends ComponentHarness {
     static with(options?: AvePaginationHarnessFilters): HarnessPredicate<AvePaginationHarness>;
 }
 
-// @alpha
+// @beta
 export interface AvePaginationHarnessFilters extends BaseHarnessFilters {
     page?: number;
 }

@@ -6,7 +6,7 @@ const SHAPES: readonly AveSkeletonShape[] = ['text', 'block'];
 /**
  * Filters for {@link AveSkeletonHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveSkeletonHarnessFilters extends BaseHarnessFilters {
   /** Only match skeletons of this shape. */
@@ -16,7 +16,7 @@ export interface AveSkeletonHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-skeleton>` from `@avelune/ui/skeleton`.
  *
- * @alpha
+ * @beta
  */
 export class AveSkeletonHarness extends ComponentHarness {
   /** Selector that finds kit skeletons. */

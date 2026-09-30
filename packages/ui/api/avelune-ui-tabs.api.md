@@ -8,7 +8,7 @@ import * as _angular_core from '@angular/core';
 import * as _avelune_icons from '@avelune/icons';
 import * as i1 from '@angular/aria/tabs';
 
-// @alpha
+// @beta
 export class AveTab {
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly icon: _angular_core.InputSignal<keyof _avelune_icons.IconNames | undefined>;
@@ -20,7 +20,7 @@ export class AveTab {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveTab, never>;
 }
 
-// @alpha
+// @beta
 export class AveTabs {
     constructor();
     protected readonly indicatorOffset: _angular_core.WritableSignal<number>;

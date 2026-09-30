@@ -23,7 +23,7 @@ let nextDrawer = 0;
  * </dialog>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'dialog[aveDrawer]',

@@ -22,7 +22,7 @@ let nextMenu = 0;
  * <ave-menu label="Действия с договором" icon="ellipsis" variant="ghost" size="sm" [items]="actions" (itemSelected)="run($event)" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-menu',

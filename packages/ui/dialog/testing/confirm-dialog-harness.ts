@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters } from '@an
 /**
  * Filters for {@link AveConfirmDialogHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveConfirmDialogHarnessFilters extends BaseHarnessFilters {
   /** Only match confirmations whose question is this string, or matches this pattern. */
@@ -13,7 +13,7 @@ export interface AveConfirmDialogHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `dialog[aveConfirmDialog]` from `@avelune/ui/dialog`.
  *
- * @alpha
+ * @beta
  */
 export class AveConfirmDialogHarness extends ComponentHarness {
   /** Selector that finds kit confirmations. */

@@ -16,7 +16,7 @@ import { AVE_CARD_PARTS } from './parts';
  * </ave-card>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-card',

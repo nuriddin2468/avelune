@@ -6,7 +6,7 @@
 
 import { Provider } from '@angular/core';
 
-// @alpha
+// @beta
 export interface AveDateFormat {
     readonly firstDayOfWeek: 1 | 2 | 3 | 4 | 5 | 6 | 7;
     readonly locale: string;
@@ -22,13 +22,13 @@ export interface AveDateFormat {
     }[];
 }
 
-// @alpha
+// @beta
 export function aveDateFormat(locale: string): AveDateFormat;
 
-// @alpha
+// @beta
 export function aveFileSize(bytes: number, locale: string): string;
 
-// @alpha
+// @beta
 export interface AveMessages {
     readonly alertDanger: string;
     readonly alertInfo: string;
@@ -109,41 +109,41 @@ export interface AveMessages {
     readonly upperValue: string;
 }
 
-// @alpha
+// @beta
 export const aveMessagesEn: AveMessages;
 
-// @alpha
+// @beta
 export function aveMessagesFor(locale: string): AveMessages;
 
-// @alpha
+// @beta
 export const aveMessagesRu: AveMessages;
 
-// @alpha
+// @beta
 export const aveMessagesUzCyrl: AveMessages;
 
-// @alpha
+// @beta
 export const aveMessagesUzLatn: AveMessages;
 
-// @alpha
+// @beta
 export function aveNumberFormat(locale: string, options?: Intl.NumberFormatOptions): Intl.NumberFormat;
 
-// @alpha
+// @beta
 export type AvePlainDate = string;
 
-// @alpha
+// @beta
 export function injectAveMessages(): AveMessages;
 
-// @alpha
+// @beta
 export function plainDateParts(date: AvePlainDate): {
     year: number;
     month: number;
     day: number;
 } | null;
 
-// @alpha
+// @beta
 export function provideAveMessages(messages: Partial<AveMessages>): Provider;
 
-// @alpha
+// @beta
 export function toPlainDate(year: number, month: number, day: number): AvePlainDate;
 
 // (No @packageDocumentation comment for this package)

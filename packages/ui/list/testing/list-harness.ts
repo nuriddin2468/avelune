@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters } from '@an
 /**
  * Filters for {@link AveListHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveListHarnessFilters extends BaseHarnessFilters {
   /** Only match lists named by this string, or by a name that matches this pattern. */
@@ -13,7 +13,7 @@ export interface AveListHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-list>` from `@avelune/ui/list`: its name and its records.
  *
- * @alpha
+ * @beta
  */
 export class AveListHarness extends ComponentHarness {
   /** Selector that finds kit lists. */

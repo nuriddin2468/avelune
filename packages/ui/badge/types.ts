@@ -3,6 +3,6 @@
  * under way ("На согласовании"), `success` for a good end ("Подписан"), `warning` for a risk ("Истекает") and
  * `danger` for a failure or an end that needs action ("Истёк", "Отклонён").
  *
- * @alpha
+ * @beta
  */
 export type AveBadgeVariant = 'neutral' | 'info' | 'success' | 'warning' | 'danger';

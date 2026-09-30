@@ -5,7 +5,7 @@ import { AveSearchHeaderHarness } from '@avelune/ui/search-header/testing';
 /**
  * Harness for `<ave-list-page>` from `@avelune/ui/list-page`.
  *
- * @alpha
+ * @beta
  */
 export class AveListPageHarness extends ComponentHarness {
   /** Selector that finds kit list pages. */

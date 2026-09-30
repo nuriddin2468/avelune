@@ -9,7 +9,7 @@ import { AveFilterPanelHarness } from '@avelune/ui/filter-panel/testing';
 import { AveSearchHeaderHarness } from '@avelune/ui/search-header/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveListPageHarness extends ComponentHarness {
     readonly getAppliedFilters: () => Promise<AveAppliedFiltersHarness | null>;
     readonly getFilterPanel: () => Promise<AveFilterPanelHarness | null>;

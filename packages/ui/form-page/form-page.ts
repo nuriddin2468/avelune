@@ -17,7 +17,7 @@ let nextForm = 0;
  * </form>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'form[aveFormPage]',

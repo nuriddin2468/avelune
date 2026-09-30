@@ -18,14 +18,14 @@ import { BrandSheet, brandStorageKey, isBrandInput, parseStoredBrand, type Store
 /**
  * The colour theme a user prefers. `system` follows the operating system (`prefers-color-scheme`).
  *
- * @alpha
+ * @beta
  */
 export type AveThemePreference = 'light' | 'dark' | 'system';
 
 /**
  * Control density. `compact` shortens controls and their padding through the component tokens.
  *
- * @alpha
+ * @beta
  */
 export type AveDensity = 'comfortable' | 'compact';
 
@@ -33,14 +33,14 @@ export type AveDensity = 'comfortable' | 'compact';
  * The motion a user prefers. `system` follows `prefers-reduced-motion`; `reduced` reduces motion whatever the
  * system says. There is no way to force full motion over a system that asks for less.
  *
- * @alpha
+ * @beta
  */
 export type AveMotionPreference = 'system' | 'reduced';
 
 /**
  * Options of {@link provideAvelune}.
  *
- * @alpha
+ * @beta
  */
 export interface AveOptions {
   /** The theme until the user chooses one. Default `system`. */
@@ -118,7 +118,7 @@ function browserStorage(view: Window | null): Storage | null {
  * {@link provideAvelune} creates it at bootstrap, before the first render; inject it to read or change the
  * preferences.
  *
- * @alpha
+ * @beta
  */
 @Injectable({ providedIn: 'root' })
 export class AveTheme {

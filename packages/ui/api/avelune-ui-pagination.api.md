@@ -8,7 +8,7 @@ import * as _angular_core from '@angular/core';
 import * as _avelune_ui_i18n from '@avelune/ui/i18n';
 import { AveOption } from '@avelune/ui/select';
 
-// @alpha
+// @beta
 export class AvePagination {
     constructor();
     protected readonly current: _angular_core.Signal<number>;

@@ -6,7 +6,7 @@
 
 import * as _angular_core from '@angular/core';
 
-// @alpha
+// @beta
 export class AveSkeleton {
     readonly lines: _angular_core.InputSignalWithTransform<number, unknown>;
     protected readonly rows: _angular_core.Signal<number[]>;
@@ -17,7 +17,7 @@ export class AveSkeleton {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveSkeleton, never>;
 }
 
-// @alpha
+// @beta
 export type AveSkeletonShape = 'text' | 'block';
 
 // (No @packageDocumentation comment for this package)

@@ -8,7 +8,7 @@ import * as _angular_core from '@angular/core';
 import { AveIconName } from '@avelune/ui/icon';
 import { AveSidebarEntry } from '@avelune/ui/sidebar-nav';
 
-// @alpha
+// @beta
 export class AveSettingsPage {
     constructor();
     protected readonly active: _angular_core.Signal<AveSettingsSection | undefined>;
@@ -30,7 +30,7 @@ export class AveSettingsPage {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveSettingsPage, never>;
 }
 
-// @alpha
+// @beta
 export interface AveSettingsSection {
     readonly icon?: AveIconName;
     readonly label: string;

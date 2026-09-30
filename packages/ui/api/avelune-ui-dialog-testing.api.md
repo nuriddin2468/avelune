@@ -10,7 +10,7 @@ import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveConfirmDialogHarness extends ComponentHarness {
     cancel(): Promise<void>;
     confirm(): Promise<void>;
@@ -24,12 +24,12 @@ export class AveConfirmDialogHarness extends ComponentHarness {
     static with(options?: AveConfirmDialogHarnessFilters): HarnessPredicate<AveConfirmDialogHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveConfirmDialogHarnessFilters extends BaseHarnessFilters {
     heading?: string | RegExp;
 }
 
-// @alpha
+// @beta
 export class AveDialogHarness extends ComponentHarness {
     clickBackdrop(): Promise<void>;
     close(): Promise<void>;
@@ -43,19 +43,19 @@ export class AveDialogHarness extends ComponentHarness {
     static with(options?: AveDialogHarnessFilters): HarnessPredicate<AveDialogHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveDialogHarnessFilters extends BaseHarnessFilters {
     heading?: string | RegExp;
 }
 
-// @alpha
+// @beta
 export class AveDrawerHarness extends AveDialogHarness {
     getSide(): Promise<AveDrawerSide>;
     static hostSelector: string;
     static with(options?: AveDrawerHarnessFilters): HarnessPredicate<AveDrawerHarness>;
 }
 
-// @alpha
+// @beta
 export type AveDrawerHarnessFilters = AveDialogHarnessFilters;
 
 // (No @packageDocumentation comment for this package)

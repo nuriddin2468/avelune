@@ -6,7 +6,7 @@
 
 import * as i0 from '@angular/core';
 
-// @alpha
+// @beta
 export class AveFormPage {
     readonly description: i0.InputSignal<string>;
     readonly heading: i0.InputSignal<string>;
@@ -18,7 +18,7 @@ export class AveFormPage {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveFormPage, never>;
 }
 
-// @alpha
+// @beta
 export class AveFormPageActions {
     constructor();
     // (undocumented)
@@ -27,7 +27,7 @@ export class AveFormPageActions {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveFormPageActions, never>;
 }
 
-// @alpha
+// @beta
 export class AveFormPageActionsStart {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<AveFormPageActionsStart, "[aveFormPageActionsStart]", never, {}, {}, never, never, true, never>;

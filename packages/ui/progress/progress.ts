@@ -12,7 +12,7 @@ import type { AveProgressSize, AveProgressVariant } from './types';
  * <progress aveProgress id="upload" [value]="sent()" [max]="size()"></progress>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'progress[aveProgress]',

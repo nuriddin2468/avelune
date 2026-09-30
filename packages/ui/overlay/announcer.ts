@@ -10,7 +10,7 @@ let nextAnnouncer = 0;
  * the dialog announces (a file upload, a searched list) would be silent; the kit's dialogs and its toast region, which
  * moves into an open modal dialog, provide this instead.
  *
- * @alpha
+ * @beta
  */
 export const aveHostAnnouncer: Provider[] = [
   LiveAnnouncer,

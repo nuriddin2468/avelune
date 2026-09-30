@@ -34,7 +34,7 @@ let nextRange = 0;
  * </ave-form-field>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-range-slider',

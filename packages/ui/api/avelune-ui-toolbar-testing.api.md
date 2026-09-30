@@ -8,7 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveToolbarHarness extends ComponentHarness {
     getActiveItem(): Promise<string | null>;
     getDisabledItems(): Promise<string[]>;
@@ -19,7 +19,7 @@ export class AveToolbarHarness extends ComponentHarness {
     static with(options?: AveToolbarHarnessFilters): HarnessPredicate<AveToolbarHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveToolbarHarnessFilters extends BaseHarnessFilters {
     label?: string | RegExp;
 }

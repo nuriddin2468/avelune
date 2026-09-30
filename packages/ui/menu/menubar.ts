@@ -33,7 +33,7 @@ let nextMenubar = 0;
  * <ave-menubar label="Шаблон" [menus]="menus" (itemSelected)="run($event)" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-menubar',

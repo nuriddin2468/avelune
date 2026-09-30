@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters, type TestE
 /**
  * Filters for {@link AveAccordionHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveAccordionHarnessFilters extends BaseHarnessFilters {
   /** Only match accordions that hold an item with this heading, or one that matches this pattern. */
@@ -13,7 +13,7 @@ export interface AveAccordionHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-accordion>` from `@avelune/ui/accordion`: its headings, which are open, and their panels.
  *
- * @alpha
+ * @beta
  */
 export class AveAccordionHarness extends ComponentHarness {
   /** Selector that finds kit accordions. */

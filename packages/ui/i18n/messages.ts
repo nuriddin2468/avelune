@@ -4,7 +4,7 @@ import { InjectionToken, LOCALE_ID, inject, type Provider } from '@angular/core'
  * The words the kit's components show or say themselves (ADR 0047), in the application's locale: uz-Latn, uz-Cyrl,
  * ru or en, chosen by `LOCALE_ID`. Components add their messages here as they arrive.
  *
- * @alpha
+ * @beta
  */
 export interface AveMessages {
   /** A combobox's list when no option matches what was typed. */
@@ -166,7 +166,7 @@ export interface AveMessages {
 /**
  * The kit's messages in English, the fallback for any locale the kit does not know.
  *
- * @alpha
+ * @beta
  */
 export const aveMessagesEn: AveMessages = {
   noResults: 'No results',
@@ -251,7 +251,7 @@ export const aveMessagesEn: AveMessages = {
 /**
  * The kit's messages in Russian.
  *
- * @alpha
+ * @beta
  */
 export const aveMessagesRu: AveMessages = {
   noResults: 'Ничего не найдено',
@@ -338,7 +338,7 @@ export const aveMessagesRu: AveMessages = {
 /**
  * The kit's messages in Uzbek, Latin script.
  *
- * @alpha
+ * @beta
  */
 export const aveMessagesUzLatn: AveMessages = {
   noResults: 'Hech narsa topilmadi',
@@ -423,7 +423,7 @@ export const aveMessagesUzLatn: AveMessages = {
 /**
  * The kit's messages in Uzbek, Cyrillic script.
  *
- * @alpha
+ * @beta
  */
 export const aveMessagesUzCyrl: AveMessages = {
   noResults: 'Ҳеч нарса топилмади',
@@ -509,7 +509,7 @@ export const aveMessagesUzCyrl: AveMessages = {
  * The kit's messages for a locale (a BCP 47 tag): Russian for `ru` and its regions, Uzbek in Cyrillic for
  * `uz-Cyrl`, Uzbek in Latin script for any other `uz`, English otherwise.
  *
- * @alpha
+ * @beta
  */
 export function aveMessagesFor(locale: string): AveMessages {
   const [language = '', ...subtags] = locale.toLowerCase().split(/[-_]/);
@@ -529,7 +529,7 @@ const AVE_MESSAGES = new InjectionToken<Partial<AveMessages>>('AVE_MESSAGES');
  * providers: [provideAveMessages({ noResults: 'Контрагент не найден' })]
  * ```
  *
- * @alpha
+ * @beta
  */
 export function provideAveMessages(messages: Partial<AveMessages>): Provider {
   return { provide: AVE_MESSAGES, useValue: messages };
@@ -539,7 +539,7 @@ export function provideAveMessages(messages: Partial<AveMessages>): Provider {
  * The messages for the caller's injector: the kit's for `LOCALE_ID`, with the nearest `provideAveMessages` over
  * them. Call it in an injection context.
  *
- * @alpha
+ * @beta
  */
 export function injectAveMessages(): AveMessages {
   const own = inject(AVE_MESSAGES, { optional: true }) ?? {};

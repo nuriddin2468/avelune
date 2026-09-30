@@ -4,7 +4,7 @@ import type { AveIconName } from '@avelune/ui/icon';
  * One action of a menu (ADR 0064): the value the menu emits when it is chosen, its words, and optionally an icon (a
  * name registered with `provideAveIcons`), `danger` for a destructive action, and `disabled`.
  *
- * @alpha
+ * @beta
  */
 export interface AveMenuItem<V> {
   /** What `itemSelected` emits when the item is chosen. */
@@ -22,7 +22,7 @@ export interface AveMenuItem<V> {
 /**
  * A line between groups of items.
  *
- * @alpha
+ * @beta
  */
 export interface AveMenuSeparator {
   /** Marks the entry as a separator. */
@@ -32,14 +32,14 @@ export interface AveMenuSeparator {
 /**
  * An entry of a menu: an item, or a separator between groups.
  *
- * @alpha
+ * @beta
  */
 export type AveMenuEntry<V> = AveMenuItem<V> | AveMenuSeparator;
 
 /**
  * One menu of a menubar (ADR 0076): the words of its item in the bar, and its entries.
  *
- * @alpha
+ * @beta
  */
 export interface AveMenubarMenu<V> {
   /** The menu's words in the bar, a noun: "Файл", "Правка", "Вставка". */

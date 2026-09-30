@@ -8,7 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveStepperHarness extends ComponentHarness {
     getCurrent(): Promise<string | null>;
     getLabel(): Promise<string | null>;
@@ -18,12 +18,12 @@ export class AveStepperHarness extends ComponentHarness {
     static with(options?: AveStepperHarnessFilters): HarnessPredicate<AveStepperHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveStepperHarnessFilters extends BaseHarnessFilters {
     label?: string | RegExp;
 }
 
-// @alpha
+// @beta
 export interface AveStepState {
     readonly error: boolean;
     readonly label: string;

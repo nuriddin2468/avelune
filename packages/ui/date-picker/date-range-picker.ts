@@ -48,7 +48,7 @@ type RangeEnd = 'start' | 'end';
  * <ave-date-range-picker [formField]="contract.period" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-date-range-picker',

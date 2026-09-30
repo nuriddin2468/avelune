@@ -15,7 +15,7 @@ import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
  *
  * For a link that looks like a button, use `a[aveButton]`.
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'a[aveLink]',

@@ -6,7 +6,7 @@
 
 import * as _angular_core from '@angular/core';
 
-// @alpha
+// @beta
 export class AveTextarea {
     constructor();
     readonly rows: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -17,7 +17,7 @@ export class AveTextarea {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveTextarea, never>;
 }
 
-// @alpha
+// @beta
 export type AveTextareaSize = 'sm' | 'md' | 'lg';
 
 // (No @packageDocumentation comment for this package)

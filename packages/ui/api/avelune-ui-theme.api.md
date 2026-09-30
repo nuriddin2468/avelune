@@ -35,25 +35,25 @@ export { AveBrandStep }
 
 export { AveBrandTheme }
 
-// @alpha
+// @beta
 export type AveColorScheme = 'light' | 'dark';
 
-// @alpha
+// @beta
 export function aveColorScheme(): Signal<AveColorScheme>;
 
-// @alpha
+// @beta
 export function aveDelayedSpinner(waiting: Signal<boolean>): Signal<boolean>;
 
-// @alpha
+// @beta
 export type AveDensity = 'comfortable' | 'compact';
 
-// @alpha
+// @beta
 export function aveDurationToken(element: Element, name: `--ave-${string}`): number;
 
-// @alpha
+// @beta
 export type AveMotionPreference = 'system' | 'reduced';
 
-// @alpha
+// @beta
 export interface AveOptions {
     readonly brand?: AveBrandInput | null;
     readonly density?: AveDensity;
@@ -62,7 +62,7 @@ export interface AveOptions {
     readonly theme?: AveThemePreference;
 }
 
-// @alpha
+// @beta
 export class AveTheme {
     constructor();
     readonly brand: Signal<AveBrandInput | null>;
@@ -80,10 +80,10 @@ export class AveTheme {
     static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
-// @alpha
+// @beta
 export type AveThemePreference = 'light' | 'dark' | 'system';
 
-// @alpha
+// @beta
 export function provideAvelune(options?: AveOptions): EnvironmentProviders;
 
 // (No @packageDocumentation comment for this package)

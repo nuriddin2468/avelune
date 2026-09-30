@@ -8,10 +8,10 @@ import * as _angular_core from '@angular/core';
 import * as _avelune_ui_i18n from '@avelune/ui/i18n';
 import { InjectionToken } from '@angular/core';
 
-// @alpha
+// @beta
 export const AVE_TAG_FIELD: InjectionToken<true>;
 
-// @alpha
+// @beta
 export class AveTag {
     protected readonly inField: boolean;
     protected keepFocus(event: MouseEvent): void;
@@ -32,7 +32,7 @@ export class AveTag {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveTag, never>;
 }
 
-// @alpha
+// @beta
 export type AveTagSize = 'sm' | 'md';
 
 // (No @packageDocumentation comment for this package)

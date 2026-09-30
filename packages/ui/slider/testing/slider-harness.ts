@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters, type TestE
 /**
  * Filters for {@link AveSliderHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveSliderHarnessFilters extends BaseHarnessFilters {
   /** Only match sliders whose value is written like this (`aria-valuetext`), or matches this pattern. */
@@ -14,7 +14,7 @@ export interface AveSliderHarnessFilters extends BaseHarnessFilters {
  * Harness for `<ave-slider>` from `@avelune/ui/slider`: its native range input and the bounds it writes. The value
  * the field's label row shows is the field's.
  *
- * @alpha
+ * @beta
  */
 export class AveSliderHarness extends ComponentHarness {
   /** Selector that finds kit sliders. */

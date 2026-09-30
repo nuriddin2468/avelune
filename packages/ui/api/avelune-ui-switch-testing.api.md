@@ -8,7 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveSwitchHarness extends ComponentHarness {
     blur(): Promise<void>;
     getLabel(): Promise<string>;
@@ -22,7 +22,7 @@ export class AveSwitchHarness extends ComponentHarness {
     static with(options?: AveSwitchHarnessFilters): HarnessPredicate<AveSwitchHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveSwitchHarnessFilters extends BaseHarnessFilters {
     label?: string | RegExp;
     on?: boolean;

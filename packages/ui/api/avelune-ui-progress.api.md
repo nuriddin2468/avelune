@@ -6,7 +6,7 @@
 
 import * as _angular_core from '@angular/core';
 
-// @alpha
+// @beta
 export class AveProgress {
     readonly size: _angular_core.InputSignal<AveProgressSize>;
     readonly variant: _angular_core.InputSignal<AveProgressVariant>;
@@ -16,10 +16,10 @@ export class AveProgress {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveProgress, never>;
 }
 
-// @alpha
+// @beta
 export type AveProgressSize = 'sm' | 'md';
 
-// @alpha
+// @beta
 export type AveProgressVariant = 'accent' | 'success' | 'danger';
 
 // (No @packageDocumentation comment for this package)

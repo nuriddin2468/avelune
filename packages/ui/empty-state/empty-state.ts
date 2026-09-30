@@ -9,7 +9,7 @@ import { AveIcon, type AveIconName } from '@avelune/ui/icon';
  * <div aveEmptyStateActions><a aveButton variant="primary" routerLink="/contracts/new">Создать договор</a></div>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: '[aveEmptyStateActions]',
@@ -30,7 +30,7 @@ export class AveEmptyStateActions {}
  * </ave-empty-state>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-empty-state',

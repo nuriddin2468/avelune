@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters, type Harne
 /**
  * Filters for {@link AveDialogHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveDialogHarnessFilters extends BaseHarnessFilters {
   /** Only match dialogs whose heading is this string, or matches this pattern. */
@@ -13,7 +13,7 @@ export interface AveDialogHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `dialog[aveDialog]` from `@avelune/ui/dialog`.
  *
- * @alpha
+ * @beta
  */
 export class AveDialogHarness extends ComponentHarness {
   /** Selector that finds kit dialogs. */

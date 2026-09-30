@@ -6,7 +6,7 @@
 
 import * as _angular_core from '@angular/core';
 
-// @alpha
+// @beta
 export class AveSpinner {
     readonly label: _angular_core.InputSignal<string>;
     readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -19,7 +19,7 @@ export class AveSpinner {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveSpinner, never>;
 }
 
-// @alpha
+// @beta
 export type AveSpinnerSize = 'sm' | 'md' | 'lg';
 
 // (No @packageDocumentation comment for this package)

@@ -9,7 +9,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveComboboxHarness extends ComponentHarness {
     blur(): Promise<void>;
     canClear(): Promise<boolean>;
@@ -34,12 +34,12 @@ export class AveComboboxHarness extends ComponentHarness {
     static with(options?: AveComboboxHarnessFilters): HarnessPredicate<AveComboboxHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveComboboxHarnessFilters extends BaseHarnessFilters {
     text?: string | RegExp;
 }
 
-// @alpha
+// @beta
 export class AveMultiselectHarness extends AveSelectHarness {
     getChips(): Promise<string[]>;
     getChosen(): Promise<string[]>;
@@ -53,7 +53,7 @@ export class AveMultiselectHarness extends AveSelectHarness {
     static with(options?: AveSelectHarnessFilters): HarnessPredicate<AveMultiselectHarness>;
 }
 
-// @alpha
+// @beta
 export class AveSelectHarness extends ComponentHarness {
     blur(): Promise<void>;
     canClear(): Promise<boolean>;
@@ -79,7 +79,7 @@ export class AveSelectHarness extends ComponentHarness {
     static with(options?: AveSelectHarnessFilters): HarnessPredicate<AveSelectHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveSelectHarnessFilters extends BaseHarnessFilters {
     text?: string | RegExp;
 }

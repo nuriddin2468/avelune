@@ -14,7 +14,7 @@ import { AVE_LIST } from './token';
  * </ave-list-item>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-list-item',

@@ -8,7 +8,7 @@ import * as _angular_core from '@angular/core';
 import * as _avelune_ui_accordion from '@avelune/ui/accordion';
 import * as i1 from '@angular/aria/accordion';
 
-// @alpha
+// @beta
 export class AveAccordion {
     readonly level: _angular_core.InputSignal<AveAccordionLevel>;
     // (undocumented)
@@ -17,7 +17,7 @@ export class AveAccordion {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveAccordion, never>;
 }
 
-// @alpha
+// @beta
 export class AveAccordionItem {
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly expanded: _angular_core.ModelSignal<boolean>;
@@ -30,7 +30,7 @@ export class AveAccordionItem {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveAccordionItem, never>;
 }
 
-// @alpha
+// @beta
 export type AveAccordionLevel = 2 | 3 | 4 | 5 | 6;
 
 // (No @packageDocumentation comment for this package)

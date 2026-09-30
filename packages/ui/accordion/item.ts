@@ -12,7 +12,7 @@ import { AVE_ACCORDION } from './types';
  * <ave-accordion-item heading="Форс-мажор" [(expanded)]="forceMajeure">…</ave-accordion-item>
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-accordion-item',

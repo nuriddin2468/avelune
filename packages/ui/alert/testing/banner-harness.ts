@@ -5,7 +5,7 @@ import { variantOf } from './alert-harness';
 /**
  * Filters for {@link AveBannerHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveBannerHarnessFilters extends BaseHarnessFilters {
   /** Only match banners of this variant. */
@@ -17,7 +17,7 @@ export interface AveBannerHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-banner>` from `@avelune/ui/alert`.
  *
- * @alpha
+ * @beta
  */
 export class AveBannerHarness extends ComponentHarness {
   /** Selector that finds kit banners. */

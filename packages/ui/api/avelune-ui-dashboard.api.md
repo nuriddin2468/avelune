@@ -6,7 +6,7 @@
 
 import * as i0 from '@angular/core';
 
-// @alpha
+// @beta
 export class AveDashboard {
     readonly description: i0.InputSignal<string>;
     readonly heading: i0.InputSignal<string>;
@@ -17,7 +17,7 @@ export class AveDashboard {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveDashboard, never>;
 }
 
-// @alpha
+// @beta
 export class AveDashboardActions {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<AveDashboardActions, "[aveDashboardActions]", never, {}, {}, never, ["*"], true, never>;
@@ -25,7 +25,7 @@ export class AveDashboardActions {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveDashboardActions, never>;
 }
 
-// @alpha
+// @beta
 export class AveDashboardMetric {
     readonly label: i0.InputSignal<string>;
     readonly note: i0.InputSignal<string>;
@@ -36,7 +36,7 @@ export class AveDashboardMetric {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveDashboardMetric, never>;
 }
 
-// @alpha
+// @beta
 export class AveDashboardWide {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<AveDashboardWide, "[aveDashboardWide]", never, {}, {}, never, ["*"], true, never>;

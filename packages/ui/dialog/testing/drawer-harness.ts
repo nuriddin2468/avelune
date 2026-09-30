@@ -5,14 +5,14 @@ import { AveDialogHarness, type AveDialogHarnessFilters } from './dialog-harness
 /**
  * Filters for {@link AveDrawerHarness}.
  *
- * @alpha
+ * @beta
  */
 export type AveDrawerHarnessFilters = AveDialogHarnessFilters;
 
 /**
  * Harness for `dialog[aveDrawer]` from `@avelune/ui/dialog`: the dialog's harness, and the edge it slides in from.
  *
- * @alpha
+ * @beta
  */
 export class AveDrawerHarness extends AveDialogHarness {
   /** Selector that finds kit drawers. */

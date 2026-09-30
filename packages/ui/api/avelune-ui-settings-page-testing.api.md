@@ -8,7 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveSettingsPageHarness extends ComponentHarness {
     getBackLabel(): Promise<string>;
     getCurrentSection(): Promise<string | null>;
@@ -25,7 +25,7 @@ export class AveSettingsPageHarness extends ComponentHarness {
     static with(options?: AveSettingsPageHarnessFilters): HarnessPredicate<AveSettingsPageHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveSettingsPageHarnessFilters extends BaseHarnessFilters {
     heading?: string | RegExp;
 }

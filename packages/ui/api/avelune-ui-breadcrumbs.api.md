@@ -7,13 +7,13 @@
 import * as _angular_core from '@angular/core';
 import * as _avelune_ui_i18n from '@avelune/ui/i18n';
 
-// @alpha
+// @beta
 export interface AveBreadcrumb {
     readonly label: string;
     readonly link: string | readonly unknown[];
 }
 
-// @alpha
+// @beta
 export class AveBreadcrumbs {
     readonly current: _angular_core.InputSignal<string>;
     readonly items: _angular_core.InputSignal<readonly AveBreadcrumb[]>;

@@ -4,7 +4,7 @@ import { AveSidebarNavHarness } from '@avelune/ui/sidebar-nav/testing';
 /**
  * Filters for {@link AveSettingsPageHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveSettingsPageHarnessFilters extends BaseHarnessFilters {
   /** Only match settings pages whose heading is this string, or matches this pattern. */
@@ -14,7 +14,7 @@ export interface AveSettingsPageHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-settings-page>` from `@avelune/ui/settings-page`.
  *
- * @alpha
+ * @beta
  */
 export class AveSettingsPageHarness extends ComponentHarness {
   /** Selector that finds kit settings pages. */

@@ -8,7 +8,7 @@ import { AveFilterPanelLayout } from '@avelune/ui/filter-panel';
 import { AveFilterPanelState } from '@avelune/ui/filter-panel';
 import * as i0 from '@angular/core';
 
-// @alpha
+// @beta
 export class AveListPage implements AveFilterPanelLayout {
     protected readonly column: i0.Signal<boolean>;
     // @internal
@@ -19,7 +19,7 @@ export class AveListPage implements AveFilterPanelLayout {
     static ɵfac: i0.ɵɵFactoryDeclaration<AveListPage, never>;
 }
 
-// @alpha
+// @beta
 export class AveListPageNotice {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<AveListPageNotice, "[aveListPageNotice]", never, {}, {}, never, never, true, never>;

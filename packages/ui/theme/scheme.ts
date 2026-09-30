@@ -4,7 +4,7 @@ import { DOCUMENT, DestroyRef, Injectable, PLATFORM_ID, computed, inject, signal
 /**
  * The colour theme a page shows: `light` or `dark`.
  *
- * @alpha
+ * @beta
  */
 export type AveColorScheme = 'light' | 'dark';
 
@@ -55,7 +55,7 @@ class ColorSchemeWatcher {
  * private readonly scheme = aveColorScheme();
  * ```
  *
- * @alpha
+ * @beta
  */
 export function aveColorScheme(): Signal<AveColorScheme> {
   return inject(ColorSchemeWatcher).scheme;

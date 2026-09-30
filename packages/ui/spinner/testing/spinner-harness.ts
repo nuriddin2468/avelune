@@ -6,7 +6,7 @@ const SIZES: readonly AveSpinnerSize[] = ['sm', 'md', 'lg'];
 /**
  * Filters for {@link AveSpinnerHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveSpinnerHarnessFilters extends BaseHarnessFilters {
   /** Only match spinners that show, or that wait for their delay or have finished. */
@@ -16,7 +16,7 @@ export interface AveSpinnerHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-spinner>` from `@avelune/ui/spinner`.
  *
- * @alpha
+ * @beta
  */
 export class AveSpinnerHarness extends ComponentHarness {
   /** Selector that finds kit spinners. */

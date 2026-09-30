@@ -45,7 +45,7 @@ interface RejectedFile {
  * <ave-file-upload accept=".pdf,image/*" [maxSize]="20 * 1024 * 1024" [formField]="contract.scan" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-file-upload',

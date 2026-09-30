@@ -3,7 +3,7 @@ import { ComponentHarness, HarnessPredicate, type BaseHarnessFilters } from '@an
 /**
  * Filters for {@link AveBreadcrumbsHarness}.
  *
- * @alpha
+ * @beta
  */
 export interface AveBreadcrumbsHarnessFilters extends BaseHarnessFilters {
   /** Only match trails whose current page is this string, or matches this pattern. */
@@ -13,7 +13,7 @@ export interface AveBreadcrumbsHarnessFilters extends BaseHarnessFilters {
 /**
  * Harness for `<ave-breadcrumbs>` from `@avelune/ui/breadcrumbs`: its links and its current page.
  *
- * @alpha
+ * @beta
  */
 export class AveBreadcrumbsHarness extends ComponentHarness {
   /** Selector that finds kit breadcrumbs. */

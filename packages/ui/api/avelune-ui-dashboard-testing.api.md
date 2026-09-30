@@ -8,7 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @alpha
+// @beta
 export class AveDashboardHarness extends ComponentHarness {
     getColumnCount(): Promise<number>;
     getDescription(): Promise<string>;
@@ -18,18 +18,18 @@ export class AveDashboardHarness extends ComponentHarness {
     static with(options?: AveDashboardHarnessFilters): HarnessPredicate<AveDashboardHarness>;
 }
 
-// @alpha
+// @beta
 export interface AveDashboardHarnessFilters extends BaseHarnessFilters {
     heading?: string | RegExp;
 }
 
-// @alpha
+// @beta
 export class AveDashboardMetricHarness extends ComponentHarness {
     getText(): Promise<AveDashboardMetricText>;
     static hostSelector: string;
 }
 
-// @alpha
+// @beta
 export interface AveDashboardMetricText {
     readonly label: string;
     readonly note: string;

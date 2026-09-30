@@ -43,7 +43,7 @@ import type { AveOption, AveSelectSize } from './types';
  * <ave-combobox [options]="counterparties" [formField]="contract.counterparty" />
  * ```
  *
- * @alpha
+ * @beta
  */
 @Component({
   selector: 'ave-combobox',
