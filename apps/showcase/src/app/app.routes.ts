@@ -38,8 +38,31 @@ export const routes: Routes = [
   },
   {
     path: 'settings',
-    loadComponent: () => import('./settings').then((m) => m.SettingsPage),
+    loadComponent: () => import('./settings').then((m) => m.SettingsScreen),
     title: 'Настройки · Avelune',
+    children: [
+      { path: '', loadComponent: () => import('./settings').then((m) => m.SettingsIndex) },
+      {
+        path: 'profile',
+        loadComponent: () => import('./settings-profile').then((m) => m.ProfileSection),
+        title: 'Профиль · Настройки · Avelune',
+      },
+      {
+        path: 'appearance',
+        loadComponent: () => import('./settings-appearance').then((m) => m.AppearanceSection),
+        title: 'Оформление · Настройки · Avelune',
+      },
+      {
+        path: 'brand',
+        loadComponent: () => import('./settings-brand').then((m) => m.BrandSection),
+        title: 'Бренд организации · Настройки · Avelune',
+      },
+      {
+        path: 'notifications',
+        loadComponent: () => import('./settings-notifications').then((m) => m.NotificationsSection),
+        title: 'Уведомления · Настройки · Avelune',
+      },
+    ],
   },
   { path: '**', redirectTo: '' },
 ];

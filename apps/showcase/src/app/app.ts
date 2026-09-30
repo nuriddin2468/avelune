@@ -1,21 +1,16 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AveBanner } from '@avelune/ui/alert';
-import { AveAppShell, AveAppShellActions, AveAppShellBanner, type AveAppLogo } from '@avelune/ui/app-shell';
+import { AveAppShell, AveAppShellActions, AveAppShellBanner } from '@avelune/ui/app-shell';
 import { AveIconButton } from '@avelune/ui/button';
 import type { AveSidebarEntry } from '@avelune/ui/sidebar-nav';
 import { AveTheme } from '@avelune/ui/theme';
 import { AveTooltip } from '@avelune/ui/tooltip';
+import { Branding } from './branding';
 import { contracts } from './data';
 
 /** The register's expired contracts, which wait for someone to extend or close them: the navigation counts them. */
 const expired = contracts.filter((contract) => contract.status === 'expired').length;
-
-/** The product's mark, the brand's orange with a white A; it reads on both bars, so it has one source. */
-const mark =
-  "<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'>" +
-  "<rect width='32' height='32' rx='8' fill='#E95420'/>" +
-  "<path d='M9 23 16 9l7 14M12 18h8' stroke='#FFFFFF' stroke-width='3' fill='none' stroke-linejoin='round'/></svg>";
 
 /**
  * The showcase shell: the kit's application shell (ADR 0092) with the product's mark and name, the theme and density
@@ -28,7 +23,7 @@ const mark =
     <ave-app-shell
       product="Avelune · Документооборот"
       navigationLabel="Разделы"
-      [logo]="logo"
+      [logo]="logo()"
       [navigation]="pages"
       lang="ru"
     >
@@ -71,8 +66,8 @@ export class App {
   protected readonly dark = computed(() => this.appearance.theme() === 'dark');
   protected readonly compact = computed(() => this.appearance.density() === 'compact');
 
-  /** The product's mark before its name; the name says what it stands for. */
-  protected readonly logo: AveAppLogo = { src: `data:image/svg+xml,${encodeURIComponent(mark)}`, alt: '' };
+  /** The product's mark, or the organisation's logo once the brand settings upload it. */
+  protected readonly logo = inject(Branding).logo;
 
   /** Whether the person closed the maintenance banner; a real application would remember it. */
   protected readonly maintenanceSeen = signal(false);

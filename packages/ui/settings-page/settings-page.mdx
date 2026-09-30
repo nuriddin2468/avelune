@@ -1,0 +1,93 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as SettingsPageStories from './settings-page.stories';
+
+<Meta of={SettingsPageStories} />
+
+# Settings page
+
+`<ave-settings-page>` holds a product's settings: the page's heading, its sections in a column at the start, each a page with its own address, and the section the address names. On a phone the list of sections shows, then a section under a link back to it (ADR 0099).
+
+```ts
+import { AveSettingsPage, type AveSettingsSection } from '@avelune/ui/settings-page';
+```
+
+<Canvas of={SettingsPageStories.Default} />
+
+## When to use
+
+- For a product's settings, the person's and the organisation's: profile, appearance, the organisation's brand, notifications.
+
+## When not to use
+
+- For one record's form: the Form page.
+- For a few settings of one thing, such as a register's columns: a dialog or a popover beside it.
+
+## Anatomy
+
+- The page's `h1` from `heading`, and `description` muted under it ("Изменения сохраняются сразу.").
+- The sections, `sections` as data (`{ label, link, icon }`), drawn by the kit's sidebar navigation in a navigation named by `sectionsLabel` ("Разделы настроек"). The current one follows the address.
+- The section, the application's `<router-outlet>` as the page's content, with its own `h2`.
+- From `container.md` the sections stand in a 256px column at the start, the section beside it, 24px apart.
+- Below it, at `home` (`/settings`) the list shows; at a section's address the section shows under a ghost link back to `home` ("Все настройки", or `backLabel`).
+
+```html
+<ave-settings-page
+  heading="Настройки"
+  description="Изменения сохраняются сразу."
+  home="/settings"
+  [sections]="sections"
+>
+  <router-outlet />
+</ave-settings-page>
+```
+
+```ts
+const routes: Routes = [
+  {
+    path: 'settings',
+    component: SettingsScreen,
+    children: [
+      { path: '', component: SettingsIndex }, // nothing of its own: the list on a phone
+      { path: 'profile', loadComponent: () => import('./profile').then((m) => m.ProfileSection) },
+      { path: 'brand', loadComponent: () => import('./brand').then((m) => m.BrandSection) },
+    ],
+  },
+];
+```
+
+## Addresses
+
+Each section is a route of the application. The settings' own address, `home`, has an empty child: on a phone it shows the list. From `container.md` the page opens the first section there, replacing the address, so the column never stands beside nothing. Don't redirect `home` in the routes, or a phone never shows the list.
+
+The "Section on a phone" and "Long text" stories show the narrow page and long Uzbek names, each on its own page, since every story draws the same navigation.
+
+## Content
+
+- Name a section by what it holds: "Оформление", "Бренд организации".
+- Settings that take effect at once say so in `description`, and a section's changes need no Save button. A section that must be saved is a form with its own actions.
+- Four to eight sections; group more under a few names.
+
+## Keyboard
+
+The page adds no keys of its own. On a narrow page:
+
+| When                         | Focus                                      |
+| ---------------------------- | ------------------------------------------ |
+| A section's link is followed | Moves to "Все настройки", over the section |
+| "Все настройки" is followed  | Returns to the section's link in the list  |
+
+## Accessibility
+
+- One `h1`, the page's; each section's heading is an `h2`.
+- The sections are a navigation named "Разделы настроек", its current link `aria-current="page"`; it differs from the product's own navigation.
+- The part that does not show is `display: none`; focus follows the part that shows (WCAG 2.4.3).
+
+## Motion
+
+None: the parts change with the address.
+
+## Do and don't
+
+- Do give every section its own address, so people can bookmark and share it.
+- Do put the organisation's brand in a section of its own, with its preview (ADR 0089).
+- Don't use tabs for the sections: tabs never change the address.

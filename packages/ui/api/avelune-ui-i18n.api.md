@@ -34,6 +34,7 @@ export interface AveMessages {
     readonly alertInfo: string;
     readonly alertSuccess: string;
     readonly alertWarning: string;
+    readonly allSettings: string;
     readonly appliedFilters: string;
     readonly backToList: string;
     readonly breadcrumbs: string;
@@ -99,6 +100,7 @@ export interface AveMessages {
     readonly retryWithEnter: string;
     readonly selectPage: string;
     readonly selectRow: string;
+    readonly settingsSections: string;
     readonly showResults: string;
     readonly skipToContent: string;
     readonly stepComplete: string;

@@ -1,0 +1,17 @@
+/* The appearance section: its groups of choices, 24px apart. Tokens only. */
+@layer app {
+  :host {
+    display: block;
+  }
+
+  .section {
+    display: grid;
+    gap: var(--ave-space-6);
+    max-inline-size: var(--ave-container-md);
+  }
+
+  .title {
+    margin: 0;
+    font: var(--ave-font-heading-md);
+  }
+}

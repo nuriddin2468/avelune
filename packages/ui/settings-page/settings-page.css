@@ -1,0 +1,63 @@
+@layer patterns {
+  /* A product's settings (ADR 0099): the heading over the sections and the section, 24px apart. */
+  :host {
+    display: grid;
+    gap: var(--ave-space-6);
+    min-inline-size: 0;
+    container-type: inline-size;
+  }
+
+  .header {
+    display: grid;
+    gap: var(--ave-space-1);
+  }
+
+  .heading {
+    margin: 0;
+    font: var(--ave-font-heading-xl);
+  }
+
+  .description {
+    margin: 0;
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-md);
+  }
+
+  .body {
+    display: grid;
+    align-items: start;
+    gap: var(--ave-space-6);
+    min-inline-size: 0;
+  }
+
+  .sections,
+  .section {
+    display: grid;
+    gap: var(--ave-space-4);
+    min-inline-size: 0;
+  }
+
+  /* The way back sits at the section's start, as wide as its words. */
+  .section > a[aveButton] {
+    justify-self: start;
+  }
+
+  /* Below container.md one part shows: the list at the settings' own address, a section at its own. */
+  @container (inline-size < 640px) {
+    :host([data-view='sections']) .section,
+    :host([data-view='section']) .sections {
+      display: none;
+    }
+  }
+
+  /* From container.md the sections stand in a 256px column at the start; the way back goes. */
+  @container (inline-size >= 640px) {
+    .body {
+      grid-template-columns: calc(var(--ave-space-16) * 4) minmax(0, 1fr);
+    }
+
+    .section > a[aveButton] {
+      display: none;
+    }
+  }
+}

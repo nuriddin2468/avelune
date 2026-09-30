@@ -157,6 +157,10 @@ export interface AveMessages {
   readonly appliedFilters: string;
   /** The button over a record on a narrow list–detail page that goes back to the list (ADR 0096). */
   readonly backToList: string;
+  /** Names the navigation of a settings page's sections (ADR 0099). */
+  readonly settingsSections: string;
+  /** The link over a settings section on a narrow page that goes back to the list of sections. */
+  readonly allSettings: string;
 }
 
 /**
@@ -240,6 +244,8 @@ export const aveMessagesEn: AveMessages = {
   showResults: 'Show results',
   appliedFilters: 'Applied filters',
   backToList: 'Back to the list',
+  settingsSections: 'Settings sections',
+  allSettings: 'All settings',
 };
 
 /**
@@ -325,6 +331,8 @@ export const aveMessagesRu: AveMessages = {
   showResults: 'Показать результаты',
   appliedFilters: 'Применённые фильтры',
   backToList: 'Назад к списку',
+  settingsSections: 'Разделы настроек',
+  allSettings: 'Все настройки',
 };
 
 /**
@@ -408,6 +416,8 @@ export const aveMessagesUzLatn: AveMessages = {
   showResults: 'Natijalarni koʻrsatish',
   appliedFilters: 'Qoʻllangan filtrlar',
   backToList: 'Roʻyxatga qaytish',
+  settingsSections: 'Sozlamalar boʻlimlari',
+  allSettings: 'Barcha sozlamalar',
 };
 
 /**
@@ -491,6 +501,8 @@ export const aveMessagesUzCyrl: AveMessages = {
   showResults: 'Натижаларни кўрсатиш',
   appliedFilters: 'Қўлланган фильтрлар',
   backToList: 'Рўйхатга қайтиш',
+  settingsSections: 'Созламалар бўлимлари',
+  allSettings: 'Барча созламалар',
 };
 
 /**

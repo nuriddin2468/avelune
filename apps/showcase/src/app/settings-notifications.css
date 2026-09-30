@@ -1,29 +1,18 @@
-/* The settings screen: the page's heading over a card of settings. Tokens only. */
+/* The notifications section: its switches, its hours and its status, 24px apart. Tokens only. */
 @layer app {
   :host {
     display: block;
   }
 
-  /* The page's heading over its cards, as wide as a form. */
-  .page {
+  .section {
     display: grid;
     gap: var(--ave-space-6);
     max-inline-size: var(--ave-container-md);
-    margin-inline: auto;
-  }
-
-  .header {
-    display: grid;
-    gap: var(--ave-space-1);
   }
 
   .title {
-    font: var(--ave-font-heading-xl);
-  }
-
-  .note {
-    color: var(--ave-color-fg-muted);
-    font: var(--ave-font-body-sm);
+    margin: 0;
+    font: var(--ave-font-heading-md);
   }
 
   /* One setting per line, 16px apart. */
@@ -44,6 +33,7 @@
     align-items: center;
     gap: var(--ave-space-2);
     min-block-size: var(--ave-font-body-md-line-height);
+    margin: 0;
     color: var(--ave-color-success-fg);
     font: var(--ave-font-body-md);
   }

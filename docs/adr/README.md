@@ -104,6 +104,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0096](0096-list-detail.md) | ListDetail: a list beside the record it opens, or one of them at a time on a narrow page | Accepted |
 | [0097](0097-form-page.md) | FormPage: the application's form with its heading, and its actions in a bar that sticks to the window's bottom | Accepted |
 | [0098](0098-dashboard.md) | Dashboard: a page's heading, a row of key figures, and cards in up to three columns | Accepted |
+| [0099](0099-settings-page.md) | SettingsPage: sections as pages in a column at the start, or the list and then a section on a phone | Accepted |
 
 ## Template
 

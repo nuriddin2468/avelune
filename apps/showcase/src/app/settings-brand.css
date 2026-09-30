@@ -1,0 +1,105 @@
+/* The brand section: its fields, the preview in both themes side by side, and what was adapted. Tokens only. */
+@layer app {
+  :host {
+    display: block;
+  }
+
+  .section {
+    display: grid;
+    gap: var(--ave-space-6);
+    max-inline-size: var(--ave-container-lg);
+  }
+
+  .intro {
+    display: grid;
+    gap: var(--ave-space-1);
+    max-inline-size: var(--ave-container-md);
+  }
+
+  .title {
+    margin: 0;
+    font: var(--ave-font-heading-md);
+  }
+
+  .subtitle {
+    margin: 0;
+    font: var(--ave-font-heading-sm);
+  }
+
+  .muted {
+    margin: 0;
+    color: var(--ave-color-fg-muted);
+  }
+
+  .fields {
+    display: grid;
+    gap: var(--ave-space-4);
+    max-inline-size: var(--ave-container-sm);
+  }
+
+  .preview-section {
+    display: grid;
+    gap: var(--ave-space-3);
+  }
+
+  /* The two themes side by side where they fit, one under the other on a phone. */
+  .previews {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--ave-container-xs)), 1fr));
+    gap: var(--ave-space-4);
+  }
+
+  /* Each theme as the bar and a piece of a page would show it. */
+  .preview {
+    display: grid;
+    overflow: hidden;
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: var(--ave-space-3);
+    padding: var(--ave-space-2) var(--ave-space-4);
+    border-block-end: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    background-color: var(--ave-color-bg-surface);
+  }
+
+  .logo {
+    display: block;
+    max-inline-size: calc(var(--ave-size-control-sm) * 5);
+    block-size: var(--ave-size-control-sm);
+    object-fit: contain;
+  }
+
+  .product {
+    font: var(--ave-font-label-md);
+  }
+
+  .sample {
+    display: grid;
+    gap: var(--ave-space-3);
+    padding: var(--ave-space-4);
+  }
+
+  .sample p {
+    margin: 0;
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ave-space-2);
+  }
+
+  .notes {
+    margin: 0;
+    padding-inline-start: var(--ave-space-5);
+  }
+
+  .actions {
+    display: flex;
+  }
+}
