@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { AveButton } from '@avelune/ui/button';
 import { AveSpinner, type AveSpinnerSize } from '@avelune/ui/spinner';
+import { aveDurationToken } from '@avelune/ui/theme';
 
 type View = 'default' | 'sizes' | 'context';
 
@@ -146,11 +147,18 @@ export const Delay: Story = {
     const canvas = within(canvasElement);
     const spinner = canvasElement.querySelector('ave-spinner');
     const box = spinner?.getBoundingClientRect();
+    const delay = spinner === null ? 0 : aveDurationToken(spinner, '--ave-timing-spinner-delay');
+    // A wait the page has seen end within the delay never shows the spinner. On a loaded CPU (the visual suite's
+    // emulated amd64) the end can reach the page later than that, and then the spinner rightly shows; it hides again
+    // before the slow search.
+    let started = performance.now();
     await userEvent.click(canvas.getByRole('button', { name: 'Quick search' }));
     await expect(await canvas.findByText('Found 12 documents.')).toBeVisible();
-    await expect(spinner).not.toHaveAttribute('data-shown');
+    if (performance.now() - started < delay) await expect(spinner).not.toHaveAttribute('data-shown');
+    await waitFor(() => expect(spinner).not.toHaveAttribute('data-shown'), { timeout: 3000 });
+    started = performance.now();
     await userEvent.click(canvas.getByRole('button', { name: 'Slow search' }));
-    await expect(spinner).not.toHaveAttribute('data-shown');
+    if (performance.now() - started < delay) await expect(spinner).not.toHaveAttribute('data-shown');
     await waitFor(() => expect(canvas.getByRole('progressbar', { name: 'Searching' })).toBeVisible(), {
       timeout: 2000,
     });

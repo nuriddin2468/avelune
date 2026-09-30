@@ -1,7 +1,7 @@
 // Opening a story or a docs page the way every visual test does (ADR 0027): in Storybook's iframe, with the theme
-// global set and the fixed clock, failing on anything that went wrong while it rendered.
+// global set and the fixed date, failing on anything that went wrong while it rendered.
 import type { Page } from '@playwright/test';
-import { fixedTime } from './environment.ts';
+import { fixDate } from './environment.ts';
 
 export type Theme = 'light' | 'dark';
 type Phase = 'finished' | 'errored';
@@ -20,7 +20,7 @@ async function openCollectingErrors(page: Page, url: string): Promise<string[]> 
     if (message.type() === 'error') errors.push(message.text());
   });
   page.on('pageerror', (error) => errors.push(error.message));
-  await page.clock.setFixedTime(fixedTime);
+  await fixDate(page);
   await page.goto(url);
   return errors;
 }

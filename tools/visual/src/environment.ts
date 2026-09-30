@@ -56,6 +56,30 @@ export const fixedEnvironment = {
 /** The instant `Date.now()` returns in every page, so rendered dates never change (ADR 0010). */
 export const fixedTime = new Date('2026-03-21T10:00:00+05:00');
 
+/**
+ * Makes `new Date()` and `Date.now()` return `fixedTime` in every document the page opens, and changes nothing else.
+ *
+ * Not `page.clock.setFixedTime()`: it hands every timer and animation frame to Playwright's clock, which sets a timer
+ * from a count that lags behind real time after a long task and then fires it early. Under amd64 emulation a play
+ * function's one-second `waitFor` failed a tenth of a second after it started (ADR 0027, addendum of 2026-09-30).
+ */
+export async function fixDate(page: Page): Promise<void> {
+  await page.addInitScript((time: number) => {
+    const NativeDate = Date;
+    // A date made with arguments, `Date.parse` and `Date.UTC` stay native; a subclass still constructs itself.
+    const FixedDate = new Proxy(NativeDate, {
+      construct: (target, args: unknown[], newTarget: new () => Date): Date => {
+        const date: unknown = Reflect.construct(target, args.length === 0 ? [time] : args, newTarget);
+        if (!(date instanceof NativeDate)) throw new TypeError('Date did not construct a date');
+        return date;
+      },
+      apply: (): string => new NativeDate(time).toString(),
+      get: (target, key, receiver): unknown => (key === 'now' ? () => time : Reflect.get(target, key, receiver)),
+    });
+    Reflect.set(globalThis, 'Date', FixedDate);
+  }, fixedTime.getTime());
+}
+
 /** The Playwright webServer entry that serves a built site from the workspace inside the container. */
 export function staticServer(options: {
   readonly port: number;

@@ -2,6 +2,7 @@
 // environment of ADR 0010. Imported as @avelune/visual.
 export {
   expectKitFonts,
+  fixDate,
   fixedEnvironment,
   fixedTime,
   requireContainer,
