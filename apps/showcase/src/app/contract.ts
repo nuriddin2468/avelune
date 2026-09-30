@@ -1,5 +1,4 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
-import type { ResolveFn } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import {
   lucideArchive,
@@ -29,18 +28,8 @@ import { AveList, AveListItem } from '@avelune/ui/list';
 import { aveDateFormat, aveNumberFormat } from '@avelune/ui/i18n';
 import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
 import { AveMenu, type AveMenuEntry } from '@avelune/ui/menu';
-import { contractStatusVariants, contractStatuses, contracts, type ContractRecord } from './data';
-
-/** The contract a route's `:id` names, if the register holds it. */
-function contractOf(id: string | undefined): ContractRecord | undefined {
-  return contracts.find((contract) => String(contract.id) === id);
-}
-
-/** The page's title: the contract's number, or that it was not found. */
-export const contractTitle: ResolveFn<string> = (route) => {
-  const contract = contractOf(route.paramMap.get('id') ?? undefined);
-  return `${contract === undefined ? 'Договор не найден' : `Договор ${contract.number}`} · Avelune`;
-};
+import { contractOf } from './contract-title';
+import { contractStatusVariants, contractStatuses, type ContractRecord } from './data';
 
 /**
  * A contract's own page, under the register: where it is in the product, its subject, a toolbar of its actions, and
