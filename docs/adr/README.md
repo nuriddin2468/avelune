@@ -22,7 +22,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0014](0014-browser-floor-follows-angular.md) | Browser floor follows Angular's supported set | Accepted |
 | [0015](0015-node-scripts-typescript-node-test.md) | Repository scripts in TypeScript, run by Node; `node:test` | Accepted; resolution exception in addendum (0022); schematics tests in addendum (0029) |
 | [0016](0016-token-sources-and-tier-rules.md) | Token sources: files, tier rules, literal values | Accepted |
-| [0017](0017-token-build-output.md) | Token build output: px, one CSS file with mode blocks, typed TS | Accepted |
+| [0017](0017-token-build-output.md) | Token build output: px, one CSS file with mode blocks, typed TS | Accepted; "consumers are not meant to override tokens" replaced for colour by 0089 |
 | [0018](0018-fonts-subset-rename-fallback.md) | Fonts: IBM Plex Sans subsets, renamed "Avelune Sans", metric-matched fallback | Accepted |
 | [0019](0019-accent-exact-brand-dark-text.md) | Accent fill: the exact brand colour with dark text | Superseded by 0021 |
 | [0020](0020-icons-lucide.md) | Icons: Lucide | Accepted |
@@ -94,6 +94,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0086](0086-list.md) | List: records on one surface between lines, and rows that fade and open as they come and go | Accepted |
 | [0087](0087-data-table.md) | DataTable: columns as data, header buttons that sort, checkboxes that choose, a page size in the pagination | Accepted |
 | [0088](0088-font-check-without-white-space.md) | The visual suite's font check leaves white space out of the text it checks | Accepted |
+| [0089](0089-brand-themes.md) | Brand themes: a product's accent at build time, a tenant's at runtime, one generator | Accepted |
 
 ## Template
 

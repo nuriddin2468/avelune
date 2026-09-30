@@ -1,6 +1,6 @@
 # 0017. Token build output: px, one CSS file with mode blocks, typed TS
 
-- Status: Accepted (2026-09-23, technical decision within Phase 2)
+- Status: Accepted (2026-09-23, technical decision within Phase 2); "consumers are not meant to override tokens" replaced for colour by [0089](0089-brand-themes.md)
 - Date: 2026-09-23
 - Related: 0003, 0004, 0016
 

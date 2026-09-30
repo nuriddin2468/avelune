@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below that is not marked **Deferred**, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 5, Wave 5 (data) built and its visual suite run (2026-09-30): Badge and Count, Tag, the Multiselect's tags, Avatar, Card, Accordion, Tree, List and DataTable, one commit each with its ADR, then the wave's visual suite with its review's fixes ("Wave 5" and "Wave 5 baselines" below). **STOP:** the product owner reviews the wave, or passes its STOP, and says whether to continue in this session or a fresh one; Wave 6 (patterns) is next. The wave's components are experimental until its visual review. The visual reviews of brief §8.1 for Waves 2, 3 and 4, which the product owner starts, are still open. Wave 1 is closed: the product owner approved it on 2026-09-25 without the showcase review of its STOP. The release age is 16 hours since 2026-09-25 (ADR 0042). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-25.
+**Current position:** Phase 5, Wave 5 (data) built and its visual suite run (2026-09-30): Badge and Count, Tag, the Multiselect's tags, Avatar, Card, Accordion, Tree, List and DataTable, one commit each with its ADR, then the wave's visual suite with its review's fixes ("Wave 5" and "Wave 5 baselines" below). **STOP:** the product owner reviews the wave, or passes its STOP, and says whether to continue in this session or a fresh one; Wave 6 (patterns) is next, and the product owner has already decided two of its items: brand themes (ADR 0089) and Storybook MCP ("Wave 6 decisions" below). The wave's components are experimental until its visual review. The visual reviews of brief §8.1 for Waves 2, 3 and 4, which the product owner starts, are still open. Wave 1 is closed: the product owner approved it on 2026-09-25 without the showcase review of its STOP. The release age is 16 hours since 2026-09-25 (ADR 0042). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-25.
 
 ## Parameters
 
@@ -14,8 +14,8 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 | npm scope | `@avelune` |
 | Selector prefix | `ave` (`button[aveButton]`, `<ave-form-field>`) |
 | CSS variable prefix | `--ave-` (ADR 0003) |
-| Consumers | internal work systems (product names not given yet) |
-| Brand accent | Ubuntu orange `#E95420`, kept exact as `color.brand.mark`; the accent fill is orange 600 `#b53700` with white text in light and orange 400 with dark text in dark (ADR 0011, 0021; product owner, 2026-09-23); one accent, no separate "suggested action" colour |
+| Consumers | internal work systems (product names not given yet); each product has its own brand colour, and their end customers (tenants) set a brand colour and a logo in the running system (product owner, 2026-09-30; ADR 0089) |
+| Brand accent | Ubuntu orange `#E95420`, kept exact as `color.brand.mark`; the accent fill is orange 600 `#b53700` with white text in light and orange 400 with dark text in dark (ADR 0011, 0021; product owner, 2026-09-23); one accent, no separate "suggested action" colour. The kit's default: a product or a tenant chooses another through the brand generator (ADR 0089) |
 | Font | IBM Plex Sans (coverage verified, [compatibility.md](compatibility.md) §4); shipped as "Avelune Sans" for the OFL Reserved Font Name (ADR 0018). Code: IBM Plex Mono as "Avelune Mono" (product owner, 2026-09-23) |
 | Icons | Lucide, outline (ADR 0020; choice delegated to the agent by the product owner, 2026-09-23) |
 | Base text | 14/20 (dense work UI) |
@@ -26,7 +26,7 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 | Registry | none yet (publish job disabled) |
 | Licence | `UNLICENSED` (proprietary, internal), for now; revisit before the first publish (product owner, 2026-09-23) |
 | Browsers | `Chrome >= 119, Edge >= 119, Firefox >= 129, Safari >= 17.5, iOS >= 17.5` (ADR 0014; changed 2026-09-23 from Chrome/Edge 117, product owner) |
-| Design source | none; visual direction "inspired by Ubuntu" ([audit.md](audit.md)) |
+| Design source | none; visual direction "inspired by Ubuntu" ([audit.md](audit.md)); consumer teams have no designers in Figma, so there is no Figma library (product owner, 2026-09-30) |
 | Existing repos | none |
 | CI | local only for now; `.gitlab-ci.yml` prepared; GitLab edition unknown, so code-owner approval is a documented rule |
 | CI runner architecture | amd64 (ADR 0010) |
@@ -175,6 +175,9 @@ Wave 2 build (2026-09-25), before the product owner's corrections and the wave's
 - [ ] `tools/adoption-metrics` (JSON + CI summary)
 - [ ] `docs/consumers/migration.md`, `docs/consumers/AGENTS.snippet.md`
 - [ ] Pilot in the showcase as a consumer; then one real consumer when access is given
+- [ ] A product's brand at build time: `ng add` wires the product's preset or colour into a stylesheet from the brand generator (ADR 0089, decision 6)
+- [ ] Consumer agents get the kit's API from the Storybook MCP docs toolset hosted inside the company (`@storybook/mcp` serving the built Storybook's manifest), named in `AGENTS.snippet.md`; needs a host (product owner). It takes the place of a Figma library (product owner, 2026-09-30: no designers in Figma)
+- [ ] Token names as a versioned public API: a token report beside the API reports; DTCG `$deprecated` with a replacement in `$extensions.avelune` (Style Dictionary 5.5.5 does not handle `$deprecated`), a deprecated name kept as an alias for one minor; a rule in `@avelune/stylelint-config` that flags unknown, deprecated and primitive `--ave-*` names (with an autofix) and any `--ave-*` declaration (ADR 0089); an `ng update` migration for each rename; a check that a removed token is listed
 
 ### Phase 7: Final audit
 - [ ] Clean-clone full pipeline; `docs/audit-final.md`; skeptical-designer review of every story
@@ -282,6 +285,10 @@ Wave 5 (2026-09-29), built in one day after the product owner's four looks; ever
 
 Wave 5 baselines (2026-09-30), the wave's visual suite, run after its last component (product owner, 2026-09-29): `pnpm visual:update`, 24 of 1161 checks failing on the nine findings above; the affected stories again after each round of fixes (193, then 73 passed); every new and changed image inspected (each story's four projects and forced colours side by side, changed ones against their previous baseline with a pixel diff); then the full suite in compare mode, 1161 passed in 23.7 minutes. 153 new baselines for the wave's 36 stories, nine of them in forced colours. 46 changed, each for a change of this wave: the Multiselect's seven stories (tags in the field, ADR 0081), the SidebarNav's two (the count on the contracts' row, ADR 0079) and the Foundations Motion catalog and playground (the list item's entry and the `timing.expand` token). `invariants:e2e`: 28 passed (the departments page and the register as a table among the screens); `test-check:e2e`: 19 passed. `ui:test`: 446 tests; `storybook:test`: 256.
 
+Wave 6 decisions (product owner, 2026-09-30, before the wave starts):
+- **Brand themes** (ADR 0089): a tenant changes the brand colour and the logo only; presets and an own colour; a colour that fails contrast is adapted and the change shown; one generator, `@avelune/tokens/brand`, built in this wave with the showcase SettingsPage's branding screen. The presets and the danger-distance thresholds are the agent's, for the product owner's taste at the wave's review.
+- **Storybook MCP**, first in the wave so the wave's own agents use it: a spike that turns on `features.componentsManifest` and reads how the manifest shows attribute directives (`button[aveButton]`), element components and their JSDoc, with the `angular-vite` patch (ADR 0035) and JIT stories (ADR 0025); then an ADR; then `@storybook/addon-mcp` 10.6.0 (peers `storybook ^10.6.0`, our pin; checked on the registry 2026-09-30) in `.mcp.json`, and a check in `tools` that the manifest holds every component and every public input. Storybook calls its AI features a preview and its manifest not a public API, so nothing heavy is built on it. Hosting it for consumers is Phase 6.
+
 ## Component waves
 
 | Wave | Components | Gate |
@@ -291,7 +298,7 @@ Wave 5 baselines (2026-09-30), the wave's visual suite, run after its last compo
 | 3 Overlays & feedback | Dialog, ConfirmDialog, Drawer, Popover, Tooltip, Menu, Toast, Alert, Banner, Progress, Spinner, Skeleton, EmptyState | **STOP:** passed 2026-09-29 (product owner started Wave 4) |
 | 4 Navigation | Tabs, Breadcrumbs, Pagination, SidebarNav, Menubar, Toolbar, Stepper, Link | **STOP:** passed 2026-09-29 (product owner started Wave 5) |
 | 5 Data | Badge, Tag, Avatar, Card, Accordion, Tree, List, DataTable (base first: ADR 0078, a native table, pages) | **STOP:** built and its visual suite run (2026-09-30); waiting for the product owner |
-| 6 Patterns | ListPage, ListDetail, FormPage, Dashboard, FilterPanel, SearchHeader, SettingsPage | STOP + summary |
+| 6 Patterns | ListPage, ListDetail, FormPage, Dashboard, FilterPanel, SearchHeader, SettingsPage; brand themes (ADR 0089) and Storybook MCP ("Wave 6 decisions") | STOP + summary |
 
 ## Component status
 
@@ -409,6 +416,7 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 | Vitest 5 | `@angular/build` 22.2 peers it; waits for `@storybook/addon-vitest` and `@nx/vitest`, which peer `^3 \|\| ^4` (re-checked 2026-09-25; ADR 0013) |
 | angular-eslint 22.5.1 (the next stable after 22.5.0) | It contains the fix for [#3198](https://github.com/angular-eslint/angular-eslint/issues/3198). Upgrade with the release-age rule (16 hours, ADR 0042), run `lint-rules:test`, update compatibility.md; the `context.valueOf` comments in the specs may then go |
 | Storybook 11 | `angular-vite` stable; drop the `@angular/animations` devDependency (ADR 0008); check whether AOT builds keep `@angular/compiler`, and return to `jit: false` if so (ADR 0025); re-check the themed docs container and its `react` version (ADR 0034); drop or re-create the `angular-vite` patch (ADR 0035) |
+| Storybook 10.6.1 with `@storybook/addon-mcp` 10.6.1 | Both published 2026-09-29; addon-mcp 10.6.1 peers `storybook ^10.6.1`. Upgrade every Storybook package together with the release-age rule (ADR 0042), re-create the `angular-vite` patch for 10.6.1 or drop it if fixed (ADR 0035), update compatibility.md |
 | pnpm 12 | Nx lists support (ADR 0012) |
 | TypeScript 7 | Angular supports it |
 | API Extractor with TS 6 | rushstack PR #5841 released |
@@ -427,4 +435,4 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 - A native mobile kit.
 - An SSR test matrix. The kit must not break SSR (no DOM access outside browser-only hooks), but SSR is not tested until a consumer needs it.
 - A high-contrast theme beyond `forced-colors` support.
-- A Figma library (no design source).
+- A Figma library: no design source, and consumer teams have no designers in Figma (product owner, 2026-09-30). If designers join, the Figma MCP server with Code Connect templates (Organization plan and above) would give their agents the kit's components; that needs a new decision.
