@@ -2,7 +2,7 @@
 
 This file is both the plan and the progress tracker. A fresh session resumes from here: read [AGENTS.md](../AGENTS.md), find the first unchecked item below that is not marked **Deferred**, then read the matching sections of the original brief ([BRIEF.md](BRIEF.md)) and the ADRs that touch that area.
 
-**Current position:** Phase 5 closed (2026-09-30): the product owner passed Wave 6's STOP and closed Waves 1 to 6, with every component and pattern in beta ("Wave 6 STOP" below). After the STOP, one commit each: the drawer's slide from the inline end (ADR 0067, addendum), the input mask (ADR 0100), and the move to beta. **Next:** Phase 6 (consumer integration), its first unchecked item. Open from Phase 5, at the start of the first session with Docker running: the mask's visual baselines (`pnpm visual:update --grep=components-mask`, every image inspected), then the full visual suite in compare mode, `invariants:e2e` and `test-check:e2e`. Until then `pnpm visual` fails on the mask's six missing baselines. The product owner closed the waves without that run (2026-09-30); Docker was not running.
+**Current position:** Phase 5 closed (2026-09-30): the product owner passed Wave 6's STOP and closed Waves 1 to 6, with every component and pattern in beta ("Wave 6 STOP" below). After the STOP, one commit each: the drawer's slide from the inline end (ADR 0067, addendum), the input mask (ADR 0100), and the move to beta. **Next:** Phase 6 (consumer integration), its first unchecked item, in a fresh session (product owner, 2026-09-30). The repository's remote is GitHub now ("Parameters"), so Phase 3's deferred CI item can be planned for GitHub Actions, in an ADR over the prepared `.gitlab-ci.yml`.
 
 Every check without Docker passed on 2026-09-30 after the mask and the move to beta: 505 unit tests, 295 story tests, lint, types, Stylelint, the API reports, the size budgets and the components manifest (89 components and directives, a snippet for each of the kit's 285 stories). Before the mask, the full visual suite passed in compare mode (1316 checks), `invariants:e2e` (28, on 11 screens) and `test-check:e2e` (19). The release age is 16 hours since 2026-09-25 (ADR 0042). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-25.
 
@@ -13,6 +13,7 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 | Parameter | Value |
 |---|---|
 | Kit name | Avelune |
+| Product name | `avelune-ui` (product owner, 2026-09-30, naming the product) |
 | npm scope | `@avelune` |
 | Selector prefix | `ave` (`button[aveButton]`, `<ave-form-field>`) |
 | CSS variable prefix | `--ave-` (ADR 0003) |
@@ -30,7 +31,8 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 | Browsers | `Chrome >= 119, Edge >= 119, Firefox >= 129, Safari >= 17.5, iOS >= 17.5` (ADR 0014; changed 2026-09-23 from Chrome/Edge 117, product owner) |
 | Design source | none; visual direction "inspired by Ubuntu" ([audit.md](audit.md)); consumer teams have no designers in Figma, so there is no Figma library (product owner, 2026-09-30) |
 | Existing repos | none |
-| CI | local only for now; `.gitlab-ci.yml` prepared; GitLab edition unknown, so code-owner approval is a documented rule |
+| Repository | GitHub: https://github.com/nuriddin2468/avelune (product owner, 2026-09-30); nothing pushed yet |
+| CI | local only for now; `.gitlab-ci.yml` prepared before the remote was known to be GitHub; code-owner approval is a documented rule |
 | CI runner architecture | amd64 (ADR 0010) |
 
 ## Phases
@@ -485,6 +487,7 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 | Testing Library's `userEvent.click` in a story's `play` function focuses by script, which Chromium shows as `:focus-visible`: a baseline draws a ring no person's click would (the Menubar stories, 2026-09-29) | a story that opens something for its baseline opens it from the keyboard, where the ring is right; a real pointer only in the visual review's script | 0027 |
 | The showcase's initial bundle was 853 kB, over its 500 kB warning and under its 1 MB error (2026-09-29): every screen loaded eagerly; 940 kB after Wave 5 | resolved in Wave 6 (2026-09-30): every screen is a lazy route (`loadComponent`), and the contract page's title resolver lives apart from the page; initial 456 kB (117 kB transferred); `invariants:e2e` 28 passed | |
 | CDK 22.2's `LiveAnnouncer` adds `cdk-visually-hidden` to its live element but loads that class's styles only through `cdkAriaLive` or the focus trap, so an announcement from the service alone shows on the page (2026-09-25); not reported upstream yet | FileUpload loads them itself with `_CdkPrivateStyleLoader` and `_VisuallyHiddenLoader` from `@angular/cdk/private`, and its spec and story check that the live element is 1px wide; drop that once CDK loads them in the service | 0050 |
+| The mask's six stories have no visual baselines: Docker was not running when the mask was built, and the product owner took their run off the plan (2026-09-30); `pnpm visual` fails on them until they are written | write and inspect them in the next visual run that any other change needs (`pnpm visual:update --grep=components-mask`), then the full suite in compare mode | 0010, 0100 |
 | `popover.spec.ts` "opens a non-modal dialog…" failed in about one full `ui:test` run in three early in Wave 5 and passed alone; its failing assertion was not kept, and it has not failed in the five full runs since (2026-09-29). The runner shares one page between spec files (`isolate: false`, Angular's default), so state one file leaves may meet another in an order that changes | keep the next failing run's log and harden the assertion it names; if it points at state between files, clean it up in the file that leaves it | 0015 |
 | Vite re-optimises its dependencies on the first story test that imports a new `@angular/aria` entry point and reloads the run, which then fails once and passes on the next (the Accordion's, 2026-09-29) | rerun once after adding an Aria entry point; if it recurs, list the entry points in Storybook's `optimizeDeps.include` | 0026 |
 
@@ -503,8 +506,8 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 
 ## Open questions (for the product owner)
 
-- Consumer product names (for the adoption plan).
-- Registry and GitLab edition (Phase 3 CI, CODEOWNERS enforcement).
+- The systems that will use the kit, for the adoption plan and the pilot (the product is `avelune-ui`, 2026-09-30).
+- The registry to publish to (Phase 6); CI and CODEOWNERS on GitHub (Phase 3's deferred item).
 
 ## Out of scope
 
