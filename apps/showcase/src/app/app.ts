@@ -78,16 +78,17 @@ export class App {
   protected readonly maintenanceSeen = signal(false);
 
   /**
-   * The product's pages: the contracts and their template in a group, the register with the count of its expired
-   * contracts, the departments and the settings under administration.
+   * The product's pages: the overview; the contracts and their template in a group, the register with the count of its
+   * expired contracts; the departments and the settings under administration.
    */
   protected readonly pages: readonly AveSidebarEntry[] = [
+    { label: 'Обзор', link: '/', icon: 'layout-dashboard', exact: true },
     {
       label: 'Договоры',
       icon: 'file-text',
       items: [
         { label: 'Реестр договоров', link: '/contracts', count: expired },
-        { label: 'Новый договор', link: '/', exact: true },
+        { label: 'Новый договор', link: '/contracts/new' },
         { label: 'Шаблон договора', link: '/templates' },
       ],
     },

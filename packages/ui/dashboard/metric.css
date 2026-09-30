@@ -1,0 +1,29 @@
+@layer patterns {
+  /* A key figure (ADR 0098): on a card's surface, its label over the number over what it means. */
+  :host {
+    display: grid;
+    align-content: start;
+    gap: var(--ave-space-1);
+    min-inline-size: 0;
+    padding: calc(var(--ave-space-4) - var(--ave-border-width-default));
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface);
+  }
+
+  .label {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-label-md);
+  }
+
+  .value {
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-heading-xl);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .note {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+}

@@ -1,0 +1,41 @@
+/* The overview: the dashboard lays it out (ADR 0098); here, the records in its cards. Tokens only. */
+@layer app {
+  :host {
+    display: block;
+  }
+
+  /* A card's records: each number a link, its subject after it, 12px between records. */
+  .records {
+    display: grid;
+    gap: var(--ave-space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .subject {
+    display: block;
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+
+  /* A signed contract: its date at the inline end of its row. */
+  .signed {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--ave-space-4);
+  }
+
+  .when {
+    flex: none;
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .none {
+    margin: 0;
+    color: var(--ave-color-fg-muted);
+  }
+}

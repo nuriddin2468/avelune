@@ -1,0 +1,13 @@
+@layer patterns {
+  /* A card that needs room (ADR 0098): two columns from container.md, where there are at least two. */
+  :host {
+    display: grid;
+    min-inline-size: 0;
+  }
+
+  @container (inline-size >= 640px) {
+    :host {
+      grid-column: span 2;
+    }
+  }
+}

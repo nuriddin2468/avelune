@@ -1,0 +1,16 @@
+/* The frame of the Dashboard stories: an overview inside the shell's padding. Stories only; the dashboard's styles are
+   dashboard.css. */
+@layer patterns {
+  :host {
+    display: block;
+    padding: var(--ave-space-6) var(--ave-space-4);
+  }
+
+  .rows {
+    display: grid;
+    gap: var(--ave-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}

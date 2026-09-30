@@ -1,0 +1,65 @@
+@layer patterns {
+  /* A work system's overview (ADR 0098): the header, the key figures and the cards, 24px apart. */
+  :host {
+    display: grid;
+    gap: var(--ave-space-6);
+    min-inline-size: 0;
+    container-type: inline-size;
+  }
+
+  /* The heading at the start, its actions at the inline end; they wrap under it on a narrow page. */
+  .header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ave-space-4);
+  }
+
+  .title {
+    display: grid;
+    gap: var(--ave-space-1);
+    min-inline-size: 0;
+  }
+
+  .heading {
+    margin: 0;
+    font: var(--ave-font-heading-xl);
+  }
+
+  .description {
+    margin: 0;
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-md);
+  }
+
+  /* The key figures in a row that wraps, each at least 192px wide; none, no row. */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--ave-space-16) * 3)), 1fr));
+    gap: var(--ave-space-4);
+  }
+
+  .metrics:empty {
+    display: none;
+  }
+
+  /* The cards: one column, two from container.md, three from container.lg; each row as tall as its tallest. */
+  .tiles {
+    display: grid;
+    gap: var(--ave-space-6);
+    min-inline-size: 0;
+  }
+
+  @container (inline-size >= 640px) {
+    .tiles {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @container (inline-size >= 960px) {
+    .tiles {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+}

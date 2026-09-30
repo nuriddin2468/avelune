@@ -8,6 +8,11 @@ import { contractTitle } from './contract-title';
 export const routes: Routes = [
   {
     path: '',
+    loadComponent: () => import('./overview').then((m) => m.OverviewPage),
+    title: 'Обзор · Avelune',
+  },
+  {
+    path: 'contracts/new',
     loadComponent: () => import('./contract-form').then((m) => m.ContractForm),
     title: 'Новый договор · Avelune',
   },

@@ -101,7 +101,7 @@ const exportInterval = 400;
           >
             {{ selected().length > 0 ? 'Выгрузить выбранные' : 'Выгрузить в Excel' }}
           </button>
-          <a aveButton variant="primary" routerLink="/">Новый договор</a>
+          <a aveButton variant="primary" routerLink="/contracts/new">Новый договор</a>
         </div>
         <input
           #searchBox
@@ -235,7 +235,7 @@ const exportInterval = 400;
         </dl>
       }
       <div aveDialogActions>
-        <a aveButton variant="primary" routerLink="/">Изменить договор</a>
+        <a aveButton variant="primary" routerLink="/contracts/new">Изменить договор</a>
       </div>
     </dialog>
 

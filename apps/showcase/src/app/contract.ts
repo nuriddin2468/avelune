@@ -85,7 +85,9 @@ import { contractStatusVariants, contractStatuses, type ContractRecord } from '.
         </header>
 
         <div aveToolbar label="Действия с договором">
-          <a aveButton aveToolbarItem variant="ghost" routerLink="/"><ave-icon name="pencil" decorative />Изменить</a>
+          <a aveButton aveToolbarItem variant="ghost" routerLink="/contracts/new"
+            ><ave-icon name="pencil" decorative />Изменить</a
+          >
           <button
             aveButton
             aveToolbarItem

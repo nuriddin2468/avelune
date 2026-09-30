@@ -1,0 +1,76 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as DashboardStories from './dashboard.stories';
+
+<Meta of={DashboardStories} />
+
+# Dashboard
+
+`<ave-dashboard>` is a work system's overview: the page's heading and its actions, a row of key figures, and cards of what waits for the person, in up to three columns (ADR 0098).
+
+```ts
+import { AveDashboard, AveDashboardActions, AveDashboardMetric, AveDashboardWide } from '@avelune/ui/dashboard';
+```
+
+<Canvas of={DashboardStories.Default} />
+
+## When to use
+
+- For a product's or a department's home page: what is in force, what waits, what changed.
+
+## When not to use
+
+- For one list people search: the List page.
+- For charts and data visualisation: out of the kit's scope. A figure over time is its value and a note.
+
+## Anatomy
+
+- The header: the page's `h1` and `description`, with `[aveDashboardActions]` at the row's end, which wrap under the heading on a narrow page.
+- The key figures, `<ave-dashboard-metric label value note>`: what it counts, the number in `font.heading-xl` with tabular figures, and what it means, on a card's surface. They stand in a row that wraps, each at least 192px wide, a list named by `metricsLabel`.
+- The cards, the rest of the content: one column, two from `container.md`, three from `container.lg`, 24px apart, each row as tall as its tallest card.
+- `[aveDashboardWide]` on the element around a card that needs room: two columns from `container.md`.
+
+```html
+<ave-dashboard
+  heading="Обзор"
+  description="Договоры юридического департамента на сегодня"
+  metricsLabel="Договоры в цифрах"
+>
+  <div aveDashboardActions><a aveButton variant="primary" routerLink="/contracts/new">Новый договор</a></div>
+  @for (figure of figures; track figure.label) {
+  <ave-dashboard-metric [label]="figure.label" [value]="figure.value" [note]="figure.note" />
+  }
+  <ave-card>…</ave-card>
+  <div aveDashboardWide><ave-card>…</ave-card></div>
+</ave-dashboard>
+```
+
+Write each figure as the one node of its `@for` or `@if`: Angular projects a block's content into the figures' place only when it has one node at its root (NG8011).
+
+<Canvas of={DashboardStories.WithoutFigures} />
+
+## Content
+
+- A figure counts what people act on: "На согласовании 5", with a note that says what to do ("ждут согласующих"). Format the number for the locale (`aveNumberFormat`); 0 is news, and shows.
+- A card lists the few records behind a figure, each a link to its page, with a Count of them at its title's end.
+- Four figures at most, and six cards; more belong in the registers.
+
+<Canvas of={DashboardStories.LongText} />
+
+## Keyboard
+
+The page adds no keys of its own: Tab moves through the actions, then each card's links in turn.
+
+## Accessibility
+
+- One `h1`; each card's title is an `h2`. A card that stands for a group of records is a region named by its title.
+- The figures are a list, each an item that reads its label, its number and its note in order.
+
+## Motion
+
+None.
+
+## Do and don't
+
+- Do put the page's main action, such as "Новый договор", in the actions.
+- Do give every card the same parts: a title, a count, the records, a link to the whole list.
+- Don't draw charts from the tokens: the kit has no data visualisation.
