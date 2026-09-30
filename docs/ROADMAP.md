@@ -27,12 +27,12 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 | Locales | uz-Latn, uz-Cyrl, ru, en |
 | Docs language | English |
 | Registry | npm, public packages; the product owner owns the `avelune` organisation that the `@avelune` scope needs (product owner, 2026-09-30); nothing published yet, and no package of the scope on npmjs.com (checked 2026-09-30) |
-| Licence | MIT (product owner, 2026-09-30), for public npm packages; the packages still say `UNLICENSED` until Phase 6 changes their `license` fields and adds the `LICENSE` files, before the first publish. Fonts stay under the OFL (ADR 0018), Lucide's icons under ISC |
+| Licence | MIT, `Copyright (c) 2026 Yuldashev Nuriddin` (product owner, 2026-09-30), for public npm packages; the packages still say `UNLICENSED` until Phase 6 changes their `license` fields and adds the `LICENSE` files, before the first publish. Fonts stay under the OFL (ADR 0018), Lucide's icons under ISC |
 | Browsers | `Chrome >= 119, Edge >= 119, Firefox >= 129, Safari >= 17.5, iOS >= 17.5` (ADR 0014; changed 2026-09-23 from Chrome/Edge 117, product owner) |
 | Design source | none; visual direction "inspired by Ubuntu" ([audit.md](audit.md)); consumer teams have no designers in Figma, so there is no Figma library (product owner, 2026-09-30) |
 | Existing repos | none |
 | Repository | GitHub: https://github.com/nuriddin2468/avelune, public (product owner, 2026-09-30); `main` pushed on 2026-09-30, with no secret in its history (163 commits scanned for tokens and private keys) |
-| CI | local only for now; `.gitlab-ci.yml` prepared before the remote was known to be GitHub; code-owner approval is a documented rule |
+| CI | local only for now; `.gitlab-ci.yml` prepared before the remote was known to be GitHub; code-owner approval is a documented rule; CODEOWNERS names `@nuriddin2468` alone (product owner, 2026-09-30) |
 | CI runner architecture | amd64 (ADR 0010) |
 
 ## Phases
@@ -506,8 +506,6 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 
 ## Open questions (for the product owner)
 
-- MIT's copyright line: whose name goes into `Copyright (c) 2026 …` in the `LICENSE` files (Phase 6).
-- The code owners' GitHub accounts for CODEOWNERS (Phase 3's deferred item); the repository's owner is `nuriddin2468`.
 - The systems that will use the kit after the pilot, for the adoption plan (the product is `avelune-ui`, 2026-09-30).
 - A host for the built Storybook and its MCP server: none for now (product owner, 2026-09-30).
 
