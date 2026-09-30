@@ -43,4 +43,10 @@
   .actions {
     display: flex;
   }
+
+  /* The drawer's two actions share its last row, as a confirmation's, and each fills a row of its own when they wrap
+     (ADR 0094, addendum). */
+  [aveDialogActions] > button[aveButton] {
+    flex: 1 1 auto;
+  }
 }

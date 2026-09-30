@@ -32,6 +32,16 @@
     background-color: var(--ave-color-bg-surface);
   }
 
+  /* The navigation's button and the link home share the first row: a long name wraps beside the button, and the
+     actions go under them first. */
+  .start {
+    display: flex;
+    flex: 0 1 auto;
+    align-items: center;
+    gap: var(--ave-space-4);
+    min-inline-size: 0;
+  }
+
   /* The link home: the logo and the product's name, 12px apart; underlined under the pointer, as Breadcrumbs'. */
   .home {
     display: flex;
@@ -94,7 +104,7 @@
 
   /* From breakpoint.md the navigation is a column that stays in sight and scrolls on its own; its button goes. */
   @media (width >= 840px) {
-    .bar > button[aveIconButton] {
+    .start > button[aveIconButton] {
       display: none;
     }
 

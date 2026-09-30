@@ -147,7 +147,7 @@ Plain CSS with native nesting, custom properties and cascade layers; emulated en
 
 Storybook imports the same file in `.storybook/preview.ts` (`@avelune/ui/styles.css`, mapped in `tsconfig.base.json`).
 
-`base.css` also stops the page scrolling while a kit dialog is open (`data-ave-scroll-lock` on the dialog, ADR 0066), and gives the document a `scroll-padding-block-end` of the form page's bar while one is on the page (`data-ave-form-actions`, ADR 0097), which the Form page stories check.
+`base.css` also stops the page scrolling while a kit dialog is open (`data-ave-scroll-lock` on the dialog, ADR 0066), and gives the document a `scroll-padding-block-end` of the form page's bar while one is on the page (`data-ave-form-actions`, ADR 0097): one row until the bar has measured itself, then the bar's height, which it writes into `<html>`'s style (ADR 0097, addendum). The Form page stories check it.
 
 **Adding global CSS** means adding it to one of these files, in its layer: `avelune/component-layer` accepts only `reset`, `base` and `utilities` there, and `avelune/layer-order` keeps the entry's first statement. Show it on the Foundations "Global styles" page and assert it in that page's `play` function.
 

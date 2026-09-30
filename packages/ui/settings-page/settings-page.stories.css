@@ -1,8 +1,8 @@
 /* The frame of the Settings page stories: a product's settings inside the shell's padding, and its sections' fields.
    Stories only; the page's styles are settings-page.css. */
 @layer patterns {
-  :host {
-    display: block;
+  /* The frame alone: the sections' components share this stylesheet, and their hosts take no padding. */
+  .frame {
     padding: var(--ave-space-6) var(--ave-space-4);
   }
 

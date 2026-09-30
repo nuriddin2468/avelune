@@ -148,6 +148,8 @@ describe('AveFilterPanel', () => {
 
     await header.toggleFilters();
     expect(await panel.isOpen()).toBe(true);
+    // The fields are there as it opens, so the browser focuses the first, never "Сбросить фильтры".
+    expect(document.activeElement).toBe(element.querySelector('dialog .fields input'));
     expect(await panel.getLabel()).toBe('Фильтры');
     expect(await panel.getFieldsText()).toMatch(/^Статус .*Подписан На согласовании$/);
     expect(element.querySelector('dialog')?.getAttribute('data-side')).toBe('start');

@@ -7,9 +7,11 @@
   list-style: none;
 }
 
-/* An island of the page's theme with the brand's colour tokens: its canvas, text and controls follow them. */
+/* An island of the page's theme with the brand's colour tokens: its canvas, text and controls follow them. Its rows
+   start at its top, so an island as tall as a longer neighbour keeps its parts level with the neighbour's. */
 .sample {
   display: grid;
+  align-content: start;
   gap: var(--ave-space-3);
   padding: var(--ave-space-4);
   border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);

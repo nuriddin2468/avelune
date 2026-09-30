@@ -49,26 +49,28 @@ let nextShell = 0;
       <a aveButton [href]="'#' + mainId" (click)="skip($event)">{{ messages.skipToContent }}</a>
     </div>
     <header class="bar">
-      @if (navigation().length > 0) {
-        <button
-          aveIconButton
-          type="button"
-          variant="ghost"
-          icon="menu"
-          [label]="navigationName()"
-          [aveTooltip]="navigationName()"
-          aveTooltipSide="bottom"
-          aria-haspopup="dialog"
-          (click)="navigationOpen.set(true)"
-        ></button>
-      }
-      <a class="home" [routerLink]="home()">
-        @if (logo(); as logo) {
-          <!-- eslint-disable-next-line @angular-eslint/template/prefer-ngsrc -- NgOptimizedImage refuses the data URLs of a tenant's upload (NG02952) and needs a size only the image knows (ADR 0092). -->
-          <img class="logo" [src]="dark() ? (logo.darkSrc ?? logo.src) : logo.src" [alt]="logo.alt" />
+      <div class="start">
+        @if (navigation().length > 0) {
+          <button
+            aveIconButton
+            type="button"
+            variant="ghost"
+            icon="menu"
+            [label]="navigationName()"
+            [aveTooltip]="navigationName()"
+            aveTooltipSide="bottom"
+            aria-haspopup="dialog"
+            (click)="navigationOpen.set(true)"
+          ></button>
         }
-        <span class="product">{{ product() }}</span>
-      </a>
+        <a class="home" [routerLink]="home()">
+          @if (logo(); as logo) {
+            <!-- eslint-disable-next-line @angular-eslint/template/prefer-ngsrc -- NgOptimizedImage refuses the data URLs of a tenant's upload (NG02952) and needs a size only the image knows (ADR 0092). -->
+            <img class="logo" [src]="dark() ? (logo.darkSrc ?? logo.src) : logo.src" [alt]="logo.alt" />
+          }
+          <span class="product">{{ product() }}</span>
+        </a>
+      </div>
       <ng-content select="[aveAppShellActions]" />
     </header>
     <ng-content select="[aveAppShellBanner]" />

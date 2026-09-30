@@ -31,6 +31,7 @@ import { AveAppShell, AveAppShellActions, AveAppShellBanner, type AveAppLogo } f
   - the navigation's button, below `breakpoint.md`, a ghost IconButton named by `navigationLabel`;
   - the link home (`home`, `/` by default): the logo, then the product's name (`product`), underlined under the pointer;
   - `[aveAppShellActions]` at the inline end: the application's items, 8px apart.
+  - The button and the link share the first row, so a long name wraps beside the button; the actions go under them first when they do not fit.
 - **Banners** marked `[aveAppShellBanner]`, across the window under the bar.
 - **The navigation**, SidebarNav drawn from `navigation`: a sticky 256px column from `breakpoint.md`, a drawer from the start below it.
 - **`main`** with the shell's content, 24px from the bar and 16px from the window's sides (24px from `breakpoint.md`).

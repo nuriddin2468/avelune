@@ -75,7 +75,8 @@
   }
 
   /* A form page's actions stick to the window's bottom (ADR 0097): a field focused near that edge scrolls above
-     their row, so the bar never covers it (WCAG 2.4.11). */
+     their row, so the bar never covers it (WCAG 2.4.11). Once the bar has measured itself, the document's scroll
+     padding is its height, which a wrapped row makes taller (ADR 0097, addendum). */
   :root:has([data-ave-form-actions]) {
     scroll-padding-block-end: calc(
       var(--ave-control-height-md) + var(--ave-space-3) * 2 + var(--ave-border-width-default)

@@ -32,8 +32,8 @@ import {
 ## Anatomy
 
 - **The column,** from `container.lg`: a `section` named by its heading (`label`, "Фильтры" by default), 256px wide on a bordered surface, `radius.lg`, 16px to its content. Under the heading are the fields, then "Сбросить фильтры" while any filter is applied. It is closed until the person opens it, and a closed column takes no room.
-- **The drawer,** below `container.lg`: a start drawer of the small size with the same fields, and at its foot "Сбросить фильтры" and "Показать результаты", which closes it.
-- **The fields,** the application's, on `<ng-template aveFilterPanelContent>`: form fields and choice groups one under another, 16px apart. The panel stamps them where it shows them, so their values live in the application's state.
+- **The drawer,** below `container.lg`: a start drawer of the small size with the same fields, and at its foot "Сбросить фильтры" and "Показать результаты", which closes it. The two share a row where they fit, and each fills a row of its own where they do not.
+- **The fields,** the application's, on `<ng-template aveFilterPanelContent>`: form fields and choice groups one under another, 16px apart. The panel stamps them where it shows them, so their values live in the application's state: in the column while it is open, and in the drawer before it opens, so the browser focuses the first field as it does.
 - **The applied filters,** `<ave-applied-filters>`: a tag per filter, whose button takes it away, then a small "Сбросить фильтры". It draws nothing while no filter is applied.
 
 ```html

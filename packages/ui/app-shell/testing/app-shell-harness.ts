@@ -26,7 +26,7 @@ export class AveAppShellHarness extends ComponentHarness {
   private readonly product = this.locatorFor('.home .product');
   private readonly home = this.locatorFor('.home');
   private readonly logo = this.locatorForOptional('.home img');
-  private readonly menu = this.locatorForOptional('.bar > button');
+  private readonly menu = this.locatorForOptional('.start > button');
   private readonly drawer = this.locatorForOptional('dialog');
   private readonly column = this.locatorForOptional('.column');
   private readonly columnNavigation = this.locatorForOptional(AveSidebarNavHarness.with({ ancestor: '.column' }));

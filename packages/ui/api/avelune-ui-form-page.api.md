@@ -20,6 +20,7 @@ export class AveFormPage {
 
 // @alpha
 export class AveFormPageActions {
+    constructor();
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<AveFormPageActions, "[aveFormPageActions]", never, {}, {}, never, ["[aveFormPageActionsStart]", "*"], true, never>;
     // (undocumented)

@@ -1,6 +1,6 @@
 import { Component, LOCALE_ID, input, signal } from '@angular/core';
 import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular-vite';
-import { expect, userEvent, within } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { lucideCircleCheck } from '@avelune/icons/lucide';
 import { AveButton } from '@avelune/ui/button';
 import { AveCheckbox, AveChoice } from '@avelune/ui/checkbox';
@@ -140,11 +140,13 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-/** The document's scroll padding at the bottom, which keeps a focused field above the bar: its one row. */
-async function padded(): Promise<void> {
-  const root = document.documentElement;
-  const control = Number.parseFloat(getComputedStyle(root).getPropertyValue('--ave-control-height-md'));
-  await expect(getComputedStyle(root).scrollPaddingBlockEnd).toBe(`${String(control + 12 * 2 + 1)}px`);
+/** The document's scroll padding at the bottom, which keeps a focused field above the bar: all its rows. */
+async function padded(canvasElement: HTMLElement): Promise<void> {
+  const bar = canvasElement.querySelector('[aveFormPageActions]');
+  const height = bar?.getBoundingClientRect().height ?? 0;
+  await waitFor(() =>
+    expect(getComputedStyle(document.documentElement).scrollPaddingBlockEnd).toBe(`${String(height)}px`),
+  );
 }
 
 const meta: Meta<FormPageStories> = {
@@ -183,10 +185,12 @@ export const Default: Story = {
     await expect(canvas.getByRole('form', { name: 'Новый договор' })).toBeVisible();
     const bar = canvasElement.querySelector('[aveFormPageActions]');
     await expect(bar ? getComputedStyle(bar).position : '').toBe('sticky');
-    await padded();
+    await padded(canvasElement);
     const send = canvas.getByRole('button', { name: 'Отправить на согласование' });
     const cancel = canvas.getByRole('button', { name: 'Отмена' });
-    await expect(send.getBoundingClientRect().left).toBeGreaterThan(cancel.getBoundingClientRect().left);
+    // The primary last: after Cancel on its row, or on a row under it where the bar wraps.
+    const [first, last] = [cancel.getBoundingClientRect(), send.getBoundingClientRect()];
+    await expect(last.left > first.left || last.top >= first.bottom).toBe(true);
   },
 };
 
@@ -257,8 +261,8 @@ export const LongText: Story = {
       },
     },
   },
-  play: async () => {
+  play: async ({ canvasElement }) => {
     await expect(document.documentElement.scrollWidth).toBe(document.documentElement.clientWidth);
-    await padded();
+    await padded(canvasElement);
   },
 };

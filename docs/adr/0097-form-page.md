@@ -33,3 +33,10 @@
 
 - `base.css` gains one rule, keyed to the bar's attribute, as the dialogs' scroll lock is.
 - The showcase's contract form loses its card and its footer's CSS.
+
+## Addendum: the scroll padding follows the bar's height (2026-09-30)
+
+Wave 6's visual review tabbed through the Form page's stories with a real keyboard at 1280, 390 and 320 px, at two window heights and both densities. On a phone the bar's row wraps: the new contract's bar is 105px tall at 390 px and 149px at 320 px (97 and 137 compact). `base.css`'s scroll padding was one row, 61px (57 compact). A field focused near the window's bottom therefore scrolled above one row and stayed under the rest. At 390 × 600 the confirmation checkbox was entirely hidden, and at 320 × 844 so was the counterparty's phone. That fails WCAG 2.4.11.
+
+- Decision: `[aveFormPageActions]` measures its border box (`ResizeObserver`) and sets the document's `scroll-padding-block-end` to its height. It writes the value into `<html>`'s style through the CSSOM, which a strict CSP allows, and removes it when the bar goes. It is a measured length, not an authored style. `base.css`'s one-row rule stays for the first paint and for a server-rendered page, until the bar has measured itself.
+- The same walk then left no focused field entirely under the bar in any of the twelve combinations. At 390 × 600 the four-row textarea stays partly under it (69 of 96px): Chromium does not scroll a field that already shows in part. That meets 2.4.11 (AA); only 2.4.12 (AAA) asks for the whole field. The stories' check reads the scroll padding against the bar's own height. The unit test checks one row, a wrapped bar of two rows, and the value gone with the bar.

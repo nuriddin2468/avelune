@@ -98,6 +98,9 @@ describe('AveFormPage', () => {
     expect(style.zIndex).toBe(tokens['z-index.sticky'].css);
     expect(style.borderTopWidth).toBe('1px');
     expect(box(bar).height).toBe(36 + 12 * 2 + 1);
+    // A field focused near the window's bottom scrolls above the bar's row (ADR 0097, addendum).
+    await fixture.whenStable();
+    await expect.poll(() => root.style.scrollPaddingBlockEnd).toBe(`${String(36 + 12 * 2 + 1)}px`);
 
     const form = element.querySelector('form');
     expect(box(bar).left).toBe(box(form).left - 16);
@@ -123,9 +126,15 @@ describe('AveFormPage', () => {
     expect(box(send).top).toBeGreaterThan(box(cancel).top);
     expect(box(send).right).toBe(box(element.querySelector('form')).right);
     expect(element.scrollWidth).toBe(element.clientWidth);
+    // The wrapped bar is two rows tall, and a focused field scrolls above both.
+    await fixture.whenStable();
+    const bar = element.querySelector('[aveFormPageActions]');
+    expect(box(bar).height).toBeGreaterThan(36 + 12 * 2 + 1);
+    await expect.poll(() => root.style.scrollPaddingBlockEnd).toBe(`${String(box(bar).height)}px`);
 
     fixture.componentInstance.withActions.set(false);
     expect(await page.hasActions()).toBe(false);
+    expect(root.style.scrollPaddingBlockEnd).toBe('');
     element.remove();
   });
 });

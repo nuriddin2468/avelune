@@ -140,10 +140,11 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-/** Whether the story's page is narrower than container.md, where one pane shows at a time. */
+/** Whether the story's page is narrower than container.md, where one pane shows at a time: the list or the record. */
 function narrow(canvasElement: HTMLElement): boolean {
-  const list = canvasElement.querySelector('ave-list-detail .list');
-  return list !== null && getComputedStyle(list).display === 'none';
+  return [...canvasElement.querySelectorAll('ave-list-detail .list, ave-list-detail .detail')].some(
+    (pane) => getComputedStyle(pane).display === 'none',
+  );
 }
 
 const snippet = `<ave-list-detail heading="Подразделения" description="Структура организации и сотрудники подразделений." [(detail)]="reading">

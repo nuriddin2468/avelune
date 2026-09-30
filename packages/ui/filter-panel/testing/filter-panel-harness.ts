@@ -21,7 +21,7 @@ export class AveFilterPanelHarness extends ComponentHarness {
 
   private readonly surface = this.locatorFor('.column, dialog[aveDrawer]');
   private readonly heading = this.locatorFor('.column > h2, dialog[aveDrawer] h2');
-  private readonly fields = this.locatorForOptional('.fields');
+  private readonly fields = this.locatorFor('.fields');
   private readonly clearButton = this.locatorForOptional(
     '.actions button, [aveDialogActions] button[data-variant="ghost"]',
   );
@@ -51,8 +51,8 @@ export class AveFilterPanelHarness extends ComponentHarness {
 
   /** Gets the text of the fields shown, on one line; an empty string while closed. */
   async getFieldsText(): Promise<string> {
-    const fields = await this.fields();
-    return fields === null ? '' : (await fields.text()).replace(/\s+/g, ' ').trim();
+    if (!(await this.isOpen())) return '';
+    return (await (await this.fields()).text()).replace(/\s+/g, ' ').trim();
   }
 
   /** Whether the panel offers to clear the applied filters. */

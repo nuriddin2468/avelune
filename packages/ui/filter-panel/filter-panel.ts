@@ -48,10 +48,9 @@ let nextPanel = 0;
   },
   template: `
     @if (mode() === 'drawer') {
+      <!-- The fields are in the drawer before it opens, so the browser focuses the first of them (ADR 0066, 0094). -->
       <dialog aveDrawer side="start" size="sm" [heading]="label()" [(open)]="open">
-        @if (open()) {
-          <div class="fields"><ng-container [ngTemplateOutlet]="content().template" /></div>
-        }
+        <div class="fields"><ng-container [ngTemplateOutlet]="content().template" /></div>
         <div aveDialogActions>
           @if (count() > 0) {
             <button aveButton type="button" variant="ghost" (click)="clear.emit()">{{ messages.clearFilters }}</button>

@@ -133,7 +133,7 @@ describe('AveAppShell', () => {
     const product = element.querySelector('.home .product');
     expect(getComputedStyle(product ?? element).clipPath).toBe('inset(50%)');
     expect(element.querySelector('.home')?.textContent.trim()).toBe('Документооборот');
-    expect(box(element.querySelector('.home img')).left - box(element.querySelector('.bar > button')).right).toBe(16);
+    expect(box(element.querySelector('.home img')).left - box(element.querySelector('.start > button')).right).toBe(16);
     expect(box(element.querySelector('.heading')).left).toBe(16);
 
     fixture.componentInstance.logo.set(null);
@@ -159,8 +159,8 @@ describe('AveAppShell', () => {
     const shell = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveAppShellHarness);
     expect(await shell.hasNavigationButton()).toBe(true);
     expect(await shell.hasNavigationColumn()).toBe(false);
-    expect(element.querySelector('.bar > button')?.getAttribute('aria-haspopup')).toBe('dialog');
-    expect(element.querySelector('.bar > button')?.getAttribute('aria-label')).toBe('Разделы');
+    expect(element.querySelector('.start > button')?.getAttribute('aria-haspopup')).toBe('dialog');
+    expect(element.querySelector('.start > button')?.getAttribute('aria-label')).toBe('Разделы');
 
     await shell.openNavigation();
     expect(await shell.isNavigationOpen()).toBe(true);
@@ -224,7 +224,7 @@ describe('AveAppShell', () => {
     const shell = await TestbedHarnessEnvironment.loader(fixture).getHarness(AveAppShellHarness);
     fixture.componentInstance.label.set(undefined);
     fixture.detectChanges();
-    expect(element.querySelector('.bar > button')?.getAttribute('aria-label')).toBe('Navigation');
+    expect(element.querySelector('.start > button')?.getAttribute('aria-label')).toBe('Navigation');
     expect(element.querySelector('nav')?.getAttribute('aria-label')).toBe('Navigation');
 
     fixture.componentInstance.pages.set([]);

@@ -49,7 +49,7 @@ While the form reaches past the window's bottom, the bar sticks there, so the ac
 
 <Canvas of={FormPageStories.Short} />
 
-A field focused near the window's bottom scrolls above the bar: `base.css` gives the document a scroll padding as tall as the bar's row while a form page is on it (WCAG 2.4.11).
+A field focused near the window's bottom scrolls above the bar: the bar sets the document's scroll padding to its own height, all its rows where they wrap on a phone, and `base.css` gives one row until it has measured itself (WCAG 2.4.11).
 
 ## Content
 

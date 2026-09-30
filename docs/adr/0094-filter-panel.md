@@ -37,3 +37,13 @@
 - The kit's messages gain `filters`, `clearFilters`, `showResults` and `appliedFilters` in the four locales.
 - A standalone FilterPanel works outside ListPage; its page places the column and keeps its room while it is open.
 - The showcase's status popover goes. Its popover story stays the Popover's.
+
+## Addendum: the drawer's fields before it opens, and its actions sharing a row (2026-09-30)
+
+Wave 6's visual review found two problems in the drawer below `container.lg`:
+
+- **Focus opened on "Сбросить фильтры".** The drawer is a modal `<dialog>`, and `showModal()` focuses its first focusable element (ADR 0066). The fields were stamped only while the panel was open, one change detection after the drawer had opened, so that element was the drawer's ghost "Сбросить фильтры". A keyboard user's first Enter would have cleared every filter.
+  - Decision: in the drawer the fields are stamped from the start, inside the closed dialog, which shows nothing and hides it from assistive technology. The browser then focuses the first field as it opens. The column still stamps them while it is open, where nothing focuses on its own.
+  - The unit test checks that focus opens on the first field. The harness's `getFieldsText()` reads the fields only while they show.
+- **Its two actions wrapped into two uneven rows.** In the small drawer (320px), "Сбросить фильтры" and "Показать результаты" do not fit one row. They stood at the end of two rows, one under the other, each as wide as its words.
+  - Decision: each action grows to fill its row, as a confirmation's two buttons share their row (ADR 0066). Where they fit, they share one row. Where they do not, each fills a row of its own. The rule sets flex growth only, which `avelune/pattern-layout-only` allows.

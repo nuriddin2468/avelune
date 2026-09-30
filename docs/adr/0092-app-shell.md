@@ -43,3 +43,10 @@
 - The showcase's `app.ts` keeps its switches and banner as content; its layout CSS goes.
 - `aveColorScheme()` and `AveColorScheme` are new public API in `@avelune/ui/theme` (alpha).
 - The skip link's and the navigation's names join the kit's messages in the four locales.
+
+## Addendum: the navigation's button and the link home share a row (2026-09-30)
+
+Wave 6's visual review found that the Long text story at 390 px left the navigation's button alone on the bar's first row, with the product's name on a row of its own under it. The bar wraps its items, and an item moves to the next row when its whole width does not fit. For the link home that width is the name on one line, so a long name never shared the button's row, where decision 2 has it wrap.
+
+- Decision: the button and the link home stand in one group at the bar's start (`.start`, a row with the bar's 16px gap). The group shrinks in its row, so a long name wraps beside the button. The application's actions still go under it first when they do not fit beside it.
+- The Long text story's play checks that the name starts on the button's row wherever the button shows. The harness finds the button in the group.

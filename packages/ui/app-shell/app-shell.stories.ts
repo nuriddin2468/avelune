@@ -357,5 +357,10 @@ export const LongText: Story = {
     const name = canvas.getByText('Oʻzbekiston Respublikasi Davlat soliq qoʻmitasi hujjat aylanishi tizimi');
     await expect(getComputedStyle(name).clipPath).toBe('none');
     await expect(name.getBoundingClientRect().height % 20).toBe(0);
+    // On a phone the name wraps beside the navigation's button, never on a row of its own under it.
+    const menu = within(bar).queryByRole('button', { name: 'Boʻlimlar' });
+    if (menu !== null && getComputedStyle(menu).display !== 'none') {
+      await expect(name.getBoundingClientRect().top).toBeLessThan(menu.getBoundingClientRect().bottom);
+    }
   },
 };
