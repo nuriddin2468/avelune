@@ -1,0 +1,41 @@
+{
+  "name": "manifest-check",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "tools/manifest-check",
+  "tags": ["type:tool"],
+  "targets": {
+    "check": {
+      "executor": "nx:run-commands",
+      "dependsOn": [{ "projects": ["storybook"], "target": "build" }],
+      "inputs": [
+        "production",
+        "{workspaceRoot}/dist/apps/storybook/manifests/**",
+        "{workspaceRoot}/dist/apps/storybook/services/**",
+        "{workspaceRoot}/packages/ui/api/*.api.md",
+        "{workspaceRoot}/packages/ui/**/*.stories.ts"
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node src/cli.ts"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "inputs": ["default", "{workspaceRoot}/packages/ui/api/*.api.md", "{workspaceRoot}/packages/ui/**/*.stories.ts"],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node --test \"src/**/*.spec.ts\""
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "tsc -p tsconfig.json"
+      }
+    }
+  }
+}

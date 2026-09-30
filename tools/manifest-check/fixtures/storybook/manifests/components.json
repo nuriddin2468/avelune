@@ -1,0 +1,26 @@
+{
+  "v": 1,
+  "components": {
+    "components-thing": {
+      "id": "components-thing",
+      "name": "AveThing",
+      "docgen": { "$ref": "../services/core/docgen/components-thing.json#/components/components-thing" },
+      "stories": { "$ref": "../services/core/story-docs/components-thing.json#/components/components-thing" },
+      "docs": {
+        "components-thing--docs": {
+          "id": "components-thing--docs",
+          "name": "Docs",
+          "mdx": {
+            "$ref": "../services/addon-docs/mdx/components-thing.json#/components/components-thing/docs/components-thing--docs"
+          }
+        }
+      }
+    },
+    "foundations-colour": {
+      "id": "foundations-colour",
+      "name": "foundations-colour",
+      "stories": { "$ref": "../services/core/story-docs/foundations-colour.json#/components/foundations-colour" }
+    }
+  },
+  "meta": { "docgen": "angular-component-meta", "durationMs": 0 }
+}

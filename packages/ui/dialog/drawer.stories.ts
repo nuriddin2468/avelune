@@ -99,10 +99,6 @@ function frame(
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 /** Opens the story's drawer with its button and waits until it shows. */
 async function openDrawer(canvasElement: HTMLElement, opener: string): Promise<HTMLDialogElement> {
   await userEvent.click(within(canvasElement).getByRole('button', { name: opener }));
@@ -114,7 +110,7 @@ async function openDrawer(canvasElement: HTMLElement, opener: string): Promise<H
 
 const meta: Meta<DrawerStories> = {
   title: 'Components/Drawer',
-  component: DrawerStories,
+  component: AveDrawer,
   decorators: [applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: 'ru' }] })],
 };
 export default meta;
@@ -122,12 +118,17 @@ export default meta;
 /** A contract's details beside the list: the drawer takes the inline end, the full height. */
 export const Default: Story = {
   render: frame('details'),
-  parameters: source(
-    '<dialog aveDrawer heading="Договор ДК-2026/114" [(open)]="viewing">',
-    '  <dl>…</dl>',
-    '  <div aveDialogActions>…</div>',
-    '</dialog>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<dialog aveDrawer heading="Договор ДК-2026/114" [(open)]="viewing">
+  <dl>…</dl>
+  <div aveDialogActions>…</div>
+</dialog>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const opener = within(canvasElement).getByRole('button', { name: 'Открыть договор' });
     const drawer = await openDrawer(canvasElement, 'Открыть договор');
@@ -143,6 +144,25 @@ export const Default: Story = {
 export const FormFromStart: Story = {
   name: 'Form from the start',
   render: frame('form', { side: 'start', size: 'sm', opener: 'Новый контрагент' }),
+  parameters: {
+    docs: {
+      source: {
+        code: `<button aveButton type="button" (click)="adding.set(true)">Новый контрагент</button>
+<dialog aveDrawer heading="Новый контрагент" side="start" size="sm" [(open)]="adding">
+  <form id="counterparty" (submit)="save($event)">
+    <ave-form-field label="Название"><input aveInput type="text" /></ave-form-field>
+    <ave-form-field label="ИНН"><input aveInput type="text" inputmode="numeric" /></ave-form-field>
+    <ave-form-field label="Город"><input aveInput type="text" /></ave-form-field>
+  </form>
+  <div aveDialogActions>
+    <button aveButton type="button" (click)="adding.set(false)">Отмена</button>
+    <button aveButton type="submit" variant="primary" form="counterparty">Добавить контрагента</button>
+  </div>
+</dialog>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const drawer = await openDrawer(canvasElement, 'Новый контрагент');
     await waitFor(() => expect(within(drawer).getByRole('textbox', { name: 'Название' })).toHaveFocus());
@@ -155,6 +175,22 @@ export const FormFromStart: Story = {
 export const LongContent: Story = {
   name: 'Long content',
   render: frame('long', { opener: 'Shartnomani ochish' }),
+  parameters: {
+    docs: {
+      source: {
+        code: `<button aveButton type="button" (click)="reading.set(true)">Shartnomani ochish</button>
+<dialog aveDrawer heading="Samarqand viloyati sogʻliqni saqlash boshqarmasi bilan tuzilgan shartnoma"
+  [(open)]="reading">
+  <p>1-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>…</p>
+  <div aveDialogActions>
+    <button aveButton type="button" variant="primary" (click)="reading.set(false)">Yopish</button>
+  </div>
+</dialog>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const drawer = await openDrawer(canvasElement, 'Shartnomani ochish');
     const body = drawer.querySelector('.body');

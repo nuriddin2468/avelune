@@ -181,13 +181,9 @@ function locale(value: string): ReturnType<typeof applicationConfig> {
   return applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: value }] });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
-// No `component`: Storybook instantiates a meta's component outside an injection context, where `model()` throws.
 const meta: Meta<MultiselectArgs> = {
   title: 'Components/Multiselect',
+  component: AveMultiselect,
   args: { size: 'md', placeholder: 'Выберите согласующих' },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
   decorators: [moduleMetadata({ imports: [AveMultiselect, MultiselectStoryFrame] })],
@@ -201,7 +197,11 @@ export default meta;
 /** One multiselect, with controls. */
 export const Default: Story = {
   decorators: [componentWrapperDecorator(MultiselectStoryFrame)],
-  parameters: source('<ave-multiselect [options]="approvers" [formField]="contract.approvers" />'),
+  parameters: {
+    docs: {
+      source: { code: '<ave-multiselect [options]="approvers" [formField]="contract.approvers" />', language: 'html' },
+    },
+  },
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('combobox', { name: 'Согласующие' })).toHaveTextContent(
       'Выберите согласующих',
@@ -212,7 +212,7 @@ export const Default: Story = {
 /** The open list: two options checked; it stays open while people check more. */
 export const Open: Story = {
   decorators: [componentWrapperDecorator(MultiselectStoryFrame)],
-  parameters: source('<ave-multiselect [options]="approvers" />'),
+  parameters: { docs: { source: { code: '<ave-multiselect [options]="approvers" />', language: 'html' } } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: 'Согласующие' });
@@ -230,10 +230,15 @@ export const Open: Story = {
 export const States: Story = {
   tags: ['forced-colors'],
   render: frame('states'),
-  parameters: source(
-    '<ave-multiselect [options]="approvers" readonly />',
-    '<ave-multiselect [options]="approvers" disabled />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-multiselect [options]="approvers" readonly />
+<ave-multiselect [options]="approvers" disabled />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     // One row without tags; with them, rows of tags on the 4px grid (ADR 0081).
     for (const trigger of canvasElement.querySelectorAll('.trigger')) {
@@ -247,10 +252,15 @@ export const States: Story = {
 /** Both form APIs: the chosen values, in the order of the list. */
 export const Forms: Story = {
   render: () => ({ template: '<ave-multiselect-forms />', moduleMetadata: { imports: [MultiselectForms] } }),
-  parameters: source(
-    '<ave-multiselect [options]="approvers" [formField]="contract.approvers" />',
-    '<ave-multiselect [options]="approvers" [formControl]="chosen" />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-multiselect [options]="approvers" [formField]="contract.approvers" />
+<ave-multiselect [options]="approvers" [formControl]="chosen" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const signalForms = canvas.getByRole('combobox', { name: 'Approvers (Signal Forms)' });
@@ -269,7 +279,7 @@ export const Forms: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
-  parameters: source('<ave-multiselect [options]="approvers" />'),
+  parameters: { docs: { source: { code: '<ave-multiselect [options]="approvers" />', language: 'html' } } },
   play: async ({ canvasElement }) => {
     const host = canvasElement.querySelector('ave-multiselect');
     const height = host?.getBoundingClientRect().height ?? 0;
@@ -293,7 +303,11 @@ export const Tags: Story = {
     props: { ...args, approvers },
     template: `<ave-multiselect label="Согласующие" lang="ru" [options]="approvers" [value]="['legal', 'finance', 'security']" />`,
   }),
-  parameters: source('<ave-multiselect [options]="approvers" [formField]="contract.approvers" />'),
+  parameters: {
+    docs: {
+      source: { code: '<ave-multiselect [options]="approvers" [formField]="contract.approvers" />', language: 'html' },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: 'Согласующие' });
@@ -318,7 +332,11 @@ export const Tags: Story = {
 export const Clearing: Story = {
   decorators: [locale('ru')],
   render: () => ({ template: '<ave-multiselect-clearing />', moduleMetadata: { imports: [MultiselectClearing] } }),
-  parameters: source('<ave-multiselect [options]="approvers" [formField]="contract.watchers" />'),
+  parameters: {
+    docs: {
+      source: { code: '<ave-multiselect [options]="approvers" [formField]="contract.watchers" />', language: 'html' },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: 'Наблюдатели' });
@@ -358,10 +376,15 @@ export const RichOptions: Story = {
     props: { documentTypes },
     template: `<ave-multiselect label="Типы документов" lang="ru" [options]="documentTypes" [value]="['contract', 'scan']" />`,
   }),
-  parameters: source(
-    "{ value: 'contract', label: 'Договоры', icon: 'file-text', meta: '128' }",
-    '<ave-multiselect [options]="documentTypes" [formField]="filter.types" />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `{ value: 'contract', label: 'Договоры', icon: 'file-text', meta: '128' }
+<ave-multiselect [options]="documentTypes" [formField]="filter.types" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: 'Типы документов' });
@@ -381,7 +404,14 @@ export const RichOptions: Story = {
 export const Search: Story = {
   decorators: [locale('ru')],
   render: () => ({ template: '<ave-multiselect-search />', moduleMetadata: { imports: [MultiselectSearch] } }),
-  parameters: source('<ave-multiselect search="local" [options]="regions" [formField]="contract.regions" />'),
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-multiselect search="local" [options]="regions" [formField]="contract.regions" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const input = canvas.getByRole('combobox', { name: 'Регионы поставки' });

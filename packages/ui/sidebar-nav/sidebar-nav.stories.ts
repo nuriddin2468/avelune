@@ -107,13 +107,9 @@ function frame(view: View, url: string, label = 'Разделы'): NonNullable<S
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'ts' } } };
-}
-
 const meta: Meta<SidebarNavStories> = {
   title: 'Components/Sidebar navigation',
-  component: SidebarNavStories,
+  component: AveSidebarNav,
   decorators: [
     applicationConfig({
       // Hash locations keep a followed link inside Storybook's frame.
@@ -130,16 +126,21 @@ export default meta;
 export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default', '/contracts'),
-  parameters: source(
-    '<ave-sidebar-nav [label]="label()" [items]="pages" />',
-    '',
-    'pages: AveSidebarEntry[] = [',
-    "  { label: 'Главная', link: '/', icon: 'house', exact: true },",
-    "  { label: 'Договоры', link: '/contracts', icon: 'file-text', count: 2 },",
-    "  { label: 'Справочники', icon: 'book-open', items: [{ label: 'Контрагенты', link: '/directories/counterparties' }] },",
-    "  { heading: 'Администрирование', items: [{ label: 'Настройки', link: '/settings', icon: 'settings' }] },",
-    '];',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-sidebar-nav [label]="label()" [items]="pages" />
+
+pages: AveSidebarEntry[] = [
+  { label: 'Главная', link: '/', icon: 'house', exact: true },
+  { label: 'Договоры', link: '/contracts', icon: 'file-text', count: 2 },
+  { label: 'Справочники', icon: 'book-open', items: [{ label: 'Контрагенты', link: '/directories/counterparties' }] },
+  { heading: 'Администрирование', items: [{ label: 'Настройки', link: '/settings', icon: 'settings' }] },
+];`,
+        language: 'typescript',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const nav = within(canvas.getByRole('navigation', { name: 'Разделы' }));
@@ -160,6 +161,27 @@ export const Default: Story = {
 export const InGroup: Story = {
   name: 'In a group',
   render: frame('default', '/directories/departments', 'Разделы документооборота'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-sidebar-nav label="Разделы документооборота" [items]="pages" />
+
+pages: AveSidebarEntry[] = [
+  { label: 'Главная', link: '/', icon: 'house', exact: true },
+  {
+    label: 'Справочники',
+    icon: 'book-open',
+    items: [
+      { label: 'Контрагенты', link: '/directories/counterparties' },
+      { label: 'Подразделения', link: '/directories/departments' }, // the current page: the group opens
+    ],
+  },
+  { heading: 'Администрирование', items: [{ label: 'Настройки', link: '/settings', icon: 'settings' }] },
+];`,
+        language: 'typescript',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const nav = within(within(canvasElement).getByRole('navigation'));
     // The navigation happens as the story opens: the group opens once it has.
@@ -173,6 +195,28 @@ export const InGroup: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long', '/directories/ministries'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-sidebar-nav label="Boʻlimlar" [items]="pages" lang="uz-Latn" />
+
+pages: AveSidebarEntry[] = [
+  { label: 'Bosh sahifa', link: '/', icon: 'house', exact: true },
+  { label: 'Kelib tushgan hujjatlar va murojaatlar', link: '/inbox', icon: 'inbox' },
+  {
+    label: 'Маълумотномалар',
+    icon: 'book-open',
+    items: [
+      { label: 'Oʻzbekiston Respublikasi vazirliklari va idoralari', link: '/directories/ministries' },
+      { label: 'Контрагенты и их банковские реквизиты', link: '/directories/counterparties' },
+    ],
+  },
+  { heading: 'Maʼmuriyat va tizim sozlamalari', items: [{ label: 'Foydalanuvchilar', link: '/users', icon: 'users' }] },
+];`,
+        language: 'typescript',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const nav = canvasElement.querySelector('nav');
     await expect(nav?.scrollWidth).toBe(nav?.clientWidth);

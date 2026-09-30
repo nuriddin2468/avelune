@@ -108,13 +108,9 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 const meta: Meta<CardStories> = {
   title: 'Components/Card',
-  component: CardStories,
+  component: AveCard,
   decorators: [
     applicationConfig({
       providers: [{ provide: LOCALE_ID, useValue: 'ru' }, provideRouter([], withHashLocation())],
@@ -127,17 +123,22 @@ export default meta;
 export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default'),
-  parameters: source(
-    '<ave-card>',
-    '  <h2 aveCardTitle>Поставка офисной мебели</h2>',
-    '  <ave-badge aveCardEnd variant="success">Подписан</ave-badge>',
-    '  <dl>…</dl>',
-    '  <div aveCardFooter>',
-    '    <button aveButton type="button">Продлить</button>',
-    '    <a aveButton variant="primary" routerLink="/contracts/114">Открыть договор</a>',
-    '  </div>',
-    '</ave-card>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-card>
+  <h2 aveCardTitle>Поставка офисной мебели</h2>
+  <ave-badge aveCardEnd variant="success">Подписан</ave-badge>
+  <dl>…</dl>
+  <div aveCardFooter>
+    <button aveButton type="button">Продлить</button>
+    <a aveButton variant="primary" routerLink="/contracts/114">Открыть договор</a>
+  </div>
+</ave-card>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('heading', { name: 'Поставка офисной мебели', level: 2 })).toBeVisible();
@@ -152,15 +153,20 @@ export const Default: Story = {
 /** Cards in a grid that wraps, each linking its contract from its title. */
 export const Grid: Story = {
   render: frame('grid'),
-  parameters: source(
-    '<li>',
-    '  <ave-card>',
-    '    <h3 aveCardTitle><a aveLink routerLink="/contracts/114">Поставка офисной мебели</a></h3>',
-    '    <ave-badge aveCardEnd variant="success">Подписан</ave-badge>',
-    '    <p>ДК-2025/114 · ООО «Мебель Сервис»</p>',
-    '  </ave-card>',
-    '</li>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<li>
+  <ave-card>
+    <h3 aveCardTitle><a aveLink routerLink="/contracts/114">Поставка офисной мебели</a></h3>
+    <ave-badge aveCardEnd variant="success">Подписан</ave-badge>
+    <p>ДК-2025/114 · ООО «Мебель Сервис»</p>
+  </ave-card>
+</li>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(within(canvas.getByRole('list')).getAllByRole('listitem')).toHaveLength(3);
@@ -172,6 +178,22 @@ export const Grid: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-card>
+  <h3 aveCardTitle>Oʻzbekiston Respublikasi Vazirlar Mahkamasining qarori bilan tasdiqlangan shartnoma</h3>
+  <ave-badge aveCardEnd variant="warning">Muddati tugaydi</ave-badge>
+  <p>Shartnoma 2026-yil 31-dekabrgacha amal qiladi. Uni uzaytiring yoki yangisini tayyorlang.</p>
+  <div aveCardFooter>
+    <button aveButton type="button">Arxivga oʻtkazish</button>
+    <button aveButton type="button" variant="primary">Muddatini uzaytirish</button>
+  </div>
+</ave-card>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const card = canvasElement.querySelector('ave-card');
     await expect(card?.scrollWidth).toBe(card?.clientWidth);

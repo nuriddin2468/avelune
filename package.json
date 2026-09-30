@@ -58,6 +58,7 @@
     "@size-limit/file": "catalog:",
     "@storybook/addon-a11y": "catalog:",
     "@storybook/addon-docs": "catalog:",
+    "@storybook/addon-mcp": "catalog:",
     "@storybook/addon-vitest": "catalog:",
     "@storybook/angular-vite": "catalog:",
     "@types/fontkit": "catalog:",

@@ -98,19 +98,14 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 /** The open menu, if any. */
 function openMenu(): HTMLElement | null {
   return document.querySelector<HTMLElement>('[role="menu"]');
 }
 
-// No `component`: Storybook instantiates a meta's component outside an injection context to read its defaults, which
-// fails on an injection there (NG0203), as for the select family's and the toolbar's stories.
 const meta: Meta<MenubarStories> = {
   title: 'Components/Menubar',
+  component: AveMenubar,
   decorators: [applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: 'ru' }] })],
 };
 export default meta;
@@ -118,14 +113,19 @@ export default meta;
 /** An editor's menus: the arrows along the bar, a menu opened by Down, following the arrows while it is open. */
 export const Default: Story = {
   render: frame('default'),
-  parameters: source(
-    '<ave-menubar label="Шаблон договора" [menus]="menus" (itemSelected)="run($event)" />',
-    '',
-    'menus: AveMenubarMenu<Command>[] = [',
-    "  { label: 'Файл', items: [{ value: 'save', label: 'Сохранить', icon: 'save' }, …] },",
-    "  { label: 'Правка', items: [{ value: 'undo', label: 'Отменить' }, …] },",
-    '];',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-menubar label="Шаблон договора" [menus]="menus" (itemSelected)="run($event)" />
+
+menus: AveMenubarMenu<Command>[] = [
+  { label: 'Файл', items: [{ value: 'save', label: 'Сохранить', icon: 'save' }, …] },
+  { label: 'Правка', items: [{ value: 'undo', label: 'Отменить' }, …] },
+];`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const bar = within(canvas.getByRole('menubar', { name: 'Шаблон договора' }));
@@ -151,6 +151,29 @@ export const Default: Story = {
 export const Open: Story = {
   tags: ['forced-colors'],
   render: frame('default'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-menubar label="Шаблон договора" [menus]="menus" (itemSelected)="run($event)" />
+
+menus: AveMenubarMenu<Command>[] = [
+  {
+    label: 'Файл',
+    items: [
+      { value: 'new', label: 'Новый шаблон', icon: 'file-plus' },
+      { value: 'save', label: 'Сохранить', icon: 'save' },
+      { value: 'export', label: 'Выгрузить в PDF', icon: 'file-down' },
+      { value: 'print', label: 'Печать', icon: 'printer' },
+      { separator: true },
+      { value: 'close', label: 'Закрыть шаблон' },
+    ],
+  },
+  { label: 'Правка', items: [{ value: 'undo', label: 'Отменить' }, …] },
+];`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const bar = within(within(canvasElement).getByRole('menubar'));
     // Opened from the keyboard, as a script opens it: focus moves to the first item and draws its ring there.
@@ -169,6 +192,31 @@ export const Open: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-menubar label="Shablon" [menus]="menus" lang="uz-Latn" (itemSelected)="run($event)" />
+
+menus: AveMenubarMenu<Command>[] = [
+  {
+    label: 'Fayl',
+    items: [
+      { value: 'save', label: 'Shablonni saqlash', icon: 'save' },
+      { value: 'export', label: 'Oʻzbekiston Respublikasi vazirliklari uchun PDF formatida yuklab olish', icon: 'file-down' },
+    ],
+  },
+  {
+    label: 'Maʼlumotnomalar',
+    items: [
+      { value: 'counterparty', label: 'Вставить реквизиты контрагента из справочника организаций' },
+      { value: 'bank', label: 'Bank rekvizitlari' },
+    ],
+  },
+];`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const bar = within(within(canvasElement).getByRole('menubar'));
     await userEvent.tab();

@@ -111,13 +111,9 @@ function locale(value: string): ReturnType<typeof applicationConfig> {
   return applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: value }] });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
-// No `component`: Storybook instantiates a meta's component outside an injection context, where `model()` throws.
 const meta: Meta = {
   title: 'Components/Slider',
+  component: AveSlider,
   decorators: [moduleMetadata({ imports: [AveFormField, AveHint, AveRangeSlider, AveSlider, SliderStoryFrame] })],
   render: () => ({
     props: { percent },
@@ -134,11 +130,16 @@ export default meta;
 /** One value in Russian: the value in the label row, the bounds under the track's ends. */
 export const Default: Story = {
   decorators: [locale('ru'), componentWrapperDecorator(SliderStoryFrame)],
-  parameters: source(
-    '<ave-form-field label="Аванс">',
-    '  <ave-slider [maxValue]="50" [step]="5" [format]="{ style: \'unit\', unit: \'percent\' }" [formField]="contract.advance" />',
-    '</ave-form-field>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-form-field label="Аванс">
+  <ave-slider [maxValue]="50" [step]="5" [format]="{ style: 'unit', unit: 'percent' }" [formField]="contract.advance" />
+</ave-form-field>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const slider = within(canvasElement).getByRole('slider', { name: 'Аванс' });
     await expect(slider).toHaveAttribute('aria-valuetext', expect.stringMatching(written('15 %')));
@@ -159,9 +160,14 @@ export const Range: Story = {
       </ave-form-field>
     `,
   }),
-  parameters: source(
-    '<ave-range-slider [maxValue]="24" [format]="{ style: \'unit\', unit: \'hour\' }" [formField]="settings.hours" />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-range-slider [maxValue]="24" [format]="{ style: \'unit\', unit: \'hour\' }" [formField]="settings.hours" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const lower = canvas.getByRole('slider', { name: 'Часы доставки писем Минимум' });
@@ -177,7 +183,15 @@ export const States: Story = {
   tags: ['forced-colors'],
   decorators: [locale('ru')],
   render: () => ({ template: '<ave-slider-states />', moduleMetadata: { imports: [SliderStates] } }),
-  parameters: source('<ave-slider disabled />', '<ave-range-slider disabled />'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-slider disabled />
+<ave-range-slider disabled />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     for (const slider of canvasElement.querySelectorAll('input[type=range]'))
@@ -202,10 +216,15 @@ function drag(slider: HTMLElement, value: number): void {
 export const Forms: Story = {
   decorators: [locale('en-US')],
   render: () => ({ template: '<ave-slider-forms />', moduleMetadata: { imports: [SliderForms] } }),
-  parameters: source(
-    '<ave-slider [maxValue]="50" [step]="5" [formField]="contract.advance" />',
-    '<ave-range-slider [maxValue]="24" [formControl]="delivery" />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-slider [maxValue]="50" [step]="5" [formField]="contract.advance" />
+<ave-range-slider [maxValue]="24" [formControl]="delivery" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const advance = canvas.getByRole('slider', { name: 'Advance (Signal Forms)' });
@@ -228,6 +247,17 @@ export const LongText: Story = {
   name: 'Long text',
   decorators: [locale('ru')],
   render: () => ({ template: '<ave-slider-long />', moduleMetadata: { imports: [SliderLong] } }),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-form-field label="Предельная сумма договора без согласования с финансовым департаментом">
+  <ave-slider [maxValue]="1000000000" [step]="50000000" [formField]="contract.limit" />
+  <p aveHint>Договоры на большую сумму уходят на согласование в финансовый департамент автоматически.</p>
+</ave-form-field>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const column = canvasElement.querySelector('.narrow');
     if (column === null) throw new Error('No column');
@@ -269,6 +299,19 @@ export const Compact: Story = {
     componentWrapperDecorator(SliderStoryFrame),
     componentWrapperDecorator((story) => `<div data-density="compact">${story}</div>`),
   ],
+  parameters: {
+    docs: {
+      source: {
+        code: `<div data-density="compact">
+  <ave-form-field label="Аванс">
+    <ave-slider [maxValue]="50" [step]="5" [format]="{ style: 'unit', unit: 'percent' }" [formField]="contract.advance" />
+    <p aveHint>Доля суммы договора, которую платят до поставки.</p>
+  </ave-form-field>
+</div>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('slider').getBoundingClientRect().height).toBe(24);
   },

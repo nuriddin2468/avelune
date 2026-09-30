@@ -69,13 +69,9 @@ function frame(view: View, start = 1): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 const meta: Meta<PaginationStories> = {
   title: 'Components/Pagination',
-  component: PaginationStories,
+  component: AvePagination,
   decorators: [applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: 'ru' }] })],
 };
 export default meta;
@@ -84,7 +80,9 @@ export default meta;
 export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default', 5),
-  parameters: source('<ave-pagination [total]="134" [pageSize]="10" [(page)]="page" />'),
+  parameters: {
+    docs: { source: { code: '<ave-pagination [total]="134" [pageSize]="10" [(page)]="page" />', language: 'html' } },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const nav = within(canvas.getByRole('navigation', { name: 'Страницы' }));
@@ -110,6 +108,14 @@ export const Default: Story = {
 export const FewPages: Story = {
   name: 'Few pages',
   render: frame('few'),
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-pagination label="Страницы актов" [total]="45" [pageSize]="10" [(page)]="page" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const nav = within(within(canvasElement).getByRole('navigation'));
     const wide = (canvasElement.querySelector('ave-pagination')?.clientWidth ?? 0) >= 480;
@@ -122,9 +128,14 @@ export const FewPages: Story = {
 export const PageSize: Story = {
   name: 'Page size',
   render: frame('sizes', 5),
-  parameters: source(
-    '<ave-pagination [total]="134" [pageSizes]="[10, 20, 50, 100]" [(pageSize)]="pageSize" [(page)]="page" />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-pagination [total]="134" [pageSizes]="[10, 20, 50, 100]" [(pageSize)]="pageSize" [(page)]="page" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const size = canvas.getByRole('combobox', { name: 'На странице' });
@@ -141,6 +152,14 @@ export const PageSize: Story = {
 /** A narrow container: "Страница 3 из 14" between the arrows, and the range above them. */
 export const Narrow: Story = {
   render: frame('narrow', 3),
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-pagination label="Страницы писем" [total]="134" [pageSize]="10" [(page)]="page" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const nav = within(within(canvasElement).getByRole('navigation'));
     await expect(nav.getByText('Страница 3 из 14')).toBeVisible();
@@ -155,6 +174,15 @@ export const Narrow: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: () => ({ template: '<ave-pagination-uzbek />', moduleMetadata: { imports: [PaginationUzbek] } }),
+  parameters: {
+    docs: {
+      source: {
+        code: `<!-- In an application whose LOCALE_ID is 'uz-Latn': the kit's words and numbers in Uzbek. -->
+<ave-pagination [total]="12345" [pageSize]="20" [(page)]="page" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const nav = canvasElement.querySelector('nav');
     await expect(nav).toHaveAttribute('aria-label', 'Sahifalar');

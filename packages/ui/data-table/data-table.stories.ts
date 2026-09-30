@@ -245,13 +245,9 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 const meta: Meta<DataTableStories> = {
   title: 'Components/DataTable',
-  component: DataTableStories,
+  component: AveDataTable,
   decorators: [
     applicationConfig({
       providers: [
@@ -267,17 +263,22 @@ export default meta;
 export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default'),
-  parameters: source(
-    '<ave-data-table label="Договоры" [rows]="contracts" [columns]="columns" [rowKey]="byId"',
-    '  selectable [(selected)]="chosen" [(sort)]="sort">',
-    '  <ng-template aveCell="subject" [aveCellOf]="contracts" let-contract>',
-    '    <a aveLink [routerLink]="[\'/contracts\', contract.id]">{{ contract.subject }}</a>',
-    '  </ng-template>',
-    '  <ng-template aveCell="status" [aveCellOf]="contracts" let-contract>',
-    '    <ave-badge [variant]="variants[contract.status]">{{ statuses[contract.status] }}</ave-badge>',
-    '  </ng-template>',
-    '</ave-data-table>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-data-table label="Договоры" [rows]="contracts" [columns]="columns" [rowKey]="byId"
+  selectable [(selected)]="chosen" [(sort)]="sort">
+  <ng-template aveCell="subject" [aveCellOf]="contracts" let-contract>
+    <a aveLink [routerLink]="['/contracts', contract.id]">{{ contract.subject }}</a>
+  </ng-template>
+  <ng-template aveCell="status" [aveCellOf]="contracts" let-contract>
+    <ave-badge [variant]="variants[contract.status]">{{ statuses[contract.status] }}</ave-badge>
+  </ng-template>
+</ave-data-table>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const table = canvas.getByRole('table', { name: 'Договоры' });
@@ -304,6 +305,15 @@ export const Default: Story = {
 /** The first rows on their way: skeleton rows under the header, and the table busy. */
 export const Loading: Story = {
   render: frame('loading'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-data-table label="Акты сверки" [rows]="contracts" [columns]="columns" [rowKey]="byId"
+  selectable [loading]="loading()" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('table')).toHaveAttribute('aria-busy', 'true');
     await expect(canvasElement.querySelectorAll('tbody tr[data-placeholder]')).toHaveLength(5);
@@ -313,6 +323,15 @@ export const Loading: Story = {
 /** The rows did not come: an alert with Retry stands in their place; pressed, the rows load. */
 export const Failed: Story = {
   render: frame('failed'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-data-table label="Счета на оплату" [rows]="contracts" [columns]="columns" [rowKey]="byId"
+  selectable [loading]="loading()" [failed]="failed()" (retry)="load()" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('alert')).toHaveTextContent('Записи не загрузились.');
@@ -323,6 +342,15 @@ export const Failed: Story = {
 /** Retry pressed: skeleton rows, then the rows. */
 export const Retried: Story = {
   render: frame('failed'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-data-table label="Счета на оплату" [rows]="contracts" [columns]="columns" [rowKey]="byId"
+  selectable [loading]="loading()" [failed]="failed()" (retry)="load()" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: 'Повторить' }));
@@ -334,6 +362,21 @@ export const Retried: Story = {
 /** Nothing matches: the application's empty state, with its action, under the header. */
 export const Empty: Story = {
   render: frame('empty'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-data-table label="Доверенности" [rows]="contracts" [columns]="columns" [rowKey]="byId" selectable>
+  <ave-empty-state aveDataTableEmpty icon="search" heading="Ничего не найдено">
+    <p>Ни один договор не подходит под поиск и выбранные статусы.</p>
+    <div aveEmptyStateActions>
+      <button aveButton type="button">Сбросить поиск и фильтры</button>
+    </div>
+  </ave-empty-state>
+</ave-data-table>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByText('Ничего не найдено')).toBeVisible();
@@ -346,6 +389,15 @@ export const Empty: Story = {
 export const ServerPages: Story = {
   name: 'Server pages',
   render: frame('server'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-data-table label="Реестр договоров" [rows]="contracts" [columns]="columns" [rowKey]="byId"
+  source="server" [total]="total" selectable [(sort)]="sort" [(page)]="page" [(pageSize)]="pageSize" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('status')).toHaveTextContent('1–10 из 134');
@@ -360,6 +412,16 @@ export const ServerPages: Story = {
 export const StickyAndResizable: Story = {
   name: 'Sticky header and resizing',
   render: frame('sticky'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<!-- The application's CSS bounds the table's height (block-size); the rows scroll under the header. -->
+<ave-data-table label="Договоры подразделения" [rows]="contracts" [columns]="columns" [rowKey]="byId"
+  selectable resizable />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('combobox', { name: 'На странице' }));
@@ -391,6 +453,21 @@ export const StickyAndResizable: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: () => ({ template: `<ave-data-table-uzbek />`, moduleMetadata: { imports: [DataTableUzbek] } }),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-data-table label="Shartnomalar" [rows]="contracts" [columns]="columns" [rowKey]="byId">
+  <ng-template aveCell="status" [aveCellOf]="contracts" let-contract>
+    <ave-badge [variant]="variants[contract.status]">{{ statuses[contract.status] }}</ave-badge>
+  </ng-template>
+  <ng-template aveCell="endsOn" [aveCellOf]="contracts" let-contract>
+    <time [attr.datetime]="contract.endsOn">{{ dates.numeric(contract.endsOn) }}</time>
+  </ng-template>
+</ave-data-table>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const box = await within(canvasElement).findByRole('region', { name: 'Shartnomalar' });
     await expect(box.scrollWidth).toBeGreaterThan(box.clientWidth);
@@ -403,6 +480,21 @@ export const LongText: Story = {
 /** Compact density: rows and controls one step down, the rows' menus among them. */
 export const Compact: Story = {
   render: frame('compact'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<div data-density="compact">
+  <ave-data-table label="Письма" [rows]="contracts" [columns]="columns" [rowKey]="byId" selectable>
+    <ng-template aveCell="actions" [aveCellOf]="contracts" let-contract>
+      <ave-menu icon="ellipsis" variant="ghost" size="sm"
+        [label]="'Действия с договором ' + contract.number" [items]="actions" />
+    </ng-template>
+  </ave-data-table>
+</div>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const rows = [...canvasElement.querySelectorAll('tbody tr')];
     await expect(rows.map((row) => row.getBoundingClientRect().height)).toEqual(rows.map(() => 36));

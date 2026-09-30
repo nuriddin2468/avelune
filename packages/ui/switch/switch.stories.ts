@@ -81,22 +81,23 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 const meta: Meta<SwitchStories> = {
   title: 'Components/Switch',
-  component: SwitchStories,
+  component: AveSwitch,
 };
 export default meta;
 
 /** Two settings; Space and a click toggle them. */
 export const Default: Story = {
   render: frame('default'),
-  parameters: source(
-    '<label aveChoice><input type="checkbox" aveSwitch [formField]="settings.notices" /> Email notices</label>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: '<label aveChoice><input type="checkbox" aveSwitch [formField]="settings.notices" /> Email notices</label>',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const compact = canvas.getByRole('switch', { name: 'Compact tables' });
@@ -113,10 +114,15 @@ export const Default: Story = {
 export const States: Story = {
   tags: ['forced-colors'],
   render: frame('states'),
-  parameters: source(
-    '<input type="checkbox" aveSwitch aria-invalid="true" />',
-    '<input type="checkbox" aveSwitch disabled />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<input type="checkbox" aveSwitch aria-invalid="true" />
+<input type="checkbox" aveSwitch disabled />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const label of canvasElement.querySelectorAll('label')) {
       await expect(label.getBoundingClientRect().height).toBe(24);
@@ -132,10 +138,15 @@ export const States: Story = {
 /** Both form APIs bind it as a checkbox. */
 export const Forms: Story = {
   render: () => ({ template: '<ave-switch-forms />', moduleMetadata: { imports: [SwitchForms] } }),
-  parameters: source(
-    '<input type="checkbox" aveSwitch [formField]="settings.notices" />',
-    '<input type="checkbox" aveSwitch [formControl]="compact" />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<input type="checkbox" aveSwitch [formField]="settings.notices" />
+<input type="checkbox" aveSwitch [formControl]="compact" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('switch', { name: 'Email notices' }));
@@ -149,6 +160,14 @@ export const Forms: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: '<label aveChoice><input type="checkbox" aveSwitch checked /> Присылать уведомления о каждом новом согласовании договоров…</label>',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const label of canvasElement.querySelectorAll('label')) {
       const track = label.querySelector('input')?.getBoundingClientRect();

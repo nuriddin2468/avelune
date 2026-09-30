@@ -97,10 +97,6 @@ function locale(value: string): ReturnType<typeof applicationConfig> {
   return applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: value }] });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 /**
  * A banner is one row of the small control height, 40px, while its message is one line, and a line of body text
  * (20px) taller for each line more: its message's rows (32px, then 20px each) plus 8px, at any width.
@@ -113,7 +109,7 @@ async function expectRows(banner: Element): Promise<void> {
 
 const meta: Meta<BannerStories> = {
   title: 'Components/Banner',
-  component: BannerStories,
+  component: AveBanner,
   decorators: [locale('ru')],
 };
 export default meta;
@@ -121,11 +117,16 @@ export default meta;
 /** Planned maintenance across the top of a page, with a link and a close button. */
 export const Default: Story = {
   render: frame('default'),
-  parameters: source(
-    '<ave-banner variant="warning" dismissible (dismiss)="maintenanceSeen.set(true)">',
-    '  В субботу с 22:00 до 02:00 система будет недоступна. <a href="…">Подробнее о работах</a>',
-    '</ave-banner>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-banner variant="warning" dismissible (dismiss)="maintenanceSeen.set(true)">
+  В субботу с 22:00 до 02:00 система будет недоступна. <a href="…">Подробнее о работах</a>
+</ave-banner>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const banner = within(canvasElement).getByRole('alert');
     await expect(within(banner).getByRole('button', { name: 'Закрыть' })).toBeVisible();
@@ -137,6 +138,20 @@ export const Default: Story = {
 export const Variants: Story = {
   tags: ['forced-colors'],
   render: frame('variants'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-banner>Доступна новая версия справочника контрагентов.</ave-banner>
+<ave-banner variant="success">Лицензия продлена до 31.12.2027.</ave-banner>
+<ave-banner variant="warning">В субботу с 22:00 до 02:00 система будет недоступна.</ave-banner>
+<ave-banner variant="danger">Сервер согласования не отвечает. Договоры сохраняются, но не отправляются.</ave-banner>
+<ave-banner variant="warning" dismissible (dismiss)="licenceSeen.set(true)">
+  Лицензия истекает через 5 дней. <a href="…">Продлить лицензию</a>
+</ave-banner>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const banner of canvasElement.querySelectorAll('ave-banner')) await expectRows(banner);
   },
@@ -147,6 +162,20 @@ export const LongText: Story = {
   name: 'Long text',
   decorators: [locale('uz-Latn')],
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-banner variant="warning" dismissible (dismiss)="worksSeen.set(true)">
+  Shanba kuni soat 22:00 dan 02:00 gacha tizimda rejali texnik ishlar olib boriladi, bu vaqtda hujjatlarni yuborish
+  va kelishish imkoniyati boʻlmaydi. <a href="…">Batafsil</a>
+</ave-banner>
+<ave-banner>
+  С 1 апреля 2026 года договоры с суммой больше одного миллиарда сумов согласует финансовый директор.
+</ave-banner>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const [first] = canvasElement.querySelectorAll('ave-banner');
     const icon = first?.querySelector('.icon')?.getBoundingClientRect();
@@ -159,6 +188,18 @@ export const LongText: Story = {
 /** Closing the banner: it emits dismiss, and the page removes it. */
 export const Dismiss: Story = {
   render: () => ({ template: '<ave-banner-dismiss />', moduleMetadata: { imports: [BannerDismiss] } }),
+  parameters: {
+    docs: {
+      source: {
+        code: `@if (!seen()) {
+  <ave-banner variant="info" dismissible (dismiss)="seen.set(true)">
+    Доступна новая версия справочника контрагентов.
+  </ave-banner>
+}`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: 'Закрыть' }));

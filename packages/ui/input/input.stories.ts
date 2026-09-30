@@ -157,10 +157,6 @@ class InputStoryFrame {}
 
 type Story = StoryObj<AveInput>;
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 function frame(view: View): NonNullable<Story['render']> {
   return () => ({
     props: { view },
@@ -212,10 +208,15 @@ export const Default: Story = {
 /** Each size next to a Button of that size: the same box. */
 export const Sizes: Story = {
   render: frame('sizes'),
-  parameters: source(
-    '<input aveInput type="search" size="sm" aria-label="Search" />',
-    '<button aveButton type="button" size="sm">Search</button>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<input aveInput type="search" size="sm" aria-label="Search" />
+<button aveButton type="button" size="sm">Search</button>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const row of canvasElement.querySelectorAll('.row')) {
       const field = row.querySelector('input');
@@ -230,11 +231,16 @@ export const Sizes: Story = {
 export const States: Story = {
   tags: ['forced-colors'],
   render: frame('states'),
-  parameters: source(
-    '<input aveInput type="text" aria-invalid="true" />',
-    '<input aveInput type="text" readonly />',
-    '<input aveInput type="text" disabled />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<input aveInput type="text" aria-invalid="true" />
+<input aveInput type="text" readonly />
+<input aveInput type="text" disabled />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     // No state changes the size: every field is as tall as the first and fills its grid cell (whose widths differ by
     // a fraction of a pixel, as the grid shares out the row).
@@ -258,14 +264,12 @@ export const SignalForms: Story = {
     docs: {
       source: {
         language: 'typescript',
-        code: [
-          "readonly contact = form(signal({ email: '' }), (path) => {",
-          '  required(path.email);',
-          '  email(path.email);',
-          '});',
-          '',
-          '// <input aveInput type="email" [formField]="contact.email" />',
-        ].join('\n'),
+        code: `readonly contact = form(signal({ email: '' }), (path) => {
+  required(path.email);
+  email(path.email);
+});
+
+// <input aveInput type="email" [formField]="contact.email" />`,
       },
     },
   },
@@ -286,11 +290,9 @@ export const ReactiveForms: Story = {
     docs: {
       source: {
         language: 'typescript',
-        code: [
-          "readonly email = new FormControl('', { validators: [Validators.required, Validators.email] });",
-          '',
-          '// <input aveInput type="email" [formControl]="email" />',
-        ].join('\n'),
+        code: `readonly email = new FormControl('', { validators: [Validators.required, Validators.email] });
+
+// <input aveInput type="email" [formControl]="email" />`,
       },
     },
   },
@@ -310,7 +312,14 @@ export const ReactiveForms: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
-  parameters: source('<input aveInput type="text" value="Государственное унитарное предприятие…" />'),
+  parameters: {
+    docs: {
+      source: {
+        code: '<input aveInput type="text" value="Государственное унитарное предприятие…" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const column = canvasElement.querySelector('.narrow');
     if (column === null) throw new Error('No column');
@@ -324,11 +333,16 @@ export const LongText: Story = {
 /** Compact density: every size one step down, next to its Button. */
 export const Compact: Story = {
   render: frame('compact'),
-  parameters: source(
-    '<div data-density="compact">',
-    '  <input aveInput type="search" aria-label="Search" />',
-    '</div>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<div data-density="compact">
+  <input aveInput type="search" aria-label="Search" />
+</div>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const heights = { sm: 28, md: 32, lg: 36 } as const;
     for (const size of sizes) {

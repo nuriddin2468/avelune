@@ -117,10 +117,6 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 /** The open menu, if any. */
 function openMenu(): HTMLElement | null {
   return document.querySelector<HTMLElement>('[role="menu"]');
@@ -128,7 +124,7 @@ function openMenu(): HTMLElement | null {
 
 const meta: Meta<MenuStories> = {
   title: 'Components/Menu',
-  component: MenuStories,
+  component: AveMenu,
   decorators: [applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: 'ru' }] })],
 };
 export default meta;
@@ -136,15 +132,20 @@ export default meta;
 /** The open menu: groups of actions with icons, a disabled one, and a destructive one last. */
 export const Default: Story = {
   render: frame('default'),
-  parameters: source(
-    '<ave-menu label="Действия" [items]="actions" (itemSelected)="run($event)" />',
-    '',
-    'actions: AveMenuEntry<Action>[] = [',
-    "  { value: 'open', label: 'Открыть', icon: 'file-text' },",
-    '  { separator: true },',
-    "  { value: 'delete', label: 'Удалить договор', icon: 'trash', danger: true },",
-    '];',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-menu label="Действия" [items]="actions" (itemSelected)="run($event)" />
+
+actions: AveMenuEntry<Action>[] = [
+  { value: 'open', label: 'Открыть', icon: 'file-text' },
+  { separator: true },
+  { value: 'delete', label: 'Удалить договор', icon: 'trash', danger: true },
+];`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button', { name: 'Действия' });
@@ -163,6 +164,14 @@ export const Default: Story = {
 export const IconOnly: Story = {
   name: 'Icon only',
   render: frame('icon'),
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-menu label="Действия с договором" icon="ellipsis" variant="ghost" [items]="actions" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Действия с договором' });
     await userEvent.tab();
@@ -179,6 +188,19 @@ export const IconOnly: Story = {
 /** The button takes a Button's variants, sizes and disabled state. */
 export const Variants: Story = {
   render: frame('variants'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-menu label="Действия" [items]="actions" />
+<ave-menu label="Действия" variant="ghost" [items]="actions" />
+<ave-menu label="Создать" variant="primary" [items]="actions" />
+<ave-menu label="Действия" size="sm" [items]="actions" />
+<ave-menu label="Действия" size="lg" [items]="actions" />
+<ave-menu label="Действия" disabled [items]="actions" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const buttons = within(canvasElement).getAllByRole('button');
     await expect(buttons.map((button) => button.getBoundingClientRect().height)).toEqual([36, 36, 36, 32, 40, 36]);
@@ -190,6 +212,28 @@ export const Variants: Story = {
 export const RowActions: Story = {
   name: 'Row actions',
   render: frame('row'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ul aria-label="Договоры">
+  @for (number of numbers; track number) {
+    <li>
+      <span>{{ number }}</span>
+      <ave-menu
+        [label]="'Действия с договором ' + number"
+        icon="ellipsis"
+        variant="ghost"
+        size="sm"
+        [items]="actions"
+        (itemSelected)="run(number, $event)"
+      />
+    </li>
+  }
+</ul>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button', { name: 'Действия с договором ДК-2026/113' });
@@ -210,6 +254,20 @@ export const RowActions: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-menu label="Действия" [items]="actions" />
+
+actions: AveMenuEntry<Action>[] = [
+  { value: 'open', label: 'Отправить договор на повторное согласование юридическому отделу' },
+  { value: 'copy', label: 'Hujjatni boʻlim boshligʻiga kelishish uchun yuborish' },
+  { value: 'delete', label: 'Удалить черновик договора без возможности восстановления', danger: true },
+];`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await userEvent.click(within(canvasElement).getByRole('button', { name: 'Действия' }));
     await waitFor(() => expect(openMenu()).not.toBeNull());

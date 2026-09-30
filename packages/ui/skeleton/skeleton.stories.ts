@@ -119,13 +119,9 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 const meta: Meta<SkeletonStories> = {
   title: 'Components/Skeleton',
-  component: SkeletonStories,
+  component: AveSkeleton,
 };
 export default meta;
 
@@ -133,13 +129,18 @@ export default meta;
 export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default'),
-  parameters: source(
-    '<article aria-busy="true" aria-label="Договор загружается">',
-    '  <ave-skeleton />',
-    '  <ave-skeleton lines="3" />',
-    '  <ave-skeleton shape="block" />',
-    '</article>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<article aria-busy="true" aria-label="Договор загружается">
+  <ave-skeleton />
+  <ave-skeleton lines="3" />
+  <ave-skeleton shape="block" />
+</article>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const skeleton of canvasElement.querySelectorAll('ave-skeleton')) {
       await expect(skeleton).toHaveAttribute('aria-hidden', 'true');
@@ -151,7 +152,16 @@ export const Default: Story = {
 /** Lines of text, a paragraph, a block and a block the page sizes. */
 export const Shapes: Story = {
   render: frame('shapes'),
-  parameters: source('<ave-skeleton />', '<ave-skeleton lines="4" />', '<ave-skeleton shape="block" />'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-skeleton />
+<ave-skeleton lines="4" />
+<ave-skeleton shape="block" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const heights = [...canvasElement.querySelectorAll('ave-skeleton')].map(
       (skeleton) => skeleton.getBoundingClientRect().height,
@@ -163,6 +173,20 @@ export const Shapes: Story = {
 /** Compact density changes controls, not text: the lines keep the height of body text. */
 export const Compact: Story = {
   render: frame('compact'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<div data-density="compact">
+  <article aria-busy="true" aria-label="Договор загружается">
+    <ave-skeleton />
+    <ave-skeleton lines="3" />
+    <ave-skeleton shape="block" />
+  </article>
+</div>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const [heading, paragraph] = canvasElement.querySelectorAll('ave-skeleton');
     await expect(heading?.getBoundingClientRect().height).toBe(20);
@@ -173,6 +197,28 @@ export const Compact: Story = {
 /** A list that loads, then shows its rows in the places the skeleton held; the status says it loads. */
 export const Loading: Story = {
   render: () => ({ template: '<ave-skeleton-list />', moduleMetadata: { imports: [SkeletonList] } }),
+  parameters: {
+    docs: {
+      source: {
+        code: `<section aria-labelledby="list-title" [attr.aria-busy]="loading() ? 'true' : null">
+  <h2 id="list-title">Договоры на согласовании</h2>
+  <p role="status">{{ loading() ? 'Загрузка договоров…' : '' }}</p>
+  <ul>
+    @if (loading()) {
+      @for (row of placeholders; track row) {
+        <li><ave-skeleton /><ave-skeleton /></li>
+      }
+    } @else {
+      @for (contract of contracts(); track contract.number) {
+        <li>{{ contract.subject }} <span>{{ contract.number }}</span></li>
+      }
+    }
+  </ul>
+</section>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const region = canvas.getByRole('region', { name: 'Договоры на согласовании' });

@@ -4,6 +4,7 @@
       "command": "node_modules/.bin/ng",
       "args": ["mcp", "--read-only"],
       "env": { "NG_CLI_ANALYTICS": "false" }
-    }
+    },
+    "storybook": { "type": "http", "url": "http://127.0.0.1:6006/mcp" }
   }
 }

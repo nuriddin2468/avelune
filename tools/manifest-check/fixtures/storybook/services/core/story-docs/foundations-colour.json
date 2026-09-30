@@ -1,0 +1,10 @@
+{
+  "components": {
+    "foundations-colour": {
+      "id": "foundations-colour",
+      "name": "foundations-colour",
+      "path": "./src/foundations/colour.stories.ts",
+      "stories": { "foundations-colour--roles": { "id": "foundations-colour--roles", "name": "Roles" } }
+    }
+  }
+}

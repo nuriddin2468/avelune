@@ -203,13 +203,9 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
-// No `component`: Storybook instantiates a meta's component outside an injection context, where `model()` throws.
 const meta: Meta = {
   title: 'Components/DateRangePicker',
+  component: AveDateRangePicker,
   decorators: [moduleMetadata({ imports: [AveDateRangePicker, DateRangeStoryFrame] })],
   render: () => ({
     props: { period: { start: '2026-03-09', end: '2026-03-20' } },
@@ -221,7 +217,9 @@ export default meta;
 /** One range field in Russian. */
 export const Default: Story = {
   decorators: [locale('ru'), componentWrapperDecorator(DateRangeStoryFrame)],
-  parameters: source('<ave-date-range-picker [formField]="contract.period" />'),
+  parameters: {
+    docs: { source: { code: '<ave-date-range-picker [formField]="contract.period" />', language: 'html' } },
+  },
   play: async ({ canvasElement }) => {
     const [start, end] = within(canvasElement).getAllByRole('textbox');
     await expect(start).toHaveValue('09.03.2026');
@@ -235,7 +233,9 @@ export const Default: Story = {
 export const Open: Story = {
   tags: ['forced-colors'],
   decorators: [locale('ru'), componentWrapperDecorator(DateRangeStoryFrame)],
-  parameters: source('<ave-date-range-picker [formField]="contract.period" />'),
+  parameters: {
+    docs: { source: { code: '<ave-date-range-picker [formField]="contract.period" />', language: 'html' } },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: 'Выбрать дату' }));
@@ -250,7 +250,9 @@ export const Open: Story = {
 export const Choosing: Story = {
   decorators: [locale('ru'), componentWrapperDecorator(DateRangeStoryFrame)],
   render: () => ({ template: `<ave-date-range-picker label="Срок действия" />` }),
-  parameters: source('<ave-date-range-picker [formField]="contract.period" />'),
+  parameters: {
+    docs: { source: { code: '<ave-date-range-picker [formField]="contract.period" />', language: 'html' } },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.type(canvas.getAllByRole('textbox')[0] ?? canvasElement, '02.03.2026');
@@ -267,7 +269,15 @@ export const States: Story = {
   tags: ['forced-colors'],
   decorators: [locale('ru')],
   render: frame('states'),
-  parameters: source('<ave-date-range-picker readonly />', '<ave-date-range-picker disabled />'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-date-range-picker readonly />
+<ave-date-range-picker disabled />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const input of canvasElement.querySelectorAll('input'))
       await expect(input.getBoundingClientRect().height).toBe(36);
@@ -283,10 +293,15 @@ export const States: Story = {
 export const Forms: Story = {
   decorators: [locale('ru')],
   render: () => ({ template: '<ave-date-range-picker-forms />', moduleMetadata: { imports: [DateRangeForms] } }),
-  parameters: source(
-    '<ave-date-range-picker [formField]="contract.period" />',
-    '<ave-date-range-picker [formControl]="period" />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-date-range-picker [formField]="contract.period" />
+<ave-date-range-picker [formControl]="period" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const signalStart = canvas.getByRole('textbox', { name: 'Period (Signal Forms) Дата начала' });
@@ -309,12 +324,17 @@ export const LongText: Story = {
   name: 'Long text',
   decorators: [locale('uz-Latn')],
   render: () => ({ template: '<ave-date-range-picker-long />', moduleMetadata: { imports: [DateRangeLong] } }),
-  parameters: source(
-    '<ave-form-field label="Shartnomaning amal qilish muddati (…)">',
-    '  <ave-date-range-picker [formField]="contract.term" />',
-    '  <p aveHint>…</p>',
-    '</ave-form-field>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-form-field label="Shartnomaning amal qilish muddati (…)">
+  <ave-date-range-picker [formField]="contract.term" />
+  <p aveHint>…</p>
+</ave-form-field>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const column = canvasElement.querySelector('.narrow');
     if (column === null) throw new Error('No column');
@@ -335,6 +355,9 @@ export const LongText: Story = {
 export const Narrow: Story = {
   decorators: [locale('ru')],
   render: frame('narrow'),
+  parameters: {
+    docs: { source: { code: '<ave-date-range-picker label="Срок действия" [value]="term" />', language: 'html' } },
+  },
   play: async ({ canvasElement }) => {
     const [start, end] = within(canvasElement).getAllByRole('textbox');
     if (start === undefined || end === undefined) throw new Error('No inputs');
@@ -348,6 +371,15 @@ export const Narrow: Story = {
 export const Sizes: Story = {
   decorators: [locale('ru')],
   render: frame('sizes'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<input aveInput type="text" size="sm" />
+<ave-date-range-picker size="sm" [formField]="contract.period" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const row of canvasElement.querySelectorAll('.pair')) {
       const [input, ...range] = [...row.querySelectorAll('input')];
@@ -365,7 +397,16 @@ export const Sizes: Story = {
 export const Compact: Story = {
   decorators: [locale('ru')],
   render: frame('compact'),
-  parameters: source('<div data-density="compact">', '  <ave-date-range-picker />', '</div>'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<div data-density="compact">
+  <ave-date-range-picker />
+</div>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const heights = { sm: 28, md: 32, lg: 36 } as const;
     for (const size of sizes) {
@@ -382,7 +423,7 @@ export const Compact: Story = {
 export const Clearing: Story = {
   decorators: [locale('ru')],
   render: () => ({ template: '<ave-date-range-picker-clearing />', moduleMetadata: { imports: [DateRangeClearing] } }),
-  parameters: source('<ave-date-range-picker [formField]="request.leave" />'),
+  parameters: { docs: { source: { code: '<ave-date-range-picker [formField]="request.leave" />', language: 'html' } } },
   play: async ({ canvasElement }) => {
     // The dash's column follows the font: measure once the kit's font has replaced the fallback.
     await document.fonts.ready;
@@ -440,9 +481,14 @@ export const Presets: Story = {
     props: { presets },
     template: `<ave-date-range-picker label="Период отчёта" [presets]="presets" />`,
   }),
-  parameters: source(
-    "<ave-date-range-picker [presets]=\"['today', 'thisWeek', 'lastMonth', 'last30Days', …]\" [formField]=\"report.period\" />",
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: "<ave-date-range-picker [presets]=\"['today', 'thisWeek', 'lastMonth', 'last30Days', …]\" [formField]=\"report.period\" />",
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: 'Выбрать дату' }));
@@ -473,7 +519,11 @@ export const PresetsBounds: Story = {
       template: `<ave-date-range-picker label="Hisobot davri" [minDate]="minDate" [maxDate]="maxDate" [presets]="presets" />`,
     };
   },
-  parameters: source('<ave-date-range-picker [minDate]="…" [maxDate]="…" [presets]="presets" />'),
+  parameters: {
+    docs: {
+      source: { code: '<ave-date-range-picker [minDate]="…" [maxDate]="…" [presets]="presets" />', language: 'html' },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: 'Sanani tanlash' }));

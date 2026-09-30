@@ -82,10 +82,6 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 /** Asks with the button, and waits until the confirmation shows. */
 async function ask(canvasElement: HTMLElement, button: string): Promise<HTMLDialogElement> {
   await userEvent.click(within(canvasElement).getByRole('button', { name: button }));
@@ -97,7 +93,7 @@ async function ask(canvasElement: HTMLElement, button: string): Promise<HTMLDial
 
 const meta: Meta<ConfirmDialogStories> = {
   title: 'Components/Confirm dialog',
-  component: ConfirmDialogStories,
+  component: AveConfirmDialog,
   decorators: [applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: 'ru' }] })],
 };
 export default meta;
@@ -105,12 +101,17 @@ export default meta;
 /** Deleting: the question names the action, the danger button repeats it, and Cancel has focus. */
 export const Default: Story = {
   render: frame('delete'),
-  parameters: source(
-    '<dialog aveConfirmDialog heading="Удалить договор ДК-2026/114?" action="Удалить договор"',
-    '  [(open)]="asking" (confirm)="remove()">',
-    '  Договор <b>ДК-2026/114</b> и его приложения будут удалены без возможности восстановления.',
-    '</dialog>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<dialog aveConfirmDialog heading="Удалить договор ДК-2026/114?" action="Удалить договор"
+  [(open)]="asking" (confirm)="remove()">
+  Договор <b>ДК-2026/114</b> и его приложения будут удалены без возможности восстановления.
+</dialog>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const opener = within(canvasElement).getByRole('button', { name: 'Удалить договор' });
     const dialog = await ask(canvasElement, 'Удалить договор');
@@ -135,6 +136,17 @@ export const Default: Story = {
 /** An action that can be undone confirms with a primary button. */
 export const Primary: Story = {
   render: frame('send'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<dialog aveConfirmDialog variant="primary" heading="Отправить договор на согласование?"
+  action="Отправить на согласование" [(open)]="asking" (confirm)="send()">
+  Юридический и финансовый отделы получат договор и ответят в течение пяти рабочих дней.
+</dialog>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const dialog = await ask(canvasElement, 'Отправить на согласование');
     await userEvent.click(within(dialog).getByRole('button', { name: 'Отправить на согласование' }));
@@ -148,6 +160,17 @@ export const Primary: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<dialog aveConfirmDialog heading="Oʻzbekiston Respublikasi Vazirlar Mahkamasining qarorlari arxivini oʻchirasizmi?"
+  action="Arxivni butunlay oʻchirish" cancel="Bekor qilish" [(open)]="asking" (confirm)="removeArchive()">
+  Arxivdagi barcha hujjatlar va ularning ilovalari qayta tiklash imkoniyatisiz oʻchiriladi.
+</dialog>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const dialog = await ask(canvasElement, 'Oʻchirish');
     const panel = dialog.querySelector('.panel');

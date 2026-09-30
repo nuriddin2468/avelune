@@ -86,10 +86,6 @@ class FormsDemo {
 
 type Story = StoryObj<AveCheckbox>;
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 function frame(view: View): NonNullable<Story['render']> {
   return () => ({
     props: { view },
@@ -107,12 +103,17 @@ export default meta;
 /** One checkbox in its label. */
 export const Default: Story = {
   render: frame('default'),
-  parameters: source(
-    '<label aveChoice>',
-    '  <input type="checkbox" aveCheckbox checked />',
-    '  Notify the counterparty by email',
-    '</label>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<label aveChoice>
+  <input type="checkbox" aveCheckbox checked />
+  Notify the counterparty by email
+</label>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const box = within(canvasElement).getByRole('checkbox', { name: 'Notify the counterparty by email' });
     await expect(box).toBeChecked();
@@ -128,10 +129,15 @@ export const Default: Story = {
 export const States: Story = {
   tags: ['forced-colors'],
   render: frame('states'),
-  parameters: source(
-    '<label aveChoice><input type="checkbox" aveCheckbox [indeterminate]="someChecked()" /> Select all</label>',
-    '<label aveChoice><input type="checkbox" aveCheckbox disabled /> Disabled</label>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<label aveChoice><input type="checkbox" aveCheckbox [indeterminate]="someChecked()" /> Select all</label>
+<label aveChoice><input type="checkbox" aveCheckbox disabled /> Disabled</label>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('checkbox', { name: 'Mixed' })).toBePartiallyChecked();
@@ -148,21 +154,19 @@ export const Forms: Story = {
     docs: {
       source: {
         language: 'typescript',
-        code: [
-          'readonly terms = form(signal({ notify: true, confirm: false }), (path) => {',
-          '  required(path.confirm);',
-          '});',
-          '',
-          '// <label aveChoice>',
-          '//   <input type="checkbox" aveCheckbox aria-describedby="confirm-error" [formField]="terms.confirm" />',
-          '//   I confirm the data is correct',
-          '// </label>',
-          '// <div id="confirm-error">',
-          '//   @if (terms.confirm().invalid() && terms.confirm().touched()) {',
-          '//     <p><ave-icon name="circle-alert" decorative />Confirm the data to send the contract for approval.</p>',
-          '//   }',
-          '// </div>',
-        ].join('\n'),
+        code: `readonly terms = form(signal({ notify: true, confirm: false }), (path) => {
+  required(path.confirm);
+});
+
+// <label aveChoice>
+//   <input type="checkbox" aveCheckbox aria-describedby="confirm-error" [formField]="terms.confirm" />
+//   I confirm the data is correct
+// </label>
+// <div id="confirm-error">
+//   @if (terms.confirm().invalid() && terms.confirm().touched()) {
+//     <p><ave-icon name="circle-alert" decorative />Confirm the data to send the contract for approval.</p>
+//   }
+// </div>`,
       },
     },
   },
@@ -182,7 +186,14 @@ export const Forms: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
-  parameters: source('<label aveChoice><input type="checkbox" aveCheckbox /> Архивировать документы…</label>'),
+  parameters: {
+    docs: {
+      source: {
+        code: '<label aveChoice><input type="checkbox" aveCheckbox /> Архивировать документы…</label>',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const label of canvasElement.querySelectorAll('label')) {
       const box = label.querySelector('input')?.getBoundingClientRect();

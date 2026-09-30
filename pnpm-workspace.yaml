@@ -77,6 +77,8 @@ catalog:
   '@storybook/angular-vite': 10.6.0
   '@storybook/addon-docs': 10.6.0
   '@storybook/addon-a11y': 10.6.0
+  # The Storybook MCP server for coding agents, on the dev server's /mcp (ADR 0090)
+  '@storybook/addon-mcp': 10.6.0
   '@analogjs/vite-plugin-angular': 2.7.4
   # The themed docs container: the React that addon-docs renders with, never in a published package (ADR 0034)
   react: 19.3.0

@@ -71,13 +71,9 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 const meta: Meta<StepperStories> = {
   title: 'Components/Stepper',
-  component: StepperStories,
+  component: AveStepper,
   decorators: [applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: 'ru' }] })],
 };
 export default meta;
@@ -86,15 +82,20 @@ export default meta;
 export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default'),
-  parameters: source(
-    '<ave-stepper',
-    '  label="Оформление договора"',
-    '  selectable',
-    '  [steps]="steps"',
-    '  [current]="step()"',
-    '  (stepSelected)="step.set($event)"',
-    '/>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-stepper
+  label="Оформление договора"
+  selectable
+  [steps]="steps"
+  [current]="step()"
+  (stepSelected)="step.set($event)"
+/>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const list = canvas.getByRole('list', { name: 'Оформление договора' });
@@ -112,6 +113,14 @@ export const Default: Story = {
 /** A contract's approval route, in a column: one department agreed, the next returned it, two ahead. */
 export const Route: Story = {
   render: frame('route'),
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-stepper label="Маршрут согласования" orientation="vertical" [steps]="route" [current]="1" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const list = within(canvasElement).getByRole('list', { name: 'Маршрут согласования' });
     await expect(within(list).getByRole('img', { name: 'Требует внимания' })).toBeVisible();
@@ -125,6 +134,14 @@ export const Route: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-stepper label="Kelishish bosqichlari" lang="uz-Latn" [steps]="steps" [current]="1" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const list = within(canvasElement).getByRole('list');
     await expect(list.scrollWidth).toBe(list.clientWidth);

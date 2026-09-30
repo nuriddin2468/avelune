@@ -248,10 +248,6 @@ function locale(value: string): ReturnType<typeof applicationConfig> {
   return applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: value }] });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 function box(control: Element) {
   const style = getComputedStyle(control);
   return {
@@ -263,10 +259,9 @@ function box(control: Element) {
   };
 }
 
-// No `component`: Storybook instantiates a meta's component outside an injection context to read its defaults, and a
-// `model()` throws there (NG0203). The arguments are declared here instead.
 const meta: Meta<SelectArgs> = {
   title: 'Components/Select',
+  component: AveSelect,
   args: { size: 'md', placeholder: 'Выберите вид договора' },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
   decorators: [moduleMetadata({ imports: [AveSelect, SelectStoryFrame] })],
@@ -280,9 +275,14 @@ export default meta;
 /** One select, with controls. */
 export const Default: Story = {
   decorators: [componentWrapperDecorator(SelectStoryFrame)],
-  parameters: source(
-    '<ave-select [options]="kinds" placeholder="Выберите вид договора" [formField]="contract.kind" />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-select [options]="kinds" placeholder="Выберите вид договора" [formField]="contract.kind" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const trigger = within(canvasElement).getByRole('combobox', { name: 'Вид договора' });
     await expect(trigger).toHaveAttribute('aria-expanded', 'false');
@@ -297,7 +297,9 @@ export const Open: Story = {
     props: { kinds },
     template: `<ave-select label="Вид договора" lang="ru" [options]="kinds" value="services" />`,
   }),
-  parameters: source('<ave-select [options]="kinds" [formField]="contract.kind" />'),
+  parameters: {
+    docs: { source: { code: '<ave-select [options]="kinds" [formField]="contract.kind" />', language: 'html' } },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: 'Вид договора' });
@@ -318,7 +320,7 @@ export const Open: Story = {
 /** Each size next to an Input of that size: the same box. */
 export const Sizes: Story = {
   render: frame('sizes'),
-  parameters: source('<ave-select size="sm" [options]="kinds" />'),
+  parameters: { docs: { source: { code: '<ave-select size="sm" [options]="kinds" />', language: 'html' } } },
   play: async ({ canvasElement }) => {
     for (const row of canvasElement.querySelectorAll('.row')) {
       const input = row.querySelector('input');
@@ -333,7 +335,15 @@ export const Sizes: Story = {
 export const States: Story = {
   tags: ['forced-colors'],
   render: frame('states'),
-  parameters: source('<ave-select [options]="kinds" readonly />', '<ave-select [options]="kinds" disabled />'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-select [options]="kinds" readonly />
+<ave-select [options]="kinds" disabled />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const triggers = [...canvasElement.querySelectorAll('.trigger')];
     for (const trigger of triggers) await expect(trigger.getBoundingClientRect().height).toBe(36);
@@ -348,10 +358,15 @@ export const States: Story = {
 /** Both form APIs: a required choice, invalid once it is left empty. */
 export const Forms: Story = {
   render: () => ({ template: '<ave-select-forms />', moduleMetadata: { imports: [SelectForms] } }),
-  parameters: source(
-    '<ave-select [options]="kinds" [formField]="contract.kind" />',
-    '<ave-select [options]="kinds" [formControl]="kind" />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-select [options]="kinds" [formField]="contract.kind" />
+<ave-select [options]="kinds" [formControl]="kind" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const signalForms = canvas.getByRole('combobox', { name: 'Kind (Signal Forms)' });
@@ -374,7 +389,7 @@ export const Forms: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
-  parameters: source('<ave-select [options]="kinds" />'),
+  parameters: { docs: { source: { code: '<ave-select [options]="kinds" />', language: 'html' } } },
   play: async ({ canvasElement }) => {
     const column = canvasElement.querySelector('.narrow');
     if (column === null) throw new Error('No column');
@@ -393,7 +408,16 @@ export const LongText: Story = {
 /** Compact density: every size one step down, next to its Input. */
 export const Compact: Story = {
   render: frame('compact'),
-  parameters: source('<div data-density="compact">', '  <ave-select [options]="kinds" />', '</div>'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<div data-density="compact">
+  <ave-select [options]="kinds" />
+</div>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const heights = { sm: 28, md: 32, lg: 36 } as const;
     for (const size of sizes) {
@@ -410,7 +434,9 @@ export const Compact: Story = {
 export const Clearing: Story = {
   decorators: [locale('ru')],
   render: () => ({ template: '<ave-select-clearing />', moduleMetadata: { imports: [SelectClearing] } }),
-  parameters: source('<ave-select [options]="kinds" [formField]="contract.kind" />'),
+  parameters: {
+    docs: { source: { code: '<ave-select [options]="kinds" [formField]="contract.kind" />', language: 'html' } },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: 'Вид договора' });
@@ -443,10 +469,15 @@ export const Clearing: Story = {
 export const RichOptions: Story = {
   name: 'Rich options',
   render: () => ({ template: '<ave-select-rich />', moduleMetadata: { imports: [SelectRich] } }),
-  parameters: source(
-    "{ value: 'uz', label: 'Узбекистан', description: 'Ташкент', meta: 'UZ', image: 'assets/flags/uz.svg' }",
-    '<ave-select [options]="countries" [formField]="company.country" />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `{ value: 'uz', label: 'Узбекистан', description: 'Ташкент', meta: 'UZ', image: 'assets/flags/uz.svg' }
+<ave-select [options]="countries" [formField]="company.country" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: 'Страна' });
@@ -478,12 +509,17 @@ export const RichOptions: Story = {
  */
 export const Templates: Story = {
   render: () => ({ template: '<ave-select-templates />', moduleMetadata: { imports: [SelectTemplates] } }),
-  parameters: source(
-    '<ave-select [options]="accounts" [formField]="payment.account">',
-    '  <ng-template aveOption [aveOptionOf]="accounts" let-option>…</ng-template>',
-    '  <ng-template aveSelectValue [aveSelectValueOf]="accounts" let-option>…</ng-template>',
-    '</ave-select>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-select [options]="accounts" [formField]="payment.account">
+  <ng-template aveOption [aveOptionOf]="accounts" let-option>…</ng-template>
+  <ng-template aveSelectValue [aveSelectValueOf]="accounts" let-option>…</ng-template>
+</ave-select>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: 'Счёт списания' });

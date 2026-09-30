@@ -114,13 +114,9 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 const meta: Meta<EmptyStateStories> = {
   title: 'Components/Empty state',
-  component: EmptyStateStories,
+  component: AveEmptyState,
 };
 export default meta;
 
@@ -128,15 +124,20 @@ export default meta;
 export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default'),
-  parameters: source(
-    '<ave-empty-state icon="file-text" heading="Договоров пока нет">',
-    '  <p>Здесь появятся договоры подразделения. Создайте первый или загрузите подписанный скан.</p>',
-    '  <div aveEmptyStateActions>',
-    '    <button aveButton type="button">Загрузить скан</button>',
-    '    <button aveButton type="button" variant="primary">Создать договор</button>',
-    '  </div>',
-    '</ave-empty-state>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-empty-state icon="file-text" heading="Договоров пока нет">
+  <p>Здесь появятся договоры подразделения. Создайте первый или загрузите подписанный скан.</p>
+  <div aveEmptyStateActions>
+    <button aveButton type="button">Загрузить скан</button>
+    <button aveButton type="button" variant="primary">Создать договор</button>
+  </div>
+</ave-empty-state>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByText('Договоров пока нет')).toBeVisible();
@@ -155,6 +156,24 @@ export const Default: Story = {
 export const NoResults: Story = {
   name: 'No results',
   render: () => ({ template: '<ave-empty-state-search />', moduleMetadata: { imports: [EmptyStateSearch] } }),
+  parameters: {
+    docs: {
+      source: {
+        code: `<input aveInput type="search" aria-label="Поиск контрагента" [value]="query()" (input)="typed($event)" />
+@if (found().length > 0) {
+  <ul>…</ul>
+} @else {
+  <ave-empty-state icon="search" heading="Ничего не найдено">
+    <p>Нет контрагентов с «{{ query() }}» в названии или ИНН.</p>
+    <div aveEmptyStateActions>
+      <button aveButton type="button" (click)="query.set('')">Сбросить поиск</button>
+    </div>
+  </ave-empty-state>
+}`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByText('Нет контрагентов с «Гамма» в названии или ИНН.')).toBeVisible();
@@ -169,6 +188,21 @@ export const NoResults: Story = {
 /** A queue that is done, and a place that could not load: each says why, one offers to try again. */
 export const Kinds: Story = {
   render: frame('kinds'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-empty-state icon="inbox" heading="Все документы рассмотрены">
+  <p>Новые документы на согласование появятся здесь.</p>
+</ave-empty-state>
+
+<ave-empty-state icon="cloud-off" heading="Архив недоступен">
+  <p>Сервер архива не отвечает. Документы на месте; попробуйте открыть архив позже.</p>
+  <div aveEmptyStateActions><button aveButton type="button">Повторить</button></div>
+</ave-empty-state>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await expect(canvasElement.querySelectorAll('ave-empty-state')).toHaveLength(2);
   },
@@ -178,6 +212,22 @@ export const Kinds: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-empty-state icon="file-text" heading="Oʻzbekiston Respublikasi Vazirlar Mahkamasining qarorlari topilmadi">
+  <p>
+    Tanlangan davr uchun hech qanday qaror roʻyxatga olinmagan. Davrni oʻzgartiring yoki qidiruv soʻzini tekshiring.
+  </p>
+  <div aveEmptyStateActions>
+    <button aveButton type="button">Filtrlarni tozalash</button>
+    <button aveButton type="button" variant="primary">Yangi qaror qoʻshish</button>
+  </div>
+</ave-empty-state>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const state = canvasElement.querySelector('ave-empty-state');
     await expect(state?.scrollWidth).toBe(state?.clientWidth);

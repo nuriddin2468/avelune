@@ -61,13 +61,9 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 const meta: Meta<TabsStories> = {
   title: 'Components/Tabs',
-  component: TabsStories,
+  component: AveTabs,
   decorators: [applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: 'ru' }] })],
 };
 export default meta;
@@ -76,14 +72,19 @@ export default meta;
 export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default'),
-  parameters: source(
-    '<ave-tabs label="Разделы договора" [(selected)]="section">',
-    '  <ave-tab value="facts" label="Сведения">…</ave-tab>',
-    '  <ave-tab value="route" label="Согласование">…</ave-tab>',
-    '  <ave-tab value="files" label="Файлы">…</ave-tab>',
-    '  <ave-tab value="history" label="История">…</ave-tab>',
-    '</ave-tabs>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-tabs label="Разделы договора" [(selected)]="section">
+  <ave-tab value="facts" label="Сведения">…</ave-tab>
+  <ave-tab value="route" label="Согласование">…</ave-tab>
+  <ave-tab value="files" label="Файлы">…</ave-tab>
+  <ave-tab value="history" label="История">…</ave-tab>
+</ave-tabs>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const list = canvas.getByRole('tablist', { name: 'Разделы договора' });
@@ -113,6 +114,19 @@ export const Default: Story = {
 /** Icons before the words, a tab chosen with the pointer, and a disabled tab that focus reaches but cannot choose. */
 export const States: Story = {
   render: frame('states'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-tabs label="Разделы договора" [(selected)]="section">
+  <ave-tab value="facts" label="Сведения" icon="info">…</ave-tab>
+  <ave-tab value="route" label="Согласование" icon="route">…</ave-tab>
+  <ave-tab value="files" label="Файлы" icon="paperclip">…</ave-tab>
+  <ave-tab value="history" label="История" icon="clock" disabled>…</ave-tab>
+</ave-tabs>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('tab', { name: 'Файлы' }));
@@ -130,6 +144,19 @@ export const States: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-tabs label="Hujjat boʻlimlari" [(selected)]="section">
+  <ave-tab value="main" label="Asosiy maʼlumotlar">…</ave-tab>
+  <ave-tab value="route" label="Kelishish yoʻnalishi">…</ave-tab>
+  <ave-tab value="links" label="Связанные документы министерств и ведомств">…</ave-tab>
+  <ave-tab value="log" label="Oʻzgarishlar tarixi">…</ave-tab>
+</ave-tabs>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const list = within(canvasElement).getByRole('tablist');
     const tabs = within(list).getAllByRole('tab');

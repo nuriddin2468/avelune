@@ -1,0 +1,21 @@
+{
+  "components": {
+    "components-thing": {
+      "id": "components-thing",
+      "name": "AveThing",
+      "path": "../../packages/ui/thing/thing.stories.ts",
+      "stories": {
+        "components-thing--default": {
+          "id": "components-thing--default",
+          "name": "Default",
+          "snippet": "<ave-thing label=\"Условия\" [(open)]=\"open\">\n  <ave-thing-item heading=\"Штрафы\">…</ave-thing-item>\n</ave-thing>"
+        },
+        "components-thing--long-text": {
+          "id": "components-thing--long-text",
+          "name": "Long text",
+          "snippet": "<ave-thing label=\"Shartnomaning umumiy shartlari\" />"
+        }
+      }
+    }
+  }
+}

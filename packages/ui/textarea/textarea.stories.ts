@@ -173,10 +173,6 @@ class TextareaStoryFrame {}
 
 type Story = StoryObj<AveTextarea>;
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 function frame(view: View): NonNullable<Story['render']> {
   return () => ({
     props: { view },
@@ -235,11 +231,16 @@ export const Default: Story = {
 /** Each size under an Input of that size: the same edge, corners and text; one row as tall as the input. */
 export const Sizes: Story = {
   render: frame('sizes'),
-  parameters: source(
-    '<input aveInput type="text" size="sm" />',
-    '<textarea aveTextarea size="sm" rows="1"></textarea>',
-    '<textarea aveTextarea size="sm"></textarea>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<input aveInput type="text" size="sm" />
+<textarea aveTextarea size="sm" rows="1"></textarea>
+<textarea aveTextarea size="sm"></textarea>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const column of canvasElement.querySelectorAll('.stack')) {
       const size = column.getAttribute('data-size') ?? '';
@@ -257,11 +258,16 @@ export const Sizes: Story = {
 export const States: Story = {
   tags: ['forced-colors'],
   render: frame('states'),
-  parameters: source(
-    '<textarea aveTextarea aria-invalid="true"></textarea>',
-    '<textarea aveTextarea readonly></textarea>',
-    '<textarea aveTextarea disabled></textarea>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<textarea aveTextarea aria-invalid="true"></textarea>
+<textarea aveTextarea readonly></textarea>
+<textarea aveTextarea disabled></textarea>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     // No state changes the size: every textarea is as tall as the first and fills its grid cell.
     const fields = [...canvasElement.querySelectorAll('textarea')];
@@ -284,15 +290,13 @@ export const SignalForms: Story = {
   parameters: {
     docs: {
       source: {
+        code: `readonly contract = form(signal({ subject: '' }), (path) => {
+  required(path.subject);
+  minLength(path.subject, 10);
+});
+
+// <textarea aveTextarea [formField]="contract.subject"></textarea>`,
         language: 'typescript',
-        code: [
-          "readonly contract = form(signal({ subject: '' }), (path) => {",
-          '  required(path.subject);',
-          '  minLength(path.subject, 10);',
-          '});',
-          '',
-          '// <textarea aveTextarea [formField]="contract.subject"></textarea>',
-        ].join('\n'),
       },
     },
   },
@@ -316,12 +320,10 @@ export const ReactiveForms: Story = {
   parameters: {
     docs: {
       source: {
+        code: `readonly subject = new FormControl('', { validators: [Validators.required, Validators.minLength(10)] });
+
+// <textarea aveTextarea [formControl]="subject"></textarea>`,
         language: 'typescript',
-        code: [
-          "readonly subject = new FormControl('', { validators: [Validators.required, Validators.minLength(10)] });",
-          '',
-          '// <textarea aveTextarea [formControl]="subject"></textarea>',
-        ].join('\n'),
       },
     },
   },
@@ -340,7 +342,9 @@ export const ReactiveForms: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
-  parameters: source('<textarea aveTextarea [formField]="contract.subject"></textarea>'),
+  parameters: {
+    docs: { source: { code: '<textarea aveTextarea [formField]="contract.subject"></textarea>', language: 'html' } },
+  },
   play: async ({ canvasElement }) => {
     const column = canvasElement.querySelector('.narrow');
     if (column === null) throw new Error('No column');
@@ -357,11 +361,16 @@ export const LongText: Story = {
 /** Compact density: every size one step down, one row as tall as its Input. */
 export const Compact: Story = {
   render: frame('compact'),
-  parameters: source(
-    '<div data-density="compact">',
-    '  <textarea aveTextarea size="sm" rows="1"></textarea>',
-    '</div>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<div data-density="compact">
+  <textarea aveTextarea size="sm" rows="1"></textarea>
+</div>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const heights = { sm: 28, md: 32, lg: 36 } as const;
     for (const size of sizes) {

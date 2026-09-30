@@ -149,13 +149,9 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
-// No `component`: Storybook instantiates a meta's component outside an injection context, where `model()` throws.
 const meta: Meta = {
   title: 'Components/FileUpload',
+  component: AveFileUpload,
   decorators: [moduleMetadata({ imports: [AveFileUpload, AveFormField, AveHint, FileUploadStoryFrame] })],
   render: () => ({
     template: `
@@ -171,12 +167,17 @@ export default meta;
 /** One file in Russian, in a form field: the zone, its button and the drop hint. */
 export const Default: Story = {
   decorators: [locale('ru'), componentWrapperDecorator(FileUploadStoryFrame)],
-  parameters: source(
-    '<ave-form-field label="Скан подписанного договора">',
-    '  <ave-file-upload accept=".pdf,image/*" [maxSize]="20 * 1024 * 1024" [formField]="contract.scan" />',
-    '  <p aveHint>PDF или изображение, до 20 МБ.</p>',
-    '</ave-form-field>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-form-field label="Скан подписанного договора">
+  <ave-file-upload accept=".pdf,image/*" [maxSize]="20 * 1024 * 1024" [formField]="contract.scan" />
+  <p aveHint>PDF или изображение, до 20 МБ.</p>
+</ave-form-field>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Скан подписанного договора Выбрать файл' });
     await expect(button).toHaveAccessibleDescription('PDF или изображение, до 20 МБ.');
@@ -196,7 +197,14 @@ export const Files: Story = {
       </ave-form-field>
     `,
   }),
-  parameters: source('<ave-file-upload multiple accept=".pdf,image/*" [maxSize]="5 * 1024 * 1024" [maxFiles]="3" />'),
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-file-upload multiple accept=".pdf,image/*" [maxSize]="5 * 1024 * 1024" [maxFiles]="3" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     drop(canvasElement, [
       file('Письмо № 14-02.pdf', 2.4 * megabyte),
@@ -218,7 +226,7 @@ export const States: Story = {
   tags: ['forced-colors'],
   decorators: [locale('ru')],
   render: frame('states'),
-  parameters: source('<ave-file-upload multiple disabled />'),
+  parameters: { docs: { source: { code: '<ave-file-upload multiple disabled />', language: 'html' } } },
   play: async ({ canvasElement }) => {
     const zone = canvasElement.querySelector('[data-dragging-target] .zone');
     const transfer = new DataTransfer();
@@ -234,10 +242,15 @@ export const States: Story = {
 export const Forms: Story = {
   decorators: [locale('ru')],
   render: () => ({ template: '<ave-file-upload-forms />', moduleMetadata: { imports: [FileUploadForms] } }),
-  parameters: source(
-    '<ave-file-upload multiple [formField]="letter.attachments" />',
-    '<ave-file-upload [formControl]="scan" />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-file-upload multiple [formField]="letter.attachments" />
+<ave-file-upload [formControl]="scan" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const signalForms = canvas.getByRole('button', { name: 'Attachments (Signal Forms) Выбрать файлы' });
@@ -258,7 +271,11 @@ export const LongText: Story = {
   name: 'Long text',
   decorators: [locale('ru')],
   render: () => ({ template: '<ave-file-upload-long />', moduleMetadata: { imports: [FileUploadLong] } }),
-  parameters: source('<ave-file-upload multiple accept=".pdf" [formField]="contract.protocol" />'),
+  parameters: {
+    docs: {
+      source: { code: '<ave-file-upload multiple accept=".pdf" [formField]="contract.protocol" />', language: 'html' },
+    },
+  },
   play: async ({ canvasElement }) => {
     const column = canvasElement.querySelector('.narrow');
     if (column === null) throw new Error('No column');
@@ -291,7 +308,16 @@ export const UzbekLatin: Story = {
 export const Compact: Story = {
   decorators: [locale('ru')],
   render: frame('compact'),
-  parameters: source('<div data-density="compact">', '  <ave-file-upload multiple />', '</div>'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<div data-density="compact">
+  <ave-file-upload multiple />
+</div>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await expect(canvasElement.querySelector('.choose')?.getBoundingClientRect().height).toBe(32);
     const rows = [...canvasElement.querySelectorAll('.file')];

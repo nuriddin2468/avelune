@@ -189,11 +189,6 @@ class ButtonLoading {
 })
 class ButtonStoryFrame {}
 
-/** The markup an application writes for what a story shows. */
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 function frame(view: View): NonNullable<Story['render']> {
   return () => ({
     props: { view },
@@ -248,12 +243,17 @@ export const Default: Story = {
 /** The four variants, and a form's actions: the primary one last. */
 export const Variants: Story = {
   render: frame('variants'),
-  parameters: source(
-    '<button aveButton type="button" variant="primary">Send for approval</button>',
-    '<button aveButton type="button">Save draft</button>',
-    '<button aveButton type="button" variant="ghost">Preview</button>',
-    '<button aveButton type="button" variant="danger">Delete document</button>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<button aveButton type="button" variant="primary">Send for approval</button>
+<button aveButton type="button">Save draft</button>
+<button aveButton type="button" variant="ghost">Preview</button>
+<button aveButton type="button" variant="danger">Delete document</button>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const buttons = [...canvasElement.querySelectorAll('button')];
     const [first] = buttons;
@@ -266,11 +266,16 @@ export const Variants: Story = {
 /** The three sizes, each on its control height; the label keeps its size. */
 export const Sizes: Story = {
   render: frame('sizes'),
-  parameters: source(
-    '<button aveButton type="button" variant="primary" size="sm">Save changes</button>',
-    '<button aveButton type="button" variant="primary">Save changes</button>',
-    '<button aveButton type="button" variant="primary" size="lg">Save changes</button>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<button aveButton type="button" variant="primary" size="sm">Save changes</button>
+<button aveButton type="button" variant="primary">Save changes</button>
+<button aveButton type="button" variant="primary" size="lg">Save changes</button>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const button of canvasElement.querySelectorAll('button')) {
       const size = button.getAttribute('data-size') ?? '';
@@ -282,12 +287,17 @@ export const Sizes: Story = {
 /** Compact density moves every size one step down, whatever the toolbar says. */
 export const Compact: Story = {
   render: frame('compact'),
-  parameters: source(
-    '<!-- Density is set once for the application (AveTheme.setDensity), or for a region. -->',
-    '<div data-density="compact">',
-    '  <button aveButton type="button" variant="primary" size="sm">Save changes</button>',
-    '</div>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<!-- Density is set once for the application (AveTheme.setDensity), or for a region. -->
+<div data-density="compact">
+  <button aveButton type="button" variant="primary" size="sm">Save changes</button>
+</div>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const heights = { sm: 28, md: 32, lg: 36 } as const;
     for (const size of sizes) {
@@ -304,12 +314,17 @@ export const Compact: Story = {
 export const States: Story = {
   tags: ['forced-colors'],
   render: frame('states'),
-  parameters: source(
-    '<button aveButton type="button" variant="primary">Save</button>',
-    '<button aveButton type="button" variant="primary" disabled>Save</button>',
-    '<button aveButton type="button" variant="primary" disabled disabledInteractive>Save</button>',
-    '<button aveButton type="button" variant="primary" [loading]="saving()">Save</button>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<button aveButton type="button" variant="primary">Save</button>
+<button aveButton type="button" variant="primary" disabled>Save</button>
+<button aveButton type="button" variant="primary" disabled disabledInteractive>Save</button>
+<button aveButton type="button" variant="primary" [loading]="saving()">Save</button>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     for (const row of canvasElement.querySelectorAll('tbody tr')) {
@@ -341,12 +356,17 @@ export const States: Story = {
 export const DisabledWithReason: Story = {
   name: 'Disabled, with a reason',
   render: frame('reason'),
-  parameters: source(
-    '<button aveButton type="button" variant="primary" disabled disabledInteractive aria-describedby="send-reason">',
-    '  Send for approval',
-    '</button>',
-    '<p id="send-reason">Attach the signed contract to send the document for approval.</p>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<button aveButton type="button" variant="primary" disabled disabledInteractive aria-describedby="send-reason">
+  Send for approval
+</button>
+<p id="send-reason">Attach the signed contract to send the document for approval.</p>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Send for approval' });
     await userEvent.tab();
@@ -360,11 +380,16 @@ export const DisabledWithReason: Story = {
 /** A save in progress: busy at once, a spinner after 300ms, the label back when it is done. */
 export const Loading: Story = {
   render: () => ({ template: '<ave-button-loading />', moduleMetadata: { imports: [ButtonLoading] } }),
-  parameters: source(
-    '<button aveButton type="button" variant="primary" [loading]="saving()" (click)="save()">',
-    '  Save changes',
-    '</button>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<button aveButton type="button" variant="primary" [loading]="saving()" (click)="save()">
+  Save changes
+</button>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button', { name: 'Save changes' });
@@ -383,12 +408,17 @@ export const Loading: Story = {
 export const WithIcons: Story = {
   name: 'With icons',
   render: frame('icons'),
-  parameters: source(
-    '<!-- Registered with provideAveIcons([lucidePlus, lucideDownload, lucideArrowRight]). -->',
-    '<button aveButton type="button" variant="primary"><ave-icon name="plus" decorative />Create document</button>',
-    '<button aveButton type="button"><ave-icon name="download" decorative />Download report</button>',
-    '<button aveButton type="button">Next step<ave-icon name="arrow-right" decorative /></button>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<!-- Registered with provideAveIcons([lucidePlus, lucideDownload, lucideArrowRight]). -->
+<button aveButton type="button" variant="primary"><ave-icon name="plus" decorative />Create document</button>
+<button aveButton type="button"><ave-icon name="download" decorative />Download report</button>
+<button aveButton type="button">Next step<ave-icon name="arrow-right" decorative /></button>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const button of canvasElement.querySelectorAll('button')) {
       const content = button.querySelector('.content');
@@ -408,11 +438,16 @@ export const WithIcons: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
-  parameters: source(
-    '<button aveButton type="button" variant="primary">',
-    '  Отправить документ на согласование руководителю отдела',
-    '</button>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<button aveButton type="button" variant="primary">
+  Отправить документ на согласование руководителю отдела
+</button>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const button of canvasElement.querySelectorAll('button')) {
       await expect(button.scrollWidth, button.textContent).toBeLessThanOrEqual(button.clientWidth);
@@ -430,11 +465,16 @@ export const LongText: Story = {
 /** Links that look like buttons, in every variant; a disabled link cannot be followed. */
 export const Links: Story = {
   render: frame('links'),
-  parameters: source(
-    '<a aveButton variant="primary" href="/documents/new">Create document</a>',
-    '<a aveButton href="/archive" disabled>Open archive</a>',
-    '<a aveButton href="/archive" disabled disabledInteractive>Open archive</a>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<a aveButton variant="primary" href="/documents/new">Create document</a>
+<a aveButton href="/archive" disabled>Open archive</a>
+<a aveButton href="/archive" disabled disabledInteractive>Open archive</a>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const links = within(canvasElement).getAllByRole('link');
     await expect(links).toHaveLength(6);

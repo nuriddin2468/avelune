@@ -189,10 +189,6 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 function locale(value: string): ReturnType<typeof applicationConfig> {
   return applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: value }] });
 }
@@ -206,9 +202,9 @@ async function openCalendar(canvasElement: HTMLElement): Promise<HTMLElement> {
   return dialog;
 }
 
-// No `component`: Storybook instantiates a meta's component outside an injection context, where `model()` throws.
 const meta: Meta<DatePickerArgs> = {
   title: 'Components/DatePicker',
+  component: AveDatePicker,
   args: { size: 'md' },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
   decorators: [moduleMetadata({ imports: [AveDatePicker, DatePickerStoryFrame] })],
@@ -222,7 +218,7 @@ export default meta;
 /** One date field in Russian, with controls. */
 export const Default: Story = {
   decorators: [locale('ru'), componentWrapperDecorator(DatePickerStoryFrame)],
-  parameters: source('<ave-date-picker [formField]="contract.signedOn" />'),
+  parameters: { docs: { source: { code: '<ave-date-picker [formField]="contract.signedOn" />', language: 'html' } } },
   play: async ({ canvasElement }) => {
     const input = within(canvasElement).getByRole('textbox', { name: 'Дата подписания' });
     await expect(input).toHaveValue('18.03.2026');
@@ -234,7 +230,7 @@ export const Default: Story = {
 export const Open: Story = {
   tags: ['forced-colors'],
   decorators: [locale('ru'), componentWrapperDecorator(DatePickerStoryFrame)],
-  parameters: source('<ave-date-picker [formField]="contract.signedOn" />'),
+  parameters: { docs: { source: { code: '<ave-date-picker [formField]="contract.signedOn" />', language: 'html' } } },
   play: async ({ canvasElement }) => {
     const dialog = await openCalendar(canvasElement);
     await expect(within(dialog).getByRole('heading')).toHaveTextContent('Март 2026 г.');
@@ -294,7 +290,14 @@ export const Bounds: Story = {
   render: () => ({
     template: `<ave-date-picker label="Срок исполнения" value="2026-03-18" minDate="2026-03-10" maxDate="2026-03-25" />`,
   }),
-  parameters: source('<ave-date-picker minDate="2026-03-10" maxDate="2026-03-25" [formField]="contract.due" />'),
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-date-picker minDate="2026-03-10" maxDate="2026-03-25" [formField]="contract.due" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const dialog = await openCalendar(canvasElement);
     await expect(within(dialog).getByRole('gridcell', { name: '9 марта 2026 г.' })).toHaveAttribute(
@@ -313,7 +316,15 @@ export const States: Story = {
   tags: ['forced-colors'],
   decorators: [locale('ru')],
   render: frame('states'),
-  parameters: source('<ave-date-picker readonly />', '<ave-date-picker disabled />'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-date-picker readonly />
+<ave-date-picker disabled />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const input of canvasElement.querySelectorAll('input'))
       await expect(input.getBoundingClientRect().height).toBe(36);
@@ -327,10 +338,15 @@ export const States: Story = {
 export const Forms: Story = {
   decorators: [locale('ru')],
   render: () => ({ template: '<ave-date-picker-forms />', moduleMetadata: { imports: [DatePickerForms] } }),
-  parameters: source(
-    '<ave-date-picker [formField]="contract.signedOn" />',
-    '<ave-date-picker [formControl]="signedOn" />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-date-picker [formField]="contract.signedOn" />
+<ave-date-picker [formControl]="signedOn" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const signalForms = canvas.getByRole('textbox', { name: 'Signed on (Signal Forms)' });
@@ -351,13 +367,18 @@ export const LongText: Story = {
   name: 'Long text',
   decorators: [locale('ru')],
   render: () => ({ template: '<ave-date-picker-long />', moduleMetadata: { imports: [DatePickerLong] } }),
-  parameters: source(
-    '<ave-form-field label="Дата подписания договора обеими сторонами…">',
-    '  <ave-date-picker [formField]="contract.signedOn" />',
-    '  <p aveHint>…</p>',
-    '  <p aveError>…</p>',
-    '</ave-form-field>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-form-field label="Дата подписания договора обеими сторонами…">
+  <ave-date-picker [formField]="contract.signedOn" />
+  <p aveHint>…</p>
+  <p aveError>…</p>
+</ave-form-field>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const column = canvasElement.querySelector('.narrow');
     if (column === null) throw new Error('No column');
@@ -373,6 +394,15 @@ export const LongText: Story = {
 export const Sizes: Story = {
   decorators: [locale('ru')],
   render: frame('sizes'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<input aveInput type="text" size="sm" />
+<ave-date-picker size="sm" [formField]="contract.signedOn" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const row of canvasElement.querySelectorAll('.row')) {
       const [input, field] = [...row.querySelectorAll('input')];
@@ -388,6 +418,16 @@ export const Sizes: Story = {
 export const Compact: Story = {
   decorators: [locale('ru')],
   render: frame('compact'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<div data-density="compact">
+  <ave-date-picker [formField]="contract.signedOn" />
+</div>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const heights = { sm: 28, md: 32, lg: 36 } as const;
     for (const size of sizes) {
@@ -404,7 +444,7 @@ export const Compact: Story = {
 export const Clearing: Story = {
   decorators: [locale('ru')],
   render: () => ({ template: '<ave-date-picker-clearing />', moduleMetadata: { imports: [DatePickerClearing] } }),
-  parameters: source('<ave-date-picker [formField]="payment.paidOn" />'),
+  parameters: { docs: { source: { code: '<ave-date-picker [formField]="payment.paidOn" />', language: 'html' } } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const input = canvas.getByRole('textbox', { name: 'Дата оплаты' });
@@ -431,7 +471,9 @@ export const Clearing: Story = {
 export const Months: Story = {
   decorators: [locale('ru'), componentWrapperDecorator(DatePickerStoryFrame)],
   render: () => ({ template: `<ave-date-picker label="Дата регистрации" value="2026-03-18" />` }),
-  parameters: source('<ave-date-picker [formField]="company.registeredOn" />'),
+  parameters: {
+    docs: { source: { code: '<ave-date-picker [formField]="company.registeredOn" />', language: 'html' } },
+  },
   play: async ({ canvasElement }) => {
     const dialog = await openCalendar(canvasElement);
     const heading = within(dialog).getByRole('button', { name: 'Март 2026 г.' });
@@ -461,9 +503,14 @@ export const Years: Story = {
   render: () => ({
     template: `<ave-date-picker label="Roʻyxatdan oʻtgan sana" value="2026-03-18" minDate="2019-06-01" maxDate="2030-12-31" />`,
   }),
-  parameters: source(
-    '<ave-date-picker minDate="2019-06-01" maxDate="2030-12-31" [formField]="company.registeredOn" />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-date-picker minDate="2019-06-01" maxDate="2030-12-31" [formField]="company.registeredOn" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const dialog = await openCalendar(canvasElement);
     await userEvent.click(within(dialog).getByRole('button', { name: 'Mart, 2026' }));

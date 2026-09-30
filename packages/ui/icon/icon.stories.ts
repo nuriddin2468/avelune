@@ -252,15 +252,6 @@ const lucideExport = (name: string) =>
     .join('')}`;
 
 /**
- * The snippet under a story: the markup an application writes for what the story shows, after a line naming the
- * icons it must register first, so a copied snippet draws.
- */
-function source(icons: readonly string[], ...lines: readonly string[]): NonNullable<Story['parameters']> {
-  const registered = `<!-- Registered with provideAveIcons([${icons.map(lucideExport).join(', ')}]), see "Registering icons". -->`;
-  return { docs: { source: { code: [registered, ...lines].join('\n'), language: 'html' } } };
-}
-
-/**
  * The Default snippet, from the story's current args: a whole component that registers the icon it draws. Storybook's
  * own snippet leaves the provider out, and a copy of it would throw.
  */
@@ -323,12 +314,17 @@ function frame(view: 'sizes' | 'meaning' | 'colour' | 'custom' | 'long'): NonNul
 /** The three sizes, next to the text each belongs with. */
 export const Sizes: Story = {
   render: frame('sizes'),
-  parameters: source(
-    ['calendar'],
-    '<ave-icon name="calendar" decorative />',
-    '<ave-icon name="calendar" decorative size="md" />',
-    '<ave-icon name="calendar" decorative size="lg" />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<!-- Registered with provideAveIcons([lucideCalendar]), see "Registering icons". -->
+<ave-icon name="calendar" decorative />
+<ave-icon name="calendar" decorative size="md" />
+<ave-icon name="calendar" decorative size="lg" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const icons = [...canvasElement.querySelectorAll('ave-icon')];
     for (const [index, icon] of icons.entries()) {
@@ -343,16 +339,21 @@ export const Sizes: Story = {
 /** An icon that carries meaning has a label; one that repeats its text is decorative. */
 export const Meaning: Story = {
   render: frame('meaning'),
-  parameters: source(
-    ['circle-alert', 'download'],
-    '<!-- The icon says what the text does not: it has a label. -->',
-    '<ave-icon name="circle-alert" label="Xato" />',
-    'Hujjat saqlanmadi: fayl hajmi 20 MB dan oshmasligi kerak.',
-    '',
-    '<!-- The text says it: the icon is decorative. -->',
-    '<ave-icon name="download" decorative />',
-    'Скачать отчёт',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<!-- Registered with provideAveIcons([lucideCircleAlert, lucideDownload]), see "Registering icons". -->
+<!-- The icon says what the text does not: it has a label. -->
+<ave-icon name="circle-alert" label="Xato" />
+Hujjat saqlanmadi: fayl hajmi 20 MB dan oshmasligi kerak.
+
+<!-- The text says it: the icon is decorative. -->
+<ave-icon name="download" decorative />
+Скачать отчёт`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getAllByRole('img')).toHaveLength(1);
@@ -364,14 +365,19 @@ export const Meaning: Story = {
 export const Colour: Story = {
   tags: ['forced-colors'],
   render: frame('colour'),
-  parameters: source(
-    ['circle-check'],
-    '<!-- The icon draws in its text colour: colour the text, never the icon. -->',
-    '<span class="status-danger">',
-    '  <ave-icon name="circle-check" decorative />',
-    '  Danger',
-    '</span>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<!-- Registered with provideAveIcons([lucideCircleCheck]), see "Registering icons". -->
+<!-- The icon draws in its text colour: colour the text, never the icon. -->
+<span class="status-danger">
+  <ave-icon name="circle-check" decorative />
+  Danger
+</span>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const row of canvasElement.querySelectorAll('.swatch')) {
       const svg = row.querySelector('svg');
@@ -392,30 +398,28 @@ export const Custom: Story = {
     docs: {
       source: {
         language: 'typescript',
-        code: [
-          "import { defineAveIcon, provideAveIcons } from '@avelune/ui/icon';",
-          "import certificateSvg from './icons/certificate.svg';",
-          "import signatureSvg from './icons/signature.svg';",
-          "import verifiedSvg from './icons/verified.svg';",
-          '',
-          '// Declare the names, so templates accept them.',
-          "declare module '@avelune/icons' {",
-          '  interface IconNames {',
-          '    certificate: true;',
-          '    signature: true;',
-          '    verified: true;',
-          '  }',
-          '}',
-          '',
-          "export const certificate = defineAveIcon('certificate', certificateSvg);",
-          "export const verified = defineAveIcon('verified', verifiedSvg, { colors: 'original' });",
-          "export const signature = defineAveIcon('signature', signatureSvg, { strokes: 'original' });",
-          '',
-          '// app.config.ts, or the providers of the route or component that draws them',
-          'providers: [provideAveIcons([certificate, verified, signature])];',
-          '',
-          '// In a template: <ave-icon name="certificate" label="Certificate" />',
-        ].join('\n'),
+        code: `import { defineAveIcon, provideAveIcons } from '@avelune/ui/icon';
+import certificateSvg from './icons/certificate.svg';
+import signatureSvg from './icons/signature.svg';
+import verifiedSvg from './icons/verified.svg';
+
+// Declare the names, so templates accept them.
+declare module '@avelune/icons' {
+  interface IconNames {
+    certificate: true;
+    signature: true;
+    verified: true;
+  }
+}
+
+export const certificate = defineAveIcon('certificate', certificateSvg);
+export const verified = defineAveIcon('verified', verifiedSvg, { colors: 'original' });
+export const signature = defineAveIcon('signature', signatureSvg, { strokes: 'original' });
+
+// app.config.ts, or the providers of the route or component that draws them
+providers: [provideAveIcons([certificate, verified, signature])];
+
+// In a template: <ave-icon name="certificate" label="Certificate" />`,
       },
     },
   },
@@ -437,7 +441,15 @@ export const Custom: Story = {
 /** Every Lucide icon, searchable by name and tag; the first 60 until "Show all". */
 export const Gallery: Story = {
   render: () => ({ template: `<ave-icon-gallery />`, moduleMetadata: { imports: [IconGallery] } }),
-  parameters: source(['arrow-down'], '<ave-icon name="arrow-down" decorative size="md" />'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<!-- Registered with provideAveIcons([lucideArrowDown]), see "Registering icons". -->
+<ave-icon name="arrow-down" decorative size="md" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvasElement.querySelectorAll('ave-icon')).toHaveLength(galleryPage);
@@ -461,14 +473,19 @@ export const Gallery: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
-  parameters: source(
-    ['paperclip', 'external-link'],
-    '<p>',
-    '  <ave-icon name="paperclip" decorative />',
-    '  Приложение к распоряжению о переводе сотрудников в отдел документационного обеспечения управления',
-    '  <ave-icon name="external-link" label="Открыть в новой вкладке" />',
-    '</p>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<!-- Registered with provideAveIcons([lucidePaperclip, lucideExternalLink]), see "Registering icons". -->
+<p>
+  <ave-icon name="paperclip" decorative />
+  Приложение к распоряжению о переводе сотрудников в отдел документационного обеспечения управления
+  <ave-icon name="external-link" label="Открыть в новой вкладке" />
+</p>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const paragraph = canvasElement.querySelector('.narrow');
     if (paragraph === null) throw new Error('No paragraph');

@@ -170,23 +170,24 @@ function frame(view: View, bars?: readonly Bar[]): NonNullable<Story['render']> 
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 const meta: Meta<ProgressStories> = {
   title: 'Components/Progress',
-  component: ProgressStories,
+  component: AveProgress,
 };
 export default meta;
 
 /** An upload under way, named by its label, its share in words at the end of the label row. */
 export const Default: Story = {
   render: frame('default'),
-  parameters: source(
-    '<label for="upload">Договор поставки.pdf</label> <span>45 %</span>',
-    '<progress aveProgress id="upload" value="0.45"></progress>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<label for="upload">Договор поставки.pdf</label> <span>45 %</span>
+<progress aveProgress id="upload" value="0.45"></progress>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const bar = within(canvasElement).getByRole('progressbar', { name: 'Договор поставки.pdf' });
     await expect(bar).toHaveAttribute('value', '0.45');
@@ -198,11 +199,16 @@ export const Default: Story = {
 export const Variants: Story = {
   tags: ['forced-colors'],
   render: frame('variants'),
-  parameters: source(
-    '<progress aveProgress [value]="sent()" [max]="size()"></progress>',
-    '<progress aveProgress variant="success" value="1"></progress>',
-    '<progress aveProgress variant="danger" [value]="sent()" [max]="size()"></progress>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<progress aveProgress [value]="sent()" [max]="size()"></progress>
+<progress aveProgress variant="success" value="1"></progress>
+<progress aveProgress variant="danger" [value]="sent()" [max]="size()"></progress>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     for (const bar of variants) {
@@ -214,10 +220,15 @@ export const Variants: Story = {
 /** Two thicknesses: 8px on its own (default), 4px in lists and rows. */
 export const Sizes: Story = {
   render: frame('sizes'),
-  parameters: source(
-    '<progress aveProgress size="sm" value="0.3"></progress>',
-    '<progress aveProgress value="0.3"></progress>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<progress aveProgress size="sm" value="0.3"></progress>
+<progress aveProgress value="0.3"></progress>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await expect(canvasElement.querySelector('[data-size="sm"] progress')?.getBoundingClientRect().height).toBe(4);
     await expect(canvasElement.querySelector('[data-size="md"] progress')?.getBoundingClientRect().height).toBe(8);
@@ -227,6 +238,27 @@ export const Sizes: Story = {
 /** A list of uploads: 4px bars under each file's name and state. */
 export const List: Story = {
   render: frame('list'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ul aria-label="Файлы">
+  @for (upload of uploads(); track upload.id) {
+    <li>
+      <label [for]="'upload-' + upload.id">{{ upload.name }}</label> <span>{{ upload.note }}</span>
+      <progress
+        aveProgress
+        size="sm"
+        [id]="'upload-' + upload.id"
+        [variant]="upload.variant"
+        [value]="upload.value"
+      ></progress>
+    </li>
+  }
+</ul>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getAllByRole('progressbar')).toHaveLength(3);
   },
@@ -235,6 +267,17 @@ export const List: Story = {
 /** Work that advances until it is done; the state is announced from the label row. */
 export const Running: Story = {
   render: () => ({ template: '<ave-progress-running />', moduleMetadata: { imports: [ProgressRunning] } }),
+  parameters: {
+    docs: {
+      source: {
+        code: `<label for="import">Импорт контрагентов</label>
+<span role="status">{{ done() === 1 ? 'Готово' : format(done()) }}</span>
+<progress aveProgress id="import" [value]="done()" [variant]="done() === 1 ? 'success' : 'accent'"></progress>
+<button aveButton type="button" (click)="start()">Начать импорт</button>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: 'Начать импорт' }));
@@ -250,6 +293,17 @@ export const Running: Story = {
 /** Nothing done yet and all done: the empty track, and the full bar. */
 export const Edges: Story = {
   render: frame('edges'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<label for="waiting">Ожидает загрузки</label> <span>0 %</span>
+<progress aveProgress id="waiting" value="0"></progress>
+<label for="checked">Проверено</label> <span>100 %</span>
+<progress aveProgress id="checked" value="1"></progress>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('progressbar', { name: 'Проверено' })).toHaveAttribute('value', '1');
   },
@@ -259,6 +313,19 @@ export const Edges: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long', long),
+  parameters: {
+    docs: {
+      source: {
+        code: `<label for="registry">Выгрузка реестра договоров подразделения за второе полугодие в систему бухгалтерского учёта</label>
+<span>62 %</span>
+<progress aveProgress id="registry" value="0.62"></progress>
+<label for="decisions" lang="uz-Latn">Oʻzbekiston Respublikasi Vazirlar Mahkamasining qarorlari arxivini yuklab olish</label>
+<span>18%</span>
+<progress aveProgress id="decisions" value="0.18"></progress>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const head of canvasElement.querySelectorAll('.head')) {
       const value = head.querySelector('.value')?.getBoundingClientRect();

@@ -113,13 +113,9 @@ function locale(value: string): ReturnType<typeof applicationConfig> {
   return applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: value }] });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 const meta: Meta<AlertStories> = {
   title: 'Components/Alert',
-  component: AlertStories,
+  component: AveAlert,
   decorators: [locale('ru')],
 };
 export default meta;
@@ -127,11 +123,16 @@ export default meta;
 /** A warning about one field, with a heading and a link in its message. */
 export const Default: Story = {
   render: frame('default'),
-  parameters: source(
-    '<ave-alert variant="warning" heading="Контрагент не прошёл проверку">',
-    '  Налоговый номер не найден в реестре. <a href="…">Проверьте ИНН</a> или выберите другого контрагента.',
-    '</ave-alert>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-alert variant="warning" heading="Контрагент не прошёл проверку">
+  Налоговый номер не найден в реестре. <a href="…">Проверьте ИНН</a> или выберите другого контрагента.
+</ave-alert>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const alert = within(canvasElement).getByRole('alert');
     await expect(within(alert).getByRole('img', { name: 'Предупреждение' })).toBeVisible();
@@ -150,12 +151,17 @@ export const Default: Story = {
 export const Variants: Story = {
   tags: ['forced-colors'],
   render: frame('variants'),
-  parameters: source(
-    '<ave-alert heading="Договор ждёт согласования">…</ave-alert>',
-    '<ave-alert variant="success" heading="Договор подписан">…</ave-alert>',
-    '<ave-alert variant="warning" heading="Срок действия истекает">…</ave-alert>',
-    '<ave-alert variant="danger" heading="Договор не отправлен">…</ave-alert>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-alert heading="Договор ждёт согласования">…</ave-alert>
+<ave-alert variant="success" heading="Договор подписан">…</ave-alert>
+<ave-alert variant="warning" heading="Срок действия истекает">…</ave-alert>
+<ave-alert variant="danger" heading="Договор не отправлен">…</ave-alert>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getAllByRole('status')).toHaveLength(2);
@@ -170,6 +176,15 @@ export const Variants: Story = {
 export const WithoutHeading: Story = {
   name: 'Without heading',
   render: frame('plain'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-alert>Изменения сохраняются автоматически каждые две минуты.</ave-alert>
+<ave-alert variant="danger">Файл больше 20 МБ. Выберите файл поменьше.</ave-alert>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const alert of canvasElement.querySelectorAll('ave-alert')) {
       const icon = alert.querySelector('.icon')?.getBoundingClientRect();
@@ -183,12 +198,17 @@ export const WithoutHeading: Story = {
 export const WithActions: Story = {
   name: 'With actions',
   render: frame('actions'),
-  parameters: source(
-    '<ave-alert variant="danger" heading="Список контрагентов не загрузился">',
-    '  Сервер справочника не ответил за 30 секунд.',
-    '  <div aveAlertActions><button aveButton type="button" size="sm" (click)="reload()">Повторить</button></div>',
-    '</ave-alert>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-alert variant="danger" heading="Список контрагентов не загрузился">
+  Сервер справочника не ответил за 30 секунд.
+  <div aveAlertActions><button aveButton type="button" size="sm" (click)="reload()">Повторить</button></div>
+</ave-alert>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     // The actions have a row of their own, 8px under the message.
@@ -207,6 +227,19 @@ export const WithActions: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-alert variant="warning" heading="Oʻzbekiston Respublikasi Vazirlar Mahkamasining qarori bilan tasdiqlangan shakl">
+  Hujjat shakli 2026-yil 1-apreldan boshlab yangilanadi. Eski shakldagi shartnomalarni qayta rasmiylashtiring.
+</ave-alert>
+<ave-alert>
+  Договоры, отправленные на согласование после 18:00, юридический отдел рассматривает на следующий рабочий день, …
+</ave-alert>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const alert of canvasElement.querySelectorAll('ave-alert')) {
       await expect(alert.scrollWidth).toBe(alert.clientWidth);
@@ -218,6 +251,19 @@ export const LongText: Story = {
 /** An alert that appears after an action is announced: a live region that interrupts. */
 export const Appearing: Story = {
   render: () => ({ template: '<ave-alert-appearing />', moduleMetadata: { imports: [AlertAppearing] } }),
+  parameters: {
+    docs: {
+      source: {
+        code: `@if (failed()) {
+  <ave-alert variant="danger" heading="Договор не отправлен">
+    Сервер согласования не ответил. Отправьте договор ещё раз.
+  </ave-alert>
+}
+<button aveButton type="button" variant="primary" (click)="send()">Отправить на согласование</button>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.queryByRole('alert')).toBeNull();

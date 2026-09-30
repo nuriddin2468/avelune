@@ -84,10 +84,6 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 /** Every spinner in the canvas has shown: its delay has passed. */
 async function shown(canvasElement: HTMLElement): Promise<void> {
   await waitFor(async () => {
@@ -99,14 +95,18 @@ async function shown(canvasElement: HTMLElement): Promise<void> {
 
 const meta: Meta<SpinnerStories> = {
   title: 'Components/Spinner',
-  component: SpinnerStories,
+  component: AveSpinner,
 };
 export default meta;
 
 /** A spinner on its own: a progress bar named by what is being waited for. */
 export const Default: Story = {
   render: frame('default'),
-  parameters: source('<ave-spinner [loading]="documents.isLoading()" label="Loading documents" />'),
+  parameters: {
+    docs: {
+      source: { code: '<ave-spinner [loading]="documents.isLoading()" label="Loading documents" />', language: 'html' },
+    },
+  },
   play: async ({ canvasElement }) => {
     await shown(canvasElement);
     await expect(within(canvasElement).getByRole('progressbar', { name: 'Loading documents' })).toBeVisible();
@@ -116,7 +116,16 @@ export const Default: Story = {
 /** The three sizes, the icon sizes: 16, 20 (default) and 24px. */
 export const Sizes: Story = {
   render: frame('sizes'),
-  parameters: source('<ave-spinner size="sm" />', '<ave-spinner />', '<ave-spinner size="lg" />'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-spinner size="sm" />
+<ave-spinner />
+<ave-spinner size="lg" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await shown(canvasElement);
     const expected = { sm: 16, md: 20, lg: 24 } as const satisfies Record<AveSpinnerSize, number>;
@@ -130,7 +139,9 @@ export const Sizes: Story = {
 /** A quick search never shows the spinner; a slow one shows it after 300ms, for at least 500ms. */
 export const Delay: Story = {
   render: () => ({ template: '<ave-spinner-delay />', moduleMetadata: { imports: [SpinnerDelay] } }),
-  parameters: source('<ave-spinner [loading]="searching()" label="Searching" />'),
+  parameters: {
+    docs: { source: { code: '<ave-spinner [loading]="searching()" label="Searching" />', language: 'html' } },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const spinner = canvasElement.querySelector('ave-spinner');
@@ -153,12 +164,17 @@ export const Delay: Story = {
 export const InContext: Story = {
   name: 'In context',
   render: frame('context'),
-  parameters: source(
-    '<section aria-labelledby="contracts-title" aria-busy="true">',
-    '  <h2 id="contracts-title">Договоры подразделения</h2>',
-    '  <p><ave-spinner size="sm" label="Загрузка договоров" /> Загружаем договоры…</p>',
-    '</section>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<section aria-labelledby="contracts-title" aria-busy="true">
+  <h2 id="contracts-title">Договоры подразделения</h2>
+  <p><ave-spinner size="sm" label="Загрузка договоров" /> Загружаем договоры…</p>
+</section>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await shown(canvasElement);
     for (const line of canvasElement.querySelectorAll('.waiting')) {

@@ -210,13 +210,9 @@ function locale(value: string): ReturnType<typeof applicationConfig> {
   return applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: value }] });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
-// No `component`: Storybook instantiates a meta's component outside an injection context, where `model()` throws.
 const meta: Meta<ComboboxArgs> = {
   title: 'Components/Combobox',
+  component: AveCombobox,
   args: { size: 'md', placeholder: 'Начните вводить название' },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
   decorators: [
@@ -232,7 +228,14 @@ export default meta;
 
 /** One combobox, with controls. */
 export const Default: Story = {
-  parameters: source('<ave-combobox [options]="counterparties" [formField]="contract.counterparty" />'),
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-combobox [options]="counterparties" [formField]="contract.counterparty" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const input = within(canvasElement).getByRole('combobox', { name: 'Контрагент' });
     await expect(input).toHaveAttribute('aria-autocomplete', 'list');
@@ -241,7 +244,7 @@ export const Default: Story = {
 
 /** Typing filters the list: "узбек" shows the two organisations whose names contain it in Cyrillic. */
 export const Filtering: Story = {
-  parameters: source('<ave-combobox [options]="counterparties" />'),
+  parameters: { docs: { source: { code: '<ave-combobox [options]="counterparties" />', language: 'html' } } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const input = canvas.getByRole('combobox', { name: 'Контрагент' });
@@ -255,7 +258,7 @@ export const Filtering: Story = {
 /** "o'zbek", typed with an ASCII apostrophe, finds "Oʻzbekiston". */
 export const UzbekApostrophes: Story = {
   name: 'Uzbek apostrophes',
-  parameters: source('<ave-combobox [options]="counterparties" />'),
+  parameters: { docs: { source: { code: '<ave-combobox [options]="counterparties" />', language: 'html' } } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.type(canvas.getByRole('combobox', { name: 'Контрагент' }), "o'zbekiston");
@@ -273,7 +276,7 @@ export const UzbekApostrophes: Story = {
 /** Nothing matches: the list says so, in the application's language. */
 export const NoResults: Story = {
   name: 'No results',
-  parameters: source('<ave-combobox [options]="counterparties" />'),
+  parameters: { docs: { source: { code: '<ave-combobox [options]="counterparties" />', language: 'html' } } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.type(canvas.getByRole('combobox', { name: 'Контрагент' }), 'Омега');
@@ -285,10 +288,15 @@ export const NoResults: Story = {
 export const States: Story = {
   tags: ['forced-colors'],
   render: frame('states'),
-  parameters: source(
-    '<ave-combobox [options]="counterparties" readonly />',
-    '<ave-combobox [options]="counterparties" disabled />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-combobox [options]="counterparties" readonly />
+<ave-combobox [options]="counterparties" disabled />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const input of canvasElement.querySelectorAll('input'))
       await expect(input.getBoundingClientRect().height).toBe(36);
@@ -300,10 +308,15 @@ export const States: Story = {
 export const Forms: Story = {
   render: () => ({ template: '<ave-combobox-forms />', moduleMetadata: { imports: [ComboboxForms] } }),
   decorators: [],
-  parameters: source(
-    '<ave-combobox [options]="counterparties" [formField]="contract.counterparty" />',
-    '<ave-combobox [options]="counterparties" [formControl]="counterparty" />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-combobox [options]="counterparties" [formField]="contract.counterparty" />
+<ave-combobox [options]="counterparties" [formControl]="counterparty" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const signalForms = canvas.getByRole('combobox', { name: 'Counterparty (Signal Forms)' });
@@ -325,7 +338,7 @@ export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
   decorators: [],
-  parameters: source('<ave-combobox [options]="counterparties" />'),
+  parameters: { docs: { source: { code: '<ave-combobox [options]="counterparties" />', language: 'html' } } },
   play: async ({ canvasElement }) => {
     const column = canvasElement.querySelector('.narrow');
     if (column === null) throw new Error('No column');
@@ -340,7 +353,11 @@ export const LongText: Story = {
 export const Clearing: Story = {
   decorators: [locale('ru')],
   render: () => ({ template: '<ave-combobox-clearing />', moduleMetadata: { imports: [ComboboxClearing] } }),
-  parameters: source('<ave-combobox [options]="counterparties" [formField]="contract.payer" />'),
+  parameters: {
+    docs: {
+      source: { code: '<ave-combobox [options]="counterparties" [formField]="contract.payer" />', language: 'html' },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const input = canvas.getByRole('combobox', { name: 'Плательщик' });
@@ -374,7 +391,11 @@ export const Clearing: Story = {
 export const RichOptions: Story = {
   name: 'Rich options',
   render: () => ({ template: '<ave-combobox-rich />', moduleMetadata: { imports: [ComboboxRich] } }),
-  parameters: source('<ave-combobox [options]="countries" [formField]="company.country" />'),
+  parameters: {
+    docs: {
+      source: { code: '<ave-combobox [options]="countries" [formField]="company.country" />', language: 'html' },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('combobox', { name: 'Mamlakat' })).toHaveValue('Oʻzbekiston Respublikasi');
@@ -403,10 +424,15 @@ export const ServerSearch: Story = {
   name: 'Server search',
   decorators: [locale('ru')],
   render: () => ({ template: '<ave-combobox-server />', moduleMetadata: { imports: [ComboboxServer] } }),
-  parameters: source(
-    '<ave-combobox search="server" [options]="page.options()" [loading]="page.loading()" [error]="page.failed()"',
-    '  [hasMore]="page.hasMore()" (query)="find($event)" (loadMore)="next()" [formField]="contract.counterparty" />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-combobox search="server" [options]="page.options()" [loading]="page.loading()" [error]="page.failed()"
+  [hasMore]="page.hasMore()" (query)="find($event)" (loadMore)="next()" [formField]="contract.counterparty" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const input = canvas.getByRole('combobox', { name: 'Контрагент' });
@@ -432,7 +458,14 @@ export const ServerStates: Story = {
     template: '<ave-combobox-server fails="first" />',
     moduleMetadata: { imports: [ComboboxServer] },
   }),
-  parameters: source('<ave-combobox search="server" [loading]="…" [error]="…" (query)="find($event)" />'),
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-combobox search="server" [loading]="…" [error]="…" (query)="find($event)" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const input = canvas.getByRole('combobox', { name: 'Контрагент' });
@@ -452,7 +485,14 @@ export const ServerFailed: Story = {
   name: 'Server failed',
   decorators: [locale('ru')],
   render: () => ({ template: '<ave-combobox-server fails="always" />', moduleMetadata: { imports: [ComboboxServer] } }),
-  parameters: source('<ave-combobox search="server" [error]="page.failed()" (query)="find($event)" />'),
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-combobox search="server" [error]="page.failed()" (query)="find($event)" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     canvas.getByRole('combobox', { name: 'Контрагент' }).focus();

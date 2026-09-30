@@ -48,14 +48,14 @@ A 24px row with a 4px track of `radius.full`: its rest in `border.strong` (3:1),
 <Canvas of={SliderStories.States} />
 
 - **Hover and press** darken the thumb (`accent.bg-hover`, `accent.bg-active`). **Focus** rings the thumb, not the track: on a range, the ring shows which end moves.
-- **Disabled:** the thumb and the chosen part in `fg.disabled`, the track in `border.subtle`; nothing can be focused.
+- **Disabled** (`disabled`, or a disabled form control): the thumb and the chosen part in `fg.disabled`, the track in `border.subtle`; nothing can be focused.
 - A slider always has a value, so it has no empty state; an error from the application's rules shows in the field as for any control.
 
 ## Forms
 
 <Canvas of={SliderStories.Forms} />
 
-**Signal Forms:** `[formField]` on a `number` (a slider) or an `AveNumberRange` (a range). **Reactive Forms:** `[formControl]` or `formControlName`. The value changes while the thumb moves; the field is touched when focus leaves it.
+**Signal Forms:** `[formField]` on a `number` (a slider) or an `AveNumberRange` (a range). **Reactive Forms:** `[formControl]` or `formControlName`. The value changes while the thumb moves; the field is touched when focus leaves it, and `touch` tells Signal Forms so. `<ave-range-slider>` takes the same inputs as `<ave-slider>`; only its `value` is a range.
 
 ## Long text and locales
 

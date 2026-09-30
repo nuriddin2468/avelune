@@ -94,13 +94,9 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 const meta: Meta<BadgeStories> = {
   title: 'Components/Badge',
-  component: BadgeStories,
+  component: AveBadge,
   decorators: [applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: 'ru' }] })],
 };
 export default meta;
@@ -109,13 +105,18 @@ export default meta;
 export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default'),
-  parameters: source(
-    '<ave-badge>Черновик</ave-badge>',
-    '<ave-badge variant="info">На согласовании</ave-badge>',
-    '<ave-badge variant="success">Подписан</ave-badge>',
-    '<ave-badge variant="warning">Истекает</ave-badge>',
-    '<ave-badge variant="danger">Истёк</ave-badge>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-badge>Черновик</ave-badge>
+<ave-badge variant="info">На согласовании</ave-badge>
+<ave-badge variant="success">Подписан</ave-badge>
+<ave-badge variant="warning">Истекает</ave-badge>
+<ave-badge variant="danger">Истёк</ave-badge>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const badges = [...canvasElement.querySelectorAll('ave-badge')];
     await expect(badges.map((badge) => badge.textContent.trim())).toEqual(statuses.map((status) => status.text));
@@ -136,10 +137,15 @@ export const Default: Story = {
 /** Where a status stands: at the end of a list's row, after a heading, and inside a sentence. */
 export const Places: Story = {
   render: frame('places'),
-  parameters: source(
-    '<li class="row">…<ave-badge variant="success">Подписан</ave-badge></li>',
-    '<h3>Договор ДК-2025/109 <ave-badge variant="danger">Истёк</ave-badge></h3>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<li class="row">…<ave-badge variant="success">Подписан</ave-badge></li>
+<h3>Договор ДК-2025/109 <ave-badge variant="danger">Истёк</ave-badge></h3>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     // The badge is text: the row's and the heading's words include it.
@@ -155,6 +161,17 @@ export const Places: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-badge variant="info">Oʻzbekiston Respublikasi Moliya vazirligida kelishilmoqda</ave-badge>
+<ave-badge variant="warning">Ожидает подписи генерального директора</ave-badge>
+<ave-badge>Қоралама</ave-badge>
+<ave-badge variant="success" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const column = canvasElement.querySelector('.narrow');
     for (const badge of canvasElement.querySelectorAll('ave-badge')) {
@@ -171,10 +188,15 @@ export const LongText: Story = {
 export const Counts: Story = {
   tags: ['forced-colors'],
   render: frame('counts'),
-  parameters: source(
-    '<a aveLink routerLink="/inbox">Входящие <ave-count [value]="3" /></a>',
-    '<a aveLink routerLink="/archive">Архив <ave-count [value]="1284" max="9999" /></a>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<a aveLink routerLink="/inbox">Входящие <ave-count [value]="3" /></a>
+<a aveLink routerLink="/archive">Архив <ave-count [value]="1284" max="9999" /></a>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('link', { name: 'Входящие 3' })).toBeVisible();

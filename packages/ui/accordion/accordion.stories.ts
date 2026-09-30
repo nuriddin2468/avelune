@@ -83,13 +83,9 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 const meta: Meta<AccordionStories> = {
   title: 'Components/Accordion',
-  component: AccordionStories,
+  component: AveAccordion,
 };
 export default meta;
 
@@ -97,13 +93,18 @@ export default meta;
 export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default'),
-  parameters: source(
-    '<ave-accordion [level]="2">',
-    '  <ave-accordion-item heading="Штрафы и пени" [(expanded)]="fines">…</ave-accordion-item>',
-    '  <ave-accordion-item heading="Форс-мажор">…</ave-accordion-item>',
-    '  <ave-accordion-item heading="Конфиденциальность" disabled>…</ave-accordion-item>',
-    '</ave-accordion>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-accordion [level]="2">
+  <ave-accordion-item heading="Штрафы и пени" [(expanded)]="fines">…</ave-accordion-item>
+  <ave-accordion-item heading="Форс-мажор">…</ave-accordion-item>
+  <ave-accordion-item heading="Конфиденциальность" disabled>…</ave-accordion-item>
+</ave-accordion>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const fines = canvas.getByRole('button', { name: 'Штрафы и пени' });
@@ -117,6 +118,21 @@ export const Default: Story = {
 /** The keyboard: Down to the next heading, Enter to open it. */
 export const Keyboard: Story = {
   render: frame('keyboard'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-accordion>
+  <ave-accordion-item heading="Порядок оплаты" [expanded]="true">
+    <p>Покупатель оплачивает поставку в течение 10 банковских дней после подписания акта приёмки.</p>
+  </ave-accordion-item>
+  <ave-accordion-item heading="Приёмка товара">
+    <p>Товар принимается по количеству и качеству в день поставки, в присутствии представителей сторон.</p>
+  </ave-accordion-item>
+</ave-accordion>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.tab();
@@ -133,7 +149,7 @@ export const Keyboard: Story = {
 /** One open at a time (`multiple` false): the supplier's and the buyer's details. */
 export const Single: Story = {
   render: frame('single'),
-  parameters: source('<ave-accordion [multiple]="false">…</ave-accordion>'),
+  parameters: { docs: { source: { code: '<ave-accordion [multiple]="false">…</ave-accordion>', language: 'html' } } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: 'Реквизиты покупателя' }));
@@ -149,6 +165,27 @@ export const Single: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-accordion>
+  <ave-accordion-item
+    heading="Oʻzbekiston Respublikasi Vazirlar Mahkamasining qarori bilan tasdiqlangan shartlar"
+    [expanded]="true"
+  >
+    <p>
+      Shartnoma boʻyicha majburiyatlar bajarilmagan taqdirda tomonlar Oʻzbekiston Respublikasi qonunchiligiga muvofiq
+      javobgar boʻladi.
+    </p>
+  </ave-accordion-item>
+  <ave-accordion-item heading="Fors-major holatlari">
+    <p>Tomonlar javobgarlikdan ozod qilinadi.</p>
+  </ave-accordion-item>
+</ave-accordion>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const [first] = canvasElement.querySelectorAll('.trigger');
     const words = first?.querySelector('.words')?.getBoundingClientRect();

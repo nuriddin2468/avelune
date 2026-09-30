@@ -1,5 +1,6 @@
 // Storybook on @storybook/angular-vite (ADR 0008): the Foundations pages in src/, and each component's docs page and
-// stories next to it in packages/ui (ADR 0033).
+// stories next to it in packages/ui (ADR 0033). The dev server also serves the Storybook MCP server at /mcp, for coding
+// agents (ADR 0090).
 import type { StorybookConfig } from '@storybook/angular-vite';
 import { join } from 'node:path';
 import remarkGfm from 'remark-gfm';
@@ -14,6 +15,10 @@ const config: StorybookConfig = {
     },
     '@storybook/addon-a11y',
     '@storybook/addon-vitest',
+    // The MCP server on the dev server's /mcp, with its docs toolset only: it reads the components manifest below. The
+    // dev and test toolsets bring a workflow of their own (their story conventions, `test-run` instead of the Nx
+    // targets) that AGENTS.md and the ADRs settle otherwise (ADR 0090).
+    { name: '@storybook/addon-mcp', options: { toolsets: { dev: false, docs: true, test: false } } },
   ],
   framework: {
     name: '@storybook/angular-vite',
@@ -30,6 +35,10 @@ const config: StorybookConfig = {
   },
   // Storybook collects telemetry by default; nothing leaves the machine.
   core: { disableTelemetry: true },
+  // The components manifest (manifests/components.json in the build): each story file's component with its inputs
+  // and JSDoc, its stories' snippets and its docs page, for the MCP docs toolset. tools/manifest-check holds it to
+  // the kit's whole public API (ADR 0090).
+  features: { componentsManifest: true },
   // CDK's overlay and portal entry points share their portal classes through a chunk of CDK's own. Pre-bundled in
   // separate passes, each got its copy, and an overlay rejected a ComponentPortal made from @angular/cdk/portal
   // ("unknown Portal type"; the tooltip, ADR 0063). Pre-bundled together, they share it, as an application's bundle

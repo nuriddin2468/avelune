@@ -1,0 +1,15 @@
+{
+  "components": {
+    "components-thing": {
+      "id": "components-thing",
+      "docs": {
+        "components-thing--docs": {
+          "id": "components-thing--docs",
+          "name": "Docs",
+          "path": "../../packages/ui/thing/thing.mdx",
+          "content": "# Thing\n\n`<ave-thing>` holds items. `multiple` lets several stay open.\n\n```html\n<ave-thing label=\"Условия\">\n  <ave-thing-item heading=\"Штрафы\">…</ave-thing-item>\n  <span aveThingEnd>3</span>\n</ave-thing>\n```\n"
+        }
+      }
+    }
+  }
+}

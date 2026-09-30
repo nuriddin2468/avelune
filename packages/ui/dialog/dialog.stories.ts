@@ -110,10 +110,6 @@ function frame(view: View, size: AveDialogSize = 'md', opener = 'Изменит�
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 /** Opens the story's dialog with its button and waits until it shows. */
 async function openDialog(canvasElement: HTMLElement, opener: string): Promise<HTMLDialogElement> {
   await userEvent.click(within(canvasElement).getByRole('button', { name: opener }));
@@ -125,7 +121,7 @@ async function openDialog(canvasElement: HTMLElement, opener: string): Promise<H
 
 const meta: Meta<DialogStories> = {
   title: 'Components/Dialog',
-  component: DialogStories,
+  component: AveDialog,
   decorators: [applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: 'ru' }] })],
 };
 export default meta;
@@ -133,15 +129,20 @@ export default meta;
 /** A short form in a dialog: focus goes to its first field, and returns to the button when it closes. */
 export const Default: Story = {
   render: frame('form'),
-  parameters: source(
-    '<dialog aveDialog heading="Изменить контрагента" [(open)]="editing">',
-    '  <form id="counterparty" (submit)="save($event)">…</form>',
-    '  <div aveDialogActions>',
-    '    <button aveButton type="button" (click)="editing.set(false)">Отмена</button>',
-    '    <button aveButton type="submit" variant="primary" form="counterparty">Сохранить изменения</button>',
-    '  </div>',
-    '</dialog>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<dialog aveDialog heading="Изменить контрагента" [(open)]="editing">
+  <form id="counterparty" (submit)="save($event)">…</form>
+  <div aveDialogActions>
+    <button aveButton type="button" (click)="editing.set(false)">Отмена</button>
+    <button aveButton type="submit" variant="primary" form="counterparty">Сохранить изменения</button>
+  </div>
+</dialog>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const opener = within(canvasElement).getByRole('button', { name: 'Изменить' });
     const dialog = await openDialog(canvasElement, 'Изменить');
@@ -158,6 +159,20 @@ export const Default: Story = {
 /** A small dialog, 480px at most. */
 export const Small: Story = {
   render: frame('form', 'sm'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<dialog aveDialog size="sm" heading="Изменить контрагента" [(open)]="editing">
+  <form id="counterparty" (submit)="save($event)">…</form>
+  <div aveDialogActions>
+    <button aveButton type="button" (click)="editing.set(false)">Отмена</button>
+    <button aveButton type="submit" variant="primary" form="counterparty">Сохранить изменения</button>
+  </div>
+</dialog>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const dialog = await openDialog(canvasElement, 'Изменить');
     await expect(dialog.querySelector('.panel')?.getBoundingClientRect().width).toBeLessThanOrEqual(480);
@@ -168,6 +183,23 @@ export const Small: Story = {
 export const LongContent: Story = {
   name: 'Long content',
   render: frame('long', 'md', 'Условия'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<dialog aveDialog heading="Условия договора" [(open)]="reading">
+  <p>1. Предмет. Стороны обязуются исполнять условия настоящего договора добросовестно, в сроки и в объёме, …</p>
+  <p>2. Сроки. …</p>
+  …
+  <p>14. Срок действия. …</p>
+  <div aveDialogActions>
+    <button aveButton type="button" (click)="reading.set(false)">Закрыть</button>
+    <button aveButton type="button" variant="primary" (click)="accept()">Принять условия</button>
+  </div>
+</dialog>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const dialog = await openDialog(canvasElement, 'Условия');
     const body = dialog.querySelector('.body');
@@ -183,6 +215,21 @@ export const LongContent: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('text', 'sm', 'Yuborish'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<dialog aveDialog size="sm" heading="Oʻzbekiston Respublikasi Vazirlar Mahkamasining qarorini kelishuvchilarga yuborish"
+  [(open)]="sending">
+  <p>Qaror barcha boʻlim boshliqlariga yuboriladi; har biri besh ish kuni ichida javob berishi kerak.</p>
+  <div aveDialogActions>
+    <button aveButton type="button" (click)="sending.set(false)">Bekor qilish</button>
+    <button aveButton type="button" variant="primary" (click)="send()">Kelishuvga yuborish</button>
+  </div>
+</dialog>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const dialog = await openDialog(canvasElement, 'Yuborish');
     const heading = dialog.querySelector('.heading');

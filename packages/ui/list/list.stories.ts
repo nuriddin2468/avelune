@@ -107,13 +107,9 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 const meta: Meta<ListStories> = {
   title: 'Components/List',
-  component: ListStories,
+  component: AveList,
   decorators: [
     applicationConfig({
       providers: [{ provide: LOCALE_ID, useValue: 'ru' }, provideAveIcons([lucideFileText, lucidePaperclip, lucideX])],
@@ -126,16 +122,21 @@ export default meta;
 export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default'),
-  parameters: source(
-    '<ave-list label="Маршрут согласования">',
-    '  <ave-list-item>',
-    '    <ave-avatar aveListStart name="Азиза Каримова" decorative />',
-    '    <span>Азиза Каримова</span>',
-    '    <span>Юридический департамент</span>',
-    '    <ave-badge aveListEnd variant="success">Согласовала</ave-badge>',
-    '  </ave-list-item>',
-    '</ave-list>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-list label="Маршрут согласования">
+  <ave-list-item>
+    <ave-avatar aveListStart name="Азиза Каримова" decorative />
+    <span>Азиза Каримова</span>
+    <span>Юридический департамент</span>
+    <ave-badge aveListEnd variant="success">Согласовала</ave-badge>
+  </ave-list-item>
+</ave-list>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const list = canvas.getByRole('list', { name: 'Маршрут согласования' });
@@ -151,6 +152,25 @@ export const Default: Story = {
 export const AddingAndRemoving: Story = {
   name: 'Adding and removing',
   render: frame('files'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-list label="Файлы договора">
+  @for (file of files(); track file.name) {
+    <ave-list-item>
+      <ave-icon aveListStart name="file-text" decorative />
+      <span>{{ file.name }}</span>
+      <span>{{ file.size }}</span>
+      <button aveIconButton aveListEnd type="button" variant="ghost" size="sm" icon="x"
+        [label]="'Открепить ' + file.name" (click)="detach(file.name)"></button>
+    </ave-list-item>
+  }
+</ave-list>
+<button aveButton type="button" (click)="attach()"><ave-icon name="paperclip" decorative />Прикрепить акты</button>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: 'Прикрепить акты' }));
@@ -168,6 +188,21 @@ export const AddingAndRemoving: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-list label="Kelishuv yoʻnalishi">
+  <ave-list-item>
+    <ave-avatar aveListStart name="Oʻktam Aliyev" decorative />
+    <span>Oʻktam Aliyev</span>
+    <span>Oʻzbekiston Respublikasi Moliya vazirligi huzuridagi Davlat moliyaviy nazorati departamenti</span>
+    <ave-badge aveListEnd variant="info">Koʻrib chiqilmoqda</ave-badge>
+  </ave-list-item>
+</ave-list>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const item = canvasElement.querySelector('ave-list-item');
     await expect(item?.scrollWidth).toBe(item?.clientWidth);

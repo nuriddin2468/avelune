@@ -1,0 +1,23 @@
+{
+  "components": {
+    "components-thing": {
+      "id": "components-thing",
+      "name": "AveThing",
+      "path": "../../packages/ui/thing/thing.stories.ts",
+      "argTypes": {
+        "label": { "name": "label", "description": "What the thing is called.", "table": { "category": "inputs" } },
+        "open": { "name": "open", "description": "Whether the thing is open.", "table": { "category": "inputs" } },
+        "openChange": { "name": "openChange", "description": "", "table": { "category": "outputs" } }
+      },
+      "renderer": "angular",
+      "angularComponentMeta": {
+        "name": "AveThing",
+        "selector": "ave-thing",
+        "standalone": true,
+        "inputs": ["label", "open"],
+        "outputs": ["closed", "openChange"],
+        "enums": []
+      }
+    }
+  }
+}

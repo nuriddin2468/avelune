@@ -83,10 +83,6 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 /** The open panel, if any. */
 function openPanel(): HTMLElement | null {
   return document.querySelector<HTMLElement>('[role="dialog"].panel');
@@ -94,7 +90,7 @@ function openPanel(): HTMLElement | null {
 
 const meta: Meta<PopoverStories> = {
   title: 'Components/Popover',
-  component: PopoverStories,
+  component: AvePopover,
   decorators: [applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: 'ru' }] })],
 };
 export default meta;
@@ -102,12 +98,17 @@ export default meta;
 /** Filters in a popover: focus goes to the first choice; Apply closes it and focus returns to the button. */
 export const Default: Story = {
   render: frame('filters'),
-  parameters: source(
-    '<ave-popover label="Фильтры" heading="Фильтры" [(open)]="filtersOpen">',
-    '  <fieldset aveChoiceGroup legend="Статус">…</fieldset>',
-    '  <div><button aveButton type="button" variant="primary" (click)="apply()">Применить</button></div>',
-    '</ave-popover>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-popover label="Фильтры" heading="Фильтры" [(open)]="filtersOpen">
+  <fieldset aveChoiceGroup legend="Статус">…</fieldset>
+  <div><button aveButton type="button" variant="primary" (click)="apply()">Применить</button></div>
+</ave-popover>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Фильтры' });
     await userEvent.click(button);
@@ -127,6 +128,19 @@ export const Default: Story = {
 export const IconOnly: Story = {
   name: 'Icon only',
   render: frame('card'),
+  parameters: {
+    docs: {
+      source: {
+        code: `Ответственный: Каримова Н. А.
+<ave-popover label="Карточка сотрудника" icon="user" variant="ghost" size="sm">
+  <p>Каримова Нигора Алишеровна</p>
+  <p>Юридический отдел, ведущий юрист</p>
+  <p>+998 71 200 14 52 · karimova&#64;example.uz</p>
+</ave-popover>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Карточка сотрудника' });
     await userEvent.click(button);
@@ -143,6 +157,22 @@ export const IconOnly: Story = {
 /** A short form: a field and its actions; Cancel closes without saving. */
 export const Form: Story = {
   render: frame('rename'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-popover label="Переименовать" heading="Название папки" [(open)]="renaming">
+  <ave-form-field label="Название">
+    <input aveInput type="text" value="Договоры 2026" />
+  </ave-form-field>
+  <div>
+    <button aveButton type="button" (click)="renaming.set(false)">Отмена</button>
+    <button aveButton type="button" variant="primary" (click)="rename()">Сохранить</button>
+  </div>
+</ave-popover>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await userEvent.click(within(canvasElement).getByRole('button', { name: 'Переименовать' }));
     await waitFor(() =>
@@ -155,6 +185,19 @@ export const Form: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-popover label="Muddatlar haqida" icon="info" variant="ghost" heading="Kelishish muddatlari" lang="uz-Latn">
+  <p>
+    Oʻzbekiston Respublikasi Vazirlar Mahkamasining qaroriga koʻra, shartnomalar besh ish kuni ichida
+    kelishilishi kerak; muddat oʻtganda hujjat avtomatik ravishda boʻlim boshligʻiga yuboriladi.
+  </p>
+</ave-popover>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await userEvent.click(within(canvasElement).getByRole('button', { name: 'Muddatlar haqida' }));
     await waitFor(() => expect(openPanel()).not.toBeNull());

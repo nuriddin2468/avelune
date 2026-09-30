@@ -66,13 +66,9 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 const meta: Meta<TagStories> = {
   title: 'Components/Tag',
-  component: TagStories,
+  component: AveTag,
   decorators: [applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: 'ru' }] })],
 };
 export default meta;
@@ -81,13 +77,18 @@ export default meta;
 export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default'),
-  parameters: source(
-    '<ul class="tags" aria-labelledby="regions">',
-    '  @for (region of regions(); track region.value) {',
-    '    <li><ave-tag removable (remove)="drop(region)">{{ region.label }}</ave-tag></li>',
-    '  }',
-    '</ul>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ul class="tags" aria-labelledby="regions">
+  @for (region of regions(); track region.value) {
+    <li><ave-tag removable (remove)="drop(region)">{{ region.label }}</ave-tag></li>
+  }
+</ul>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('list', { name: 'Регионы доставки' })).toBeVisible();
@@ -103,6 +104,18 @@ export const Default: Story = {
 /** Taking values away from the keyboard: focus goes to the next tag, then to the one before. */
 export const Removing: Story = {
   render: frame('default'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ul aria-labelledby="regions">
+  @for (region of regions(); track region.value) {
+    <li><ave-tag removable (remove)="drop(region)">{{ region.label }}</ave-tag></li>
+  }
+</ul>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.tab();
@@ -122,7 +135,15 @@ export const Removing: Story = {
 /** 28px tags on a page and 24px tags for a field, with and without a remove button. */
 export const Sizes: Story = {
   render: frame('sizes'),
-  parameters: source('<ave-tag removable>Ташкент</ave-tag>', '<ave-tag size="sm" removable>Ташкент</ave-tag>'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-tag removable>Ташкент</ave-tag>
+<ave-tag size="sm" removable>Ташкент</ave-tag>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const [md, plain, sm] = canvasElement.querySelectorAll('ave-tag');
     await expect(md?.getBoundingClientRect().height).toBe(28);
@@ -136,6 +157,16 @@ export const Sizes: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-tag removable lang="uz-Latn">Oʻzbekiston Respublikasi Vazirlar Mahkamasi</ave-tag>
+<ave-tag lang="ru">Для служебного пользования</ave-tag>
+<ave-tag size="sm" removable lang="uz-Cyrl">Қорақалпоғистон Республикаси</ave-tag>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const column = canvasElement.querySelector('.narrow');
     for (const tag of canvasElement.querySelectorAll('ave-tag')) {

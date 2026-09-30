@@ -141,7 +141,7 @@ function frame(view: View): NonNullable<Story['render']> {
 
 const meta: Meta<ChoiceGroupStories> = {
   title: 'Components/ChoiceGroup',
-  component: ChoiceGroupStories,
+  component: AveChoiceGroup,
 };
 export default meta;
 
@@ -153,13 +153,11 @@ export const States: Story = {
     docs: {
       source: {
         language: 'html',
-        code: [
-          '<fieldset aveChoiceGroup legend="Delivery">',
-          '  <label aveChoice><input type="radio" aveRadio name="delivery" value="courier" /> Courier</label>',
-          '  <label aveChoice><input type="radio" aveRadio name="delivery" value="pickup" /> Pickup point</label>',
-          '  <p aveHint>Pickup is free.</p>',
-          '</fieldset>',
-        ].join('\n'),
+        code: `<fieldset aveChoiceGroup legend="Delivery">
+  <label aveChoice><input type="radio" aveRadio name="delivery" value="courier" /> Courier</label>
+  <label aveChoice><input type="radio" aveRadio name="delivery" value="pickup" /> Pickup point</label>
+  <p aveHint>Pickup is free.</p>
+</fieldset>`,
       },
     },
   },
@@ -181,17 +179,15 @@ export const SignalForms: Story = {
     docs: {
       source: {
         language: 'typescript',
-        code: [
-          'readonly order = form(signal({ delivery: "", notify: { email: false, sms: false } }), (path) => {',
-          '  required(path.delivery);',
-          '  validate(path.notify, ({ value }) => (value().email || value().sms ? undefined : { kind: "channel" }));',
-          '});',
-          '',
-          '// <fieldset aveChoiceGroup legend="Delivery">',
-          '//   <label aveChoice><input type="radio" aveRadio value="courier" [formField]="order.delivery" /> Courier</label>',
-          '//   @if (order.delivery().errors().length > 0) { <p aveError>Choose how to deliver the order.</p> }',
-          '// </fieldset>',
-        ].join('\n'),
+        code: `readonly order = form(signal({ delivery: "", notify: { email: false, sms: false } }), (path) => {
+  required(path.delivery);
+  validate(path.notify, ({ value }) => (value().email || value().sms ? undefined : { kind: "channel" }));
+});
+
+// <fieldset aveChoiceGroup legend="Delivery">
+//   <label aveChoice><input type="radio" aveRadio value="courier" [formField]="order.delivery" /> Courier</label>
+//   @if (order.delivery().errors().length > 0) { <p aveError>Choose how to deliver the order.</p> }
+// </fieldset>`,
       },
     },
   },
@@ -216,6 +212,22 @@ export const SignalForms: Story = {
 export const ReactiveForms: Story = {
   name: 'Reactive Forms',
   render: () => ({ template: '<ave-choice-group-reactive />', moduleMetadata: { imports: [ReactiveFormsDemo] } }),
+  parameters: {
+    docs: {
+      source: {
+        language: 'typescript',
+        code: `readonly order = new FormGroup({
+  delivery: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+});
+
+// <fieldset aveChoiceGroup legend="Delivery" [formGroup]="order">
+//   <label aveChoice><input type="radio" aveRadio value="courier" formControlName="delivery" /> Courier</label>
+//   <label aveChoice><input type="radio" aveRadio value="pickup" formControlName="delivery" /> Pickup point</label>
+//   @if (order.controls.delivery.invalid) { <p aveError>Choose how to deliver the order.</p> }
+// </fieldset>`,
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const courier = canvas.getByRole('radio', { name: 'Courier' });
@@ -230,6 +242,24 @@ export const ReactiveForms: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<fieldset aveChoiceGroup legend="Каким способом организация подпишет договор поставки оборудования">
+  <label aveChoice>
+    <input type="radio" aveRadio name="signing" value="digital" checked />
+    Электронной цифровой подписью руководителя в системе электронного документооборота
+  </label>
+  <label aveChoice>
+    <input type="radio" aveRadio name="signing" value="paper" />
+    Qogʻozda, tashkilot rahbarining shaxsiy imzosi va muhri bilan
+  </label>
+  <p aveHint>Подписанный на бумаге экземпляр нужно передать в канцелярию в течение трёх рабочих дней.</p>
+</fieldset>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const column = canvasElement.querySelector('.narrow');
     if (column === null) throw new Error('No column');

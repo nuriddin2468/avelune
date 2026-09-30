@@ -142,14 +142,9 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
-// No `component`: Storybook instantiates a meta's component outside an injection context to read its defaults, and with
-// this frame that failed on an injection of `ElementRef` (NG0203), as a `model()` does in the select family's stories.
 const meta: Meta<ToolbarStories> = {
   title: 'Components/Toolbar',
+  component: AveToolbar,
   decorators: [applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: 'ru' }] })],
 };
 export default meta;
@@ -158,17 +153,22 @@ export default meta;
 export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default'),
-  parameters: source(
-    '<div aveToolbar label="Действия с договором">',
-    '  <button aveButton aveToolbarItem type="button" variant="ghost">Изменить</button>',
-    '  <button aveButton aveToolbarItem type="button" variant="ghost" disabled disabledInteractive>',
-    '    Отправить на согласование',
-    '  </button>',
-    '  <span aveToolbarSeparator></span>',
-    '  <button aveIconButton aveToolbarItem type="button" variant="ghost" icon="copy" label="Дублировать" aveTooltip="Дублировать"></button>',
-    '  <ave-menu label="Ещё действия" icon="ellipsis" variant="ghost" [items]="more" />',
-    '</div>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<div aveToolbar label="Действия с договором">
+  <button aveButton aveToolbarItem type="button" variant="ghost">Изменить</button>
+  <button aveButton aveToolbarItem type="button" variant="ghost" disabled disabledInteractive>
+    Отправить на согласование
+  </button>
+  <span aveToolbarSeparator></span>
+  <button aveIconButton aveToolbarItem type="button" variant="ghost" icon="copy" label="Дублировать" aveTooltip="Дублировать"></button>
+  <ave-menu label="Ещё действия" icon="ellipsis" variant="ghost" [items]="more" />
+</div>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const toolbar = within(canvas.getByRole('toolbar', { name: 'Действия с договором' }));
@@ -191,6 +191,21 @@ export const Default: Story = {
 /** A template editor: icon buttons, a menu with words and a button, in groups. */
 export const Editor: Story = {
   render: frame('editor'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<div aveToolbar label="Правка шаблона">
+  <button aveIconButton aveToolbarItem type="button" variant="ghost" icon="undo-2" label="Отменить" aveTooltip="Отменить"></button>
+  <button aveIconButton aveToolbarItem type="button" variant="ghost" icon="redo-2" label="Повторить" aveTooltip="Повторить" disabled disabledInteractive></button>
+  <span aveToolbarSeparator></span>
+  <ave-menu label="Вставить поле" variant="ghost" [items]="fields" (itemSelected)="insert($event)" />
+  <span aveToolbarSeparator></span>
+  <button aveButton aveToolbarItem type="button" variant="ghost">Проверить шаблон</button>
+</div>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const toolbar = within(within(canvasElement).getByRole('toolbar', { name: 'Правка шаблона' }));
     await expect(toolbar.getAllByRole('separator')).toHaveLength(2);
@@ -210,6 +225,19 @@ export const Editor: Story = {
 /** A narrow panel: the items wrap onto another row, and nothing is cut. */
 export const Narrow: Story = {
   render: frame('narrow'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<div aveToolbar label="Действия с договором">
+  <button aveButton aveToolbarItem type="button" variant="ghost">Изменить договор</button>
+  <button aveButton aveToolbarItem type="button" variant="ghost">Отправить на согласование</button>
+  <button aveButton aveToolbarItem type="button" variant="ghost">Выгрузить в PDF</button>
+  <ave-menu label="Ещё действия" icon="ellipsis" variant="ghost" [items]="more" />
+</div>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const toolbar = within(canvasElement).getByRole('toolbar');
     const tops = new Set(

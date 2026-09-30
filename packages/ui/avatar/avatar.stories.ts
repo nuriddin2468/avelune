@@ -79,13 +79,9 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 const meta: Meta<AvatarStories> = {
   title: 'Components/Avatar',
-  component: AvatarStories,
+  component: AveAvatar,
   decorators: [applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: 'ru' }] })],
 };
 export default meta;
@@ -94,11 +90,16 @@ export default meta;
 export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default'),
-  parameters: source(
-    '<ave-avatar name="Азиза Каримова" size="sm" />',
-    '<ave-avatar name="Азиза Каримова" />',
-    '<ave-avatar name="ООО «Мебель Сервис»" kind="organization" size="lg" />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-avatar name="Азиза Каримова" size="sm" />
+<ave-avatar name="Азиза Каримова" />
+<ave-avatar name="ООО «Мебель Сервис»" kind="organization" size="lg" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const [small, medium, large] = canvas.getAllByRole('img', { name: 'Азиза Каримова' });
@@ -113,7 +114,9 @@ export const Default: Story = {
 /** Photos over the initials, cropped to fill the circle; a photo that fails leaves the initials. */
 export const Photos: Story = {
   render: frame('photos'),
-  parameters: source('<ave-avatar name="Азиза Каримова" [image]="person.photo" />'),
+  parameters: {
+    docs: { source: { code: '<ave-avatar name="Азиза Каримова" [image]="person.photo" />', language: 'html' } },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await waitFor(() => expect(canvas.getByRole('img', { name: 'Азиза Каримова' })).toHaveAttribute('data-photo', ''));
@@ -127,10 +130,15 @@ export const Photos: Story = {
 /** Beside the name it shows, an avatar is decorative: a list of approvers and a counterparty. */
 export const Places: Story = {
   render: frame('places'),
-  parameters: source(
-    '<li><ave-avatar name="Азиза Каримова" decorative /> Азиза Каримова</li>',
-    '<ave-avatar name="ООО «Мебель Сервис»" kind="organization" decorative />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<li><ave-avatar name="Азиза Каримова" decorative /> Азиза Каримова</li>
+<ave-avatar name="ООО «Мебель Сервис»" kind="organization" decorative />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.queryAllByRole('img')).toHaveLength(0);

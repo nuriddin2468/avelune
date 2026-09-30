@@ -111,13 +111,9 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 const meta: Meta<TreeStories> = {
   title: 'Components/Tree',
-  component: TreeStories,
+  component: AveTree,
   decorators: [
     applicationConfig({
       providers: [{ provide: LOCALE_ID, useValue: 'ru' }, provideAveIcons([lucideBuilding, lucideFolder])],
@@ -130,10 +126,15 @@ export default meta;
 export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default'),
-  parameters: source(
-    "{ value: 'legal', label: 'Юридический департамент', children: [ … ] }",
-    '<ave-tree label="Подразделения" [nodes]="departments" [(selected)]="department" />',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `{ value: 'legal', label: 'Юридический департамент', children: [ … ] }
+<ave-tree label="Подразделения" [nodes]="departments" [(selected)]="department" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const tree = canvas.getByRole('tree', { name: 'Подразделения' });
@@ -146,6 +147,14 @@ export const Default: Story = {
 /** The keyboard: Down, Right to open, Down into the branch, Enter to choose. */
 export const Keyboard: Story = {
   render: frame('default'),
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-tree label="Подразделения" [nodes]="departments" [(selected)]="department" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.tab();
@@ -162,6 +171,15 @@ export const Keyboard: Story = {
 /** A register's folders with their icons; the chosen folder is marked with the accent bar. */
 export const Folders: Story = {
   render: frame('folders'),
+  parameters: {
+    docs: {
+      source: {
+        code: `{ value: '2026', label: 'Номенклатура дел 2026', icon: 'folder', expanded: true, children: [ … ] }
+<ave-tree label="Номенклатура дел" [nodes]="folders" [(selected)]="folder" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('treeitem', { name: '02 Договорная работа' })).toHaveAttribute(
@@ -175,6 +193,15 @@ export const Folders: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: `{ value: 'department', label: 'Davlat moliyaviy nazorati departamentining Toshkent shahri boʻyicha boshqarmasi', children: [ … ] }
+<ave-tree label="Tashkilot tuzilmasi" [nodes]="structure" selected="unit" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('treeitem', { name: 'Hisobga olish va hisobot boʻlimi' })).toHaveAttribute(

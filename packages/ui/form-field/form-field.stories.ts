@@ -116,10 +116,6 @@ class ReactiveFormsDemo {
 
 type Story = StoryObj<AveFormField>;
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 function frame(view: View): NonNullable<Story['render']> {
   return () => ({
     props: { view },
@@ -137,12 +133,17 @@ export default meta;
 /** A required field with a hint. */
 export const Default: Story = {
   render: frame('default'),
-  parameters: source(
-    '<ave-form-field label="Contract number">',
-    '  <input aveInput type="text" required />',
-    '  <p aveHint>As written on the signed copy.</p>',
-    '</ave-form-field>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-form-field label="Contract number">
+  <input aveInput type="text" required />
+  <p aveHint>As written on the signed copy.</p>
+</ave-form-field>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const control = within(canvasElement).getByRole('textbox', { name: 'Contract number' });
     await expect(control).toBeRequired();
@@ -157,12 +158,17 @@ export const Default: Story = {
 export const States: Story = {
   tags: ['forced-colors'],
   render: frame('states'),
-  parameters: source(
-    '<ave-form-field label="With an error">',
-    '  <input aveInput type="text" [formField]="contract.number" />',
-    '  <p aveError>Enter the contract number, for example ДК-2026/114.</p>',
-    '</ave-form-field>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-form-field label="With an error">
+  <input aveInput type="text" [formField]="contract.number" />
+  <p aveError>Enter the contract number, for example ДК-2026/114.</p>
+</ave-form-field>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('textbox', { name: 'With an error' })).toHaveAccessibleDescription(
@@ -184,15 +190,20 @@ export const States: Story = {
 export const SignalForms: Story = {
   name: 'Signal Forms',
   render: () => ({ template: '<ave-form-field-signal-forms />', moduleMetadata: { imports: [SignalFormsDemo] } }),
-  parameters: source(
-    '<ave-form-field label="Contract number">',
-    '  <input aveInput type="text" [formField]="contract.number" />',
-    '  <p aveHint>As written on the signed copy.</p>',
-    '  @if (contract.number().errors().length > 0) {',
-    '    <p aveError>Enter the contract number, for example ДК-2026/114.</p>',
-    '  }',
-    '</ave-form-field>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-form-field label="Contract number">
+  <input aveInput type="text" [formField]="contract.number" />
+  <p aveHint>As written on the signed copy.</p>
+  @if (contract.number().errors().length > 0) {
+    <p aveError>Enter the contract number, for example ДК-2026/114.</p>
+  }
+</ave-form-field>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const control = canvas.getByRole('textbox', { name: 'Contract number' });
@@ -210,12 +221,17 @@ export const SignalForms: Story = {
 export const ReactiveForms: Story = {
   name: 'Reactive Forms',
   render: () => ({ template: '<ave-form-field-reactive-forms />', moduleMetadata: { imports: [ReactiveFormsDemo] } }),
-  parameters: source(
-    '<ave-form-field label="Email for notices">',
-    '  <input aveInput type="email" [formControl]="email" />',
-    '  <p aveError>Enter an address like name@example.uz.</p>',
-    '</ave-form-field>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-form-field label="Email for notices">
+  <input aveInput type="email" [formControl]="email" />
+  <p aveError>Enter an address like name@example.uz.</p>
+</ave-form-field>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const control = within(canvasElement).getByRole('textbox', { name: 'Email for notices' });
     await expect(control).toHaveAttribute('aria-required', 'true');
@@ -229,7 +245,14 @@ export const ReactiveForms: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
-  parameters: source('<ave-form-field label="Наименование организации-контрагента…">…</ave-form-field>'),
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-form-field label="Наименование организации-контрагента…">…</ave-form-field>',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const column = canvasElement.querySelector('.narrow');
     if (column === null) throw new Error('No column');

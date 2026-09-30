@@ -122,10 +122,6 @@ class IconButtonStoryFrame {}
 
 type Story = StoryObj<AveIconButton>;
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 function frame(view: View): NonNullable<Story['render']> {
   return () => ({
     props: { view },
@@ -162,10 +158,15 @@ export default meta;
 /** One icon button, with controls. */
 export const Default: Story = {
   decorators: [moduleMetadata({ imports: [IconButtonStoryFrame] }), componentWrapperDecorator(IconButtonStoryFrame)],
-  parameters: source(
-    '<!-- Registered with provideAveIcons([lucideX]). -->',
-    '<button aveIconButton type="button" icon="x" label="Close"></button>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<!-- Registered with provideAveIcons([lucideX]). -->
+<button aveIconButton type="button" icon="x" label="Close"></button>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('button', { name: 'Close' })).toBeVisible();
   },
@@ -174,7 +175,14 @@ export const Default: Story = {
 /** The four variants. */
 export const Variants: Story = {
   render: frame('variants'),
-  parameters: source('<button aveIconButton type="button" icon="pencil" label="Edit" variant="ghost"></button>'),
+  parameters: {
+    docs: {
+      source: {
+        code: '<button aveIconButton type="button" icon="pencil" label="Edit" variant="ghost"></button>',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const buttons = within(canvasElement).getAllByRole('button', { name: /^Edit, / });
     await expect(buttons).toHaveLength(4);
@@ -184,10 +192,15 @@ export const Variants: Story = {
 /** Each size next to a Button of that size: the same height, a square. */
 export const Sizes: Story = {
   render: frame('sizes'),
-  parameters: source(
-    '<button aveButton type="button" size="sm">Export</button>',
-    '<button aveIconButton type="button" icon="download" label="Download" size="sm"></button>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<button aveButton type="button" size="sm">Export</button>
+<button aveIconButton type="button" icon="download" label="Download" size="sm"></button>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const row of canvasElement.querySelectorAll('.row')) {
       const [button, ...squares] = [...row.querySelectorAll('button')];
@@ -204,10 +217,15 @@ export const Sizes: Story = {
 export const States: Story = {
   tags: ['forced-colors'],
   render: frame('states'),
-  parameters: source(
-    '<button aveIconButton type="button" icon="trash" label="Delete row" disabled disabledInteractive></button>',
-    '<button aveIconButton type="button" icon="trash" label="Delete row" [loading]="deleting()"></button>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<button aveIconButton type="button" icon="trash" label="Delete row" disabled disabledInteractive></button>
+<button aveIconButton type="button" icon="trash" label="Delete row" [loading]="deleting()"></button>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const buttons = [...canvasElement.querySelectorAll('button')];
     const [first] = buttons;
@@ -230,11 +248,16 @@ export const States: Story = {
 export const InARow: Story = {
   name: 'In a row',
   render: frame('row'),
-  parameters: source(
-    '<button aveIconButton type="button" icon="chevron-left" label="Previous document" variant="ghost" size="sm"></button>',
-    '<span>Документ 3 из 12</span>',
-    '<button aveIconButton type="button" icon="chevron-right" label="Next document" variant="ghost" size="sm"></button>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<button aveIconButton type="button" icon="chevron-left" label="Previous document" variant="ghost" size="sm"></button>
+<span>Документ 3 из 12</span>
+<button aveIconButton type="button" icon="chevron-right" label="Next document" variant="ghost" size="sm"></button>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     // A group, not a toolbar: arrow-key navigation comes with the Toolbar (Wave 4, Angular Aria).
     const toolbar = within(canvasElement).getByRole('group', { name: 'Document' });

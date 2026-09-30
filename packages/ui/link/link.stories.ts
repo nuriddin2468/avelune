@@ -60,13 +60,9 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 const meta: Meta<LinkStories> = {
   title: 'Components/Link',
-  component: LinkStories,
+  component: AveLink,
   decorators: [
     applicationConfig({
       // Hash locations keep a followed link inside Storybook's frame.
@@ -83,11 +79,16 @@ export default meta;
 export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default'),
-  parameters: source(
-    'Договор отправлен на согласование в <a aveLink routerLink="/departments/legal">юридический отдел</a>.',
-    'Порядок согласования описан в',
-    '<a aveLink href="https://lex.uz/docs/1234" target="_blank">регламенте документооборота</a>.',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `Договор отправлен на согласование в <a aveLink routerLink="/departments/legal">юридический отдел</a>.
+Порядок согласования описан в
+<a aveLink href="https://lex.uz/docs/1234" target="_blank">регламенте документооборота</a>.`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const inner = canvas.getByRole('link', { name: 'юридический отдел' });
@@ -104,6 +105,23 @@ export const Default: Story = {
 /** A link in an alert's tinted message, a record's name in a list, and a hint under a form. */
 export const Places: Story = {
   render: frame('places'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-alert variant="warning" heading="Есть истёкшие договоры">
+  Договор <a aveLink routerLink="/contracts/109">ДК-2025/109</a> истёк 31.12.2025. Продлите или закройте его.
+</ave-alert>
+
+<ul aria-label="Договоры">
+  <li><a aveLink routerLink="/contracts/114">Поставка серверного оборудования</a></li>
+  <li><a aveLink routerLink="/contracts/113">Перевозка грузов по железной дороге</a></li>
+</ul>
+
+<p>Шаблоны договоров — в <a aveLink routerLink="/templates">справочнике шаблонов</a>.</p>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getAllByRole('link')).toHaveLength(4);
@@ -117,6 +135,17 @@ export const Places: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: `Hujjat
+<a aveLink routerLink="/decrees/214">Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2026-yil 18-martdagi 214-sonli qarori</a>
+asosida tayyorlangan;
+<a aveLink href="https://lex.uz/docs/214" target="_blank">qarorning toʻliq matni</a> Lex.uz saytida.`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const text = canvasElement.querySelector('.text');
     await expect(text?.scrollWidth).toBe(text?.clientWidth);

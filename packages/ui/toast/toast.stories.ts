@@ -122,10 +122,6 @@ function frame(view: View, opener = 'Сохранить документ'): NonN
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'ts' } } };
-}
-
 /** The kit's own words (the icons' kinds, Close, the region's name) in the stories' language. */
 function locale(value: string): ReturnType<typeof applicationConfig> {
   return applicationConfig({ providers: [{ provide: LOCALE_ID, useValue: value }] });
@@ -158,7 +154,6 @@ async function rest(): Promise<void> {
 
 const meta: Meta<ToastStories> = {
   title: 'Components/Toast',
-  component: ToastStories,
   decorators: [locale('ru')],
 };
 export default meta;
@@ -166,11 +161,16 @@ export default meta;
 /** A confirmation of what the person just did, at the bottom of the screen: 48px tall. */
 export const Default: Story = {
   render: frame('default'),
-  parameters: source(
-    'private readonly toaster = inject(AveToaster);',
-    '',
-    "this.toaster.show({ message: 'Документ сохранён', variant: 'success' });",
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `private readonly toaster = inject(AveToaster);
+
+this.toaster.show({ message: 'Документ сохранён', variant: 'success' });`,
+        language: 'typescript',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await showToasts(canvasElement, 'Сохранить документ', 1);
     const [toast] = toasts();
@@ -184,6 +184,20 @@ export const Default: Story = {
 export const Variants: Story = {
   tags: ['forced-colors'],
   render: frame('variants', 'Показать уведомления'),
+  parameters: {
+    docs: {
+      source: {
+        code: `this.toaster.show({ message: 'Выгрузка реестра началась. Файл появится в разделе «Загрузки».' });
+this.toaster.show({ message: 'Срок согласования договора ДК-2026/114 истекает завтра.', variant: 'warning' });
+this.toaster.show({
+  message: 'Не удалось отправить договор на согласование.',
+  variant: 'danger',
+  action: { label: 'Повторить', run: () => this.send(contract) },
+});`,
+        language: 'typescript',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await showToasts(canvasElement, 'Показать уведомления', 3);
     const [first, , last] = toasts();
@@ -195,13 +209,18 @@ export const Variants: Story = {
 /** Undo: the row goes at once, and the toast's action brings it back. */
 export const Undo: Story = {
   render: frame('undo'),
-  parameters: source(
-    'this.toaster.show({',
-    '  message: `${contract.number} удалён`,',
-    "  variant: 'success',",
-    "  action: { label: 'Отменить', run: () => this.restore(contract) },",
-    '});',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `this.toaster.show({
+  message: \`\${contract.number} удалён\`,
+  variant: 'success',
+  action: { label: 'Отменить', run: () => this.restore(contract) },
+});`,
+        language: 'typescript',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const [first] = canvas.getAllByRole('button', { name: 'Удалить' });
@@ -222,6 +241,17 @@ export const Undo: Story = {
 /** Four at once: three show, the fourth waits its turn and shows as soon as one is closed. */
 export const Queue: Story = {
   render: frame('queue', 'Отправить на согласование'),
+  parameters: {
+    docs: {
+      source: {
+        code: `this.toaster.show({ message: 'Договор ДК-2026/101 отправлен', variant: 'success' });
+this.toaster.show({ message: 'Договор ДК-2026/102 отправлен', variant: 'success' });
+this.toaster.show({ message: 'Договор ДК-2026/103 отправлен', variant: 'success' });
+this.toaster.show({ message: 'Договор ДК-2026/104 отправлен', variant: 'success' }); // waits its turn`,
+        language: 'typescript',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await showToasts(canvasElement, 'Отправить на согласование', 3);
     const [first] = toasts();
@@ -241,6 +271,18 @@ export const LongText: Story = {
   name: 'Long text',
   decorators: [locale('uz-Latn')],
   render: frame('long', 'Kelishuvga yuborish'),
+  parameters: {
+    docs: {
+      source: {
+        code: `this.toaster.show({
+  message: 'Samarqand viloyati sogʻliqni saqlash boshqarmasi bilan tuzilgan shartnoma kelishuv uchun yuridik boʻlimga yuborildi',
+  variant: 'success',
+  action: { label: 'Ochish', run: () => this.open(contract) },
+});`,
+        language: 'typescript',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await showToasts(canvasElement, 'Kelishuvga yuborish', 1);
     const [toast] = toasts();
@@ -256,6 +298,15 @@ export const LongText: Story = {
 export const OverADialog: Story = {
   name: 'Over a dialog',
   render: frame('dialog'),
+  parameters: {
+    docs: {
+      source: {
+        code: `// From a modal dialog: while it is open, the notifications show inside it.
+this.toaster.show({ message: 'Реквизиты сохранены', variant: 'success' });`,
+        language: 'typescript',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await userEvent.click(within(canvasElement).getByRole('button', { name: 'Изменить реквизиты' }));
     const dialog = canvasElement.querySelector('dialog');
@@ -276,6 +327,15 @@ export const OverADialog: Story = {
 export const Compact: Story = {
   globals: { density: 'compact' },
   render: frame('default'),
+  parameters: {
+    docs: {
+      source: {
+        code: `// <html data-density="compact">: the notifications take the page's density, 44px tall.
+this.toaster.show({ message: 'Документ сохранён', variant: 'success' });`,
+        language: 'typescript',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await showToasts(canvasElement, 'Сохранить документ', 1);
     const [toast] = toasts();

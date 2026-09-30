@@ -39,7 +39,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0031](0031-motion-catalog.md) | Motion catalog: motion.css classes, reduced motion from tokens, linear only on loops | Accepted; the drawer's reduced motion settled by 0067, top-layer overlays by 0066, the list item by 0086 |
 | [0032](0032-runtime-theme-api.md) | Runtime API: provideAvelune() and AveTheme in @avelune/ui/theme | Accepted |
 | [0033](0033-icon-set-and-ave-icon.md) | Icon set and `<ave-icon>`: typed Lucide data, frozen strokes, a label or decorative | Accepted; decisions 1, 3 and 6 superseded by 0036 |
-| [0034](0034-docs-pages-follow-the-theme.md) | Storybook docs pages: the Theme toolbar, GFM tables, written snippets | Accepted; docs sweep, surface and props table in addendum |
+| [0034](0034-docs-pages-follow-the-theme.md) | Storybook docs pages: the Theme toolbar, GFM tables, written snippets | Accepted; docs sweep, surface and props table in addendum; snippets literal since 0090 |
 | [0035](0035-patch-storybook-angular-bootstrap.md) | Patch `@storybook/angular-vite`: skip bootstrapping a detached story host | Accepted |
 | [0036](0036-every-lucide-icon-registered-and-custom.md) | Every Lucide icon, registered with `provideAveIcons`, and an application's own SVG | Accepted |
 | [0037](0037-button.md) | Button: a native button or link, four variants, disabled that can stay focusable, a delayed spinner | Accepted |
@@ -95,6 +95,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0087](0087-data-table.md) | DataTable: columns as data, header buttons that sort, checkboxes that choose, a page size in the pagination | Accepted |
 | [0088](0088-font-check-without-white-space.md) | The visual suite's font check leaves white space out of the text it checks | Accepted |
 | [0089](0089-brand-themes.md) | Brand themes: a product's accent at build time, a tenant's at runtime, one generator | Accepted |
+| [0090](0090-storybook-mcp-and-the-components-manifest.md) | Storybook MCP: the components manifest, the kit's component in every story file, snippets an application writes | Accepted |
 
 ## Template
 

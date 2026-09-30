@@ -72,13 +72,9 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 const meta: Meta<BreadcrumbsStories> = {
   title: 'Components/Breadcrumbs',
-  component: BreadcrumbsStories,
+  component: AveBreadcrumbs,
   decorators: [
     applicationConfig({
       // Hash locations keep a followed link inside Storybook's frame.
@@ -95,12 +91,17 @@ export default meta;
 export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default'),
-  parameters: source(
-    '<ave-breadcrumbs',
-    "  [items]=\"[{ label: 'Главная', link: '/' }, { label: 'Договоры', link: '/contracts' }]\"",
-    '  current="ДК-2026/114"',
-    '/>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-breadcrumbs
+  [items]="[{ label: 'Главная', link: '/' }, { label: 'Договоры', link: '/contracts' }]"
+  current="ДК-2026/114"
+/>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const nav = canvas.getByRole('navigation', { name: 'Навигационная цепочка' });
@@ -122,6 +123,23 @@ export const Default: Story = {
  */
 export const Deep: Story = {
   render: frame('deep'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-breadcrumbs
+  label="Путь к реквизитам"
+  [items]="[
+    { label: 'Главная', link: '/' },
+    { label: 'Справочники', link: '/directories' },
+    { label: 'Контрагенты', link: '/directories/counterparties' },
+    { label: 'ООО «Альфа Технологии»', link: '/directories/counterparties/1' }
+  ]"
+  current="Банковские реквизиты"
+/>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const trail = within(within(canvasElement).getByRole('navigation'));
     await expect(trail.getAllByRole('link')).toHaveLength(4);
@@ -133,6 +151,22 @@ export const Deep: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-breadcrumbs
+  label="Hujjat yoʻli"
+  [items]="[
+    { label: 'Oʻzbekiston Respublikasi Vazirlar Mahkamasi', link: '/' },
+    { label: 'Hujjatlarni roʻyxatdan oʻtkazish boʻlimi', link: '/registry' },
+    { label: 'Входящая корреспонденция министерств и ведомств', link: '/registry/incoming' }
+  ]"
+  current="Toshkent shahar hokimligining 2026-yil 18-martdagi 214-sonli qarori"
+/>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const trail = canvasElement.querySelector('ol');
     await expect(trail?.scrollWidth).toBe(trail?.clientWidth);

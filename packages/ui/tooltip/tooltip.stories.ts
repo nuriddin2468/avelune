@@ -112,10 +112,6 @@ function frame(view: View): NonNullable<Story['render']> {
   });
 }
 
-function source(...lines: readonly string[]): NonNullable<Story['parameters']> {
-  return { docs: { source: { code: lines.join('\n'), language: 'html' } } };
-}
-
 /** The tooltip that shows now, if any. */
 function shown(): HTMLElement | null {
   return document.querySelector<HTMLElement>('ave-tooltip-panel[data-state="open"]');
@@ -123,16 +119,21 @@ function shown(): HTMLElement | null {
 
 const meta: Meta<TooltipStories> = {
   title: 'Components/Tooltip',
-  component: TooltipStories,
+  component: AveTooltip,
 };
 export default meta;
 
 /** A toolbar of icon buttons: each shows its name on hover after 500ms, and at once on keyboard focus. */
 export const Default: Story = {
   render: frame('default'),
-  parameters: source(
-    '<button aveIconButton type="button" variant="ghost" icon="pencil" label="Изменить" aveTooltip="Изменить"></button>',
-  ),
+  parameters: {
+    docs: {
+      source: {
+        code: '<button aveIconButton type="button" variant="ghost" icon="pencil" label="Изменить" aveTooltip="Изменить"></button>',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const edit = canvas.getByRole('button', { name: 'Изменить' });
@@ -152,7 +153,14 @@ export const Default: Story = {
 /** Top by default, then bottom, start and end: keyboard focus on each shows its tooltip there. */
 export const Sides: Story = {
   render: frame('sides'),
-  parameters: source('<button aveButton type="button" aveTooltip="Подсказка" aveTooltipSide="end">end</button>'),
+  parameters: {
+    docs: {
+      source: {
+        code: '<button aveButton type="button" aveTooltip="Подсказка" aveTooltipSide="end">end</button>',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const buttons = within(canvasElement).getAllByRole('button');
     for (const [index, side] of sides.entries()) {
@@ -166,6 +174,14 @@ export const Sides: Story = {
 /** No room above an element at the top of the page: the tooltip shows under it. */
 export const Flip: Story = {
   render: frame('edge'),
+  parameters: {
+    docs: {
+      source: {
+        code: '<button aveIconButton type="button" variant="ghost" icon="printer" label="Печать" aveTooltip="Печать"></button>',
+        language: 'html',
+      },
+    },
+  },
   play: async () => {
     await userEvent.tab();
     await waitFor(() => expect(shown()).toHaveAttribute('data-side', 'bottom'));
@@ -176,6 +192,15 @@ export const Flip: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
+  parameters: {
+    docs: {
+      source: {
+        code: `<button aveIconButton type="button" icon="download" label="Выгрузить" aveTooltip="Выгрузить реестр договоров подразделения за выбранный период в формате Excel"></button>
+<button aveIconButton type="button" icon="pencil" label="Tahrirlash" lang="uz-Latn" aveTooltip="Hujjatni tahrirlash: oʻzgarishlar kelishuvchilarga qayta yuboriladi"></button>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await userEvent.tab();
     await waitFor(() => expect(shown()).toHaveTextContent('Выгрузить реестр договоров подразделения'));
