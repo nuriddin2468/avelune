@@ -26,12 +26,12 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 | Density | comfortable (default), compact |
 | Locales | uz-Latn, uz-Cyrl, ru, en |
 | Docs language | English |
-| Registry | npm (product owner, 2026-09-30); nothing published yet, and no package of the `@avelune` scope on npmjs.com (checked 2026-09-30) |
-| Licence | `UNLICENSED` (proprietary, internal), for now; revisit before the first publish (product owner, 2026-09-23) |
+| Registry | npm, public packages; the product owner owns the `avelune` organisation that the `@avelune` scope needs (product owner, 2026-09-30); nothing published yet, and no package of the scope on npmjs.com (checked 2026-09-30) |
+| Licence | MIT (product owner, 2026-09-30), for public npm packages; the packages still say `UNLICENSED` until Phase 6 changes their `license` fields and adds the `LICENSE` files, before the first publish. Fonts stay under the OFL (ADR 0018), Lucide's icons under ISC |
 | Browsers | `Chrome >= 119, Edge >= 119, Firefox >= 129, Safari >= 17.5, iOS >= 17.5` (ADR 0014; changed 2026-09-23 from Chrome/Edge 117, product owner) |
 | Design source | none; visual direction "inspired by Ubuntu" ([audit.md](audit.md)); consumer teams have no designers in Figma, so there is no Figma library (product owner, 2026-09-30) |
 | Existing repos | none |
-| Repository | GitHub: https://github.com/nuriddin2468/avelune (product owner, 2026-09-30); nothing pushed yet |
+| Repository | GitHub: https://github.com/nuriddin2468/avelune, public (product owner, 2026-09-30); `main` pushed on 2026-09-30, with no secret in its history (163 commits scanned for tokens and private keys) |
 | CI | local only for now; `.gitlab-ci.yml` prepared before the remote was known to be GitHub; code-owner approval is a documented rule |
 | CI runner architecture | amd64 (ADR 0010) |
 
@@ -178,9 +178,9 @@ Wave 2 build (2026-09-25), before the product owner's corrections and the wave's
 - [ ] `ng add @avelune/ui` (peers, styles, fonts, provider, lint configs, AGENTS snippet); build and publish `@avelune/eslint-config` with `tools/lint-rules` bundled (ADR 0023). It also sets `inlineCritical: false`, `outputHashing: bundles` and the font preload (ADR 0030), and the inline script that applies a stored theme and the cached brand stylesheet before the first paint (ADR 0032, 0089)
 - [ ] `tools/adoption-metrics` (JSON + CI summary)
 - [ ] `docs/consumers/migration.md`, `docs/consumers/AGENTS.snippet.md`
-- [ ] Pilot in the showcase as a consumer; then one real consumer when access is given
+- [ ] Pilot: the UI part of the product owner's document archive (`e-archive`, Angular 22, in `~/Desktop/archive project`, `apps/web`), rebuilt on the kit in a new repository as a consumer would: two or three of its pages with their modals, such as the registers of Fonds, Opislar and Delolar with their create and edit dialogs, on pretend data without its API (product owner, 2026-09-30). The archive's own repository is read only
 - [ ] A product's brand at build time: `ng add` wires the product's preset or colour into a stylesheet from the brand generator (ADR 0089, decision 6)
-- [ ] Consumer agents get the kit's API from the Storybook MCP docs toolset hosted inside the company (`@storybook/mcp` serving the built Storybook's manifest), named in `AGENTS.snippet.md`; needs a host (product owner). It takes the place of a Figma library (product owner, 2026-09-30: no designers in Figma)
+- [ ] **Deferred** (no host yet, product owner, 2026-09-30): consumer agents get the kit's API from the Storybook MCP docs toolset hosted inside the company (`@storybook/mcp` serving the built Storybook's manifest), named in `AGENTS.snippet.md`; needs a host (product owner). It takes the place of a Figma library (product owner, 2026-09-30: no designers in Figma)
 - [ ] Token names as a versioned public API: a token report beside the API reports; DTCG `$deprecated` with a replacement in `$extensions.avelune` (Style Dictionary 5.5.5 does not handle `$deprecated`), a deprecated name kept as an alias for one minor; a rule in `@avelune/stylelint-config` that flags unknown, deprecated and primitive `--ave-*` names (with an autofix) and any `--ave-*` declaration (ADR 0089); an `ng update` migration for each rename; a check that a removed token is listed
 
 ### Phase 7: Final audit
@@ -506,11 +506,10 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 
 ## Open questions (for the product owner)
 
-- The systems that will use the kit, for the adoption plan and the pilot (the product is `avelune-ui`, 2026-09-30), and access to one of them.
-- npm: public or private packages (private scoped packages need a paid npm organisation); who owns the `avelune` organisation, which the `@avelune` scope needs; the npm account and token CI publishes with.
-- The licence before the first publish: the packages are `UNLICENSED` (proprietary) for now, which a public npm package would contradict.
-- GitHub: whether the agent may add the remote and push `main`; the repository's visibility; the code owners' GitHub accounts (CODEOWNERS, Phase 3's deferred item).
-- A host inside the company for the built Storybook and its MCP server (Phase 6).
+- MIT's copyright line: whose name goes into `Copyright (c) 2026 …` in the `LICENSE` files (Phase 6).
+- The code owners' GitHub accounts for CODEOWNERS (Phase 3's deferred item); the repository's owner is `nuriddin2468`.
+- The systems that will use the kit after the pilot, for the adoption plan (the product is `avelune-ui`, 2026-09-30).
+- A host for the built Storybook and its MCP server: none for now (product owner, 2026-09-30).
 
 ## Out of scope
 
