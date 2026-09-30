@@ -143,6 +143,10 @@ export interface AveMessages {
   readonly stepComplete: string;
   /** Names the mark of a step that needs attention before the steps after it. */
   readonly stepError: string;
+  /** The application shell's first link, which moves focus past the bar and the navigation to the page (ADR 0092). */
+  readonly skipToContent: string;
+  /** Names the product's navigation, and its button and drawer on a phone, when the application gives no name. */
+  readonly navigation: string;
 }
 
 /**
@@ -219,6 +223,8 @@ export const aveMessagesEn: AveMessages = {
   recordsFailed: 'The records did not load.',
   stepComplete: 'Done',
   stepError: 'Needs attention',
+  skipToContent: 'Skip to content',
+  navigation: 'Navigation',
 };
 
 /**
@@ -297,6 +303,8 @@ export const aveMessagesRu: AveMessages = {
   recordsFailed: 'Записи не загрузились.',
   stepComplete: 'Выполнен',
   stepError: 'Требует внимания',
+  skipToContent: 'Перейти к содержимому',
+  navigation: 'Навигация',
 };
 
 /**
@@ -373,6 +381,8 @@ export const aveMessagesUzLatn: AveMessages = {
   recordsFailed: 'Yozuvlar yuklanmadi.',
   stepComplete: 'Bajarildi',
   stepError: 'Eʼtibor talab qiladi',
+  skipToContent: 'Asosiy qismga oʻtish',
+  navigation: 'Navigatsiya',
 };
 
 /**
@@ -449,6 +459,8 @@ export const aveMessagesUzCyrl: AveMessages = {
   recordsFailed: 'Ёзувлар юкланмади.',
   stepComplete: 'Бажарилди',
   stepError: 'Эътибор талаб қилади',
+  skipToContent: 'Асосий қисмга ўтиш',
+  navigation: 'Навигация',
 };
 
 /**

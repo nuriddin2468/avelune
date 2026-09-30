@@ -1,0 +1,8 @@
+/* Lint as: packages/ui/app-shell/app-shell.css
+   Expect: avelune/component-layer (a pattern's entry.json says patterns, so its styles go in @layer patterns) */
+
+@layer components {
+  :host {
+    display: block;
+  }
+}

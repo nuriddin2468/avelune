@@ -50,6 +50,14 @@ One primary button per view region (a form, a dialog, a toolbar, a card): the on
 - An editor's many commands go into a menubar (`<ave-menubar>`, ADR 0076), "Файл", "Правка", "Вставка", with the most used in a toolbar under it; a page's or a record's actions never do.
 - A clickable icon without a visible label is an IconButton, with a label for assistive technology and the same words in its tooltip (`aveTooltip`), so everyone can read its name.
 
+### Screens and page patterns
+
+Every screen of a product sits in the application shell (`<ave-app-shell>`, ADR 0092), and a page inside it takes a page pattern where one fits (ADR 0091). A pattern lays the page out; the page gives it its content.
+
+- The bar holds the product: its logo and name, which lead home, and at most three of the application's items (the view's switches, notifications, the person's menu). A page's actions belong to the page's header, never to the bar.
+- The logo is the product's or the tenant's image: give it a dark source when its dark parts would vanish on the dark bar, and an `alt` that names the organisation, or `''` when the product's name says the same.
+- One `main`, one banner landmark and one navigation per screen: the shell draws them, and a page never draws them again. A page's heading is its `h1`.
+
 ### Dialog, drawer or page
 
 | Use | When |

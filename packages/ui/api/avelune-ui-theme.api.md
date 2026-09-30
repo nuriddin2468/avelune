@@ -36,6 +36,12 @@ export { AveBrandStep }
 export { AveBrandTheme }
 
 // @alpha
+export type AveColorScheme = 'light' | 'dark';
+
+// @alpha
+export function aveColorScheme(): Signal<AveColorScheme>;
+
+// @alpha
 export function aveDelayedSpinner(waiting: Signal<boolean>): Signal<boolean>;
 
 // @alpha

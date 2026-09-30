@@ -1,0 +1,12 @@
+/* The frame of the App shell stories: a page's words inside the shell. Stories only; the shell's styles are
+   app-shell.css. */
+@layer patterns {
+  :host {
+    display: block;
+  }
+
+  .text {
+    margin-block-start: var(--ave-space-2);
+    color: var(--ave-color-fg-muted);
+  }
+}

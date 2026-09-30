@@ -1,0 +1,101 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as AppShellStories from './app-shell.stories';
+
+<Meta of={AppShellStories} />
+
+# App shell
+
+`<ave-app-shell>` is the layout of every screen of a product: the application bar with the logo and the product's name, the application's actions and banners, the navigation beside the page, and `main` (ADR 0091, 0092).
+
+```ts
+import { AveAppShell, AveAppShellActions, AveAppShellBanner, type AveAppLogo } from '@avelune/ui/app-shell';
+```
+
+<Canvas of={AppShellStories.Default} />
+
+## When to use
+
+- Once, at the root of the application, around its `<router-outlet>`.
+- For a product with pages people move between: give it `navigation`.
+- For a screen with one task, such as a wizard or a page opened from a link: leave `navigation` out, and the bar stays.
+
+## When not to use
+
+- Inside a page, a dialog or a drawer: a page's own layout is a page pattern (List page, Form page, Settings page).
+- For a product's second bar of tools: use a toolbar or a menubar on the page (GUIDELINES.md, "Button variants").
+
+## Anatomy
+
+- **Skip link**, the first Tab stop, "Перейти к содержимому". It is out of sight until the keyboard reaches it, then shows over the bar's start.
+- **The bar** (`header`, the banner landmark), on the surface over a subtle line, 52px tall (48px compact):
+  - the navigation's button, below `breakpoint.md`, a ghost IconButton named by `navigationLabel`;
+  - the link home (`home`, `/` by default): the logo, then the product's name (`product`), underlined under the pointer;
+  - `[aveAppShellActions]` at the inline end: the application's items, 8px apart.
+- **Banners** marked `[aveAppShellBanner]`, across the window under the bar.
+- **The navigation**, SidebarNav drawn from `navigation`: a sticky 256px column from `breakpoint.md`, a drawer from the start below it.
+- **`main`** with the shell's content, 24px from the bar and 16px from the window's sides (24px from `breakpoint.md`).
+
+```html
+<ave-app-shell product="Документооборот" navigationLabel="Разделы" [logo]="logo" [navigation]="pages">
+  <div aveAppShellActions role="group" aria-label="Вид">
+    <button
+      aveIconButton
+      type="button"
+      variant="ghost"
+      icon="moon"
+      label="Тёмная тема"
+      aveTooltip="Тёмная тема"
+    ></button>
+  </div>
+  <ave-banner aveAppShellBanner variant="warning" dismissible (dismiss)="maintenanceSeen.set(true)">…</ave-banner>
+  <router-outlet />
+</ave-app-shell>
+```
+
+## Logo
+
+`logo` is the product's or the tenant's image, `{ src, darkSrc?, alt }`. It is 32px tall, at most 160px wide, and drawn whole.
+
+- `darkSrc` is the image for the dark bar, for a logo whose dark parts the dark surface would hide. The shell chooses it by the theme the page shows (`aveColorScheme()` from `@avelune/ui/theme`).
+- `alt` names the organisation the logo stands for ("Альфа Технологии"), or is `''` when the product's name beside it says the same. The link home is named by both.
+- On a phone (below `breakpoint.sm`) a logo stands for the product: the name leaves the row, and still names the link.
+- The logo is the application's image; it takes no colour from the tokens. The brand colour the tenant chose comes from `AveTheme.setBrand` (ADR 0089).
+
+## Navigation
+
+The shell draws the navigation twice, in the column and in the drawer, so it takes the pages as data, as SidebarNav does (ADR 0072). CSS decides which one shows. The drawer (`navigationOpen`, a model) closes when a link is followed and when the window widens to `breakpoint.md`.
+
+The stories "Navigation drawer", "Skip link", "Without navigation" and "Long text" show the rest, each on its own page: every shell draws a banner landmark and `main`, so this page shows one shell and its landmarks stay unique.
+
+## Content
+
+- `product` is the product's name, not the page's: "Документооборот". The page's heading is the page's `h1`.
+- Put at most three items in the actions: the view's switches, notifications, the person's menu. The rest belongs to the pages.
+- A long name wraps in the bar; a very narrow window moves the actions under it.
+
+## Keyboard
+
+| Key                                       | Does                                     |
+| ----------------------------------------- | ---------------------------------------- |
+| Tab, first on the page                    | Shows the skip link and focuses it       |
+| Enter on the skip link                    | Moves focus to `main`; the address stays |
+| Enter or Space on the navigation's button | Opens the drawer, focus inside           |
+| Escape in the drawer                      | Closes it, focus back on the button      |
+
+## Accessibility
+
+- Landmarks: the bar is the banner, the navigation is named by `navigationLabel` ("Разделы"), the page is `main`. A page pattern never draws its own `main`.
+- The skip link moves focus by script, since a fragment link would change the address the router reads. `main` draws the ring inside its edge while it has focus.
+- The navigation's button says it opens a dialog (`aria-haspopup="dialog"`), and its tooltip shows its name.
+- Only one navigation is visible at a time, so its name stays unique.
+
+## Motion
+
+The drawer's `ave-motion-drawer-*` from the catalog (ADR 0067); under reduced motion it fades in place. Nothing else moves.
+
+## Do and don't
+
+- Do give every screen of the product the same shell, with the same pages in the navigation.
+- Do give a dark logo its `darkSrc`, and look at it in the dark theme.
+- Don't put the page's actions in the bar; they belong to the page's header.
+- Don't draw a second `main`, banner or navigation inside a page.

@@ -55,6 +55,7 @@ export interface AveMessages {
     readonly loadFailed: string;
     readonly loading: string;
     readonly lowerValue: string;
+    readonly navigation: string;
     readonly nextMonth: string;
     readonly nextPage: string;
     readonly nextYear: string;
@@ -94,6 +95,7 @@ export interface AveMessages {
     readonly retryWithEnter: string;
     readonly selectPage: string;
     readonly selectRow: string;
+    readonly skipToContent: string;
     readonly stepComplete: string;
     readonly stepError: string;
     readonly tooManyFiles: (max: number) => string;

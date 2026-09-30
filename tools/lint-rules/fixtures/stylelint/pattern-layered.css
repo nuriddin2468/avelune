@@ -1,0 +1,15 @@
+/* Lint as: packages/ui/app-shell/app-shell.css
+   Expect: none (a pattern's stylesheet in @layer patterns places a kit element and styles its own) */
+
+@layer patterns {
+  .bar {
+    display: flex;
+    gap: var(--ave-space-2);
+    background-color: var(--ave-color-bg-surface);
+  }
+
+  .bar > button[aveIconButton] {
+    display: none;
+    margin-inline-start: auto;
+  }
+}

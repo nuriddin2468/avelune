@@ -1,0 +1,119 @@
+@layer patterns {
+  /* The application shell (ADR 0092): the bar over the body, whose navigation is a column from breakpoint.md. */
+  :host {
+    position: relative;
+    display: block;
+  }
+
+  /* The skip link: out of sight, and of the pointer's way, until it has keyboard focus; then over the bar's start,
+     where its button stands on the bar's row. */
+  .skip {
+    position: absolute;
+    inset-block-start: var(--ave-space-2);
+    inset-inline-start: var(--ave-space-4);
+    z-index: var(--ave-z-index-sticky);
+  }
+
+  .skip:not(:has(:focus-visible)) {
+    clip-path: inset(50%);
+  }
+
+  /* The bar: a medium control's row with 8px above it and 8px to its line, the line included (52px, 48px compact).
+     Items that do not fit the row wrap under it, the actions first. */
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ave-space-2) var(--ave-space-4);
+    min-block-size: calc(var(--ave-control-height-md) + var(--ave-space-2) * 2);
+    padding-block: var(--ave-space-2) calc(var(--ave-space-2) - var(--ave-border-width-default));
+    padding-inline: var(--ave-space-4);
+    border-block-end: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    background-color: var(--ave-color-bg-surface);
+  }
+
+  /* The link home: the logo and the product's name, 12px apart; underlined under the pointer, as Breadcrumbs'. */
+  .home {
+    display: flex;
+    flex: 0 1 auto;
+    align-items: center;
+    gap: var(--ave-space-3);
+    min-inline-size: 0;
+    border-radius: var(--ave-radius-sm);
+    color: var(--ave-color-fg-default);
+    font: var(--ave-font-label-md);
+    text-decoration-line: none;
+  }
+
+  .product {
+    min-inline-size: 0;
+  }
+
+  /* On a phone a logo stands for the product: its name leaves the row but still names the link. */
+  @media (width < 600px) {
+    .home {
+      position: relative;
+    }
+
+    .logo + .product {
+      position: absolute;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+
+  .home:hover .product {
+    text-decoration-line: underline;
+    text-decoration-thickness: var(--ave-border-width-default);
+  }
+
+  /* The logo: 32px tall, drawn whole, at most five times as wide, and narrower before the bar would overflow. */
+  .logo {
+    display: block;
+    flex: 0 1 auto;
+    min-inline-size: 0;
+    max-inline-size: calc(var(--ave-size-control-sm) * 5);
+    block-size: var(--ave-size-control-sm);
+    object-fit: contain;
+    object-position: 0% 50%;
+  }
+
+  /* Below breakpoint.md the screen stands alone and the navigation waits in the drawer. */
+  .body {
+    display: grid;
+  }
+
+  .column {
+    display: none;
+  }
+
+  .main {
+    min-inline-size: 0;
+    padding: var(--ave-space-6) var(--ave-space-4);
+  }
+
+  /* From breakpoint.md the navigation is a column that stays in sight and scrolls on its own; its button goes. */
+  @media (width >= 840px) {
+    .bar > button[aveIconButton] {
+      display: none;
+    }
+
+    .body {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .column {
+      position: sticky;
+      inset-block-start: 0;
+      display: block;
+      align-self: start;
+      inline-size: calc(var(--ave-space-16) * 4);
+      max-block-size: 100dvb;
+      overflow-y: auto;
+    }
+
+    .main {
+      padding-inline: var(--ave-space-6);
+    }
+  }
+}

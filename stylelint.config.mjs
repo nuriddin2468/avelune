@@ -148,8 +148,13 @@ export default {
       },
     },
     {
+      // An entry point's styles are components; a pattern's (its entry.json says so) are patterns, which place the
+      // kit's components in their templates and never restyle them (ADR 0091).
       files: ['packages/ui/*/**/*.css'],
-      rules: { 'avelune/component-layer': 'components' },
+      rules: {
+        'avelune/component-layer': ['components', { entryLayers: { patterns: 'patterns' } }],
+        'avelune/pattern-layout-only': true,
+      },
     },
     {
       // The global stylesheets wrap their rules in the layers below and above the components (ADR 0030).

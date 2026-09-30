@@ -1,0 +1,10 @@
+@layer patterns {
+  /* The application's actions (ADR 0092): at the bar's inline end, 8px apart, centred on its row. */
+  :host {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ave-space-2);
+    margin-inline-start: auto;
+  }
+}

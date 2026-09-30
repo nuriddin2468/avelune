@@ -6,9 +6,16 @@ import { plugins } from './index.ts';
 
 const tokens = join(import.meta.dirname, '..', '..', 'fixtures', 'stylelint-tokens.css');
 
-/** The rule names and words of every finding, in order. */
-async function lint(code: string, rules: Record<string, unknown>): Promise<readonly string[]> {
-  const { results } = await stylelint.lint({ code, config: { plugins, rules } });
+/** A miniature @avelune/ui whose entry points declare their layers: `button` (components), `list-page` (patterns). */
+const library = join(import.meta.dirname, '..', '..', 'fixtures', 'library');
+
+/** The rule names and words of every finding, in order; `file` lints the code as that file. */
+async function lint(code: string, rules: Record<string, unknown>, file?: string): Promise<readonly string[]> {
+  const { results } = await stylelint.lint({
+    code,
+    config: { plugins, rules },
+    ...(file === undefined ? {} : { codeFilename: file }),
+  });
   return (results[0]?.warnings ?? []).map((warning) => `${warning.rule}: ${warning.text}`);
 }
 
@@ -58,8 +65,60 @@ describe('avelune/component-layer', () => {
     const list = { 'avelune/component-layer': [['reset', 'base', 'utilities']] };
     assert.deepEqual(await lint('@layer reset { * {} }\n@layer base { a {} }\n@layer utilities { .x {} }', list), []);
     assert.deepEqual(await lint('@layer components { a {} }', list), [
-      'avelune/component-layer: Put this inside @layer reset | base | utilities { … }; kit styles are layered (ADR 0004, 0030). (avelune/component-layer)',
+      'avelune/component-layer: Put this inside @layer reset | base | utilities { … }; kit styles are layered (ADR 0004, 0030, 0091). (avelune/component-layer)',
     ]);
+  });
+
+  it("takes the layer from the entry point's entry.json: patterns for a pattern, the default for the rest", async () => {
+    const byEntry = { 'avelune/component-layer': ['components', { entryLayers: { patterns: 'patterns' } }] };
+    const pattern = join(library, 'list-page', 'list-page.css');
+    const component = join(library, 'button', 'button.css');
+    assert.deepEqual(await lint('@layer patterns { :host { display: block; } }', byEntry, pattern), []);
+    assert.deepEqual(await lint('@layer components { :host { display: block; } }', byEntry, pattern), [
+      'avelune/component-layer: Put this inside @layer patterns { … }; kit styles are layered (ADR 0004, 0030, 0091). (avelune/component-layer)',
+    ]);
+    assert.deepEqual(await lint('@layer components { :host {} }', byEntry, component), []);
+    assert.equal((await lint('@layer patterns { :host {} }', byEntry, component)).length, 1);
+    // A stylesheet outside every entry point, and code without a file, take the default.
+    assert.deepEqual(await lint('@layer components { a {} }', byEntry, join(library, 'styles.css')), []);
+    assert.deepEqual(await lint('@layer components { a {} }', byEntry), []);
+  });
+});
+
+describe('avelune/pattern-layout-only', () => {
+  const rules = { 'avelune/pattern-layout-only': true };
+  const pattern = join(library, 'list-page', 'list-page.css');
+
+  it('lets a pattern place kit elements and style its own', async () => {
+    const code = `
+      .menu { color: red; }
+      :host { display: block; container-type: inline-size; }
+      .bar > button[aveIconButton].menu { display: none; margin-inline-start: auto; }
+      ave-sidebar-nav { grid-column: 1 / -1; inline-size: 100%; }
+      ave-card:not(.wide) { max-inline-size: 50%; }
+      @container (inline-size >= 640px) { ave-card { grid-area: detail; } }
+      .item[data-state='open'] { background-color: blue; }
+    `;
+    assert.deepEqual(await lint(code, rules, pattern), []);
+  });
+
+  it('rejects any other property on a kit element, also nested and inside a query', async () => {
+    const code = `
+      ave-card { border-radius: 0; }
+      .bar button[aveIconButton] { color: red; }
+      ave-tag { &:hover { background-color: blue; } }
+      @container (inline-size >= 640px) { [aveCardTitle] { font-size: 2em; } }
+      ave-badge { --ave-color-bg-accent: red; }
+    `;
+    const found = await lint(code, rules, pattern);
+    assert.equal(found.length, 5, found.join('\n'));
+    assert.match(found[0] ?? '', /border-radius on "ave-card" is not a layout property/);
+  });
+
+  it('leaves the stylesheets of every other entry point alone', async () => {
+    const code = 'ave-card { border-radius: 0; }';
+    assert.deepEqual(await lint(code, rules, join(library, 'button', 'button.css')), []);
+    assert.deepEqual(await lint(code, rules), []);
   });
 });
 

@@ -97,6 +97,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0089](0089-brand-themes.md) | Brand themes: a product's accent at build time, a tenant's at runtime, one generator | Accepted; the generator as built in addendum (Wave 6) |
 | [0090](0090-storybook-mcp-and-the-components-manifest.md) | Storybook MCP: the components manifest, the kit's component in every story file, snippets an application writes | Accepted |
 | [0091](0091-patterns.md) | Patterns: page layouts the application fills, in their own layer, adapting to their container | Accepted |
+| [0092](0092-app-shell.md) | App shell: the application bar with the logo, the navigation as a column or a drawer, one main | Accepted |
 
 ## Template
 

@@ -1,0 +1,8 @@
+/* Lint as: packages/ui/app-shell/app-shell.css
+   Expect: avelune/pattern-layout-only (a pattern places kit components but never changes their look) */
+
+@layer patterns {
+  .bar > button[aveIconButton] {
+    border-radius: var(--ave-radius-full);
+  }
+}
