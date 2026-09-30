@@ -26,7 +26,7 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 | Density | comfortable (default), compact |
 | Locales | uz-Latn, uz-Cyrl, ru, en |
 | Docs language | English |
-| Registry | none yet (publish job disabled) |
+| Registry | npm (product owner, 2026-09-30); nothing published yet, and no package of the `@avelune` scope on npmjs.com (checked 2026-09-30) |
 | Licence | `UNLICENSED` (proprietary, internal), for now; revisit before the first publish (product owner, 2026-09-23) |
 | Browsers | `Chrome >= 119, Edge >= 119, Firefox >= 129, Safari >= 17.5, iOS >= 17.5` (ADR 0014; changed 2026-09-23 from Chrome/Edge 117, product owner) |
 | Design source | none; visual direction "inspired by Ubuntu" ([audit.md](audit.md)); consumer teams have no designers in Figma, so there is no Figma library (product owner, 2026-09-30) |
@@ -506,8 +506,11 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 
 ## Open questions (for the product owner)
 
-- The systems that will use the kit, for the adoption plan and the pilot (the product is `avelune-ui`, 2026-09-30).
-- The registry to publish to (Phase 6); CI and CODEOWNERS on GitHub (Phase 3's deferred item).
+- The systems that will use the kit, for the adoption plan and the pilot (the product is `avelune-ui`, 2026-09-30), and access to one of them.
+- npm: public or private packages (private scoped packages need a paid npm organisation); who owns the `avelune` organisation, which the `@avelune` scope needs; the npm account and token CI publishes with.
+- The licence before the first publish: the packages are `UNLICENSED` (proprietary) for now, which a public npm package would contradict.
+- GitHub: whether the agent may add the remote and push `main`; the repository's visibility; the code owners' GitHub accounts (CODEOWNERS, Phase 3's deferred item).
+- A host inside the company for the built Storybook and its MCP server (Phase 6).
 
 ## Out of scope
 
