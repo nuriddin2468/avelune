@@ -35,6 +35,7 @@ export interface AveMessages {
     readonly alertSuccess: string;
     readonly alertWarning: string;
     readonly appliedFilters: string;
+    readonly backToList: string;
     readonly breadcrumbs: string;
     readonly cancel: string;
     readonly chooseDate: string;

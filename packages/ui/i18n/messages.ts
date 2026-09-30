@@ -155,6 +155,8 @@ export interface AveMessages {
   readonly showResults: string;
   /** Names the list of the filters applied to a list, shown as tags above it. */
   readonly appliedFilters: string;
+  /** The button over a record on a narrow list–detail page that goes back to the list (ADR 0096). */
+  readonly backToList: string;
 }
 
 /**
@@ -237,6 +239,7 @@ export const aveMessagesEn: AveMessages = {
   clearFilters: 'Clear filters',
   showResults: 'Show results',
   appliedFilters: 'Applied filters',
+  backToList: 'Back to the list',
 };
 
 /**
@@ -321,6 +324,7 @@ export const aveMessagesRu: AveMessages = {
   clearFilters: 'Сбросить фильтры',
   showResults: 'Показать результаты',
   appliedFilters: 'Применённые фильтры',
+  backToList: 'Назад к списку',
 };
 
 /**
@@ -403,6 +407,7 @@ export const aveMessagesUzLatn: AveMessages = {
   clearFilters: 'Filtrlarni tozalash',
   showResults: 'Natijalarni koʻrsatish',
   appliedFilters: 'Qoʻllangan filtrlar',
+  backToList: 'Roʻyxatga qaytish',
 };
 
 /**
@@ -485,6 +490,7 @@ export const aveMessagesUzCyrl: AveMessages = {
   clearFilters: 'Фильтрларни тозалаш',
   showResults: 'Натижаларни кўрсатиш',
   appliedFilters: 'Қўлланган фильтрлар',
+  backToList: 'Рўйхатга қайтиш',
 };
 
 /**

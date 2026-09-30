@@ -1,42 +1,7 @@
-/* The departments: the page's heading over the tree and the chosen department's card, side by side from the medium
-   container. Tokens only. */
+/* The departments: the list–detail page lays them out (ADR 0096); here, the card's facts and staff. Tokens only. */
 @layer app {
   :host {
     display: block;
-  }
-
-  .page {
-    display: grid;
-    gap: var(--ave-space-6);
-    max-inline-size: var(--ave-container-lg);
-    margin-inline: auto;
-    container-type: inline-size;
-  }
-
-  .header {
-    display: grid;
-    gap: var(--ave-space-1);
-  }
-
-  .title {
-    font: var(--ave-font-heading-xl);
-  }
-
-  .note {
-    color: var(--ave-color-fg-muted);
-    font: var(--ave-font-body-sm);
-  }
-
-  .split {
-    display: grid;
-    gap: var(--ave-space-6);
-    align-items: start;
-  }
-
-  @container (min-width: 640px) {
-    .split {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
-    }
   }
 
   .facts {

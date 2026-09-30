@@ -1,0 +1,63 @@
+@layer patterns {
+  /* A list beside the record it opens (ADR 0096): the page's heading over the panes, 24px apart. */
+  :host {
+    display: grid;
+    gap: var(--ave-space-6);
+    min-inline-size: 0;
+    container-type: inline-size;
+  }
+
+  .header {
+    display: grid;
+    gap: var(--ave-space-1);
+  }
+
+  .heading {
+    margin: 0;
+    font: var(--ave-font-heading-xl);
+  }
+
+  .description {
+    margin: 0;
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-md);
+  }
+
+  .panes {
+    display: grid;
+    align-items: start;
+    gap: var(--ave-space-6);
+    min-inline-size: 0;
+  }
+
+  .list,
+  .detail {
+    display: grid;
+    gap: var(--ave-space-4);
+    min-inline-size: 0;
+  }
+
+  /* The way back sits at the record's start, as wide as its words. */
+  .detail > button[aveButton] {
+    justify-self: start;
+  }
+
+  /* Below container.md one pane shows: the list, or the record under its way back. */
+  @container (inline-size < 640px) {
+    :host([data-view='list']) .detail,
+    :host([data-view='detail']) .list {
+      display: none;
+    }
+  }
+
+  /* From container.md the list and the record stand side by side, 2 : 3; the way back goes. */
+  @container (inline-size >= 640px) {
+    .panes {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    }
+
+    .detail > button[aveButton] {
+      display: none;
+    }
+  }
+}

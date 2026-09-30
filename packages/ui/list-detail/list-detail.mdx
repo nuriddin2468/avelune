@@ -1,0 +1,83 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ListDetailStories from './list-detail.stories';
+
+<Meta of={ListDetailStories} />
+
+# List–detail
+
+`<ave-list-detail>` shows a list beside the record chosen in it: the page's heading over the list and the record, side by side from `container.md`. On a narrow page one of them shows, the list and then the record under a way back (ADR 0096).
+
+```ts
+import { AveListDetail, AveListDetailDetail, AveListDetailList } from '@avelune/ui/list-detail';
+```
+
+<Canvas of={ListDetailStories.Default} />
+
+## When to use
+
+- For a hierarchy or a short list whose records people read one at a time without leaving it: departments, folders, a mailbox.
+
+## When not to use
+
+- For a register people search and filter: use the List page, whose records open on their own pages.
+- For a record people change at length: open it on its own page (a Form page).
+- For a quick look at a record from a table: a drawer (GUIDELINES.md, "Dialog, drawer or page").
+
+## Anatomy
+
+- The page's `h1` from `heading`, and `description` muted under it.
+- `[aveListDetailList]` on the application's list: a Tree, a List, a DataTable.
+- `[aveListDetailDetail]` on the chosen record: a Card or a form, or an EmptyState while none is chosen.
+- From `container.md` the list and the record stand side by side, 2 : 3, 24px apart, their tops level.
+- Below it, the list shows until `detail` is true; then the record shows under a ghost "Назад к списку" button (`backLabel` to name it after the list: "Все подразделения").
+
+```html
+<ave-list-detail
+  heading="Подразделения"
+  description="Структура организации."
+  [(detail)]="reading"
+  (detailChange)="back($event)"
+>
+  <ave-tree
+    aveListDetailList
+    label="Подразделения"
+    [nodes]="nodes"
+    [(selected)]="selected"
+    (selectedChange)="reading.set(true)"
+  />
+  <ave-card aveListDetailDetail>…</ave-card>
+</ave-list-detail>
+```
+
+## Choosing and going back
+
+Set `detail` to true when a record is chosen; wider than `container.md` it changes nothing. The way back sets it to false. A Tree tells of a new choice only, so clear its choice when the person goes back, and choosing the same node opens the record again.
+
+<Canvas of={ListDetailStories.Empty} />
+
+The "Record on a phone" and "Long text" stories show the narrow page and long Uzbek names.
+
+## Keyboard
+
+The page adds no keys of its own. On a narrow page:
+
+| When                           | Focus                                          |
+| ------------------------------ | ---------------------------------------------- |
+| A record is chosen in the list | Moves to "Назад к списку", over the record     |
+| "Назад к списку" is pressed    | Returns to the element of the list that had it |
+
+## Accessibility
+
+- One `h1`, the page's; a record's heading is at level 2.
+- The pane that does not show is `display: none`, out of the reading order, so screen readers read one of them.
+- Focus follows the pane that shows (WCAG 2.4.3); `main`, the shell's, holds the page.
+
+## Motion
+
+None: the panes change at once.
+
+## Do and don't
+
+- Do give the record's place an empty state while nothing is chosen.
+- Do name the way back after the list when the page has more than one: "Все подразделения".
+- Don't put a second list inside the record: open its own page.

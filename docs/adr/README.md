@@ -101,6 +101,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0093](0093-search-header.md) | SearchHeader: a list page's heading, count and main action over the search and the filters' button | Accepted |
 | [0094](0094-filter-panel.md) | FilterPanel: a list's filters in a column that opens beside it, or in a drawer; the applied ones as tags | Accepted |
 | [0095](0095-list-page.md) | ListPage: a register's header, notices, applied filters, and the filters' column beside the list | Accepted |
+| [0096](0096-list-detail.md) | ListDetail: a list beside the record it opens, or one of them at a time on a narrow page | Accepted |
 
 ## Template
 

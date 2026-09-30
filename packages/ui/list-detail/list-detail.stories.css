@@ -1,0 +1,13 @@
+/* The frame of the List–detail stories: a page inside the shell's padding. Stories only; the page's styles are
+   list-detail.css. */
+@layer patterns {
+  :host {
+    display: block;
+    padding: var(--ave-space-6);
+  }
+
+  /* A page narrower than container.md: one pane at a time at every width. */
+  .frame[data-narrow] {
+    max-inline-size: var(--ave-container-sm);
+  }
+}

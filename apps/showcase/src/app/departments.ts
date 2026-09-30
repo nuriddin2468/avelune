@@ -1,9 +1,11 @@
 import { Component, computed, signal } from '@angular/core';
-import { lucideBuilding } from '@avelune/icons/lucide';
+import { lucideBuilding, lucideNetwork } from '@avelune/icons/lucide';
 import { AveAvatar } from '@avelune/ui/avatar';
 import { AveBadge } from '@avelune/ui/badge';
 import { AveCard, AveCardEnd, AveCardTitle } from '@avelune/ui/card';
+import { AveEmptyState } from '@avelune/ui/empty-state';
 import { provideAveIcons } from '@avelune/ui/icon';
+import { AveListDetail, AveListDetailDetail, AveListDetailList } from '@avelune/ui/list-detail';
 import { AveTree, type AveTreeNode } from '@avelune/ui/tree';
 
 /** A department of the organisation, as the directory keeps it. */
@@ -97,60 +99,92 @@ function find(department: Department, id: string): Department | undefined {
 }
 
 /**
- * The organisation's departments: the tree of departments beside the chosen one's card, with its head, its telephone
- * and its staff.
+ * The organisation's departments on the kit's list–detail page (ADR 0096): the tree of departments beside the chosen
+ * one's card, with its head, its telephone and its staff; on a phone the tree, then the card.
  */
 @Component({
   selector: 'ave-showcase-departments',
-  imports: [AveAvatar, AveBadge, AveCard, AveCardEnd, AveCardTitle, AveTree],
-  providers: [provideAveIcons([lucideBuilding])],
+  imports: [
+    AveAvatar,
+    AveBadge,
+    AveCard,
+    AveCardEnd,
+    AveCardTitle,
+    AveEmptyState,
+    AveListDetail,
+    AveListDetailDetail,
+    AveListDetailList,
+    AveTree,
+  ],
+  providers: [provideAveIcons([lucideBuilding, lucideNetwork])],
   template: `
-    <div class="page" lang="ru">
-      <header class="header">
-        <h1 class="title">Подразделения</h1>
-        <p class="note">Структура организации и сотрудники подразделений.</p>
-      </header>
-      <div class="split">
-        <ave-tree class="tree" label="Подразделения" [nodes]="nodes" [(selected)]="selected" />
-        @if (department(); as chosen) {
-          <ave-card role="region" aria-labelledby="department-title">
-            <h2 aveCardTitle id="department-title">{{ chosen.name }}</h2>
-            <ave-badge aveCardEnd>{{ people(chosen.staff.length) }}</ave-badge>
-            <dl class="facts">
-              <div>
-                <dt>Руководитель</dt>
-                <dd>{{ chosen.head }}</dd>
-              </div>
-              <div>
-                <dt>Телефон</dt>
-                <dd class="phone">{{ chosen.phone }}</dd>
-              </div>
-            </dl>
-            <ul class="staff" aria-label="Сотрудники">
-              @for (person of chosen.staff; track person.name) {
-                <li class="person">
-                  <ave-avatar decorative [name]="person.name" />
-                  <span class="who">
-                    <span>{{ person.name }}</span>
-                    <span class="role">{{ person.role }}</span>
-                  </span>
-                </li>
-              }
-            </ul>
-          </ave-card>
-        }
-      </div>
-    </div>
+    <ave-list-detail
+      heading="Подразделения"
+      description="Структура организации и сотрудники подразделений."
+      backLabel="Все подразделения"
+      [(detail)]="reading"
+      (detailChange)="back($event)"
+      lang="ru"
+    >
+      <ave-tree
+        aveListDetailList
+        label="Подразделения"
+        [nodes]="nodes"
+        [(selected)]="selected"
+        (selectedChange)="reading.set(true)"
+      />
+      @if (department(); as chosen) {
+        <ave-card aveListDetailDetail role="region" aria-labelledby="department-title">
+          <h2 aveCardTitle id="department-title">{{ chosen.name }}</h2>
+          <ave-badge aveCardEnd>{{ people(chosen.staff.length) }}</ave-badge>
+          <dl class="facts">
+            <div>
+              <dt>Руководитель</dt>
+              <dd>{{ chosen.head }}</dd>
+            </div>
+            <div>
+              <dt>Телефон</dt>
+              <dd class="phone">{{ chosen.phone }}</dd>
+            </div>
+          </dl>
+          <ul class="staff" aria-label="Сотрудники">
+            @for (person of chosen.staff; track person.name) {
+              <li class="person">
+                <ave-avatar decorative [name]="person.name" />
+                <span class="who">
+                  <span>{{ person.name }}</span>
+                  <span class="role">{{ person.role }}</span>
+                </span>
+              </li>
+            }
+          </ul>
+        </ave-card>
+      } @else {
+        <ave-empty-state aveListDetailDetail icon="network" heading="Выберите подразделение">
+          <p>Его руководитель, телефон и сотрудники появятся здесь.</p>
+        </ave-empty-state>
+      }
+    </ave-list-detail>
   `,
   styleUrl: './departments.css',
 })
 export class DepartmentsPage {
   protected readonly nodes = [node(organisation, true)];
   protected readonly selected = signal<string | undefined>('contracts');
+  /** Whether the chosen department shows instead of the tree, on a narrow page. */
+  protected readonly reading = signal(false);
   protected readonly department = computed(() => {
     const id = this.selected();
     return id === undefined ? undefined : find(organisation, id);
   });
+
+  /**
+   * The way back to the tree on a narrow page: the choice goes, so that choosing the same department opens it again
+   * (the tree tells of a new choice only).
+   */
+  protected back(reading: boolean): void {
+    if (!reading) this.selected.set(undefined);
+  }
 
   /** How many people, in Russian: 1 сотрудник, 2 сотрудника, 5 сотрудников. */
   protected people(count: number): string {
