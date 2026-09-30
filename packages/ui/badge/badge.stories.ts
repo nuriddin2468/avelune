@@ -123,9 +123,13 @@ export const Default: Story = {
       await expect(badge.getBoundingClientRect().height).toBe(20);
       await expect(badge.getAttribute('role')).toBeNull();
     }
-    // Each variant has a fill of its own.
-    const fills = new Set(badges.map((badge) => getComputedStyle(badge).backgroundColor));
-    await expect(fills.size).toBe(5);
+    // Each variant has a fill of its own; forced colours replace the fills, and paint the border instead.
+    if (matchMedia('(forced-colors: active)').matches) {
+      for (const badge of badges) await expect(getComputedStyle(badge).borderTopColor).not.toBe('rgba(0, 0, 0, 0)');
+    } else {
+      const fills = new Set(badges.map((badge) => getComputedStyle(badge).backgroundColor));
+      await expect(fills.size).toBe(5);
+    }
   },
 };
 

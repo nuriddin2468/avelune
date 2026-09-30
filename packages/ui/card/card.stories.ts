@@ -45,7 +45,7 @@ type View = 'default' | 'grid' | 'long';
       }
       @default {
         <ave-card lang="ru">
-          <h3 aveCardTitle>Поставка офисной мебели</h3>
+          <h2 aveCardTitle>Поставка офисной мебели</h2>
           <ave-badge aveCardEnd variant="success">Подписан</ave-badge>
           <dl class="facts">
             <div>
@@ -129,7 +129,7 @@ export const Default: Story = {
   render: frame('default'),
   parameters: source(
     '<ave-card>',
-    '  <h3 aveCardTitle>Поставка офисной мебели</h3>',
+    '  <h2 aveCardTitle>Поставка офисной мебели</h2>',
     '  <ave-badge aveCardEnd variant="success">Подписан</ave-badge>',
     '  <dl>…</dl>',
     '  <div aveCardFooter>',
@@ -140,7 +140,7 @@ export const Default: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('heading', { name: 'Поставка офисной мебели', level: 3 })).toBeVisible();
+    await expect(canvas.getByRole('heading', { name: 'Поставка офисной мебели', level: 2 })).toBeVisible();
     const card = canvasElement.querySelector('ave-card');
     await expect(getComputedStyle(card ?? canvasElement).boxShadow).toBe('none');
     const status = canvasElement.querySelector('ave-badge')?.getBoundingClientRect();

@@ -47,8 +47,9 @@
     vertical-align: middle;
   }
 
-  /* The header sticks to the top of the box over a stronger line. A column is as wide as people set it, or as its
-     content makes it. */
+  /* The header sticks to the top of the box over a stronger line, its words on one line: the cells' text wraps, and a
+     table wider than its box scrolls. A column is as wide as people set it, or as its content makes it; the set width
+     is its minimum too, which a table squeezed to its content's widths keeps. */
   thead th {
     --ave-data-table-column-width: auto;
 
@@ -59,7 +60,9 @@
     background-color: var(--ave-color-bg-surface);
     color: var(--ave-color-fg-muted);
     font: var(--ave-font-label-md);
+    white-space: nowrap;
     inline-size: var(--ave-data-table-column-width);
+    min-inline-size: var(--ave-data-table-column-width);
   }
 
   /* A row's title is its header for screen readers; it reads as the other cells. */

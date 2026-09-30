@@ -171,8 +171,13 @@ interface Drag {
                 @if (selectable()) {
                   <td class="check"></td>
                 }
+                <!-- A column whose header is only said holds a row's controls (its menu): nothing to hold a place for. -->
                 @for (column of columns(); track column.key) {
-                  <td><ave-skeleton /></td>
+                  <td>
+                    @if (!column.hideHeader) {
+                      <ave-skeleton />
+                    }
+                  </td>
                 }
               </tr>
             }

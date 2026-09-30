@@ -35,3 +35,7 @@ Brief §9.4 lists Avatar in Wave 5. Facts, verified on 2026-09-29 (Angular 22.2.
 
 - The showcase's contract page shows its counterparty's avatar and the avatars of the people in its history.
 - An application with legal forms outside quotes ("ИП Каримов А.") gives `initials` when the first two words are wrong for it.
+
+## Addendum: the photo under the border (2026-09-29)
+
+The Wave 5 visual review found a line of the photo's other edge at the top of every photo: the background is placed in the padding box and repeated, and the transparent border's ring showed the repeat. The photo is placed in the border box and not repeated (`background-origin: border-box`, `background-repeat: no-repeat`).

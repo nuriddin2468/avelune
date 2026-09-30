@@ -33,3 +33,7 @@ Brief §9.4 lists Accordion in Wave 5 and §9.1 puts its behaviour in Angular Ar
 
 - One more token in `timing`; the List's rows open and close on it too.
 - Every panel's content is created with the accordion; a panel that loads data does it when `expanded` says so.
+
+## Addendum: the ring inside the trigger (2026-09-29)
+
+The Wave 5 visual review found the focus ring, drawn outside the trigger, over the first line of its open panel, and past the item's lines at its sides. The trigger draws the ring inside itself (`data-focus-ring="inset"`, as the tabs and the date fields do).

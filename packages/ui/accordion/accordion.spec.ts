@@ -134,6 +134,8 @@ describe('AveAccordion', () => {
     const accordion = await TestbedHarnessEnvironment.loader(fixture).getHarness(
       AveAccordionHarness.with({ selector: '.terms' }),
     );
+    // The ring is drawn inside the trigger, clear of the open panel's first line.
+    expect(trigger(element, 'Штрафы и пени').dataset['focusRing']).toBe('inset');
     trigger(element, 'Штрафы и пени').focus();
     await userEvent.keyboard('{ArrowDown}');
     expect(document.activeElement).toBe(trigger(element, 'Форс-мажор'));

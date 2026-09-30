@@ -11,7 +11,18 @@ import { provideAveIcons } from '@avelune/ui/icon';
 import { AveLink } from '@avelune/ui/link';
 import { AveMenu, type AveMenuEntry } from '@avelune/ui/menu';
 
-type View = 'default' | 'loading' | 'failed' | 'empty' | 'server' | 'sticky' | 'long' | 'compact';
+type View = 'default' | 'loading' | 'failed' | 'empty' | 'server' | 'sticky' | 'compact';
+
+/** Each view's table has a name of its own, as the docs page draws them together and names their landmarks. */
+const labels: Readonly<Record<View, string>> = {
+  default: 'Договоры',
+  loading: 'Акты сверки',
+  failed: 'Счета на оплату',
+  empty: 'Доверенности',
+  server: 'Реестр договоров',
+  sticky: 'Договоры подразделения',
+  compact: 'Письма',
+};
 
 type Status = 'draft' | 'approval' | 'signed' | 'expired';
 
@@ -65,14 +76,14 @@ const register: readonly Contract[] = Array.from({ length: 134 }, (_, index) => 
   template: `
     <div class="frame" [attr.data-view]="view()" [attr.data-density]="view() === 'compact' ? 'compact' : null">
       <ave-data-table
-        [label]="view() === 'long' ? 'Shartnomalar' : 'Договоры'"
-        [attr.lang]="view() === 'long' ? 'uz-Latn' : 'ru'"
+        lang="ru"
+        [label]="labels[view()]"
         [rows]="rows()"
-        [columns]="columns"
+        [columns]="shownColumns()"
         [rowKey]="byId"
         [source]="view() === 'server' ? 'server' : 'local'"
         [total]="view() === 'server' ? register.length : undefined"
-        [selectable]="view() !== 'long'"
+        selectable
         [resizable]="view() === 'sticky'"
         [loading]="loading()"
         [failed]="failed()"
@@ -115,6 +126,7 @@ const register: readonly Contract[] = Array.from({ length: 134 }, (_, index) => 
 })
 class DataTableStories {
   readonly view = input<View>('default');
+  protected readonly labels = labels;
   protected readonly register = register;
   protected readonly statuses = statuses;
   protected readonly dates = aveDateFormat('ru');
@@ -127,6 +139,12 @@ class DataTableStories {
     { key: 'endsOn', header: 'Действует до', value: (row) => row.endsOn, sortable: true },
     { key: 'actions', header: 'Действия', hideHeader: true },
   ];
+  /** The compact table's columns are short, so its rows stay one line even on a phone. */
+  protected readonly shownColumns = computed(() =>
+    this.view() === 'compact'
+      ? this.columns.filter((column) => ['number', 'amount', 'actions'].includes(column.key))
+      : this.columns,
+  );
   protected readonly actions: readonly AveMenuEntry<string>[] = [
     { value: 'open', label: 'Открыть', icon: 'file-text' },
     { value: 'copy', label: 'Дублировать', icon: 'copy' },
@@ -153,20 +171,6 @@ class DataTableStories {
       const size = this.pageSize();
       return register.slice((this.page() - 1) * size, this.page() * size);
     }
-    if (view === 'long') {
-      return [
-        {
-          id: 1,
-          number: 'SH-2026/134',
-          subject:
-            'Oʻzbekiston Respublikasi Moliya vazirligi huzuridagi Davlat moliyaviy nazorati departamenti uchun axborot tizimini ishlab chiqish',
-          counterparty: 'Samarqand viloyati sogʻliqni saqlash boshqarmasi',
-          amount: 1_987_654_321,
-          status: 'approval',
-          endsOn: '2027-12-31',
-        },
-      ];
-    }
     return register.slice(0, view === 'sticky' ? 30 : 12);
   });
 
@@ -178,6 +182,57 @@ class DataTableStories {
       this.reloading.set(false);
     }, 400);
   }
+}
+
+/** A register in Uzbek, in Latin script: the kit's words, the headers and the records in the locale. */
+@Component({
+  selector: 'ave-data-table-uzbek',
+  imports: [AveBadge, AveCellTemplate, AveDataTable],
+  providers: [{ provide: LOCALE_ID, useValue: 'uz-Latn' }],
+  template: `
+    <div class="frame" data-view="long">
+      <ave-data-table lang="uz-Latn" label="Shartnomalar" [rows]="rows" [columns]="columns" [rowKey]="byId">
+        <ng-template aveCell="status" [aveCellOf]="rows" let-contract>
+          <ave-badge [variant]="statuses[contract.status].variant">{{ uzbekStatuses[contract.status] }}</ave-badge>
+        </ng-template>
+        <ng-template aveCell="endsOn" [aveCellOf]="rows" let-contract>
+          <time [attr.datetime]="contract.endsOn">{{ dates.numeric(contract.endsOn) }}</time>
+        </ng-template>
+      </ave-data-table>
+    </div>
+  `,
+  styleUrl: './data-table.stories.css',
+})
+class DataTableUzbek {
+  protected readonly dates = aveDateFormat('uz-Latn');
+  protected readonly statuses = statuses;
+  protected readonly uzbekStatuses: Readonly<Record<Status, string>> = {
+    draft: 'Qoralama',
+    approval: 'Koʻrib chiqilmoqda',
+    signed: 'Imzolangan',
+    expired: 'Muddati oʻtgan',
+  };
+  protected readonly rows: readonly Contract[] = [
+    {
+      id: 1,
+      number: 'SH-2026/134',
+      subject:
+        'Oʻzbekiston Respublikasi Moliya vazirligi huzuridagi Davlat moliyaviy nazorati departamenti uchun axborot tizimini ishlab chiqish',
+      counterparty: 'Samarqand viloyati sogʻliqni saqlash boshqarmasi',
+      amount: 1_987_654_321,
+      status: 'approval',
+      endsOn: '2027-12-31',
+    },
+  ];
+  protected readonly columns: readonly AveColumn<Contract>[] = [
+    { key: 'number', header: 'Raqam', value: (row) => row.number, sortable: true, rowHeader: true },
+    { key: 'subject', header: 'Shartnoma predmeti', value: (row) => row.subject },
+    { key: 'counterparty', header: 'Kontragent', value: (row) => row.counterparty },
+    { key: 'amount', header: 'Summa, soʻm', value: (row) => row.amount, numeric: true },
+    { key: 'status', header: 'Holat' },
+    { key: 'endsOn', header: 'Amal qilish muddati' },
+  ];
+  protected readonly byId = (row: Contract) => row.id;
 }
 
 type Story = StoryObj<DataTableStories>;
@@ -294,7 +349,7 @@ export const ServerPages: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('status')).toHaveTextContent('1–10 из 134');
-    await userEvent.click(canvas.getByRole('button', { name: 'Страница 2' }));
+    await userEvent.click(canvas.getByRole('button', { name: 'Следующая страница' }));
     await expect(canvas.getAllByRole('rowheader')[0]).toHaveTextContent('ДК-2026/124');
     await expect(canvas.getByRole('status')).toHaveTextContent('11–20 из 134');
     (document.activeElement as HTMLElement | null)?.blur();
@@ -309,7 +364,7 @@ export const StickyAndResizable: Story = {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('combobox', { name: 'На странице' }));
     await userEvent.click(await within(document.body).findByRole('option', { name: '50' }));
-    const box = await canvas.findByRole('region', { name: 'Договоры' });
+    const box = await canvas.findByRole('region', { name: 'Договоры подразделения' });
     await expect(box).toHaveAttribute('tabindex', '0');
     box.scrollTo({ top: 240 });
     const header = canvas.getAllByRole('columnheader')[0];
@@ -335,7 +390,7 @@ export const StickyAndResizable: Story = {
 /** Long Uzbek words wrap in their cells; a narrow table scrolls sideways in its box, a named region. */
 export const LongText: Story = {
   name: 'Long text',
-  render: frame('long'),
+  render: () => ({ template: `<ave-data-table-uzbek />`, moduleMetadata: { imports: [DataTableUzbek] } }),
   play: async ({ canvasElement }) => {
     const box = await within(canvasElement).findByRole('region', { name: 'Shartnomalar' });
     await expect(box.scrollWidth).toBeGreaterThan(box.clientWidth);
@@ -345,11 +400,11 @@ export const LongText: Story = {
   },
 };
 
-/** Compact density: rows and controls one step down. */
+/** Compact density: rows and controls one step down, the rows' menus among them. */
 export const Compact: Story = {
   render: frame('compact'),
   play: async ({ canvasElement }) => {
-    const row = canvasElement.querySelector('tbody tr');
-    await expect(row?.getBoundingClientRect().height).toBe(36);
+    const rows = [...canvasElement.querySelectorAll('tbody tr')];
+    await expect(rows.map((row) => row.getBoundingClientRect().height)).toEqual(rows.map(() => 36));
   },
 };

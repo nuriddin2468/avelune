@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { AveAccordion, AveAccordionItem } from '@avelune/ui/accordion';
 
-type View = 'default' | 'single' | 'long';
+type View = 'default' | 'keyboard' | 'single' | 'long';
 
 /** The frame the stories draw accordions in: a contract's terms. Styled with tokens only. */
 @Component({
@@ -39,8 +39,18 @@ type View = 'default' | 'single' | 'long';
           </ave-accordion>
         </div>
       }
-      @default {
+      @case ('keyboard') {
         <ave-accordion lang="ru">
+          <ave-accordion-item heading="Порядок оплаты" [expanded]="true">
+            <p>Покупатель оплачивает поставку в течение 10 банковских дней после подписания акта приёмки.</p>
+          </ave-accordion-item>
+          <ave-accordion-item heading="Приёмка товара">
+            <p>Товар принимается по количеству и качеству в день поставки, в присутствии представителей сторон.</p>
+          </ave-accordion-item>
+        </ave-accordion>
+      }
+      @default {
+        <ave-accordion lang="ru" [level]="2">
           <ave-accordion-item heading="Штрафы и пени" [expanded]="true">
             <p>За каждый день просрочки поставки — пеня 0,1% от суммы договора, но не более 10%.</p>
           </ave-accordion-item>
@@ -88,7 +98,7 @@ export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default'),
   parameters: source(
-    '<ave-accordion [level]="3">',
+    '<ave-accordion [level]="2">',
     '  <ave-accordion-item heading="Штрафы и пени" [(expanded)]="fines">…</ave-accordion-item>',
     '  <ave-accordion-item heading="Форс-мажор">…</ave-accordion-item>',
     '  <ave-accordion-item heading="Конфиденциальность" disabled>…</ave-accordion-item>',
@@ -98,7 +108,7 @@ export const Default: Story = {
     const canvas = within(canvasElement);
     const fines = canvas.getByRole('button', { name: 'Штрафы и пени' });
     await expect(fines).toHaveAttribute('aria-expanded', 'true');
-    await expect(canvas.getByRole('heading', { level: 3, name: 'Форс-мажор' })).toBeVisible();
+    await expect(canvas.getByRole('heading', { level: 2, name: 'Форс-мажор' })).toBeVisible();
     await expect(canvas.getByRole('region', { name: 'Штрафы и пени' })).toBeVisible();
     await expect(canvas.getByRole('button', { name: 'Конфиденциальность' })).toHaveAttribute('aria-disabled', 'true');
   },
@@ -106,17 +116,17 @@ export const Default: Story = {
 
 /** The keyboard: Down to the next heading, Enter to open it. */
 export const Keyboard: Story = {
-  render: frame('default'),
+  render: frame('keyboard'),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.tab();
-    await expect(canvas.getByRole('button', { name: 'Штрафы и пени' })).toHaveFocus();
+    await expect(canvas.getByRole('button', { name: 'Порядок оплаты' })).toHaveFocus();
     await userEvent.keyboard('{ArrowDown}');
-    const majeure = canvas.getByRole('button', { name: 'Форс-мажор' });
-    await expect(majeure).toHaveFocus();
+    const acceptance = canvas.getByRole('button', { name: 'Приёмка товара' });
+    await expect(acceptance).toHaveFocus();
     await userEvent.keyboard('{Enter}');
-    await expect(majeure).toHaveAttribute('aria-expanded', 'true');
-    await waitFor(() => expect(canvas.getByRole('region', { name: 'Форс-мажор' })).toBeVisible());
+    await expect(acceptance).toHaveAttribute('aria-expanded', 'true');
+    await waitFor(() => expect(canvas.getByRole('region', { name: 'Приёмка товара' })).toBeVisible());
   },
 };
 

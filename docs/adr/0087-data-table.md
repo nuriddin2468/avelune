@@ -43,3 +43,12 @@ ADR 0078 made the DataTable a native table the kit draws, one page at a time, an
 - Every pagination carries the select in its bundle, used or not; its budget rises with it (ADR 0028).
 - The showcase's register is a DataTable: sortable, with chosen rows, sizes of a page, and its menus in a column.
 - A table on a phone scrolls sideways inside its box; a card view of the rows is a pattern for Wave 6.
+
+## Addendum: the wave's visual review (2026-09-29)
+
+The first visual run and its review found four things, now part of the decisions above:
+
+- **A set width is a minimum too.** A table wider than its box lays its columns out at their content's narrowest, where a cell's `inline-size` counts for nothing: a column people widened stayed as it was. The width people set is the header's `min-inline-size` as well.
+- **Headers on one line.** Headers wrapped ("Сумма, / сум") beside their arrows while the cells' text had room; the header's words keep one line, and a table wider than its box scrolls.
+- **No skeleton in a column of controls.** A column whose header is only said (a row's menus) has no content while rows load, and its skeleton shrank to a dot; its cells stay empty.
+- **Docs pages name each table apart.** The stories' tables shared a name, and with it their paginations' landmarks (axe `landmark-unique`); each story's table has a name of its own.

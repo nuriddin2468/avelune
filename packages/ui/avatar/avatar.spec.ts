@@ -147,6 +147,9 @@ describe('AveAvatar', () => {
     const host = element.querySelector('.photo') ?? element;
     expect(getComputedStyle(host).backgroundImage).toMatch(/^url\("data:image\/svg\+xml,/);
     expect(getComputedStyle(host).backgroundSize).toBe('cover');
+    // Under the transparent border too, and once: a repeat would show the photo's other edge in the border's ring.
+    expect(getComputedStyle(host).backgroundOrigin).toBe('border-box');
+    expect(getComputedStyle(host).backgroundRepeat).toBe('no-repeat');
     expect(getComputedStyle(host.querySelector('.initials') ?? element).visibility).toBe('hidden');
     // A photo that fails leaves the initials.
     fixture.componentInstance.image.set('data:image/png;base64,broken');

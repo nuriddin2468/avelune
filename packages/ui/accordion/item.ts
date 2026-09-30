@@ -28,6 +28,7 @@ import { AVE_ACCORDION } from './types';
         ngAccordionTrigger
         type="button"
         class="trigger"
+        data-focus-ring="inset"
         [panel]="panel"
         [disabled]="disabled()"
         [(expanded)]="expanded"

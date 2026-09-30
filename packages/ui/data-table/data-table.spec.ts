@@ -356,7 +356,8 @@ describe('AveDataTable', () => {
     expect(await table.isLoading()).toBe(true);
     // As many skeleton rows as the rows shown, each cell a skeleton; the header's checkbox waits.
     expect(element.querySelectorAll('tbody tr[data-placeholder]')).toHaveLength(4);
-    expect(element.querySelectorAll('tbody tr[data-placeholder] ave-skeleton')).toHaveLength(20);
+    // A skeleton in every cell but the menus' column, whose header is only said.
+    expect(element.querySelectorAll('tbody tr[data-placeholder] ave-skeleton')).toHaveLength(16);
     expect(element.querySelector<HTMLInputElement>('thead .check > input')?.disabled).toBe(true);
     expect(await table.getRows()).toEqual([]);
     host.rows.set([]);
@@ -452,6 +453,12 @@ describe('AveDataTable', () => {
     const drawn = await table.getColumnWidth('Предмет');
     expect(drawn).toBeGreaterThan(48);
     expect(Number(subject?.value)).toBe(stepped(drawn));
+    // A table squeezed to its content's widths still widens the column people set.
+    element.querySelector<HTMLElement>('.frame')?.style.setProperty('inline-size', '360px');
+    await settle(fixture);
+    await table.setColumnWidth('Сумма', 304);
+    await settle(fixture);
+    expect(await table.getColumnWidth('Сумма')).toBe(304);
     await expect(table.setColumnWidth('Срок', 100)).rejects.toThrow('cannot be resized');
     await expect(table.getColumnWidth('Срок')).rejects.toThrow('no column Срок');
     element.remove();
