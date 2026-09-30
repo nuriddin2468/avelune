@@ -294,6 +294,9 @@ importers:
       '@avelune/icons':
         specifier: workspace:*
         version: link:packages/icons
+      '@avelune/tokens':
+        specifier: workspace:*
+        version: link:packages/tokens
       '@axe-core/playwright':
         specifier: 'catalog:'
         version: 4.13.0(playwright-core@1.63.0)
@@ -469,7 +472,11 @@ importers:
 
   packages/stylelint-config: {}
 
-  packages/tokens: {}
+  packages/tokens:
+    dependencies:
+      colorjs.io:
+        specifier: 'catalog:'
+        version: 0.7.1
 
   packages/ui:
     dependencies:

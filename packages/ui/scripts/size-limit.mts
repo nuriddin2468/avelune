@@ -1,7 +1,8 @@
 // Size budgets (brief §5.4, ADR 0028): one size-limit check per entry point, with the limit its entry.json declares.
 // A check measures the entry point's FESM bundle from the library build, bundled and minified by esbuild (the bundler
 // of Angular's application builder) and compressed with brotli. Angular and the other peers are left out, and so are
-// the other @avelune/ui entry points, which carry their own budgets.
+// the other @avelune/ui entry points and @avelune/tokens/brand, the brand generator that @avelune/ui/theme loads lazily
+// (ADR 0089): each carries its own budget.
 //
 //   size-limit --config scripts/size-limit.mts       (the ui:size target, after ui:build-lib)
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
@@ -49,7 +50,7 @@ export function sizeChecks(uiRoot: string, fesmDir: string, configDir: string): 
     name: `@avelune/ui/${name}`,
     path: relative(configDir, join(fesmDir, `avelune-ui-${name}.mjs`)),
     limit,
-    ignore: ['@avelune/ui/*'],
+    ignore: ['@avelune/ui/*', '@avelune/tokens/brand'],
   }));
 }
 

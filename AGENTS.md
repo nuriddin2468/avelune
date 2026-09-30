@@ -57,6 +57,7 @@ Run from the repository root. `pnpm` switches itself to the pinned 11.27.1 (`pac
 | Prove the ESLint and Stylelint configs and the `avelune` rules (rule tests + workspace fixtures) | `pnpm nx run lint-rules:test` |
 | Fonts: check / rebuild (`packages/ui/styles/fonts`) | `pnpm nx run fonts:check` / `pnpm nx run fonts:check --update` |
 | Colour primitives: check / regenerate | `pnpm nx run tokens:colors` / `pnpm nx run tokens:colors --update` |
+| Brand generator data: check / regenerate (after a colour role, a pair or the generator changes) / size | `pnpm nx run tokens:roles` / `pnpm nx run tokens:roles --update` / `pnpm nx run tokens:size` (ADR 0089) |
 | All tests: library (Vitest in Chromium, coverage gate), stories (render, `play`, axe), Node-side (`node:test`) | `pnpm nx run-many -t test` (ADR 0015, 0026) |
 | Library unit tests / story tests / schematics tests | `pnpm nx run ui:test` / `pnpm nx run storybook:test` / `pnpm nx run ui:test-schematics` |
 | Visual regression + axe sweep of every story, in the pinned Docker image: check / update baselines (then inspect every changed image) | `pnpm visual` / `pnpm visual:update`; filter with `pnpm visual --grep=<story>` (ADR 0010, 0027) |

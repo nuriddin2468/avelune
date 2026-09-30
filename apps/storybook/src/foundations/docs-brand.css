@@ -1,0 +1,45 @@
+.samples {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--ave-container-xs)), 1fr));
+  gap: var(--ave-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* An island of the page's theme with the brand's colour tokens: its canvas, text and controls follow them. */
+.sample {
+  display: grid;
+  gap: var(--ave-space-3);
+  padding: var(--ave-space-4);
+  border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+  border-radius: var(--ave-radius-lg);
+}
+
+.head,
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ave-space-2);
+}
+
+.mark {
+  inline-size: var(--ave-space-6);
+  block-size: var(--ave-space-6);
+  border-radius: var(--ave-radius-sm);
+}
+
+.name {
+  font: var(--ave-font-label-md);
+}
+
+.value {
+  font: var(--ave-font-code);
+  color: var(--ave-color-fg-muted);
+}
+
+.note {
+  font: var(--ave-font-caption);
+  color: var(--ave-color-fg-muted);
+}

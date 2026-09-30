@@ -4,9 +4,36 @@
 
 ```ts
 
+import { AveBrandAdjustment } from '@avelune/tokens/brand';
+import { AveBrandFamily } from '@avelune/tokens/brand';
+import { AveBrandInput } from '@avelune/tokens/brand';
+import { AveBrandPresetName } from '@avelune/tokens/brand/presets';
+import { aveBrandPresetNames } from '@avelune/tokens/brand/presets';
+import { aveBrandPresets } from '@avelune/tokens/brand/presets';
+import { AveBrandReport } from '@avelune/tokens/brand';
+import { AveBrandStep } from '@avelune/tokens/brand';
+import { AveBrandTheme } from '@avelune/tokens/brand';
 import { EnvironmentProviders } from '@angular/core';
 import * as i0 from '@angular/core';
 import { Signal } from '@angular/core';
+
+export { AveBrandAdjustment }
+
+export { AveBrandFamily }
+
+export { AveBrandInput }
+
+export { AveBrandPresetName }
+
+export { aveBrandPresetNames }
+
+export { aveBrandPresets }
+
+export { AveBrandReport }
+
+export { AveBrandStep }
+
+export { AveBrandTheme }
 
 // @alpha
 export function aveDelayedSpinner(waiting: Signal<boolean>): Signal<boolean>;
@@ -22,6 +49,7 @@ export type AveMotionPreference = 'system' | 'reduced';
 
 // @alpha
 export interface AveOptions {
+    readonly brand?: AveBrandInput | null;
     readonly density?: AveDensity;
     readonly motion?: AveMotionPreference;
     readonly persist?: boolean;
@@ -31,8 +59,11 @@ export interface AveOptions {
 // @alpha
 export class AveTheme {
     constructor();
+    readonly brand: Signal<AveBrandInput | null>;
+    readonly brandReport: Signal<AveBrandReport | null>;
     readonly density: Signal<AveDensity>;
     readonly motion: Signal<AveMotionPreference>;
+    setBrand(input: AveBrandInput | null): Promise<AveBrandReport | null>;
     setDensity(density: AveDensity): void;
     setMotion(motion: AveMotionPreference): void;
     setTheme(theme: AveThemePreference): void;

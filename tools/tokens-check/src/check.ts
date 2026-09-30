@@ -40,6 +40,8 @@ export interface Report {
   readonly tokens: number;
   readonly pairs: number;
   readonly themes: readonly string[];
+  /** The brand presets checked as themes of their own (ADR 0089). */
+  readonly brands: number;
 }
 
 /** Package-relative path → file contents. */
@@ -98,7 +100,7 @@ export function checkTokens(files: Files): Report {
     violations.push({ rule, file, token, message });
 
   const manifest = readManifest(files, report);
-  if (manifest === undefined) return { violations, tokens: 0, pairs: 0, themes: [] };
+  if (manifest === undefined) return { violations, tokens: 0, pairs: 0, themes: [], brands: 0 };
 
   // Parse and flatten every source file.
   const byFile = new Map<string, readonly Token[]>();
@@ -171,10 +173,17 @@ export function checkTokens(files: Files): Report {
       .filter(([, override]) => override.names === 'same')
       .map(([file]) => ({ name: themeName(file), context: contexts.get(file) ?? baseContext })),
   ];
-  const pairs = checkContrast(files, themes, report);
+  const brands = brandThemes(files, themes, report);
+  const pairs = checkContrast(files, [...themes, ...brands], report);
   checkOutput(files, baseContext, report);
 
-  return { violations, tokens: allTokens.length, pairs, themes: themes.map((theme) => theme.name) };
+  return {
+    violations,
+    tokens: allTokens.length,
+    pairs,
+    themes: themes.map((theme) => theme.name),
+    brands: new Set(brands.map((theme) => theme.name.split(' ')[0])).size,
+  };
 }
 
 type Reporter = (rule: Rule, file: string | undefined, token: string | undefined, message: string) => void;
@@ -584,6 +593,53 @@ function checkOutput(files: Files, baseContext: ReadonlyMap<string, Token>, repo
       report('output', file, token.path, `${name} is not declared; the build is stale or dropped it`);
     }
   }
+}
+
+/**
+ * Every brand preset the build wrote (`dist/brands/<name>.css`, ADR 0089) as two more themes: light and dark with the
+ * colour tokens its stylesheet declares, so every declared pair is checked for every preset here too, by this tool's
+ * own contrast code rather than the generator's.
+ */
+function brandThemes(
+  files: Files,
+  themes: readonly { readonly name: string; readonly context: ReadonlyMap<string, Token> }[],
+  report: Reporter,
+): { readonly name: string; readonly context: ReadonlyMap<string, Token> }[] {
+  const found: { readonly name: string; readonly context: ReadonlyMap<string, Token> }[] = [];
+  for (const [file, css] of files) {
+    const preset = /^dist\/brands\/([a-z0-9-]+)\.css$/.exec(file)?.[1];
+    if (preset === undefined) continue;
+    for (const [theme, selector] of [
+      ['light', ':root'],
+      ['dark', "[data-theme='dark']"],
+    ] as const) {
+      const base = themes.find((candidate) => candidate.name === theme)?.context;
+      const start = css.indexOf(`${selector} {`);
+      if (base === undefined || start === -1) {
+        report('output', file, undefined, `no ${selector} block for the ${theme} theme`);
+        continue;
+      }
+      const block = css.slice(start, css.indexOf('}', start));
+      const declared = new Map([...block.matchAll(/(--ave-[a-z0-9-]+):\s*([^;]+);/g)].map((m) => [m[1], m[2]?.trim()]));
+      const context = new Map(base);
+      for (const token of base.values()) {
+        if (token.tier !== 'semantic' || resolveType(token, base, new Set()) !== 'color') continue;
+        const name = `--ave-${token.path.replaceAll('.', '-')}`;
+        const value = declared.get(name);
+        const match = value === undefined ? null : /^#([0-9a-f]{6})([0-9a-f]{2})?$/.exec(value);
+        if (match?.[1] === undefined) {
+          report('output', file, token.path, `${name} is not declared as a hex colour in ${selector}`);
+          continue;
+        }
+        const hex = match[1];
+        const components = [0, 2, 4].map((offset) => parseInt(hex.slice(offset, offset + 2), 16) / 255);
+        const alpha = match[2] === undefined ? {} : { alpha: parseInt(match[2], 16) / 255 };
+        context.set(token.path, { ...token, value: { colorSpace: 'srgb', components, ...alpha } });
+      }
+      found.push({ name: `${preset} ${theme}`, context });
+    }
+  }
+  return found;
 }
 
 function themeName(file: string): string {

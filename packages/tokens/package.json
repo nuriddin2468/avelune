@@ -2,7 +2,7 @@
   "name": "@avelune/tokens",
   "version": "0.0.0",
   "private": true,
-  "description": "Design tokens for Avelune: DTCG sources and the Style Dictionary build (CSS custom properties, typed TS).",
+  "description": "Design tokens for Avelune: DTCG sources, the Style Dictionary build (CSS custom properties, typed TS) and the brand generator.",
   "license": "UNLICENSED",
   "type": "module",
   "exports": {
@@ -10,6 +10,15 @@
       "types": "./dist/tokens.d.ts",
       "default": "./dist/tokens.js"
     },
+    "./brand": {
+      "types": "./dist/brand/index.d.ts",
+      "default": "./dist/brand/index.js"
+    },
+    "./brand/presets": {
+      "types": "./dist/brand/presets.d.ts",
+      "default": "./dist/brand/presets.js"
+    },
+    "./brands/*.css": "./dist/brands/*.css",
     "./tokens.css": "./dist/tokens.css",
     "./contrast-pairs.json": "./contrast-pairs.json",
     "./package.json": "./package.json"
@@ -20,5 +29,8 @@
   ],
   "sideEffects": [
     "*.css"
-  ]
+  ],
+  "dependencies": {
+    "colorjs.io": "catalog:"
+  }
 }

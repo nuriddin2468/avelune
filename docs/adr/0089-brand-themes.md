@@ -60,3 +60,20 @@
 - `colorjs.io` becomes a runtime dependency of `@avelune/tokens/brand`, loaded lazily and only for an own colour.
 - The logo is the application's image. Wave 6's patterns give it a place, with light and dark sources and no token.
 - The baselines cover the presets and the stress colours, not every story × brand.
+
+## Addendum: the generator as built (Wave 6, 2026-09-30)
+
+The agent's decisions under decisions 2–9, for the product owner's review at the wave's end:
+
+- **One source.** `tokens:roles` compiles `brand/roles.ts` (every colour role per theme, the pairs, the ladder) and `brand/fingerprint.ts` from `palette.config.ts`, the semantic colour files and `contrast-pairs.json`, and fails until `--update` when they differ. The fingerprint hashes that data and the generator's code, so any change to what a brand generates invalidates every cached brand. Shadows keep the kit's `neutral-alpha`, whose base has chroma 0.006.
+- **Scales.** The accent is the ladder at the colour's hue, its peak chroma the colour's over its step's share of the curve, at most 0.25. The colour stays exact on its step when it is within 0.025 of the step's lightness and every pair passes. Neutrals take the hue at up to the kit's 0.01 chroma, and none below 0.02 (a grey brand). The kit's orange keeps the kit's scales: its output equals `tokens.css` (tested).
+- **The fill** is the step nearest the colour within 600–850 in light (white text) and 200–400 in dark (dark text); hover and pressed keep their distance from it. A failing pair lowers the chroma of the brand's steps it uses by a fifth per round, down to grey.
+- **Status distance:** ΔE_OK 0.04 between the accent and a status fill, in both themes: the kit's own orange and red are 0.040 apart in dark. Closer to danger moves danger's hue within 352°–32°, nearest to 22° first. Closer to info, success or warning is reported. In dark the kit's own accent and danger read almost alike; raising the minimum means changing the kit's palette first.
+- **Presets:** orange, red, yellow, green, teal, cyan, blue, navy, indigo, purple, magenta, graphite (`brand/presets.ts`). Each is in `dist/brands/<name>.css`. `tokens-check` checks every preset's pairs in both themes with its own contrast code. The property test runs 3000 seeded colours and seven stress colours through an independent check.
+- **Applying it.**
+  - The stylesheet is a constructed `CSSStyleSheet` adopted after the page's own. It is not an inline style, so a strict `style-src` needs no nonce (Chromium 1243: applied under `style-src 'self'`, where a `<style>` element was blocked; Firefox and WebKit not checked locally).
+  - `localStorage` (`avelune:brand`) keeps the input, the fingerprint, the stylesheet and the report. They apply at bootstrap without the generator while the fingerprint matches, which `@avelune/tokens/brand/presets` exports with the presets.
+  - A stored stylesheet applies only if every line is one the generator writes. Another tab's brand is followed. On the server only the signals change.
+- **Loading.** The generator, with colorjs.io imported module by module, is 20.5 kB brotli (`tokens:size`, 22.6 kB). It loads for a preset too, so there is one code path, but only once per device and fingerprint. `@avelune/ui/theme` grew to 2.5 kB (2.8 kB).
+- **Guards.** Entry budgets leave the lazy generator out. Nx's lazy-load rule allows the other entry points of `@avelune/tokens`, anchored; a lint-rules fixture proves a static import of the generator in the kit fails.
+- **Later.** Phase 6's pre-paint script (ADR 0032) applies the cached stylesheet before the first paint.

@@ -11,6 +11,9 @@ import {
   type Signal,
   type WritableSignal,
 } from '@angular/core';
+import { aveBrandFingerprint } from '@avelune/tokens/brand/presets';
+import type { AveBrandInput, AveBrandReport } from '@avelune/tokens/brand';
+import { BrandSheet, brandStorageKey, isBrandInput, parseStoredBrand, type StoredBrand } from './brand';
 
 /**
  * The colour theme a user prefers. `system` follows the operating system (`prefers-color-scheme`).
@@ -48,6 +51,11 @@ export interface AveOptions {
   readonly motion?: AveMotionPreference;
   /** Whether the user's choices are kept in `localStorage` for later visits and shared across tabs. Default `true`. */
   readonly persist?: boolean;
+  /**
+   * The brand until {@link AveTheme.setBrand} sets one: a preset's name or a `#rrggbb` colour (ADR 0089). Default:
+   * none, the colours of the kit or of the product's own brand stylesheet.
+   */
+  readonly brand?: AveBrandInput | null;
 }
 
 /** The options of provideAvelune, read by AveTheme. Not public: applications pass them to provideAvelune. */
@@ -125,6 +133,15 @@ export class AveTheme {
   /** The motion preference. */
   readonly motion: Signal<AveMotionPreference>;
 
+  private readonly brandSheet: BrandSheet | undefined;
+  private readonly brandState = signal<StoredBrand | null>(null);
+  private brandRequest = 0;
+
+  /** The brand the page shows: a preset's name or a colour; `null` for the kit's or the product's own colours. */
+  readonly brand = computed(() => this.brandState()?.input ?? null);
+  /** What the generator adapted for the brand the page shows (ADR 0089), for a settings screen to explain. */
+  readonly brandReport = computed(() => this.brandState()?.report ?? null);
+
   constructor() {
     const options = inject(AVE_OPTIONS, { optional: true }) ?? {};
     const view = inject(DOCUMENT).defaultView;
@@ -141,10 +158,18 @@ export class AveTheme {
     this.motion = computed(() => this.preferences().motion);
     this.apply();
 
+    // The last brand of this device applies at once, without the generator, while the kit still generates it alike.
+    this.brandSheet = browser ? new BrandSheet(inject(DOCUMENT)) : undefined;
+    const cached = this.storedBrand();
+    if (cached !== undefined) this.showBrand(cached);
+    else if (options.brand !== undefined && options.brand !== null) void this.setBrand(options.brand);
+
     if (this.storage !== null && view !== null) {
       const storage = this.storage;
       const follow = (event: StorageEvent) => {
-        if (event.storageArea !== storage || (event.key !== null && event.key !== storageKey)) return;
+        if (event.storageArea !== storage) return;
+        if (event.key === null || event.key === brandStorageKey) this.followBrand(event.newValue);
+        if (event.key !== null && event.key !== storageKey) return;
         this.preferences.set({ ...defaults, ...parsePreferences(event.newValue) });
         this.apply();
       };
@@ -170,13 +195,75 @@ export class AveTheme {
     this.choose({ motion });
   }
 
+  /**
+   * Sets the brand: a preset's name or a `#rrggbb` colour, or `null` for the kit's or the product's own colours
+   * (ADR 0089). The generator loads the first time a device needs it; its stylesheet is kept for the next visit and
+   * shared across tabs. Resolves with what the generator adapted, and rejects an input that is neither.
+   */
+  async setBrand(input: AveBrandInput | null): Promise<AveBrandReport | null> {
+    const request = ++this.brandRequest;
+    if (input === null) {
+      this.brandSheet?.remove();
+      this.brandState.set(null);
+      this.write(brandStorageKey, null);
+      return null;
+    }
+    if (!isBrandInput(input))
+      throw new Error(`AveTheme.setBrand: ${String(input)} is neither a preset nor a #rrggbb colour`);
+    const cached = this.storedBrand();
+    if (cached?.input === input) {
+      this.showBrand(cached);
+      return cached.report;
+    }
+    const { generateAveBrand } = await import('@avelune/tokens/brand');
+    const brand = generateAveBrand(input);
+    const stored: StoredBrand = { input, fingerprint: brand.fingerprint, css: brand.css, report: brand.report };
+    // A later call won while the generator loaded.
+    if (request !== this.brandRequest) return stored.report;
+    this.showBrand(stored);
+    this.write(brandStorageKey, JSON.stringify(stored));
+    return stored.report;
+  }
+
   private choose(change: Partial<Preferences>): void {
     this.preferences.update((preferences) => ({ ...preferences, ...change }));
     this.apply();
+    this.write(storageKey, JSON.stringify(this.preferences()));
+  }
+
+  private write(key: string, value: string | null): void {
     try {
-      this.storage?.setItem(storageKey, JSON.stringify(this.preferences()));
+      if (value === null) this.storage?.removeItem(key);
+      else this.storage?.setItem(key, value);
     } catch {
       // Storage is full or blocked: the choice lasts for this visit.
+    }
+  }
+
+  /** The brand kept on this device, while the kit generates it alike (the same fingerprint). */
+  private storedBrand(): StoredBrand | undefined {
+    try {
+      const stored = parseStoredBrand(this.storage?.getItem(brandStorageKey) ?? null);
+      return stored?.fingerprint === aveBrandFingerprint ? stored : undefined;
+    } catch {
+      return undefined;
+    }
+  }
+
+  private showBrand(brand: StoredBrand): void {
+    this.brandSheet?.apply(brand.css);
+    this.brandState.set(brand);
+  }
+
+  /** Another tab set or cleared the brand. */
+  private followBrand(json: string | null): void {
+    const brand = parseStoredBrand(json);
+    this.brandRequest++;
+    if (brand?.fingerprint === aveBrandFingerprint) {
+      this.showBrand(brand);
+    } else {
+      this.brandSheet?.remove();
+      this.brandState.set(null);
     }
   }
 

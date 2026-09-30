@@ -1,0 +1,14 @@
+/* Compiles the brand generator (brand/*.ts, ADR 0089) into the published dist/brand, rewriting its .ts imports. */
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "brand",
+    "outDir": "dist/brand",
+    "declaration": true,
+    "importHelpers": false,
+    "sourceMap": false,
+    "rewriteRelativeImportExtensions": true,
+    "types": []
+  },
+  "files": ["brand/index.ts", "brand/presets.ts"]
+}

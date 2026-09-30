@@ -94,7 +94,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0086](0086-list.md) | List: records on one surface between lines, and rows that fade and open as they come and go | Accepted |
 | [0087](0087-data-table.md) | DataTable: columns as data, header buttons that sort, checkboxes that choose, a page size in the pagination | Accepted |
 | [0088](0088-font-check-without-white-space.md) | The visual suite's font check leaves white space out of the text it checks | Accepted |
-| [0089](0089-brand-themes.md) | Brand themes: a product's accent at build time, a tenant's at runtime, one generator | Accepted |
+| [0089](0089-brand-themes.md) | Brand themes: a product's accent at build time, a tenant's at runtime, one generator | Accepted; the generator as built in addendum (Wave 6) |
 | [0090](0090-storybook-mcp-and-the-components-manifest.md) | Storybook MCP: the components manifest, the kit's component in every story file, snippets an application writes | Accepted |
 
 ## Template

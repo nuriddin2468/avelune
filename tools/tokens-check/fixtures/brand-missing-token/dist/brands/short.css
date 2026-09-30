@@ -1,0 +1,13 @@
+/* A brand preset as the generator writes it (ADR 0089): every colour token, per theme, as a hex colour. */
+@layer tokens {
+  :root {
+    --ave-color-bg-surface: #ffffff;
+    --ave-color-bg-hover: #00000014;
+    --ave-color-fg-default: #1f2328;
+  }
+
+  [data-theme='dark'] {
+    --ave-color-bg-surface: #16181c;
+    --ave-color-bg-hover: #ffffff14;
+  }
+}

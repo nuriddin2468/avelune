@@ -7,18 +7,18 @@
   "targets": {
     "build": {
       "executor": "nx:run-commands",
-      "dependsOn": ["^build", "colors"],
+      "dependsOn": ["^build", "colors", "roles"],
       "inputs": [
         "production",
         {
-          "externalDependencies": ["style-dictionary", "typescript"]
+          "externalDependencies": ["style-dictionary", "typescript", "colorjs.io"]
         }
       ],
       "outputs": ["{projectRoot}/dist"],
       "cache": true,
       "options": {
         "cwd": "{projectRoot}",
-        "commands": ["node scripts/build.ts", "tsc -p tsconfig.dist.json"],
+        "commands": ["node scripts/build.ts", "tsc -p tsconfig.dist.json", "tsc -p tsconfig.brand.json"],
         "parallel": false
       }
     },
@@ -39,6 +39,27 @@
         "command": "node scripts/generate-colors.ts"
       }
     },
+    "roles": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/scripts/**/*",
+        "!{projectRoot}/scripts/**/*.spec.ts",
+        "{projectRoot}/src/semantic.light.tokens.json",
+        "{projectRoot}/src/semantic.dark.tokens.json",
+        "{projectRoot}/brand/**/*.ts",
+        "!{projectRoot}/brand/**/*.spec.ts",
+        "{projectRoot}/contrast-pairs.json",
+        "{workspaceRoot}/.prettierrc.json",
+        {
+          "externalDependencies": ["prettier"]
+        }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node scripts/generate-roles.ts"
+      }
+    },
     "test": {
       "executor": "nx:run-commands",
       "inputs": [
@@ -50,14 +71,31 @@
       "cache": true,
       "options": {
         "cwd": "{projectRoot}",
-        "command": "node --test \"scripts/**/*.spec.ts\""
-      }
+        "command": "node --test \"scripts/**/*.spec.ts\" \"brand/**/*.spec.ts\""
+      },
+      "dependsOn": ["build"]
     },
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {
         "cwd": "{projectRoot}",
         "command": "tsc -p tsconfig.json"
+      }
+    },
+    "size": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "inputs": [
+        "{projectRoot}/dist/**/*",
+        "{projectRoot}/scripts/size-limit.mts",
+        {
+          "externalDependencies": ["size-limit", "@size-limit/file", "@size-limit/esbuild", "colorjs.io"]
+        }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "size-limit --config scripts/size-limit.mts"
       }
     }
   }

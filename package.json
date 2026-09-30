@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@avelune/icons": "workspace:*",
+    "@avelune/tokens": "workspace:*",
     "@analogjs/vite-plugin-angular": "catalog:",
     "@axe-core/playwright": "catalog:",
     "@angular-devkit/architect": "catalog:",

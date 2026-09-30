@@ -7,7 +7,7 @@ import { readFiles } from './files.ts';
 
 const workspaceRoot = join(import.meta.dirname, '..', '..', '..');
 const packageDir = resolve(process.argv[2] ?? join(workspaceRoot, 'packages', 'tokens'));
-const { violations, tokens, pairs, themes } = checkTokens(readFiles(packageDir));
+const { violations, tokens, pairs, themes, brands } = checkTokens(readFiles(packageDir));
 
 const format = (violation: Violation) =>
   `  [${violation.rule}] ${[violation.file, violation.token].filter(Boolean).join(' › ')}: ${violation.message}`;
@@ -18,4 +18,6 @@ if (violations.length > 0) {
   );
   process.exit(1);
 }
-console.log(`tokens-check: ${tokens} tokens and ${pairs} contrast checks (${themes.join(', ')}) passed`);
+console.log(
+  `tokens-check: ${tokens} tokens and ${pairs} contrast checks (${themes.join(', ')}; ${String(brands)} brand presets in both) passed`,
+);

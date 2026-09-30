@@ -17,7 +17,7 @@ When two good options conflict, the higher principle wins.
 Every value comes from a token ([packages/tokens](../packages/tokens), browsable in Storybook under Foundations). Applications use the semantic tokens (`--ave-color-fg-muted`, `--ave-space-4`) and never a raw colour, length, duration or easing.
 
 - **Type:** body text is 14/20 (`font.body-md`). Headings, labels and captions have their own roles; three weights at most.
-- **Colour:** one accent, orange, for the primary action, selection and focus. Status colours (info, success, warning, danger) carry meaning and are never decoration.
+- **Colour:** one accent for the primary action, selection and focus: the kit's orange, or a product's or a tenant's brand through `AveTheme.setBrand` (ADR 0089), never by writing `--ave-*` values. The exact brand colour is for the logo and marks only; the generator picks the shades that keep every text and boundary readable. Status colours (info, success, warning, danger) carry meaning and are never decoration.
 - **Shape:** radii by hierarchy: `radius.sm` for small parts inside controls (a checkbox), `radius.md` for controls and menu items, `radius.lg` for cards, popovers and dialogs. Nested corners are concentric: inner radius = outer radius − the gap between them.
 - **Themes and density:** light and dark from day one, comfortable and compact. Review a screen in both themes; never assume dark from light.
 

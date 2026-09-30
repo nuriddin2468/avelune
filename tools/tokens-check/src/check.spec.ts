@@ -56,6 +56,16 @@ const cases: readonly { readonly name: string; readonly rule: Rule; readonly mes
     rule: 'contrast',
     message: /translucent background needs an "over" surface/,
   },
+  {
+    name: 'brand-contrast',
+    rule: 'contrast',
+    message: /^pale light: color\.fg\.default on color\.bg\.surface is 2\.\d\d:1, below 4\.5:1/,
+  },
+  {
+    name: 'brand-missing-token',
+    rule: 'output',
+    message: /--ave-color-fg-default is not declared as a hex colour in \[data-theme='dark'\]/,
+  },
   { name: 'output-primitive', rule: 'output', message: /primitive emitted as --ave-color-grey-900/ },
   { name: 'output-missing-token', rule: 'output', message: /--ave-space-1 is not declared/ },
 ];

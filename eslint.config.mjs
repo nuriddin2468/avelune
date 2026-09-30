@@ -192,6 +192,11 @@ export default defineConfig(
           allowCircularSelfDependency: true,
           allow: [],
           depConstraints,
+          // @avelune/ui/theme loads the brand generator, @avelune/tokens/brand, lazily (ADR 0089). Nx sees one project,
+          // so these other entry points of the tokens package stay static; a static import of the generator itself is
+          // still an error (lint-rules fixture boundary-static-brand-generator.ts). Nx reads each as an unanchored
+          // regular expression, hence the anchors.
+          checkDynamicDependenciesExceptions: ['^@avelune/tokens$', '^@avelune/tokens/brand/presets$'],
         },
       ],
     },

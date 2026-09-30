@@ -1,7 +1,10 @@
 // Colour generation in OKLCH (ADR 0011). Pure functions: palette.config.ts is the input, generate-colors.ts writes
 // the result. Every colour is computed at the exact OKLCH lightness and hue of its step, with chroma capped at the sRGB
 // boundary, then serialised as 8-bit sRGB hex. Contrast is always measured on that hex, the colour the browser paints.
-import Color from 'colorjs.io';
+// The maths is brand/color.ts, which the brand generator shares (ADR 0089).
+import { contrast as contrastOfHex, hexOf, hueDistance, maxChroma, oklchOf, round, type Hex } from '../brand/color.ts';
+
+export type { Hex };
 
 /** Steps of every scale, light to dark. */
 export const steps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 850, 900, 950] as const;
@@ -60,8 +63,6 @@ export interface PaletteConfig<S extends string = string> {
 export function definePalette<const S extends string>(config: PaletteConfig<S>): PaletteConfig<S> {
   return config;
 }
-
-export type Hex = `#${string}`;
 
 export interface GeneratedColor {
   /** Six-digit sRGB hex, lower case. */
@@ -140,7 +141,7 @@ export function generatePalette<S extends string>(config: PaletteConfig<S>): Pal
       }
 
       const chroma = Math.min(scale.chroma * curve[step], maxChroma(target, scale.hue));
-      const color = measure(toHex(target, chroma, scale.hue), 1, false);
+      const color = measure(hexOf(target, chroma, scale.hue), 1, false);
       if (Math.abs(color.oklch[0] - target) > lightnessRoundingTolerance) {
         violations.push(`${name}.${step}: lightness ${fixed(color.oklch[0])} drifted from ${target}`);
       }
@@ -267,7 +268,7 @@ function oklchText(color: GeneratedColor): string {
 
 /** WCAG 2.x contrast ratio of two opaque colours (ADR 0011: the normative metric). */
 export function contrast(a: GeneratedColor, b: GeneratedColor): number {
-  return new Color(a.hex).contrast(new Color(b.hex), 'WCAG21');
+  return contrastOfHex(a.hex, b.hex);
 }
 
 function checkNeutralTint<S extends string>(
@@ -292,48 +293,13 @@ function checkNeutralTint<S extends string>(
   }
 }
 
-/** The largest chroma at this lightness and hue that is still inside sRGB. */
-function maxChroma(lightness: number, hue: number): number {
-  let low = 0;
-  let high = 0.5;
-  for (let i = 0; i < 40; i++) {
-    const middle = (low + high) / 2;
-    if (new Color('oklch', [lightness, middle, hue]).inGamut('srgb')) low = middle;
-    else high = middle;
-  }
-  return low;
-}
-
-function toHex(lightness: number, chroma: number, hue: number): Hex {
-  // Already inside sRGB by construction; the CSS Color 4 gamut mapping is kept as a guard (ADR 0011).
-  const srgb = new Color('oklch', [lightness, chroma, hue]).toGamut({ space: 'srgb', method: 'css' }).to('srgb');
-  const channels = srgb.coords.map((value) => Math.round(Math.min(1, Math.max(0, value ?? 0)) * 255));
-  return `#${channels.map((channel) => channel.toString(16).padStart(2, '0')).join('')}`;
-}
-
 function measure(hex: Hex, alpha: number, exact: boolean): GeneratedColor {
-  const [lightness, chroma, hue] = new Color(hex).to('oklch').coords;
-  return {
-    hex,
-    alpha,
-    oklch: [round(lightness ?? 0, 4), round(chroma ?? 0, 4), round(Number.isNaN(hue) ? 0 : (hue ?? 0), 2)],
-    exact,
-  };
+  return { hex, alpha, oklch: oklchOf(hex), exact };
 }
 
 function normaliseHex(hex: string): Hex {
   if (!/^#[0-9a-f]{6}$/i.test(hex)) throw new PaletteError([`${hex} is not a six-digit hex colour`]);
   return hex.toLowerCase() as Hex;
-}
-
-function hueDistance(a: number, b: number): number {
-  const distance = Math.abs(a - b) % 360;
-  return distance > 180 ? 360 - distance : distance;
-}
-
-function round(value: number, digits: number): number {
-  const factor = 10 ** digits;
-  return Math.round(value * factor) / factor;
 }
 
 function fixed(value: number): string {

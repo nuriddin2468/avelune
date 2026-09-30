@@ -1,12 +1,14 @@
 // Token build (ADR 0003, 0017): resolves the DTCG sources with Style Dictionary and writes
 //   dist/tokens.css   semantic and component tokens as --ave-* custom properties, per theme, density and motion
 //   dist/tokens.ts    typed values, CSS variable names and the TokenName union
+//   dist/brands/*.css each brand preset's colour tokens, for a page that links one without the generator (ADR 0089)
 // Primitives are resolved but never emitted.
 //
 //   node scripts/build.ts [--out <dir>]
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import StyleDictionary from 'style-dictionary';
+import { aveBrandPresetNames, generateAveBrand } from '../brand/index.ts';
 import { modes, readManifest, type Mode } from './sources.ts';
 import { convertToken, isTokenType, type ConvertedToken, type TokenType } from './token-values.ts';
 
@@ -77,6 +79,12 @@ mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, 'tokens.css'), css);
 writeFileSync(join(outDir, 'tokens.ts'), typescript(base, modeValues));
 console.log(`build: wrote ${base.length} tokens to ${join(outDir, 'tokens.css')} and tokens.ts`);
+
+// Each preset through the generator, as a tenant's own colour goes (brand/roles.ts is checked by `tokens:roles`).
+mkdirSync(join(outDir, 'brands'), { recursive: true });
+for (const name of aveBrandPresetNames)
+  writeFileSync(join(outDir, 'brands', `${name}.css`), generateAveBrand(name).css);
+console.log(`build: wrote ${String(aveBrandPresetNames.length)} brand presets to ${join(outDir, 'brands')}`);
 
 async function resolveMode(mode: Mode): Promise<readonly EmittedToken[]> {
   const dictionary = new StyleDictionary({
