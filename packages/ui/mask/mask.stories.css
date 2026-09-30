@@ -1,0 +1,48 @@
+/* The frame of the Mask stories. Stories only; the mask adds no styles of its own. */
+@layer components {
+  :host {
+    display: block;
+    padding: var(--ave-space-6);
+  }
+
+  .stack {
+    display: grid;
+    gap: var(--ave-space-4);
+  }
+
+  .narrow {
+    max-inline-size: var(--ave-container-xs);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(calc(var(--ave-space-16) * 4), 1fr));
+    gap: var(--ave-space-4);
+  }
+
+  /* A plain label until FormField: label type above the field, 4px apart, the hint under it. */
+  .field {
+    display: grid;
+    gap: var(--ave-space-1);
+  }
+
+  .label {
+    font: var(--ave-font-label-md);
+  }
+
+  .hint {
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+
+  .error {
+    color: var(--ave-color-danger-fg);
+  }
+
+  .value {
+    margin: 0;
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-md);
+    font-variant-numeric: tabular-nums;
+  }
+}

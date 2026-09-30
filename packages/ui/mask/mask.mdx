@@ -1,0 +1,93 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as MaskStories from './mask.stories';
+
+<Meta of={MaskStories} />
+
+# Mask
+
+`aveMask` on the kit's input lets a person type a number of a known shape: a phone, a tax number, a card. The field groups it as it is written (`+998 90 123-45-67`), takes it pasted in any shape, and writes nothing that does not fit. The form holds the clean value (`+998901234567`) (ADR 0100).
+
+```ts
+import { AveMask, aveMaskPattern } from '@avelune/ui/mask';
+```
+
+<Canvas of={MaskStories.Default} />
+
+## When to use
+
+- For a value of a fixed shape: phones, STIR (INN), JShShIR (PINFL), passport and ID card numbers, bank cards and accounts, a bank's MFO, postcodes.
+- For a code of your product's own shape, with a pattern, or with a `RegExp` that filters what is typed.
+
+## When not to use
+
+- For free text, a name or an address: use the input alone.
+- For an amount of money or a quantity: use `type="number"` or a plain input with `inputmode="decimal"`; a mask for numbers with the locale's separators is not in the kit yet.
+- For a date: use DatePicker.
+
+## Presets
+
+<Canvas of={MaskStories.Presets} />
+
+| Preset     | Shown                      | The form holds                     |
+| ---------- | -------------------------- | ---------------------------------- |
+| `phone`    | `+998 90 123-45-67`        | `+998901234567` (E.164)            |
+| `stir`     | `302345678`                | 9 digits                           |
+| `pinfl`    | `31203865210024`           | 14 digits                          |
+| `passport` | `AD1234567`                | two Latin letters and seven digits |
+| `card`     | `8600 1234 5678 9012`      | 16 digits                          |
+| `account`  | `2340 2000 3001 0000 1010` | 20 digits                          |
+| `mfo`      | `00450`                    | 5 digits                           |
+| `postcode` | `100084`                   | 6 digits                           |
+
+The phone adds `+998 ` when the field gets focus and takes it away when the person leaves it without a digit, so an empty field stays empty. The caret never goes into the country code. A pasted number loses everything but its digits, and a leading 998 of a whole international number.
+
+## Patterns and filters
+
+<Canvas of={MaskStories.Patterns} />
+
+- A pattern: `0` a digit, `A` a Latin letter (written upper case), `a` any letter, `*` a letter or a digit, and `\` before one of them to write it as it is. Everything else is written for the person: `{ pattern: 'ДК-0000/000' }`.
+- The form holds the characters typed into the pattern's places. `value: 'shown'` holds the text as shown instead, when the written characters belong to the value.
+- A `RegExp` is a filter: the whole text must match it after every change, so write one that accepts a partial text (`/^[A-Z0-9-]{0,12}$/`). The form holds the text.
+- Define patterns and filters in the component (`protected readonly code = /…/`); templates cannot hold a `RegExp`.
+
+## States
+
+<Canvas of={MaskStories.States} />
+
+The mask adds no look: the input keeps its sizes and states, readonly and disabled included.
+
+## Forms
+
+<Canvas of={MaskStories.SignalForms} />
+
+- **Signal Forms:** `[formField]="contact.phone"` binds the clean value. `required`, `disabled` and `readonly` reach the input. `pattern()`, `minLength()` and `maxLength()` check the value and never the grouped text.
+- **Reactive Forms:** `[formControl]` or `formControlName`; the mask takes the place of the native value accessor.
+- **A number typed in part** is held as it is (`+99890123`). `aveMaskPattern(mask)` gives the `RegExp` a complete value matches: `pattern(path.phone, aveMaskPattern('phone'))` or `Validators.pattern(aveMaskPattern('card'))`. An empty value passes it, so `required` stays yours, and so do the error's words.
+- **A value the program writes** shows grouped, in any shape the mask can read: `+998901234567`, `998901234567` or `901234567` for a phone.
+
+## Content
+
+- Say the format in the field's hint: "Например, +998 90 123-45-67". Not in the placeholder, which disappears as people type.
+- Give a phone `type="tel"` and `autocomplete="tel"`, so the browser offers the person's number. The mask sets `inputmode` for the keyboard (`tel`, `numeric`, or `text` with capital letters for a passport) unless you set it.
+
+<Canvas of={MaskStories.LongText} />
+
+## Keyboard
+
+Native: typing, deleting, selecting, cutting and pasting work as in any field. Deleting next to a written character (a space, a hyphen) deletes the digit beside it too. Undo and redo step through what was typed.
+
+## Accessibility
+
+- The input keeps its label, hint and error; the hint says the format (WCAG 3.3.2). A character that does not fit is not written, and screen readers read the grouped value as it is.
+- `autocomplete` tokens are yours to give (WCAG 1.3.5): `tel` for a phone, `cc-number` for a card.
+
+## Motion
+
+None.
+
+## Do and don't
+
+- Do say the format in the hint, with an example.
+- Do validate a complete value with `aveMaskPattern`, and say what is missing in the error.
+- Don't mask free text, and don't show the mask's shape with underscores in the value.
+- Don't turn a mask on for a field that already holds values of another shape without migrating them.

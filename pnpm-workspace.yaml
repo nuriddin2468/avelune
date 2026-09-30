@@ -102,6 +102,9 @@ catalog:
   '@size-limit/esbuild': 14.0.0
   # API reports
   '@microsoft/api-extractor': 7.59.2
+  # Input masks (ADR 0100)
+  '@maskito/core': 5.6.0
+  '@maskito/kit': 5.6.0
   # Tokens (ADR 0003, 0011)
   colorjs.io: 0.7.1
   style-dictionary: 5.5.5

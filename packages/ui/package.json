@@ -18,6 +18,8 @@
   "dependencies": {
     "@avelune/icons": "workspace:*",
     "@avelune/tokens": "workspace:*",
+    "@maskito/core": "catalog:",
+    "@maskito/kit": "catalog:",
     "tslib": "^2.8.1"
   },
   "sideEffects": [

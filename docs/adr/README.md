@@ -32,7 +32,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0024](0024-stylelint-configuration.md) | Stylelint: token-only values, same-element nesting, logical exceptions derived from browser data | Accepted; no nesting under `:host` since Angular 22.2 (addendum) |
 | [0025](0025-storybook-jit.md) | Storybook compiles stories JIT; ngc type-checks them | Accepted |
 | [0026](0026-unit-and-story-tests.md) | Unit and story tests: Angular's unit-test builder in Chromium, per-file thresholds, failing fixtures | Accepted |
-| [0027](0027-browser-suites-in-the-pinned-container.md) | Browser suites: visual, axe sweep and invariants in the pinned container | Accepted; one screen per route in addendum (2026-09-29) |
+| [0027](0027-browser-suites-in-the-pinned-container.md) | Browser suites: visual, axe sweep and invariants in the pinned container | Accepted; one screen per route in addendum (2026-09-29); a fixed date, not Playwright's clock, in addendum (2026-09-30) |
 | [0028](0028-size-budget-per-entry-point.md) | Size budgets: one per entry point, declared in its manifest | Accepted |
 | [0029](0029-repository-guardrails-proven.md) | Repository guardrails: project tags, browser floor, commits, formatting, dependency policy | Accepted; the pinned release age changed by 0042 |
 | [0030](0030-global-stylesheet.md) | Global stylesheet: one entry, layered files, loaded through the consumer's bundler; one focus ring | Accepted |
@@ -72,9 +72,9 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0064](0064-menu.md) | Menu: a menu button that draws its own trigger, Angular Aria's menu in the kit's popup, items as data | Accepted |
 | [0065](0065-popover.md) | Popover: a non-modal dialog under its own button, focus in and back, closed by Escape, a press or focus leaving | Accepted |
 | [0066](0066-dialog-and-confirm-dialog.md) | Dialog and ConfirmDialog: a native modal dialog that is its own backdrop, the catalog's classes, an announcer inside | Accepted |
-| [0067](0067-drawer.md) | Drawer: the kit's dialog against an edge, and a token that turns its slide into a fade under reduced motion | Accepted |
+| [0067](0067-drawer.md) | Drawer: the kit's dialog against an edge, and a token that turns its slide into a fade under reduced motion | Accepted; the dialog clips without scrolling in addendum (2026-09-30) |
 | [0068](0068-toast.md) | Toast: a service, a popover region that moves into an open modal dialog, a queue of three, F8 | Accepted |
-| [0069](0069-overlay-invariants.md) | Overlay invariants: one control per kind, opened as a person does, and CDK kept from closing on Escape | Accepted; the largest corner in addendum (2026-09-29) |
+| [0069](0069-overlay-invariants.md) | Overlay invariants: one control per kind, opened as a person does, and CDK kept from closing on Escape | Accepted; the largest corner in addendum (2026-09-29); a script's focus target is not interactive in addendum (2026-09-30) |
 | [0070](0070-breadcrumbs.md) | Breadcrumbs: a trail from data, links through Angular's router, the current page as text | Accepted |
 | [0071](0071-tabs.md) | Tabs: Angular Aria's tabs, tabs declared as panels, an indicator that slides on `timing.slide` | Accepted |
 | [0072](0072-sidebar-nav.md) | SidebarNav: the product's navigation from data, current pages from the router, groups that disclose | Accepted; a page's count in addendum (0079) |
@@ -97,14 +97,15 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0089](0089-brand-themes.md) | Brand themes: a product's accent at build time, a tenant's at runtime, one generator | Accepted; the generator as built in addendum (Wave 6) |
 | [0090](0090-storybook-mcp-and-the-components-manifest.md) | Storybook MCP: the components manifest, the kit's component in every story file, snippets an application writes | Accepted |
 | [0091](0091-patterns.md) | Patterns: page layouts the application fills, in their own layer, adapting to their container | Accepted |
-| [0092](0092-app-shell.md) | App shell: the application bar with the logo, the navigation as a column or a drawer, one main | Accepted |
+| [0092](0092-app-shell.md) | App shell: the application bar with the logo, the navigation as a column or a drawer, one main | Accepted; the button and the link home share a row in addendum |
 | [0093](0093-search-header.md) | SearchHeader: a list page's heading, count and main action over the search and the filters' button | Accepted |
-| [0094](0094-filter-panel.md) | FilterPanel: a list's filters in a column that opens beside it, or in a drawer; the applied ones as tags | Accepted |
+| [0094](0094-filter-panel.md) | FilterPanel: a list's filters in a column that opens beside it, or in a drawer; the applied ones as tags | Accepted; the drawer's fields and actions in addendum |
 | [0095](0095-list-page.md) | ListPage: a register's header, notices, applied filters, and the filters' column beside the list | Accepted |
 | [0096](0096-list-detail.md) | ListDetail: a list beside the record it opens, or one of them at a time on a narrow page | Accepted |
-| [0097](0097-form-page.md) | FormPage: the application's form with its heading, and its actions in a bar that sticks to the window's bottom | Accepted |
+| [0097](0097-form-page.md) | FormPage: the application's form with its heading, and its actions in a bar that sticks to the window's bottom | Accepted; the scroll padding follows the bar in addendum |
 | [0098](0098-dashboard.md) | Dashboard: a page's heading, a row of key figures, and cards in up to three columns | Accepted |
 | [0099](0099-settings-page.md) | SettingsPage: sections as pages in a column at the start, or the list and then a section on a phone | Accepted |
+| [0100](0100-input-mask.md) | Input mask: Maskito under a kit directive on the native input, the clean value in the form | Accepted |
 
 ## Template
 

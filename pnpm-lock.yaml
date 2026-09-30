@@ -72,6 +72,12 @@ catalogs:
     '@eslint/js':
       specifier: 10.0.1
       version: 10.0.1
+    '@maskito/core':
+      specifier: 5.6.0
+      version: 5.6.0
+    '@maskito/kit':
+      specifier: 5.6.0
+      version: 5.6.0
     '@mdn/browser-compat-data':
       specifier: 8.1.2
       version: 8.1.2
@@ -315,6 +321,12 @@ importers:
       '@eslint/js':
         specifier: 'catalog:'
         version: 10.0.1(eslint@10.11.0(jiti@2.6.1)(supports-color@7.2.0))
+      '@maskito/core':
+        specifier: 'catalog:'
+        version: 5.6.0
+      '@maskito/kit':
+        specifier: 'catalog:'
+        version: 5.6.0(@maskito/core@5.6.0)
       '@mdn/browser-compat-data':
         specifier: 'catalog:'
         version: 8.1.2
@@ -504,6 +516,12 @@ importers:
       '@avelune/tokens':
         specifier: workspace:*
         version: link:../tokens
+      '@maskito/core':
+        specifier: 'catalog:'
+        version: 5.6.0
+      '@maskito/kit':
+        specifier: 'catalog:'
+        version: 5.6.0(@maskito/core@5.6.0)
       tslib:
         specifier: ^2.8.1
         version: 2.8.1
@@ -2096,6 +2114,14 @@ packages:
     resolution: {integrity: sha512-1g7G0knRX2iV/voDu54yxrGqw5Dk0w2oIYb7dgJq8IkOi+m7wbD8Q3QpPFjh0C01G58S88dqGn03len6UPCXsg==}
     cpu: [x64]
     os: [win32]
+
+  '@maskito/core@5.6.0':
+    resolution: {integrity: sha512-CchnaPiXWy4llMEsb6AG4o7CwlyS2j/1ttHQXo0FMnLhcA5OwlFgMpEb6gCZkUN5a0Bns8UTjm7eUpVBHRoqUQ==}
+
+  '@maskito/kit@5.6.0':
+    resolution: {integrity: sha512-QbOElQlC/fUlZG7KhNKDDTovXCp1hnm9BT6JzffW/y3hKEepDn3iWAbUxi4mHnQEkrWw24LWI1j8VENdlGgmbQ==}
+    peerDependencies:
+      '@maskito/core': ^5.6.0
 
   '@mdn/browser-compat-data@8.1.2':
     resolution: {integrity: sha512-pe2qO3VDkRybAvmpr1UfC4zMnvOiVHUp4EMJU8RboulqzEvearRrUWCi/Y0QVRvkfe6Fh5Nahdk9uncU9anrFw==}
@@ -8720,6 +8746,12 @@ snapshots:
 
   '@lmdb/lmdb-win32-x64@3.5.6':
     optional: true
+
+  '@maskito/core@5.6.0': {}
+
+  '@maskito/kit@5.6.0(@maskito/core@5.6.0)':
+    dependencies:
+      '@maskito/core': 5.6.0
 
   '@mdn/browser-compat-data@8.1.2': {}
 

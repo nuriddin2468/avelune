@@ -110,6 +110,17 @@ Every screen of a product sits in the application shell (`<ave-app-shell>`, ADR 
 | More than 15, or unknown | Combobox with search |
 | Thousands, on the server | Combobox with `search="server"`: the server searches, a page at a time (ADR 0056) |
 
+### Plain text, a mask or a picker
+
+| Value | Use |
+|---|---|
+| Free text: a name, an address, a comment | Input alone, or Textarea |
+| A fixed shape: a phone, STIR, PINFL, a passport, a card, an account | Input with `aveMask`, a preset (ADR 0100); the form holds the clean value (`+998901234567`) |
+| A code of the product's own shape | `aveMask` with a pattern (`'ДК-0000/000'`) or a `RegExp` filter |
+| A date | DatePicker, never a mask |
+
+Say the format in the hint with an example ("Например, +998 90 123-45-67"), and check a complete value with `aveMaskPattern(mask)`.
+
 ### Status, tag or count
 
 | Use | When |

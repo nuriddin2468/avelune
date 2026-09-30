@@ -55,6 +55,7 @@ Verified on 2026-09-23 with `npm view <pkg> version peerDependencies engines` an
 | | `browserslist` | 4.29.0 | Reads `.browserslistrc` for guardrail tests; the same version Angular's build resolves |
 | Tokens | `style-dictionary` | 5.5.5 | DTCG colour objects since 5.3, dimension objects since 5.4; duration/gradient still WIP (issue #1590). Installed in Phase 2 (released 2026-09-20); used as the resolver, values converted by our own code (ADR 0017) |
 | | `colorjs.io` | 0.7.1 | ADR 0011; installed in Phase 2 (released 2026-07-24). A runtime dependency of `@avelune/tokens` since the brand generator (ADR 0089, 2026-09-30), imported module by module (`colorjs.io/src/*.js`): the `colorjs.io/fn` barrel brings every colour space into a bundle, as the package declares no side-effect-free modules |
+| Masks | `@maskito/core`, `@maskito/kit` | 5.6.0 | ADR 0100; released 2026-09-28, Apache-2.0, no dependencies; runtime dependencies of `@avelune/ui`, bundled only by `@avelune/ui/mask` (5.92 kB brotli with the directive, 2026-09-30) |
 | API | `@microsoft/api-extractor` | 7.59.2 | Bundles TS 5.9.3; works on TS 6 output (ADR 0007, spike result). Installed 2026-09-25 |
 | Release | `@changesets/cli` | 3.0.3 | Node `^22.11 \|\| ^24`, pnpm `>=10` |
 | Hooks | `lefthook` | 2.1.14 | |

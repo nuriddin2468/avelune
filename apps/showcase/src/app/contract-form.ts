@@ -8,6 +8,7 @@ import { AveFormPage, AveFormPageActions, AveFormPageActionsStart } from '@avelu
 import { AveChoiceGroup, AveError, AveFormField, AveHint } from '@avelune/ui/form-field';
 import { AveIcon } from '@avelune/ui/icon';
 import { AveInput } from '@avelune/ui/input';
+import { AveMask, aveMaskPattern } from '@avelune/ui/mask';
 import { AveRadio } from '@avelune/ui/radio';
 import { AveCombobox, AveMultiselect, AveSelect } from '@avelune/ui/select';
 import { AveSlider } from '@avelune/ui/slider';
@@ -28,6 +29,7 @@ interface Contract {
   amount: string;
   advance: number;
   email: string;
+  phone: string;
   signing: string;
   notify: boolean;
   confirm: boolean;
@@ -46,6 +48,7 @@ const empty: Contract = {
   amount: '',
   advance: 30,
   email: '',
+  phone: '',
   signing: '',
   notify: true,
   confirm: false,
@@ -90,6 +93,7 @@ const sendDelay = 1500;
     AveHint,
     AveIcon,
     AveInput,
+    AveMask,
     AveMultiselect,
     AveRadio,
     AveSelect,
@@ -208,6 +212,14 @@ const sendDelay = 1500;
             <p aveError>Укажите адрес вида name@example.uz.</p>
           }
         </ave-form-field>
+
+        <ave-form-field label="Телефон контрагента">
+          <input aveInput aveMask="phone" type="tel" autocomplete="tel" [formField]="contract.phone" />
+          <p aveHint>Например, +998 90 123-45-67.</p>
+          @if (contract.phone().errors().length > 0) {
+            <p aveError>Введите номер полностью: +998 и девять цифр.</p>
+          }
+        </ave-form-field>
       </div>
 
       <div class="choices">
@@ -287,6 +299,7 @@ export class ContractForm {
     required(path.amount);
     pattern(path.amount, /^\d+$/);
     email(path.email);
+    pattern(path.phone, aveMaskPattern('phone'));
     required(path.signing);
     required(path.confirm);
   });
