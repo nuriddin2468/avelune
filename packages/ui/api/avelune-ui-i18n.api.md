@@ -34,6 +34,7 @@ export interface AveMessages {
     readonly alertInfo: string;
     readonly alertSuccess: string;
     readonly alertWarning: string;
+    readonly appliedFilters: string;
     readonly breadcrumbs: string;
     readonly cancel: string;
     readonly chooseDate: string;
@@ -43,6 +44,7 @@ export interface AveMessages {
     readonly chooseYear: string;
     readonly chosenValues: (labels: string) => string;
     readonly clear: string;
+    readonly clearFilters: string;
     readonly close: string;
     readonly columnWidth: (header: string) => string;
     readonly dropFile: string;
@@ -51,6 +53,7 @@ export interface AveMessages {
     readonly filesAdded: (count: number) => string;
     readonly fileTooLarge: (limit: string) => string;
     readonly fileTypeRejected: string;
+    readonly filters: string;
     readonly itemRange: (from: string, to: string, total: string) => string;
     readonly loadFailed: string;
     readonly loading: string;
@@ -95,6 +98,7 @@ export interface AveMessages {
     readonly retryWithEnter: string;
     readonly selectPage: string;
     readonly selectRow: string;
+    readonly showResults: string;
     readonly skipToContent: string;
     readonly stepComplete: string;
     readonly stepError: string;

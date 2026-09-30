@@ -6,21 +6,32 @@ import { lucideCopy, lucideEllipsis, lucideFileText, lucideSearch, lucideTrash }
 import { AveButton } from '@avelune/ui/button';
 import { AveCheckbox, AveChoice } from '@avelune/ui/checkbox';
 import { AveCellTemplate, AveDataTable, type AveColumn, type AveSort } from '@avelune/ui/data-table';
+import { AveDateRangePicker, type AveDateRange } from '@avelune/ui/date-picker';
 import { AveConfirmDialog, AveDialog, AveDialogActions, AveDrawer } from '@avelune/ui/dialog';
 import { AveEmptyState, AveEmptyStateActions } from '@avelune/ui/empty-state';
 import { aveDateFormat, aveNumberFormat } from '@avelune/ui/i18n';
 import { provideAveIcons } from '@avelune/ui/icon';
-import { AveChoiceGroup } from '@avelune/ui/form-field';
+import {
+  AveAppliedFilters,
+  AveFilterPanel,
+  AveFilterPanelContent,
+  type AveAppliedFilter,
+} from '@avelune/ui/filter-panel';
+import { AveChoiceGroup, AveFormField } from '@avelune/ui/form-field';
 import { AveInput } from '@avelune/ui/input';
 import { AveLink } from '@avelune/ui/link';
 import { AveMenu, type AveMenuEntry } from '@avelune/ui/menu';
-import { AvePopover } from '@avelune/ui/popover';
 import { AveRadio } from '@avelune/ui/radio';
 import { AveSearchHeader, AveSearchHeaderActions, AveSearchHeaderSearch } from '@avelune/ui/search-header';
 import { AveProgress } from '@avelune/ui/progress';
-import { AveTag } from '@avelune/ui/tag';
 import { AveToaster } from '@avelune/ui/toast';
 import { contractStatusVariants, contractStatuses, contracts, type ContractRecord, type ContractStatus } from './data';
+
+/** Whether a date falls in a term, whose ends may be open; any date without a term. */
+function within(date: string, term: AveDateRange | null): boolean {
+  if (term === null) return true;
+  return (term.start === null || date >= term.start) && (term.end === null || date <= term.end);
+}
 
 /** What a row's menu does to its contract. */
 type RowAction = 'open' | 'copy' | 'delete';
@@ -40,6 +51,7 @@ const exportInterval = 400;
   selector: 'ave-showcase-contracts',
   imports: [
     AveAlert,
+    AveAppliedFilters,
     AveBadge,
     AveButton,
     AveCellTemplate,
@@ -48,21 +60,23 @@ const exportInterval = 400;
     AveChoiceGroup,
     AveConfirmDialog,
     AveDataTable,
+    AveDateRangePicker,
     AveDialog,
     AveDialogActions,
     AveDrawer,
     AveEmptyState,
     AveEmptyStateActions,
+    AveFilterPanel,
+    AveFilterPanelContent,
+    AveFormField,
     AveInput,
     AveLink,
     AveMenu,
-    AvePopover,
     AveProgress,
     AveRadio,
     AveSearchHeader,
     AveSearchHeaderActions,
     AveSearchHeaderSearch,
-    AveTag,
     RouterLink,
   ],
   providers: [provideAveIcons([lucideCopy, lucideEllipsis, lucideFileText, lucideSearch, lucideTrash])],
@@ -72,6 +86,7 @@ const exportInterval = 400;
         heading="Договоры"
         searchLabel="Поиск договоров"
         [summary]="loading() ? 'Загрузка договоров…' : count()"
+        [filters]="filters"
       >
         <div aveSearchHeaderActions>
           <button
@@ -125,77 +140,69 @@ const exportInterval = 400;
         </ave-alert>
       }
 
-      <div class="toolbar">
-        <ave-popover label="Статус" heading="Статус договора" [(open)]="filtering">
-          <fieldset aveChoiceGroup legend="Показывать договоры">
-            @for (status of statusList; track status) {
-              <label aveChoice>
-                <input type="checkbox" aveCheckbox [checked]="shownStatuses().has(status)" (change)="toggle(status)" />
-                {{ statuses[status] }}
-              </label>
-            }
-          </fieldset>
-          <div class="filter-actions">
-            <button aveButton type="button" variant="ghost" (click)="shownStatuses.set(allStatuses())">
-              Все статусы
-            </button>
-            <button aveButton type="button" variant="primary" (click)="filtering.set(false)">Готово</button>
-          </div>
-        </ave-popover>
+      <ave-applied-filters [filters]="applied()" (remove)="removeFilter($event)" (clear)="clearFilters()" />
+
+      <div class="layout" [attr.data-filters]="filters.open() && !filters.modal() ? 'open' : null">
+        <ave-filter-panel #filters [count]="applied().length" (clear)="clearFilters()">
+          <ng-template aveFilterPanelContent>
+            <fieldset aveChoiceGroup legend="Статус">
+              @for (status of statusList; track status) {
+                <label aveChoice>
+                  <input
+                    type="checkbox"
+                    aveCheckbox
+                    [checked]="shownStatuses().has(status)"
+                    (change)="toggle(status)"
+                  />
+                  {{ statuses[status] }}
+                </label>
+              }
+            </fieldset>
+            <ave-form-field label="Действует до">
+              <ave-date-range-picker [(value)]="term" />
+            </ave-form-field>
+          </ng-template>
+        </ave-filter-panel>
+
+        <ave-data-table
+          label="Договоры подразделения"
+          selectable
+          [rows]="shown()"
+          [columns]="columns"
+          [rowKey]="byId"
+          [loading]="loading()"
+          [(sort)]="sort"
+          [(selected)]="selected"
+          [(page)]="page"
+          [(pageSize)]="pageSize"
+        >
+          <ng-template aveCell="subject" [aveCellOf]="shown()" let-contract>
+            <a aveLink [routerLink]="['/contracts', contract.id]">{{ contract.subject }}</a>
+          </ng-template>
+          <ng-template aveCell="status" [aveCellOf]="shown()" let-contract>
+            <ave-badge [variant]="variants[contract.status]">{{ statuses[contract.status] }}</ave-badge>
+          </ng-template>
+          <ng-template aveCell="endsOn" [aveCellOf]="shown()" let-contract>
+            <time [attr.datetime]="contract.endsOn">{{ dates.numeric(contract.endsOn) }}</time>
+          </ng-template>
+          <ng-template aveCell="actions" [aveCellOf]="shown()" let-contract>
+            <ave-menu
+              icon="ellipsis"
+              variant="ghost"
+              size="sm"
+              [label]="'Действия с договором ' + contract.number"
+              [items]="rowActions"
+              (itemSelected)="act(contract, $event)"
+            />
+          </ng-template>
+          <ave-empty-state aveDataTableEmpty icon="search" heading="Ничего не найдено">
+            <p>Ни один договор не подходит под поиск и выбранные статусы.</p>
+            <div aveEmptyStateActions>
+              <button aveButton type="button" (click)="resetSearch()">Сбросить поиск и фильтры</button>
+            </div>
+          </ave-empty-state>
+        </ave-data-table>
       </div>
-
-      @if (narrowed()) {
-        <div class="filters">
-          <span class="filters-caption" id="shown-statuses">Показаны статусы</span>
-          <ul class="filter-tags" aria-labelledby="shown-statuses">
-            @for (status of shownList(); track status) {
-              <li>
-                <ave-tag removable (remove)="removeStatus(status)">{{ statuses[status] }}</ave-tag>
-              </li>
-            }
-          </ul>
-          <button aveButton type="button" variant="ghost" size="sm" (click)="showAllStatuses()">Все статусы</button>
-        </div>
-      }
-
-      <ave-data-table
-        label="Договоры подразделения"
-        selectable
-        [rows]="shown()"
-        [columns]="columns"
-        [rowKey]="byId"
-        [loading]="loading()"
-        [(sort)]="sort"
-        [(selected)]="selected"
-        [(page)]="page"
-        [(pageSize)]="pageSize"
-      >
-        <ng-template aveCell="subject" [aveCellOf]="shown()" let-contract>
-          <a aveLink [routerLink]="['/contracts', contract.id]">{{ contract.subject }}</a>
-        </ng-template>
-        <ng-template aveCell="status" [aveCellOf]="shown()" let-contract>
-          <ave-badge [variant]="variants[contract.status]">{{ statuses[contract.status] }}</ave-badge>
-        </ng-template>
-        <ng-template aveCell="endsOn" [aveCellOf]="shown()" let-contract>
-          <time [attr.datetime]="contract.endsOn">{{ dates.numeric(contract.endsOn) }}</time>
-        </ng-template>
-        <ng-template aveCell="actions" [aveCellOf]="shown()" let-contract>
-          <ave-menu
-            icon="ellipsis"
-            variant="ghost"
-            size="sm"
-            [label]="'Действия с договором ' + contract.number"
-            [items]="rowActions"
-            (itemSelected)="act(contract, $event)"
-          />
-        </ng-template>
-        <ave-empty-state aveDataTableEmpty icon="search" heading="Ничего не найдено">
-          <p>Ни один договор не подходит под поиск и выбранные статусы.</p>
-          <div aveEmptyStateActions>
-            <button aveButton type="button" (click)="resetSearch()">Сбросить поиск и фильтры</button>
-          </div>
-        </ave-empty-state>
-      </ave-data-table>
     </div>
 
     <dialog aveDialog size="sm" heading="Выгрузка реестра" [(open)]="exportOpen" lang="ru">
@@ -285,20 +292,34 @@ export class ContractsPage {
   ];
   private nextId = 115;
 
-  /** The statuses the list shows, chosen in the Status popover; all of them at first. */
+  /** The statuses the list shows, chosen in the filter panel; all of them at first. */
   protected readonly statusList = Object.keys(contractStatuses) as ContractStatus[];
   protected readonly shownStatuses = signal<ReadonlySet<ContractStatus>>(this.allStatuses());
-  protected readonly filtering = signal(false);
-  /** The statuses shown, in the popover's order, while the filter leaves some out. */
-  protected readonly shownList = computed(() => this.statusList.filter((status) => this.shownStatuses().has(status)));
-  protected readonly narrowed = computed(() => this.shownList().length < this.statusList.length);
+  /** The period the contracts' terms end in, chosen in the filter panel; any at first. */
+  protected readonly term = signal<AveDateRange | null>(null);
+
+  /** The filters applied, as tags over the list: each status shown while some are left out, and the term. */
+  protected readonly applied = computed<readonly AveAppliedFilter[]>(() => {
+    const statuses = this.statusList.filter((status) => this.shownStatuses().has(status));
+    const narrowed = statuses.length < this.statusList.length;
+    const term = this.term();
+    return [
+      ...(narrowed
+        ? statuses.map((status) => ({ key: `status:${status}`, label: `Статус: ${contractStatuses[status]}` }))
+        : []),
+      ...(term === null || (term.start === null && term.end === null)
+        ? []
+        : [{ key: 'term', label: `Действует до: ${this.period(term)}` }]),
+    ];
+  });
 
   /** What the person searches for: part of a number, a subject or a counterparty. */
   protected readonly query = signal('');
   protected readonly shown = computed(() => {
     const query = this.query().trim().toLocaleLowerCase('ru');
     const statuses = this.shownStatuses();
-    const rows = this.rows().filter((contract) => statuses.has(contract.status));
+    const term = this.term();
+    const rows = this.rows().filter((contract) => statuses.has(contract.status) && within(contract.endsOn, term));
     if (query === '') return rows;
     return rows.filter((contract) =>
       [contract.number, contract.subject, contract.counterparty].some((text) =>
@@ -310,7 +331,7 @@ export class ContractsPage {
   /** The register pages ten contracts at a time at first; a new search or filter goes back to the first page. */
   protected readonly pageSize = signal(10);
   protected readonly page = linkedSignal({
-    source: () => [this.query(), this.shownStatuses()] as const,
+    source: () => [this.query(), this.shownStatuses(), this.term()] as const,
     computation: () => 1,
   });
 
@@ -348,9 +369,6 @@ export class ContractsPage {
   }
 
   private readonly searchBox = viewChild.required<ElementRef<HTMLInputElement>>('searchBox');
-  private readonly statusFilter = viewChild.required<AvePopover, ElementRef<HTMLElement>>(AvePopover, {
-    read: ElementRef,
-  });
 
   protected allStatuses(): ReadonlySet<ContractStatus> {
     return new Set(this.statusList);
@@ -364,26 +382,39 @@ export class ContractsPage {
   }
 
   /**
-   * A status's tag taken away: the list stops showing it. Without the last one the filter is gone, and focus goes to
-   * the Status button, since the tags go too.
+   * An applied filter's tag taken away: the list stops showing that status, or any term. Without the last status the
+   * status filter is gone; once no tag is left, focus goes back to the search, since the tags go.
    */
-  protected removeStatus(status: ContractStatus): void {
-    const next = new Set(this.shownStatuses());
-    next.delete(status);
-    if (next.size > 0) this.shownStatuses.set(next);
-    else this.showAllStatuses();
+  protected removeFilter(key: string): void {
+    if (key === 'term') {
+      this.term.set(null);
+    } else {
+      const next = new Set(this.shownStatuses());
+      next.delete(key.replace('status:', '') as ContractStatus);
+      this.shownStatuses.set(next.size > 0 ? next : this.allStatuses());
+    }
+    if (this.applied().length === 0) this.searchBox().nativeElement.focus();
   }
 
-  /** Every status shown again; the tags go, and focus goes to the Status button. */
-  protected showAllStatuses(): void {
+  /** Every filter taken away: every status and any term; focus goes back to the search. */
+  protected clearFilters(): void {
     this.shownStatuses.set(this.allStatuses());
-    this.statusFilter().nativeElement.querySelector('button')?.focus();
+    this.term.set(null);
+    this.searchBox().nativeElement.focus();
+  }
+
+  /** A term's dates for its tag: "01.01.2026 – 31.12.2026", or one end of it. */
+  private period(term: AveDateRange): string {
+    const start = term.start === null ? '…' : this.dates.numeric(term.start);
+    const end = term.end === null ? '…' : this.dates.numeric(term.end);
+    return `${start} – ${end}`;
   }
 
   /** The empty state's action: the search and the filters empty, and focus goes to the search. */
   protected resetSearch(): void {
     this.query.set('');
     this.shownStatuses.set(this.allStatuses());
+    this.term.set(null);
     this.searchBox().nativeElement.focus();
   }
 

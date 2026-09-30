@@ -1,0 +1,93 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as FilterPanelStories from './filter-panel.stories';
+
+<Meta of={FilterPanelStories} />
+
+# Filter panel
+
+`<ave-filter-panel>` holds a list's filters: a column at the start of the list on a wide page, opened and closed by the search header's "Фильтры" button, and a drawer on a narrow one. `<ave-applied-filters>` shows the applied filters as tags above the list (ADR 0094).
+
+```ts
+import {
+  AveAppliedFilters,
+  AveFilterPanel,
+  AveFilterPanelContent,
+  type AveAppliedFilter,
+} from '@avelune/ui/filter-panel';
+```
+
+<Canvas of={FilterPanelStories.Default} />
+
+## When to use
+
+- For a list people narrow by several fields at once: a register by status, term and counterparty.
+- With a search header, whose button shows and hides the panel (`[filters]="panel"`).
+
+## When not to use
+
+- For one quick choice over a short list: tabs, or a select beside the search.
+- For a search alone: the search header's input is enough.
+- For a form that saves: filters narrow what the page shows, and save nothing.
+
+## Anatomy
+
+- **The column,** from `container.lg`: a `section` named by its heading (`label`, "Фильтры" by default), 256px wide on a bordered surface, `radius.lg`, 16px to its content. Under the heading are the fields, then "Сбросить фильтры" while any filter is applied. It is closed until the person opens it, and a closed column takes no room.
+- **The drawer,** below `container.lg`: a start drawer of the small size with the same fields, and at its foot "Сбросить фильтры" and "Показать результаты", which closes it.
+- **The fields,** the application's, on `<ng-template aveFilterPanelContent>`: form fields and choice groups one under another, 16px apart. The panel stamps them where it shows them, so their values live in the application's state.
+- **The applied filters,** `<ave-applied-filters>`: a tag per filter, whose button takes it away, then a small "Сбросить фильтры". It draws nothing while no filter is applied.
+
+```html
+<ave-search-header heading="Договоры" [summary]="summary()" [filters]="filters">
+  <input aveInput aveSearchHeaderSearch type="search" aria-label="Поиск договоров" />
+</ave-search-header>
+<ave-applied-filters [filters]="applied()" (remove)="removeFilter($event)" (clear)="clearFilters()" />
+<ave-filter-panel #filters [count]="applied().length" (clear)="clearFilters()">
+  <ng-template aveFilterPanelContent>
+    <fieldset aveChoiceGroup legend="Статус">…</fieldset>
+    <ave-form-field label="Срок действия"><ave-date-range-picker [formField]="form.term" /></ave-form-field>
+  </ng-template>
+</ave-filter-panel>
+```
+
+## Column or drawer
+
+The panel measures the element around it. From `container.lg` (960px) it is a column; below, a drawer. The list page places the column at the list's start while it is open (List page pattern). A panel on its own page needs its page to do the same.
+
+The "Collapsed", "Drawer" and "Long text" stories show the other forms, each on its own page.
+
+## Behaviour
+
+- Filters apply as they change, in the column and in the drawer. There is no Apply button: the list and the search header's count follow at once.
+- `count` is how many filters are applied. The search header's button counts them, and the panel offers "Сбросить фильтры" while it is above 0.
+- `clear` emits for both "Сбросить фильтры" buttons, the panel's and the applied filters'. `remove` on the applied filters emits a filter's key.
+
+## Content
+
+- Put the fields people use most first.
+- A group of up to five options is a choice group of checkboxes; more are a multiselect (GUIDELINES.md, "Radio, select or combobox").
+- An applied filter's `label` says its field and its value: "Статус: Подписан", "Срок: до 31.12.2026".
+
+## Keyboard
+
+| Key                                             | Does                                                                       |
+| ----------------------------------------------- | -------------------------------------------------------------------------- |
+| Enter or Space on the search header's "Фильтры" | Shows or hides the column; on a narrow page opens the drawer, focus inside |
+| Tab in the column                               | The fields in order, then "Сбросить фильтры"                               |
+| Escape in the drawer                            | Closes it, focus back on "Фильтры"                                         |
+| Enter or Space on a tag's button                | Takes that filter away; focus moves to the next tag                        |
+
+## Accessibility
+
+- The column is a region named by its heading, and the search header's button controls it (`aria-expanded`, `aria-controls`). The column's element stays in the page while it is closed, so the button always names it.
+- On a narrow page the button opens a dialog (`aria-haspopup="dialog"`). The drawer is the kit's, modal, and returns focus.
+- The tags are a list named "Применённые фильтры"; each button is named by "Убрать" and the tag's words.
+
+## Motion
+
+The drawer's `ave-motion-drawer-*` from the catalog; the column appears without motion.
+
+## Do and don't
+
+- Do show every applied filter as a tag, also while the panel is closed.
+- Do count the list's records again after every change, in the search header.
+- Don't hide a filter people applied in a field of a closed accordion or a tab.

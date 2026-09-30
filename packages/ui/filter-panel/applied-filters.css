@@ -1,0 +1,24 @@
+@layer patterns {
+  /* The applied filters (ADR 0094): the tags and the button that clears them in one row that wraps, 8px apart. */
+  :host {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ave-space-2);
+    min-inline-size: 0;
+  }
+
+  :host([data-empty]) {
+    display: none;
+  }
+
+  .list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ave-space-2);
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}

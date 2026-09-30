@@ -147,6 +147,14 @@ export interface AveMessages {
   readonly skipToContent: string;
   /** Names the product's navigation, and its button and drawer on a phone, when the application gives no name. */
   readonly navigation: string;
+  /** A list's filters: the filter panel's heading and its button in a search header (ADR 0094). */
+  readonly filters: string;
+  /** The button that takes every applied filter away. */
+  readonly clearFilters: string;
+  /** The button that closes the filters' drawer over the list they narrowed. */
+  readonly showResults: string;
+  /** Names the list of the filters applied to a list, shown as tags above it. */
+  readonly appliedFilters: string;
 }
 
 /**
@@ -225,6 +233,10 @@ export const aveMessagesEn: AveMessages = {
   stepError: 'Needs attention',
   skipToContent: 'Skip to content',
   navigation: 'Navigation',
+  filters: 'Filters',
+  clearFilters: 'Clear filters',
+  showResults: 'Show results',
+  appliedFilters: 'Applied filters',
 };
 
 /**
@@ -305,6 +317,10 @@ export const aveMessagesRu: AveMessages = {
   stepError: 'Требует внимания',
   skipToContent: 'Перейти к содержимому',
   navigation: 'Навигация',
+  filters: 'Фильтры',
+  clearFilters: 'Сбросить фильтры',
+  showResults: 'Показать результаты',
+  appliedFilters: 'Применённые фильтры',
 };
 
 /**
@@ -383,6 +399,10 @@ export const aveMessagesUzLatn: AveMessages = {
   stepError: 'Eʼtibor talab qiladi',
   skipToContent: 'Asosiy qismga oʻtish',
   navigation: 'Navigatsiya',
+  filters: 'Filtrlar',
+  clearFilters: 'Filtrlarni tozalash',
+  showResults: 'Natijalarni koʻrsatish',
+  appliedFilters: 'Qoʻllangan filtrlar',
 };
 
 /**
@@ -461,6 +481,10 @@ export const aveMessagesUzCyrl: AveMessages = {
   stepError: 'Эътибор талаб қилади',
   skipToContent: 'Асосий қисмга ўтиш',
   navigation: 'Навигация',
+  filters: 'Фильтрлар',
+  clearFilters: 'Фильтрларни тозалаш',
+  showResults: 'Натижаларни кўрсатиш',
+  appliedFilters: 'Қўлланган фильтрлар',
 };
 
 /**

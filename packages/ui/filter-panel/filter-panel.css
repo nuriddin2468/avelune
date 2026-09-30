@@ -1,0 +1,46 @@
+@layer patterns {
+  /* A list's filters (ADR 0094). Only an open column takes room; a drawer takes none in the page, and nothing shows
+     before the panel has measured its container. */
+  :host {
+    display: none;
+    min-inline-size: 0;
+  }
+
+  :host([data-mode='column'][data-open]) {
+    display: block;
+  }
+
+  :host([data-mode='drawer']) {
+    display: contents;
+  }
+
+  /* The column: a card-like surface 256px wide, its heading over the fields, 16px between its parts, the border
+     inside the 16px. */
+  .column {
+    display: grid;
+    align-content: start;
+    gap: var(--ave-space-4);
+    inline-size: calc(var(--ave-space-16) * 4);
+    max-inline-size: 100%;
+    padding: calc(var(--ave-space-4) - var(--ave-border-width-default));
+    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    border-radius: var(--ave-radius-lg);
+    background-color: var(--ave-color-bg-surface);
+  }
+
+  .heading {
+    margin: 0;
+    font: var(--ave-font-heading-sm);
+  }
+
+  /* The application's fields, one under another, 16px apart, as a form's. */
+  .fields {
+    display: grid;
+    gap: var(--ave-space-4);
+    min-inline-size: 0;
+  }
+
+  .actions {
+    display: flex;
+  }
+}

@@ -1,0 +1,34 @@
+/* The frame of the Filter panel stories: a register's page, with the column beside the list while it is open.
+   Stories only; the panel's styles are filter-panel.css. */
+@layer patterns {
+  :host {
+    display: block;
+    padding: var(--ave-space-6);
+  }
+
+  .page {
+    display: grid;
+    gap: var(--ave-space-6);
+  }
+
+  /* A narrow page, below container.lg: the filters open in a drawer at every width. */
+  .page[data-narrow] {
+    max-inline-size: var(--ave-container-md);
+  }
+
+  .layout {
+    display: grid;
+    gap: var(--ave-space-6);
+    align-items: start;
+  }
+
+  .layout[data-filters='open'] {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .muted {
+    display: block;
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-sm);
+  }
+}
