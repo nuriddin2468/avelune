@@ -157,13 +157,14 @@ export const Default: Story = {
     docs: {
       source: {
         code: `<div aveToolbar label="Действия с договором">
-  <button aveButton aveToolbarItem type="button" variant="ghost">Изменить</button>
+  <button aveButton aveToolbarItem type="button" variant="ghost"><ave-icon name="pencil" decorative />Изменить</button>
   <button aveButton aveToolbarItem type="button" variant="ghost" disabled disabledInteractive>
     Отправить на согласование
   </button>
   <span aveToolbarSeparator></span>
   <button aveIconButton aveToolbarItem type="button" variant="ghost" icon="copy" label="Дублировать" aveTooltip="Дублировать"></button>
-  <ave-menu label="Ещё действия" icon="ellipsis" variant="ghost" [items]="more" />
+  <button aveIconButton aveToolbarItem type="button" variant="ghost" icon="printer" label="Печать" aveTooltip="Печать"></button>
+  <ave-menu label="Ещё действия" icon="ellipsis" variant="ghost" [items]="more" (itemSelected)="run($event)" />
 </div>`,
         language: 'html',
       },

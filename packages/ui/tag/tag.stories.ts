@@ -80,12 +80,34 @@ export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ul class="tags" aria-labelledby="regions">
-  @for (region of regions(); track region.value) {
-    <li><ave-tag removable (remove)="drop(region)">{{ region.label }}</ave-tag></li>
+        code: `import { Component, signal } from '@angular/core';
+import { AveTag } from '@avelune/ui/tag';
+
+@Component({
+  selector: 'app-region-filter',
+  imports: [AveTag],
+  template: \`
+    <span id="regions">Регионы доставки</span>
+    <ul aria-labelledby="regions">
+      @for (region of regions(); track region) {
+        <li>
+          <ave-tag removable (remove)="drop(region)">{{ region }}</ave-tag>
+        </li>
+      }
+    </ul>
+    @if (regions().length === 0) {
+      <p>Все регионы</p>
+    }
+  \`,
+})
+export class RegionFilter {
+  protected readonly regions = signal(['Ташкент', 'Самарканд', 'Бухара', 'Навоийская область']);
+
+  protected drop(region: string): void {
+    this.regions.update((regions) => regions.filter((one) => one !== region));
   }
-</ul>`,
-        language: 'html',
+}`,
+        language: 'typescript',
       },
     },
   },
@@ -107,12 +129,34 @@ export const Removing: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ul aria-labelledby="regions">
-  @for (region of regions(); track region.value) {
-    <li><ave-tag removable (remove)="drop(region)">{{ region.label }}</ave-tag></li>
+        code: `import { Component, signal } from '@angular/core';
+import { AveTag } from '@avelune/ui/tag';
+
+@Component({
+  selector: 'app-region-filter',
+  imports: [AveTag],
+  template: \`
+    <span id="regions">Регионы доставки</span>
+    <ul aria-labelledby="regions">
+      @for (region of regions(); track region) {
+        <li>
+          <ave-tag removable (remove)="drop(region)">{{ region }}</ave-tag>
+        </li>
+      }
+    </ul>
+    @if (regions().length === 0) {
+      <p>Все регионы</p>
+    }
+  \`,
+})
+export class RegionFilter {
+  protected readonly regions = signal(['Ташкент', 'Самарканд', 'Бухара', 'Навоийская область']);
+
+  protected drop(region: string): void {
+    this.regions.update((regions) => regions.filter((one) => one !== region));
   }
-</ul>`,
-        language: 'html',
+}`,
+        language: 'typescript',
       },
     },
   },
@@ -139,7 +183,9 @@ export const Sizes: Story = {
     docs: {
       source: {
         code: `<ave-tag removable>Ташкент</ave-tag>
-<ave-tag size="sm" removable>Ташкент</ave-tag>`,
+<ave-tag>Срочно</ave-tag>
+<ave-tag size="sm" removable>Ташкент</ave-tag>
+<ave-tag size="sm">Срочно</ave-tag>`,
         language: 'html',
       },
     },

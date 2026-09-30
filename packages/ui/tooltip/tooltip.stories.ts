@@ -129,7 +129,12 @@ export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: '<button aveIconButton type="button" variant="ghost" icon="pencil" label="Изменить" aveTooltip="Изменить"></button>',
+        code: `<div role="toolbar" aria-label="Договор">
+  <button aveIconButton type="button" variant="ghost" icon="pencil" label="Изменить" aveTooltip="Изменить"></button>
+  <button aveIconButton type="button" variant="ghost" icon="download" label="Выгрузить" aveTooltip="Выгрузить в Excel"></button>
+  <button aveIconButton type="button" variant="ghost" icon="printer" label="Печать" aveTooltip="Печать"></button>
+  <button aveIconButton type="button" variant="ghost" icon="trash" label="Удалить" aveTooltip="Удалить"></button>
+</div>`,
         language: 'html',
       },
     },
@@ -156,7 +161,10 @@ export const Sides: Story = {
   parameters: {
     docs: {
       source: {
-        code: '<button aveButton type="button" aveTooltip="Подсказка" aveTooltipSide="end">end</button>',
+        code: `<button aveButton type="button" aveTooltip="Подсказка: top" aveTooltipSide="top">top</button>
+<button aveButton type="button" aveTooltip="Подсказка: bottom" aveTooltipSide="bottom">bottom</button>
+<button aveButton type="button" aveTooltip="Подсказка: start" aveTooltipSide="start">start</button>
+<button aveButton type="button" aveTooltip="Подсказка: end" aveTooltipSide="end">end</button>`,
         language: 'html',
       },
     },

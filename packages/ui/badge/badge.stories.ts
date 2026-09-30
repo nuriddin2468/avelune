@@ -140,8 +140,18 @@ export const Places: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<li class="row">…<ave-badge variant="success">Подписан</ave-badge></li>
-<h3>Договор ДК-2025/109 <ave-badge variant="danger">Истёк</ave-badge></h3>`,
+        code: `<ul aria-label="Договоры">
+  <li>
+    ДК-2025/114 Поставка офисной мебели
+    <ave-badge variant="success">Подписан</ave-badge>
+  </li>
+  <li>
+    ДК-2025/113 Обслуживание серверного оборудования
+    <ave-badge variant="info">На согласовании</ave-badge>
+  </li>
+</ul>
+<h3>Договор ДК-2025/109 <ave-badge variant="danger">Истёк</ave-badge></h3>
+<p>Статус <ave-badge variant="warning">Истекает</ave-badge> ставится за 30 дней до окончания договора.</p>`,
         language: 'html',
       },
     },
@@ -192,7 +202,9 @@ export const Counts: Story = {
     docs: {
       source: {
         code: `<a aveLink routerLink="/inbox">Входящие <ave-count [value]="3" /></a>
-<a aveLink routerLink="/archive">Архив <ave-count [value]="1284" max="9999" /></a>`,
+<a aveLink routerLink="/all">Все документы <ave-count [value]="1284" /></a>
+<a aveLink routerLink="/archive">Архив <ave-count [value]="1284" max="9999" /></a>
+<a aveLink routerLink="/drafts">Черновики <ave-count [value]="0" /></a>`,
         language: 'html',
       },
     },

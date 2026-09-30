@@ -164,11 +164,32 @@ export const Default: Story = {
     docs: {
       source: {
         code: `<form aveFormPage heading="Новый договор" description="* — обязательные поля" novalidate (submit)="send($event)">
-  <div class="fields">
-    <ave-form-field label="Номер договора"><input aveInput type="text" [formField]="contract.number" /></ave-form-field>
-    …
+  <!-- The application lays the fields out in columns. -->
+  <div>
+    <ave-form-field label="Номер договора">
+      <input aveInput type="text" required />
+      <p aveHint>Как в подписанном экземпляре, например ДК-2026/114.</p>
+    </ave-form-field>
+    <ave-form-field label="Контрагент"><input aveInput type="text" required /></ave-form-field>
+    <ave-form-field label="Дата подписания"><input aveInput type="text" /></ave-form-field>
+    <ave-form-field label="Сумма договора, сум"><input aveInput type="text" inputmode="decimal" /></ave-form-field>
+    <ave-form-field label="Предмет договора">
+      <textarea aveTextarea rows="4"></textarea>
+      <p aveHint>Кратко: что поставляется или выполняется, куда и в какие сроки.</p>
+    </ave-form-field>
+    <ave-form-field label="Почта для уведомлений"><input aveInput type="email" /></ave-form-field>
+    <ave-form-field label="Телефон контрагента"><input aveInput type="tel" /></ave-form-field>
   </div>
-  <fieldset aveChoiceGroup legend="Форма подписания">…</fieldset>
+  <fieldset aveChoiceGroup legend="Форма подписания">
+    <label aveChoice><input type="radio" aveRadio value="digital" /> Электронная подпись</label>
+    <label aveChoice><input type="radio" aveRadio value="paper" /> На бумаге</label>
+  </fieldset>
+  <fieldset aveChoiceGroup legend="Перед отправкой">
+    <label aveChoice>
+      <input type="checkbox" aveCheckbox />
+      Подтверждаю, что данные договора сверены с подписанным экземпляром
+    </label>
+  </fieldset>
   <div aveFormPageActions>
     <button aveButton aveFormPageActionsStart type="button" variant="ghost" (click)="saveDraft()">Сохранить черновик</button>
     <p aveFormPageActionsStart role="status">{{ status() }}</p>
@@ -202,7 +223,11 @@ export const Short: Story = {
     docs: {
       source: {
         code: `<form aveFormPage heading="Новый контрагент" novalidate (submit)="add($event)">
-  <div class="fields">…</div>
+  <!-- The application lays the fields out in columns. -->
+  <div>
+    <ave-form-field label="Название организации"><input aveInput type="text" /></ave-form-field>
+    <ave-form-field label="ИНН"><input aveInput type="text" inputmode="numeric" /></ave-form-field>
+  </div>
   <div aveFormPageActions>
     <button aveButton type="button">Отмена</button>
     <button aveButton type="submit" variant="primary">Добавить контрагента</button>
@@ -228,7 +253,8 @@ export const Status: Story = {
         code: `<div aveFormPageActions>
   <button aveButton aveFormPageActionsStart type="button" variant="ghost" (click)="saveDraft()">Сохранить черновик</button>
   <p aveFormPageActionsStart role="status">Черновик сохранён.</p>
-  …
+  <button aveButton type="button" (click)="cancel()">Отмена</button>
+  <button aveButton type="submit" variant="primary">Отправить на согласование</button>
 </div>`,
         language: 'html',
       },
@@ -249,11 +275,17 @@ export const LongText: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<form aveFormPage heading="Yangi shartnomani roʻyxatdan oʻtkazish" description="* — majburiy maydonlar" lang="uz-Latn" novalidate>
-  …
+        code: `<form aveFormPage heading="Yangi shartnomani roʻyxatdan oʻtkazish" description="* — majburiy maydonlar" novalidate (submit)="send($event)">
+  <!-- The application lays the fields out in columns. -->
+  <div>
+    <ave-form-field label="Oʻzbekiston Respublikasi hududidagi yetkazib berish manzili">
+      <input aveInput type="text" />
+    </ave-form-field>
+    <ave-form-field label="Shartnoma raqami"><input aveInput type="text" /></ave-form-field>
+  </div>
   <div aveFormPageActions>
-    <button aveButton aveFormPageActionsStart type="button" variant="ghost">Qoralama sifatida saqlash</button>
-    <button aveButton type="button">Bekor qilish</button>
+    <button aveButton aveFormPageActionsStart type="button" variant="ghost" (click)="saveDraft()">Qoralama sifatida saqlash</button>
+    <button aveButton type="button" (click)="cancel()">Bekor qilish</button>
     <button aveButton type="submit" variant="primary">Kelishuvga yuborish</button>
   </div>
 </form>`,

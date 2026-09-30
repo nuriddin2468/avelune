@@ -11,6 +11,18 @@ describe('framesOf', () => {
     assert.deepEqual(framesOf(source), { selectors: ['ave-thing-stories'], classNames: ['ThingStories'] });
   });
 
+  it('leaves out a component written inside a snippet', () => {
+    const source = [
+      "@Component({ selector: 'ave-thing-stories', template: '' })",
+      'class ThingStories {}',
+      'const code = `@Component({',
+      "  selector: 'app-contract-terms',",
+      '})',
+      'export class ContractTerms {}`;',
+    ].join('\n');
+    assert.deepEqual(framesOf(source), { selectors: ['ave-thing-stories'], classNames: ['ThingStories'] });
+  });
+
   it('finds the frames of the kit’s story files', () => {
     const frames = kitFrames(join(import.meta.dirname, '..', '..', '..', 'packages', 'ui'));
     assert.ok(frames.selectors.includes('ave-accordion-stories'));

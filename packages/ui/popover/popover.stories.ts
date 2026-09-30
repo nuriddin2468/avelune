@@ -102,8 +102,16 @@ export const Default: Story = {
     docs: {
       source: {
         code: `<ave-popover label="Фильтры" heading="Фильтры" [(open)]="filtersOpen">
-  <fieldset aveChoiceGroup legend="Статус">…</fieldset>
-  <div><button aveButton type="button" variant="primary" (click)="apply()">Применить</button></div>
+  <fieldset aveChoiceGroup legend="Статус">
+    <label aveChoice><input type="checkbox" aveCheckbox checked /> На согласовании</label>
+    <label aveChoice><input type="checkbox" aveCheckbox checked /> Подписан</label>
+    <label aveChoice><input type="checkbox" aveCheckbox /> Черновик</label>
+    <label aveChoice><input type="checkbox" aveCheckbox /> Истёк</label>
+  </fieldset>
+  <div>
+    <button aveButton type="button" variant="ghost">Сбросить</button>
+    <button aveButton type="button" variant="primary" (click)="filtersOpen.set(false)">Применить</button>
+  </div>
 </ave-popover>`,
         language: 'html',
       },

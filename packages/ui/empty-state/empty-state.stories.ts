@@ -159,18 +159,46 @@ export const NoResults: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<input aveInput type="search" aria-label="Поиск контрагента" [value]="query()" (input)="typed($event)" />
-@if (found().length > 0) {
-  <ul>…</ul>
-} @else {
-  <ave-empty-state icon="search" heading="Ничего не найдено">
-    <p>Нет контрагентов с «{{ query() }}» в названии или ИНН.</p>
-    <div aveEmptyStateActions>
-      <button aveButton type="button" (click)="query.set('')">Сбросить поиск</button>
-    </div>
-  </ave-empty-state>
+        code: `import { Component, signal } from '@angular/core';
+import { lucideSearch } from '@avelune/icons/lucide';
+import { AveButton } from '@avelune/ui/button';
+import { AveEmptyState, AveEmptyStateActions } from '@avelune/ui/empty-state';
+import { provideAveIcons } from '@avelune/ui/icon';
+import { AveInput } from '@avelune/ui/input';
+
+@Component({
+  selector: 'app-counterparty-search',
+  imports: [AveButton, AveEmptyState, AveEmptyStateActions, AveInput],
+  providers: [provideAveIcons([lucideSearch])],
+  template: \`
+    <input aveInput type="search" aria-label="Поиск контрагента" [value]="query()" (input)="typed($event)" />
+    @if (found().length > 0) {
+      <ul>
+        @for (name of found(); track name) {
+          <li>{{ name }}</li>
+        }
+      </ul>
+    } @else {
+      <ave-empty-state icon="search" heading="Ничего не найдено">
+        <p>Нет контрагентов с «{{ query() }}» в названии или ИНН.</p>
+        <div aveEmptyStateActions>
+          <button aveButton type="button" (click)="query.set('')">Сбросить поиск</button>
+        </div>
+      </ave-empty-state>
+    }
+  \`,
+})
+export class CounterpartySearch {
+  private readonly names = ['ООО «Альфа Технологии»', 'АО «Узбекнефтегаз»', 'ООО «Бета Логистик»'];
+  protected readonly query = signal('Гамма');
+  protected readonly found = (): readonly string[] =>
+    this.names.filter((name) => name.toLowerCase().includes(this.query().toLowerCase()));
+
+  protected typed(event: Event): void {
+    if (event.target instanceof HTMLInputElement) this.query.set(event.target.value);
+  }
 }`,
-        language: 'html',
+        language: 'typescript',
       },
     },
   },

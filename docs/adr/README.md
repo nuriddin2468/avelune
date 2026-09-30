@@ -95,7 +95,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0087](0087-data-table.md) | DataTable: columns as data, header buttons that sort, checkboxes that choose, a page size in the pagination | Accepted |
 | [0088](0088-font-check-without-white-space.md) | The visual suite's font check leaves white space out of the text it checks | Accepted |
 | [0089](0089-brand-themes.md) | Brand themes: a product's accent at build time, a tenant's at runtime, one generator | Accepted; the generator as built in addendum (Wave 6) |
-| [0090](0090-storybook-mcp-and-the-components-manifest.md) | Storybook MCP: the components manifest, the kit's component in every story file, snippets an application writes | Accepted |
+| [0090](0090-storybook-mcp-and-the-components-manifest.md) | Storybook MCP: the components manifest, the kit's component in every story file, snippets an application writes | Accepted; derived snippets superseded by 0101 |
 | [0091](0091-patterns.md) | Patterns: page layouts the application fills, in their own layer, adapting to their container | Accepted |
 | [0092](0092-app-shell.md) | App shell: the application bar with the logo, the navigation as a column or a drawer, one main | Accepted; the button and the link home share a row in addendum |
 | [0093](0093-search-header.md) | SearchHeader: a list page's heading, count and main action over the search and the filters' button | Accepted |
@@ -106,6 +106,8 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0098](0098-dashboard.md) | Dashboard: a page's heading, a row of key figures, and cards in up to three columns | Accepted |
 | [0099](0099-settings-page.md) | SettingsPage: sections as pages in a column at the start, or the list and then a section on a phone | Accepted |
 | [0100](0100-input-mask.md) | Input mask: Maskito under a kit directive on the native input, the clean value in the form | Accepted |
+| [0101](0101-snippets-that-paste-and-the-whole-api-in-mcp.md) | Storybook MCP: snippets that paste, every export where an agent reads it | Accepted |
+| [0102](0102-foundations-docs-pages-and-the-token-reference.md) | Foundations in MCP: a docs page per Foundations story file, with a token reference generated from the tokens | Accepted |
 
 ## Template
 

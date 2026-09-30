@@ -47,7 +47,7 @@ pages: AveSidebarEntry[] = [
 ];
 ```
 
-Entries are data (`AveSidebarEntry`): a page `{ label, link, icon?, exact?, count? }`, a group `{ label, icon?, items }` or a section `{ heading, items }`. Links go from the root; `exact` keeps the home page from being current on every page under it; `count` says how many items wait on the page, drawn as the kit's count (`@avelune/ui/badge`) at the row's end and read after its name ("Договоры 2"), nothing at 0. Register the icons with `provideAveIcons`.
+Entries are data (`AveSidebarEntry`, one of three exported types): a page, an `AveSidebarLink` `{ label, link, icon?, exact?, count? }`; a group, an `AveSidebarGroup` `{ label, icon?, items }` whose `items` are links; or a section, an `AveSidebarSection` `{ heading, items }` whose `items` are links and groups. A link's `link` is a path (`'/contracts'`) or the router's commands (`['/contracts', 42]`). Links go from the root; `exact` keeps the home page from being current on every page under it; `count` says how many items wait on the page, drawn as the kit's count (`@avelune/ui/badge`) at the row's end and read after its name ("Договоры 2"), nothing at 0. Register the icons with `provideAveIcons`.
 
 ## States
 

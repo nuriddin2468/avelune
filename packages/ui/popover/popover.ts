@@ -114,7 +114,9 @@ export class AvePopover {
   /** Draws the button as an icon alone (an IconButton), named and titled by `label`. */
   readonly icon = input<AveIconName>();
 
-  /** The button's emphasis, as a Button's: `secondary` (default), `ghost` in toolbars. */
+  /**
+   * The button's emphasis, as a Button's: `primary`, `secondary` (default), `ghost` in toolbars or `danger`.
+   */
   readonly variant = input<AveButtonVariant>('secondary');
 
   /** The button's size, as a Button's: `sm`, `md` (default), `lg`. */

@@ -7,8 +7,16 @@ import { Component, input } from '@angular/core';
  * ```html
  * <ave-dashboard heading="Обзор" description="Договоры отдела на сегодня">
  *   <ave-dashboard-metric label="На согласовании" value="5" note="2 ждут вас" />
- *   <ave-card>…</ave-card>
- *   <div aveDashboardWide><ave-card>…</ave-card></div>
+ *   <ave-card>
+ *     <h2 aveCardTitle>Ждут согласования</h2>
+ *     <p>ДК-2026/114 · Поставка серверного оборудования</p>
+ *   </ave-card>
+ *   <div aveDashboardWide>
+ *     <ave-card>
+ *       <h2 aveCardTitle>Подписаны недавно</h2>
+ *       <p>ДК-2026/113 · Перевозка грузов</p>
+ *     </ave-card>
+ *   </div>
  * </ave-dashboard>
  * ```
  *

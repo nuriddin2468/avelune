@@ -12,11 +12,15 @@ const lastPlace = 4;
  *
  * ```html
  * <ave-list label="Файлы договора">
- *   @for (file of files(); track file.id) {
- *     <ave-list-item>…</ave-list-item>
- *   }
+ *   <ave-list-item>
+ *     <ave-icon aveListStart name="file-text" decorative />
+ *     <span>Договор ДК-2025/114.pdf</span>
+ *     <span>2,4 МБ</span>
+ *   </ave-list-item>
  * </ave-list>
  * ```
+ *
+ * Rows from data are written with `@for` inside `<ave-list>`; the docs page shows it.
  *
  * @beta
  */

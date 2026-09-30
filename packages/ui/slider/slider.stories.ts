@@ -134,7 +134,8 @@ export const Default: Story = {
     docs: {
       source: {
         code: `<ave-form-field label="Аванс">
-  <ave-slider [maxValue]="50" [step]="5" [format]="{ style: 'unit', unit: 'percent' }" [formField]="contract.advance" />
+  <ave-slider [maxValue]="50" [step]="5" [format]="{ style: 'unit', unit: 'percent' }" [value]="15" />
+  <p aveHint>Доля суммы договора, которую платят до поставки.</p>
 </ave-form-field>`,
         language: 'html',
       },
@@ -163,7 +164,10 @@ export const Range: Story = {
   parameters: {
     docs: {
       source: {
-        code: '<ave-range-slider [maxValue]="24" [format]="{ style: \'unit\', unit: \'hour\' }" [formField]="settings.hours" />',
+        code: `<ave-form-field label="Часы доставки писем">
+  <ave-range-slider [maxValue]="24" [format]="{ style: 'unit', unit: 'hour' }" [value]="{ start: 9, end: 18 }" />
+  <p aveHint>Письма о договорах приходят только в эти часы.</p>
+</ave-form-field>`,
         language: 'html',
       },
     },
@@ -186,8 +190,21 @@ export const States: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-slider disabled />
-<ave-range-slider disabled />`,
+        code: `<ave-form-field label="Rest">
+  <ave-slider [maxValue]="50" [step]="5" [format]="{ style: 'unit', unit: 'percent' }" [value]="15" />
+</ave-form-field>
+<ave-form-field label="Focused">
+  <ave-slider [maxValue]="50" [step]="5" [format]="{ style: 'unit', unit: 'percent' }" [value]="30" />
+</ave-form-field>
+<ave-form-field label="Disabled">
+  <ave-slider disabled [maxValue]="50" [step]="5" [format]="{ style: 'unit', unit: 'percent' }" [value]="15" />
+</ave-form-field>
+<ave-form-field label="Range">
+  <ave-range-slider [maxValue]="24" [format]="{ style: 'unit', unit: 'hour' }" [value]="{ start: 9, end: 18 }" />
+</ave-form-field>
+<ave-form-field label="Range, disabled">
+  <ave-range-slider disabled [maxValue]="24" [format]="{ style: 'unit', unit: 'hour' }" [value]="{ start: 9, end: 18 }" />
+</ave-form-field>`,
         language: 'html',
       },
     },
@@ -219,8 +236,14 @@ export const Forms: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-slider [maxValue]="50" [step]="5" [formField]="contract.advance" />
-<ave-range-slider [maxValue]="24" [formControl]="delivery" />`,
+        code: `<ave-form-field label="Advance (Signal Forms)">
+  <ave-slider [maxValue]="50" [step]="5" [format]="{ style: 'unit', unit: 'percent' }" [formField]="contract.advance" />
+  <p aveHint>At least 10 % of the amount.</p>
+  <p aveError>An advance under 10 % needs the finance department's approval.</p>
+</ave-form-field>
+<ave-form-field label="Delivery hours (Reactive Forms)">
+  <ave-range-slider [maxValue]="24" [format]="{ style: 'unit', unit: 'hour' }" [formControl]="delivery" />
+</ave-form-field>`,
         language: 'html',
       },
     },
@@ -251,7 +274,7 @@ export const LongText: Story = {
     docs: {
       source: {
         code: `<ave-form-field label="Предельная сумма договора без согласования с финансовым департаментом">
-  <ave-slider [maxValue]="1000000000" [step]="50000000" [formField]="contract.limit" />
+  <ave-slider [maxValue]="1000000000" [step]="50000000" [value]="750000000" />
   <p aveHint>Договоры на большую сумму уходят на согласование в финансовый департамент автоматически.</p>
 </ave-form-field>`,
         language: 'html',
@@ -275,6 +298,28 @@ export const LongText: Story = {
 export const UzbekLatin: Story = {
   name: 'Uzbek (Latin)',
   decorators: [locale('uz-Latn'), componentWrapperDecorator(SliderStoryFrame)],
+  parameters: {
+    docs: {
+      source: {
+        code: `import { Component, LOCALE_ID } from '@angular/core';
+import { AveFormField } from '@avelune/ui/form-field';
+import { AveSlider } from '@avelune/ui/slider';
+
+@Component({
+  selector: 'app-experience-filter',
+  imports: [AveFormField, AveSlider],
+  providers: [{ provide: LOCALE_ID, useValue: 'uz-Latn' }],
+  template: \`
+    <ave-form-field label="Ish tajribasi, yil">
+      <ave-slider [maxValue]="10" [step]="0.5" [value]="2.5" [format]="{ maximumFractionDigits: 1 }" />
+    </ave-form-field>
+  \`,
+})
+export class ExperienceFilter {}`,
+        language: 'typescript',
+      },
+    },
+  },
   render: () => ({
     template: `
       <ave-form-field label="Ish tajribasi, yil">
@@ -304,7 +349,7 @@ export const Compact: Story = {
       source: {
         code: `<div data-density="compact">
   <ave-form-field label="Аванс">
-    <ave-slider [maxValue]="50" [step]="5" [format]="{ style: 'unit', unit: 'percent' }" [formField]="contract.advance" />
+    <ave-slider [maxValue]="50" [step]="5" [format]="{ style: 'unit', unit: 'percent' }" [value]="15" />
     <p aveHint>Доля суммы договора, которую платят до поставки.</p>
   </ave-form-field>
 </div>`,

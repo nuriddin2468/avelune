@@ -314,7 +314,17 @@ export const WithoutNavigation: Story = {
     docs: {
       source: {
         code: `<ave-app-shell product="Документооборот" [logo]="logo">
-  <div aveAppShellActions>…</div>
+  <div aveAppShellActions>
+    <button
+      aveIconButton
+      type="button"
+      variant="ghost"
+      icon="rows-3"
+      label="Компактная плотность"
+      aveTooltip="Компактная плотность"
+      aveTooltipSide="bottom"
+    ></button>
+  </div>
   <router-outlet />
 </ave-app-shell>`,
         language: 'html',
@@ -342,7 +352,9 @@ export const LongText: Story = {
   [navigation]="pages"
   lang="uz-Latn"
 >
-  <ave-banner aveAppShellBanner variant="info">…</ave-banner>
+  <ave-banner aveAppShellBanner variant="info">
+    Tizim 2026-yil 31-dekabrgacha yangi versiyaga oʻtkaziladi, hujjatlaringiz saqlanib qoladi.
+  </ave-banner>
   <router-outlet />
 </ave-app-shell>`,
         language: 'html',

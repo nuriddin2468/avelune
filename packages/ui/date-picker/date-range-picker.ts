@@ -186,7 +186,7 @@ export class AveDateRangePicker implements ControlValueAccessor {
   /** The latest date that can be chosen or typed, as an ISO date. */
   readonly maxDate = input<AvePlainDate | null>(null);
 
-  /** The size: the box of an Input of that size, for each input. */
+  /** The size: the box of an Input of that size, for each input: `sm`, `md` (default) or `lg`. */
   readonly size = input<AveDatePickerSize>('md');
 
   /** Whether the field is disabled. A form binding sets it too. */
@@ -202,9 +202,12 @@ export class AveDateRangePicker implements ControlValueAccessor {
   readonly label = input('');
 
   /**
-   * Periods people choose with one press, in the calendar's panel (ADR 0054): the kit's own by name (`'thisMonth'`,
-   * `'last30Days'`, …), whole, from today, weeks from the locale's first day; and the application's own
-   * (`{ label, start, end }`). Cut to `minDate` and `maxDate`; none by default.
+   * Periods people choose with one press, in the calendar's panel (ADR 0054): the kit's own by name, an
+   * `AveDateRangePresetName` (`today`, `yesterday`, `thisWeek`, `lastWeek`, `thisMonth`, `lastMonth`, `thisQuarter`,
+   * `thisYear`, `last7Days` or `last30Days`), whole, from today, weeks from the locale's first day; and the
+   * application's own, an `AveDateRangeCustomPreset` with its `label`, and its `start` and `end` ISO dates
+   * (`{ label: 'Первое полугодие', start: '2026-01-01', end: '2026-06-30' }`). Cut to `minDate` and `maxDate`; none
+   * by default.
    */
   readonly presets = input<readonly AveDateRangePreset[]>([]);
 

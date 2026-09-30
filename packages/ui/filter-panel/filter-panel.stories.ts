@@ -185,18 +185,21 @@ export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-search-header heading="Договоры" [summary]="summary()" [filters]="filters">
+        code: `<ave-search-header heading="Договоры" [summary]="summary()" searchLabel="Поиск договоров" [filters]="filters">
   <input aveInput aveSearchHeaderSearch type="search" aria-label="Поиск договоров" />
 </ave-search-header>
 <ave-applied-filters [filters]="applied()" (remove)="removeFilter($event)" (clear)="clearFilters()" />
-<ave-filter-panel #filters [count]="applied().length" (clear)="clearFilters()">
+<ave-filter-panel #filters label="Фильтры" [count]="applied().length" [(open)]="filtersOpen" (clear)="clearFilters()">
   <ng-template aveFilterPanelContent>
     <fieldset aveChoiceGroup legend="Статус">
+      <label aveChoice><input type="checkbox" aveCheckbox [checked]="shown().has('draft')" (change)="toggle('draft')" /> Черновик</label>
+      <label aveChoice><input type="checkbox" aveCheckbox [checked]="shown().has('approval')" (change)="toggle('approval')" /> На согласовании</label>
       <label aveChoice><input type="checkbox" aveCheckbox [checked]="shown().has('signed')" (change)="toggle('signed')" /> Подписан</label>
-      …
+      <label aveChoice><input type="checkbox" aveCheckbox [checked]="shown().has('expired')" (change)="toggle('expired')" /> Истёк</label>
     </fieldset>
   </ng-template>
-</ave-filter-panel>`,
+</ave-filter-panel>
+<!-- filtersOpen is a signal(true): the column is open from the start. -->`,
         language: 'html',
       },
     },
@@ -225,10 +228,21 @@ export const Collapsed: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-search-header heading="Договоры" [filters]="filters">…</ave-search-header>
-<ave-filter-panel #filters [count]="applied().length" (clear)="clearFilters()">
-  <ng-template aveFilterPanelContent>…</ng-template>
-</ave-filter-panel>`,
+        code: `<ave-search-header heading="Договоры" [summary]="summary()" searchLabel="Поиск по реестру" [filters]="filters">
+  <input aveInput aveSearchHeaderSearch type="search" aria-label="Поиск по реестру" />
+</ave-search-header>
+<ave-applied-filters [filters]="applied()" (remove)="removeFilter($event)" (clear)="clearFilters()" />
+<ave-filter-panel #filters label="Фильтры" [count]="applied().length" [(open)]="filtersOpen" (clear)="clearFilters()">
+  <ng-template aveFilterPanelContent>
+    <fieldset aveChoiceGroup legend="Статус">
+      <label aveChoice><input type="checkbox" aveCheckbox [checked]="shown().has('draft')" (change)="toggle('draft')" /> Черновик</label>
+      <label aveChoice><input type="checkbox" aveCheckbox [checked]="shown().has('approval')" (change)="toggle('approval')" /> На согласовании</label>
+      <label aveChoice><input type="checkbox" aveCheckbox [checked]="shown().has('signed')" (change)="toggle('signed')" /> Подписан</label>
+      <label aveChoice><input type="checkbox" aveCheckbox [checked]="shown().has('expired')" (change)="toggle('expired')" /> Истёк</label>
+    </fieldset>
+  </ng-template>
+</ave-filter-panel>
+<!-- filtersOpen is a signal(false): the list takes the width until the button opens the column. -->`,
         language: 'html',
       },
     },
@@ -256,9 +270,21 @@ export const Drawer: Story = {
     docs: {
       source: {
         code: `<!-- The same panel: below container.lg it opens in a drawer, with "Сбросить фильтры" and "Показать результаты". -->
-<ave-filter-panel #filters [count]="applied().length" (clear)="clearFilters()">
-  <ng-template aveFilterPanelContent>…</ng-template>
-</ave-filter-panel>`,
+<ave-search-header heading="Договоры" [summary]="summary()" searchLabel="Поиск в архиве" [filters]="filters">
+  <input aveInput aveSearchHeaderSearch type="search" aria-label="Поиск в архиве" />
+</ave-search-header>
+<ave-applied-filters [filters]="applied()" (remove)="removeFilter($event)" (clear)="clearFilters()" />
+<ave-filter-panel #filters label="Фильтры" [count]="applied().length" [(open)]="filtersOpen" (clear)="clearFilters()">
+  <ng-template aveFilterPanelContent>
+    <fieldset aveChoiceGroup legend="Статус">
+      <label aveChoice><input type="checkbox" aveCheckbox [checked]="shown().has('draft')" (change)="toggle('draft')" /> Черновик</label>
+      <label aveChoice><input type="checkbox" aveCheckbox [checked]="shown().has('approval')" (change)="toggle('approval')" /> На согласовании</label>
+      <label aveChoice><input type="checkbox" aveCheckbox [checked]="shown().has('signed')" (change)="toggle('signed')" /> Подписан</label>
+      <label aveChoice><input type="checkbox" aveCheckbox [checked]="shown().has('expired')" (change)="toggle('expired')" /> Истёк</label>
+    </fieldset>
+  </ng-template>
+</ave-filter-panel>
+<!-- filtersOpen is a signal(true): on a narrow page the drawer is open from the start. -->`,
         language: 'html',
       },
     },
@@ -284,9 +310,18 @@ export const LongText: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-filter-panel #filters label="Filtrlar" [count]="applied().length" (clear)="clearFilters()">
+        code: `<ave-search-header heading="Shartnomalar" [summary]="summary()" searchLabel="Shartnomalarni qidirish" [filters]="filters">
+  <input aveInput aveSearchHeaderSearch type="search" aria-label="Shartnomalarni qidirish" />
+</ave-search-header>
+<ave-applied-filters [filters]="applied()" (remove)="removeFilter($event)" (clear)="clearFilters()" />
+<ave-filter-panel #filters label="Filtrlar" [count]="applied().length" [(open)]="filtersOpen" (clear)="clearFilters()">
   <ng-template aveFilterPanelContent>
-    <fieldset aveChoiceGroup legend="Holati">…</fieldset>
+    <fieldset aveChoiceGroup legend="Holati">
+      <label aveChoice><input type="checkbox" aveCheckbox [checked]="shown().has('draft')" (change)="toggle('draft')" /> Qoralama</label>
+      <label aveChoice><input type="checkbox" aveCheckbox [checked]="shown().has('approval')" (change)="toggle('approval')" /> Kelishuv jarayonida boʻlgan shartnomalar</label>
+      <label aveChoice><input type="checkbox" aveCheckbox [checked]="shown().has('signed')" (change)="toggle('signed')" /> Imzolangan va roʻyxatdan oʻtkazilgan</label>
+      <label aveChoice><input type="checkbox" aveCheckbox [checked]="shown().has('expired')" (change)="toggle('expired')" /> Muddati tugagan</label>
+    </fieldset>
   </ng-template>
 </ave-filter-panel>`,
         language: 'html',

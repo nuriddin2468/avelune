@@ -76,10 +76,10 @@ export const Default: Story = {
     docs: {
       source: {
         code: `<ave-tabs label="Разделы договора" [(selected)]="section">
-  <ave-tab value="facts" label="Сведения">…</ave-tab>
-  <ave-tab value="route" label="Согласование">…</ave-tab>
-  <ave-tab value="files" label="Файлы">…</ave-tab>
-  <ave-tab value="history" label="История">…</ave-tab>
+  <ave-tab value="facts" label="Сведения"><p>Контрагент, сумма и сроки договора.</p></ave-tab>
+  <ave-tab value="route" label="Согласование"><p>Юридический отдел согласовал, финансовый рассматривает.</p></ave-tab>
+  <ave-tab value="files" label="Файлы"><p>Договор.pdf, Спецификация.xlsx</p></ave-tab>
+  <ave-tab value="history" label="История"><p>Создан черновик, отправлен на согласование.</p></ave-tab>
 </ave-tabs>`,
         language: 'html',
       },
@@ -118,10 +118,10 @@ export const States: Story = {
     docs: {
       source: {
         code: `<ave-tabs label="Разделы договора" [(selected)]="section">
-  <ave-tab value="facts" label="Сведения" icon="info">…</ave-tab>
-  <ave-tab value="route" label="Согласование" icon="route">…</ave-tab>
-  <ave-tab value="files" label="Файлы" icon="paperclip">…</ave-tab>
-  <ave-tab value="history" label="История" icon="clock" disabled>…</ave-tab>
+  <ave-tab value="facts" label="Сведения" icon="info"><p>Контрагент, сумма и сроки договора.</p></ave-tab>
+  <ave-tab value="route" label="Согласование" icon="route"><p>Юридический отдел согласовал.</p></ave-tab>
+  <ave-tab value="files" label="Файлы" icon="paperclip"><p>Договор.pdf, Спецификация.xlsx</p></ave-tab>
+  <ave-tab value="history" label="История" icon="clock" disabled><p>Создан черновик.</p></ave-tab>
 </ave-tabs>`,
         language: 'html',
       },
@@ -148,10 +148,10 @@ export const LongText: Story = {
     docs: {
       source: {
         code: `<ave-tabs label="Hujjat boʻlimlari" [(selected)]="section">
-  <ave-tab value="main" label="Asosiy maʼlumotlar">…</ave-tab>
-  <ave-tab value="route" label="Kelishish yoʻnalishi">…</ave-tab>
-  <ave-tab value="links" label="Связанные документы министерств и ведомств">…</ave-tab>
-  <ave-tab value="log" label="Oʻzgarishlar tarixi">…</ave-tab>
+  <ave-tab value="main" label="Asosiy maʼlumotlar"><p>Hujjatning asosiy maʼlumotlari.</p></ave-tab>
+  <ave-tab value="route" label="Kelishish yoʻnalishi"><p>Kelishuvchilar roʻyxati.</p></ave-tab>
+  <ave-tab value="links" label="Связанные документы министерств и ведомств"><p>Связей нет.</p></ave-tab>
+  <ave-tab value="log" label="Oʻzgarishlar tarixi"><p>Oʻzgarishlar yoʻq.</p></ave-tab>
 </ave-tabs>`,
         language: 'html',
       },

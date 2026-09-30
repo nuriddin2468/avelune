@@ -274,6 +274,13 @@ export const Default: Story = {
   <ng-template aveCell="status" [aveCellOf]="contracts" let-contract>
     <ave-badge [variant]="variants[contract.status]">{{ statuses[contract.status] }}</ave-badge>
   </ng-template>
+  <ng-template aveCell="endsOn" [aveCellOf]="contracts" let-contract>
+    <time [attr.datetime]="contract.endsOn">{{ dates.numeric(contract.endsOn) }}</time>
+  </ng-template>
+  <ng-template aveCell="actions" [aveCellOf]="contracts" let-contract>
+    <ave-menu icon="ellipsis" variant="ghost" size="sm"
+      [label]="'Действия с договором ' + contract.number" [items]="actions" />
+  </ng-template>
 </ave-data-table>`,
         language: 'html',
       },

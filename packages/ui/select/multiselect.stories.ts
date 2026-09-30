@@ -199,7 +199,10 @@ export const Default: Story = {
   decorators: [componentWrapperDecorator(MultiselectStoryFrame)],
   parameters: {
     docs: {
-      source: { code: '<ave-multiselect [options]="approvers" [formField]="contract.approvers" />', language: 'html' },
+      source: {
+        code: '<ave-multiselect label="Согласующие" [options]="approvers" size="md" placeholder="Выберите согласующих" />',
+        language: 'html',
+      },
     },
   },
   play: async ({ canvasElement }) => {
@@ -212,7 +215,14 @@ export const Default: Story = {
 /** The open list: two options checked; it stays open while people check more. */
 export const Open: Story = {
   decorators: [componentWrapperDecorator(MultiselectStoryFrame)],
-  parameters: { docs: { source: { code: '<ave-multiselect [options]="approvers" />', language: 'html' } } },
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-multiselect label="Согласующие" [options]="approvers" placeholder="Выберите согласующих" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: 'Согласующие' });
@@ -233,8 +243,10 @@ export const States: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-multiselect [options]="approvers" readonly />
-<ave-multiselect [options]="approvers" disabled />`,
+        code: `<ave-multiselect label="Empty" placeholder="Выберите согласующих" [options]="approvers" />
+<ave-multiselect label="Chosen" [options]="approvers" [value]="['legal', 'finance']" />
+<ave-multiselect label="Readonly" [options]="approvers" [value]="['security']" readonly />
+<ave-multiselect label="Disabled" [options]="approvers" [value]="['legal']" disabled />`,
         language: 'html',
       },
     },
@@ -255,8 +267,8 @@ export const Forms: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-multiselect [options]="approvers" [formField]="contract.approvers" />
-<ave-multiselect [options]="approvers" [formControl]="chosen" />`,
+        code: `<ave-multiselect label="Approvers (Signal Forms)" [options]="approvers" [formField]="contract.approvers" />
+<ave-multiselect label="Approvers (Reactive Forms)" [options]="approvers" [formControl]="chosen" />`,
         language: 'html',
       },
     },
@@ -279,7 +291,14 @@ export const Forms: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
-  parameters: { docs: { source: { code: '<ave-multiselect [options]="approvers" />', language: 'html' } } },
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-multiselect label="Согласующие" [options]="approvers" [value]="allApprovers" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const host = canvasElement.querySelector('ave-multiselect');
     const height = host?.getBoundingClientRect().height ?? 0;
@@ -305,7 +324,10 @@ export const Tags: Story = {
   }),
   parameters: {
     docs: {
-      source: { code: '<ave-multiselect [options]="approvers" [formField]="contract.approvers" />', language: 'html' },
+      source: {
+        code: `<ave-multiselect label="Согласующие" [options]="approvers" [value]="['legal', 'finance', 'security']" />`,
+        language: 'html',
+      },
     },
   },
   play: async ({ canvasElement }) => {
@@ -334,7 +356,11 @@ export const Clearing: Story = {
   render: () => ({ template: '<ave-multiselect-clearing />', moduleMetadata: { imports: [MultiselectClearing] } }),
   parameters: {
     docs: {
-      source: { code: '<ave-multiselect [options]="approvers" [formField]="contract.watchers" />', language: 'html' },
+      source: {
+        code: `<ave-multiselect label="Наблюдатели" placeholder="Выберите подразделения" [options]="approvers" [(value)]="watchers" />
+<ave-multiselect label="Согласующие (обязательно)" [options]="approvers" [formField]="contract.approvers" />`,
+        language: 'html',
+      },
     },
   },
   play: async ({ canvasElement }) => {
@@ -379,9 +405,26 @@ export const RichOptions: Story = {
   parameters: {
     docs: {
       source: {
-        code: `{ value: 'contract', label: 'Договоры', icon: 'file-text', meta: '128' }
-<ave-multiselect [options]="documentTypes" [formField]="filter.types" />`,
-        language: 'html',
+        code: `import { Component } from '@angular/core';
+import { lucideFileArchive, lucideFileImage, lucideFileSpreadsheet, lucideFileText } from '@avelune/icons/lucide';
+import { provideAveIcons } from '@avelune/ui/icon';
+import { AveMultiselect, type AveOption } from '@avelune/ui/select';
+
+@Component({
+  selector: 'app-document-types',
+  imports: [AveMultiselect],
+  providers: [provideAveIcons([lucideFileArchive, lucideFileImage, lucideFileSpreadsheet, lucideFileText])],
+  template: \`<ave-multiselect label="Типы документов" [options]="documentTypes" [value]="['contract', 'scan']" />\`,
+})
+export class DocumentTypes {
+  protected readonly documentTypes: readonly AveOption<string>[] = [
+    { value: 'contract', label: 'Договоры', icon: 'file-text', meta: '128' },
+    { value: 'estimate', label: 'Сметы', icon: 'file-spreadsheet', meta: '42' },
+    { value: 'scan', label: 'Сканы', icon: 'file-image', meta: '7' },
+    { value: 'archive', label: 'Архивы', icon: 'file-archive', meta: '3' },
+  ];
+}`,
+        language: 'typescript',
       },
     },
   },
@@ -407,7 +450,8 @@ export const Search: Story = {
   parameters: {
     docs: {
       source: {
-        code: '<ave-multiselect search="local" [options]="regions" [formField]="contract.regions" />',
+        code: `<ave-multiselect label="Регионы поставки" search="local" placeholder="Начните вводить регион" [options]="regions" [(value)]="chosen" />
+<ave-multiselect label="Yetkazib berish hududlari" search="local" [options]="regionsUz" [value]="['fergana']" />`,
         language: 'html',
       },
     },

@@ -97,9 +97,18 @@ export const Default: Story = {
     docs: {
       source: {
         code: `<ave-accordion [level]="2">
-  <ave-accordion-item heading="Штрафы и пени" [(expanded)]="fines">…</ave-accordion-item>
-  <ave-accordion-item heading="Форс-мажор">…</ave-accordion-item>
-  <ave-accordion-item heading="Конфиденциальность" disabled>…</ave-accordion-item>
+  <ave-accordion-item heading="Штрафы и пени" [expanded]="true">
+    <p>За каждый день просрочки поставки — пеня 0,1% от суммы договора, но не более 10%.</p>
+  </ave-accordion-item>
+  <ave-accordion-item heading="Форс-мажор">
+    <p>
+      Стороны освобождаются от ответственности за неисполнение обязательств из-за обстоятельств непреодолимой
+      силы.
+    </p>
+  </ave-accordion-item>
+  <ave-accordion-item heading="Конфиденциальность" disabled>
+    <p>Условия договора не раскрываются третьим лицам.</p>
+  </ave-accordion-item>
 </ave-accordion>`,
         language: 'html',
       },
@@ -149,7 +158,21 @@ export const Keyboard: Story = {
 /** One open at a time (`multiple` false): the supplier's and the buyer's details. */
 export const Single: Story = {
   render: frame('single'),
-  parameters: { docs: { source: { code: '<ave-accordion [multiple]="false">…</ave-accordion>', language: 'html' } } },
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-accordion [multiple]="false">
+  <ave-accordion-item heading="Реквизиты поставщика" [expanded]="true">
+    <p>ООО «Мебель Сервис», ИНН 305 118 427, р/с 2020 8000 1051 2345 6001.</p>
+  </ave-accordion-item>
+  <ave-accordion-item heading="Реквизиты покупателя">
+    <p>АО «Узтелеком», ИНН 203 366 731, р/с 2021 0000 9001 1122 3004.</p>
+  </ave-accordion-item>
+</ave-accordion>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: 'Реквизиты покупателя' }));

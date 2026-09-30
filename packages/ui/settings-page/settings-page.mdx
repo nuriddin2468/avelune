@@ -30,6 +30,21 @@ import { AveSettingsPage, type AveSettingsSection } from '@avelune/ui/settings-p
 - From `container.md` the sections stand in a 256px column at the start, the section beside it, 24px apart.
 - Below it, at `home` (`/settings`) the list shows; at a section's address the section shows under a ghost link back to `home` ("Все настройки", or `backLabel`).
 
+Each entry of `sections` is an `AveSettingsSection`:
+
+| Field   | Holds                                                                         |
+| ------- | ----------------------------------------------------------------------------- |
+| `label` | The section's name in the list: `Оформление`.                                 |
+| `link`  | The route of the section's page: `/settings/appearance`.                      |
+| `icon`  | An icon name before the label, such as `palette`. Optional, none if left out. |
+
+```ts
+const sections: readonly AveSettingsSection[] = [
+  { label: 'Профиль', link: '/settings/profile', icon: 'user' },
+  { label: 'Оформление', link: '/settings/appearance' },
+];
+```
+
 ```html
 <ave-settings-page
   heading="Настройки"

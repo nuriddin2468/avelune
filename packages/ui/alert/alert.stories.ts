@@ -127,7 +127,7 @@ export const Default: Story = {
     docs: {
       source: {
         code: `<ave-alert variant="warning" heading="Контрагент не прошёл проверку">
-  Налоговый номер не найден в реестре. <a href="…">Проверьте ИНН</a> или выберите другого контрагента.
+  Налоговый номер не найден в реестре. <a href="/counterparties/1">Проверьте ИНН</a> или выберите другого контрагента.
 </ave-alert>`,
         language: 'html',
       },
@@ -154,10 +154,18 @@ export const Variants: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-alert heading="Договор ждёт согласования">…</ave-alert>
-<ave-alert variant="success" heading="Договор подписан">…</ave-alert>
-<ave-alert variant="warning" heading="Срок действия истекает">…</ave-alert>
-<ave-alert variant="danger" heading="Договор не отправлен">…</ave-alert>`,
+        code: `<ave-alert variant="info" heading="Договор ждёт согласования">
+  Юридический отдел ответит до конца рабочего дня.
+</ave-alert>
+<ave-alert variant="success" heading="Договор подписан">
+  Экземпляр с подписями сохранён в приложениях.
+</ave-alert>
+<ave-alert variant="warning" heading="Срок действия истекает">
+  Договор действует до 26.03.2026. Продлите его или подготовьте новый.
+</ave-alert>
+<ave-alert variant="danger" heading="Договор не отправлен">
+  Сервер согласования не ответил. Проверьте подключение и отправьте договор ещё раз.
+</ave-alert>`,
         language: 'html',
       },
     },
@@ -204,6 +212,10 @@ export const WithActions: Story = {
         code: `<ave-alert variant="danger" heading="Список контрагентов не загрузился">
   Сервер справочника не ответил за 30 секунд.
   <div aveAlertActions><button aveButton type="button" size="sm" (click)="reload()">Повторить</button></div>
+</ave-alert>
+<ave-alert variant="warning">
+  ИНН контрагента не найден в реестре налоговой.
+  <div aveAlertActions><a href="/counterparties/1">Открыть карточку контрагента</a></div>
 </ave-alert>`,
         language: 'html',
       },
@@ -233,8 +245,9 @@ export const LongText: Story = {
         code: `<ave-alert variant="warning" heading="Oʻzbekiston Respublikasi Vazirlar Mahkamasining qarori bilan tasdiqlangan shakl">
   Hujjat shakli 2026-yil 1-apreldan boshlab yangilanadi. Eski shakldagi shartnomalarni qayta rasmiylashtiring.
 </ave-alert>
-<ave-alert>
-  Договоры, отправленные на согласование после 18:00, юридический отдел рассматривает на следующий рабочий день, …
+<ave-alert variant="info">
+  Договоры, отправленные на согласование после 18:00, юридический отдел рассматривает на следующий рабочий день, а
+  договоры с суммой больше одного миллиарда сумов дополнительно согласует финансовый директор.
 </ave-alert>`,
         language: 'html',
       },

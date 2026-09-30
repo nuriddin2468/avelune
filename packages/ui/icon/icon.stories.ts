@@ -244,39 +244,6 @@ class IconGallery {
 })
 class IconStoryFrame {}
 
-/** `arrow-down` → `lucideArrowDown`: the export an application imports from `@avelune/icons/lucide`. */
-const lucideExport = (name: string) =>
-  `lucide${name
-    .split('-')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join('')}`;
-
-/**
- * The Default snippet, from the story's current args: a whole component that registers the icon it draws. Storybook's
- * own snippet leaves the provider out, and a copy of it would throw.
- */
-function registeredComponent(_code: string, { args }: { readonly args: Readonly<Record<string, unknown>> }): string {
-  const name = typeof args['name'] === 'string' ? args['name'] : 'circle-alert';
-  const label = typeof args['label'] === 'string' ? args['label'].trim() : '';
-  const size = typeof args['size'] === 'string' ? args['size'] : 'sm';
-  const meaning = args['decorative'] === true || label === '' ? 'decorative' : `label="${label}"`;
-  const attributes = [`name="${name}"`, meaning, ...(size === 'sm' ? [] : [`size="${size}"`])].join(' ');
-  return [
-    "import { Component } from '@angular/core';",
-    `import { ${lucideExport(name)} } from '@avelune/icons/lucide';`,
-    "import { AveIcon, provideAveIcons } from '@avelune/ui/icon';",
-    '',
-    '@Component({',
-    "  selector: 'app-demo',",
-    '  imports: [AveIcon],',
-    '  // Registers the icon this component draws; icons used across the app go in app.config.ts.',
-    `  providers: [provideAveIcons([${lucideExport(name)}])],`,
-    `  template: \`<ave-icon ${attributes} />\`,`,
-    '})',
-    'export class DemoComponent {}',
-  ].join('\n');
-}
-
 const meta: Meta<AveIcon> = {
   title: 'Components/Icon',
   component: AveIcon,
@@ -292,7 +259,25 @@ type Story = StoryObj<AveIcon>;
 
 /** One icon, with controls; every Lucide icon is registered, so any name works. */
 export const Default: Story = {
-  parameters: { docs: { source: { transform: registeredComponent, language: 'typescript' } } },
+  parameters: {
+    docs: {
+      source: {
+        code: `import { Component } from '@angular/core';
+import { lucideCircleAlert } from '@avelune/icons/lucide';
+import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
+
+@Component({
+  selector: 'app-upload-error',
+  imports: [AveIcon],
+  // Registers the icon this component draws; icons used across the app go in app.config.ts.
+  providers: [provideAveIcons([lucideCircleAlert])],
+  template: \`<ave-icon name="circle-alert" label="Error" />\`,
+})
+export class UploadError {}`,
+        language: 'typescript',
+      },
+    },
+  },
   decorators: [
     applicationConfig({ providers: [provideAveIcons(lucideIcons)] }),
     moduleMetadata({ imports: [IconStoryFrame] }),
@@ -398,7 +383,8 @@ export const Custom: Story = {
     docs: {
       source: {
         language: 'typescript',
-        code: `import { defineAveIcon, provideAveIcons } from '@avelune/ui/icon';
+        code: `import { Component } from '@angular/core';
+import { AveIcon, defineAveIcon, provideAveIcons } from '@avelune/ui/icon';
 import certificateSvg from './icons/certificate.svg';
 import signatureSvg from './icons/signature.svg';
 import verifiedSvg from './icons/verified.svg';
@@ -416,10 +402,18 @@ export const certificate = defineAveIcon('certificate', certificateSvg);
 export const verified = defineAveIcon('verified', verifiedSvg, { colors: 'original' });
 export const signature = defineAveIcon('signature', signatureSvg, { strokes: 'original' });
 
-// app.config.ts, or the providers of the route or component that draws them
-providers: [provideAveIcons([certificate, verified, signature])];
-
-// In a template: <ave-icon name="certificate" label="Certificate" />`,
+@Component({
+  selector: 'app-seals',
+  imports: [AveIcon],
+  // Or app.config.ts, when the whole application draws them.
+  providers: [provideAveIcons([certificate, verified, signature])],
+  template: \`
+    <ave-icon name="certificate" label="Certificate" />
+    <ave-icon name="verified" label="Verified" size="md" />
+    <ave-icon name="signature" label="Signature" size="lg" />
+  \`,
+})
+export class Seals {}`,
       },
     },
   },
@@ -476,11 +470,13 @@ export const LongText: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<!-- Registered with provideAveIcons([lucidePaperclip, lucideExternalLink]), see "Registering icons". -->
-<p>
+        code: `<!-- Registered with provideAveIcons([lucidePaperclip, lucideExternalLink, lucideFileText]), see "Registering icons". -->
+<p lang="ru">
   <ave-icon name="paperclip" decorative />
   Приложение к распоряжению о переводе сотрудников в отдел документационного обеспечения управления
-  <ave-icon name="external-link" label="Открыть в новой вкладке" />
+  <ave-icon name="external-link" label="Открыть в новой вкладке" /> и
+  <span lang="uz-Latn">Oʻzbekiston Respublikasi Vazirlar Mahkamasining qarorlari roʻyxati</span>
+  <ave-icon name="file-text" decorative />
 </p>`,
         language: 'html',
       },

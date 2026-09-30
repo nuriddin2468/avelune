@@ -8,7 +8,7 @@
         "components-thing--default": {
           "id": "components-thing--default",
           "name": "Default",
-          "snippet": "<ave-thing label=\"Условия\" [(open)]=\"open\">\n  <ave-thing-item heading=\"Штрафы\">…</ave-thing-item>\n</ave-thing>"
+          "snippet": "<ave-thing label=\"Условия\" [(open)]=\"open\">\n  <ave-thing-item heading=\"Штрафы\">Пеня 0,1% за каждый день просрочки.</ave-thing-item>\n</ave-thing>"
         },
         "components-thing--long-text": {
           "id": "components-thing--long-text",

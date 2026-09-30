@@ -47,8 +47,8 @@ function nodeInCurrentColour(node: IconNode): IconNode {
 /**
  * Turns an application's SVG into an icon for `provideAveIcons` (ADR 0036). Any static SVG works; by default it
  * is fitted to the kit: drawn in the text colour, with the kit's stroke widths, in the square of the icon size. Draw
- * new icons as Lucide's are drawn (24 × 24 canvas, 2px round strokes); the Storybook page "Components / Icon / Check
- * your icon" compares one with Lucide's.
+ * new icons as Lucide's are drawn (24 × 24 canvas, 2px round strokes); the Storybook page "Guides / Custom icons /
+ * Check your icon" compares one with Lucide's.
  *
  * Declare the name first, so templates accept it:
  *

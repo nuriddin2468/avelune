@@ -122,8 +122,19 @@ export const Default: Story = {
     docs: {
       source: {
         code: `<dialog aveDrawer heading="Договор ДК-2026/114" [(open)]="viewing">
-  <dl>…</dl>
-  <div aveDialogActions>…</div>
+  <dl>
+    <dt>Предмет</dt>
+    <dd>Поставка серверного оборудования для центра обработки данных</dd>
+    <dt>Контрагент</dt>
+    <dd>ООО «Альфа Технологии»</dd>
+    <dt>Сумма</dt>
+    <dd>1 250 000 000 сум</dd>
+    <dt>Срок действия</dt>
+    <dd>до 31.12.2026</dd>
+  </dl>
+  <div aveDialogActions>
+    <button aveButton type="button" variant="primary" (click)="viewing.set(false)">Изменить договор</button>
+  </div>
 </dialog>`,
         language: 'html',
       },
@@ -189,7 +200,29 @@ export const LongContent: Story = {
 <dialog aveDrawer heading="Samarqand viloyati sogʻliqni saqlash boshqarmasi bilan tuzilgan shartnoma"
   [(open)]="reading">
   <p>1-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
-  <p>…</p>
+  <p>2-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>3-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>4-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>5-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>6-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>7-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>8-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>9-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>10-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>11-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>12-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>13-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>14-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>15-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>16-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>17-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>18-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>19-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>20-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>21-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>22-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>23-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
+  <p>24-band. Shartnoma shartlari tomonlar tomonidan belgilangan muddatlarda bajariladi.</p>
   <div aveDialogActions>
     <button aveButton type="button" variant="primary" (click)="reading.set(false)">Yopish</button>
   </div>

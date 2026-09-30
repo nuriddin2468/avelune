@@ -231,7 +231,7 @@ export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: '<ave-combobox [options]="counterparties" [formField]="contract.counterparty" />',
+        code: '<ave-combobox label="Контрагент" [options]="counterparties" size="md" placeholder="Начните вводить название" />',
         language: 'html',
       },
     },
@@ -244,7 +244,14 @@ export const Default: Story = {
 
 /** Typing filters the list: "узбек" shows the two organisations whose names contain it in Cyrillic. */
 export const Filtering: Story = {
-  parameters: { docs: { source: { code: '<ave-combobox [options]="counterparties" />', language: 'html' } } },
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-combobox label="Контрагент" placeholder="Начните вводить название" [options]="counterparties" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const input = canvas.getByRole('combobox', { name: 'Контрагент' });
@@ -258,7 +265,14 @@ export const Filtering: Story = {
 /** "o'zbek", typed with an ASCII apostrophe, finds "Oʻzbekiston". */
 export const UzbekApostrophes: Story = {
   name: 'Uzbek apostrophes',
-  parameters: { docs: { source: { code: '<ave-combobox [options]="counterparties" />', language: 'html' } } },
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-combobox label="Контрагент" placeholder="Начните вводить название" [options]="counterparties" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.type(canvas.getByRole('combobox', { name: 'Контрагент' }), "o'zbekiston");
@@ -276,7 +290,14 @@ export const UzbekApostrophes: Story = {
 /** Nothing matches: the list says so, in the application's language. */
 export const NoResults: Story = {
   name: 'No results',
-  parameters: { docs: { source: { code: '<ave-combobox [options]="counterparties" />', language: 'html' } } },
+  parameters: {
+    docs: {
+      source: {
+        code: '<ave-combobox label="Контрагент" placeholder="Начните вводить название" [options]="counterparties" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.type(canvas.getByRole('combobox', { name: 'Контрагент' }), 'Омега');
@@ -291,8 +312,10 @@ export const States: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-combobox [options]="counterparties" readonly />
-<ave-combobox [options]="counterparties" disabled />`,
+        code: `<ave-combobox label="Empty" placeholder="Начните вводить название" [options]="counterparties" />
+<ave-combobox label="Chosen" [options]="counterparties" [value]="3" />
+<ave-combobox label="Readonly" [options]="counterparties" [value]="1" readonly />
+<ave-combobox label="Disabled" [options]="counterparties" [value]="2" disabled />`,
         language: 'html',
       },
     },
@@ -311,8 +334,8 @@ export const Forms: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-combobox [options]="counterparties" [formField]="contract.counterparty" />
-<ave-combobox [options]="counterparties" [formControl]="counterparty" />`,
+        code: `<ave-combobox label="Counterparty (Signal Forms)" [options]="counterparties" [formField]="contract.counterparty" />
+<ave-combobox label="Counterparty (Reactive Forms)" [options]="counterparties" [formControl]="counterparty" />`,
         language: 'html',
       },
     },
@@ -338,7 +361,15 @@ export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
   decorators: [],
-  parameters: { docs: { source: { code: '<ave-combobox [options]="counterparties" />', language: 'html' } } },
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-combobox label="Контрагент" [options]="counterparties" [value]="6" />
+<ave-combobox label="Kontragent" lang="uz-Latn" [options]="counterparties" [value]="8" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const column = canvasElement.querySelector('.narrow');
     if (column === null) throw new Error('No column');
@@ -355,7 +386,11 @@ export const Clearing: Story = {
   render: () => ({ template: '<ave-combobox-clearing />', moduleMetadata: { imports: [ComboboxClearing] } }),
   parameters: {
     docs: {
-      source: { code: '<ave-combobox [options]="counterparties" [formField]="contract.payer" />', language: 'html' },
+      source: {
+        code: `<ave-combobox label="Плательщик" placeholder="Начните вводить название" [options]="counterparties" [(value)]="payer" />
+<ave-combobox label="Контрагент (обязательный)" [options]="counterparties" [formField]="contract.counterparty" />`,
+        language: 'html',
+      },
     },
   },
   play: async ({ canvasElement }) => {
@@ -393,7 +428,11 @@ export const RichOptions: Story = {
   render: () => ({ template: '<ave-combobox-rich />', moduleMetadata: { imports: [ComboboxRich] } }),
   parameters: {
     docs: {
-      source: { code: '<ave-combobox [options]="countries" [formField]="company.country" />', language: 'html' },
+      source: {
+        code: `<ave-combobox label="Страна" lang="ru" [options]="countries" />
+<ave-combobox label="Mamlakat" lang="uz-Latn" [options]="countriesUz" value="uz" />`,
+        language: 'html',
+      },
     },
   },
   play: async ({ canvasElement }) => {
@@ -427,8 +466,18 @@ export const ServerSearch: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-combobox search="server" [options]="page.options()" [loading]="page.loading()" [error]="page.failed()"
-  [hasMore]="page.hasMore()" (query)="find($event)" (loadMore)="next()" [formField]="contract.counterparty" />`,
+        code: `<ave-combobox
+  label="Контрагент"
+  placeholder="Название или ИНН"
+  search="server"
+  [options]="page.options()"
+  [loading]="page.loading()"
+  [error]="page.failed()"
+  [hasMore]="page.hasMore()"
+  [(value)]="counterparty"
+  (query)="page.query($event)"
+  (loadMore)="page.loadMore()"
+/>`,
         language: 'html',
       },
     },
@@ -461,8 +510,43 @@ export const ServerStates: Story = {
   parameters: {
     docs: {
       source: {
-        code: '<ave-combobox search="server" [loading]="…" [error]="…" (query)="find($event)" />',
-        language: 'html',
+        code: `import { Component, signal } from '@angular/core';
+import { AveCombobox, type AveOption } from '@avelune/ui/select';
+
+@Component({
+  selector: 'app-counterparty-search',
+  imports: [AveCombobox],
+  template: \`
+    <ave-combobox
+      label="Контрагент"
+      placeholder="Название или ИНН"
+      search="server"
+      [options]="options()"
+      [loading]="loading()"
+      [error]="failed()"
+      [hasMore]="hasMore()"
+      [(value)]="counterparty"
+      (query)="find($event)"
+      (loadMore)="loadMore()"
+    />
+  \`,
+})
+export class CounterpartySearch {
+  protected readonly options = signal<readonly AveOption<number>[]>([]);
+  protected readonly loading = signal(false);
+  protected readonly failed = signal(false);
+  protected readonly hasMore = signal(false);
+  protected readonly counterparty = signal<number | null>(null);
+
+  protected find(text: string): void {
+    // Ask the server for the first page of counterparties matching the text: set loading, then options, hasMore and failed.
+  }
+
+  protected loadMore(): void {
+    // Ask for the next page and append it to the options.
+  }
+}`,
+        language: 'typescript',
       },
     },
   },
@@ -488,7 +572,18 @@ export const ServerFailed: Story = {
   parameters: {
     docs: {
       source: {
-        code: '<ave-combobox search="server" [error]="page.failed()" (query)="find($event)" />',
+        code: `<ave-combobox
+  label="Контрагент"
+  placeholder="Название или ИНН"
+  search="server"
+  [options]="page.options()"
+  [loading]="page.loading()"
+  [error]="page.failed()"
+  [hasMore]="page.hasMore()"
+  [(value)]="counterparty"
+  (query)="page.query($event)"
+  (loadMore)="page.loadMore()"
+/>`,
         language: 'html',
       },
     },

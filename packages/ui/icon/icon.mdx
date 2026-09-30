@@ -31,6 +31,7 @@ providers: [provideAveIcons([lucideSettings])];
 <ave-icon name="calendar" decorative />
 ```
 
+- `provideAveIcons` takes a list of `AveIconDefinition` values: a Lucide export such as `lucideCalendar`, or the result of `defineAveIcon`. Its `name` field is the name `<ave-icon>` takes.
 - Every `<ave-icon>` sees the icons of its own injector and of every ancestor: the application's, the route's and the component's.
 - To register every Lucide icon at once, for an admin tool or a prototype: `provideAveIcons(lucideIcons)` with `lucideIcons` from `@avelune/icons/lucide/all`. That puts the whole set in the bundle, about 75 kB brotli.
 - In development, a name nobody registered throws and names the export to add (`lucideCalendarDays` for `calendar-days`). So does one name registered with two different drawings.
@@ -108,6 +109,12 @@ providers: [provideAveIcons([certificate])];
 To import `.svg` files as text, add `"loader": { ".svg": "text" }` to the application's build options and declare the module once: `declare module '*.svg' { const svg: string; export default svg; }`.
 
 <Canvas of={IconStories.Custom} />
+
+`defineAveIcon(name, svg, options)` returns an `AveIconDefinition` and takes an optional `AveCustomIconOptions`, whose two fields are both optional: `colors`, `current` (default) or `original`, and `strokes`, `kit` (default) or `original`.
+
+```ts
+export const verified = defineAveIcon('verified', verifiedSvg, { colors: 'original', strokes: 'kit' });
+```
 
 **The kit fits the icon by default.** Whatever the file says, the icon takes the square of its size, and:
 

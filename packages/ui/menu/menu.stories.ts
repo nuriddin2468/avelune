@@ -135,14 +135,38 @@ export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-menu label="Действия" [items]="actions" (itemSelected)="run($event)" />
+        code: `import { Component, signal } from '@angular/core';
+import { lucideArchive, lucideCopy, lucideDownload, lucideFileText, lucidePencil, lucideTrash } from '@avelune/icons/lucide';
+import { provideAveIcons } from '@avelune/ui/icon';
+import { AveMenu, type AveMenuEntry } from '@avelune/ui/menu';
 
-actions: AveMenuEntry<Action>[] = [
-  { value: 'open', label: 'Открыть', icon: 'file-text' },
-  { separator: true },
-  { value: 'delete', label: 'Удалить договор', icon: 'trash', danger: true },
-];`,
-        language: 'html',
+type Action = 'open' | 'edit' | 'copy' | 'export' | 'archive' | 'delete';
+
+@Component({
+  selector: 'app-contract-actions',
+  imports: [AveMenu],
+  providers: [
+    provideAveIcons([lucideArchive, lucideCopy, lucideDownload, lucideFileText, lucidePencil, lucideTrash]),
+  ],
+  template: \`
+    <ave-menu label="Действия" [items]="actions" (itemSelected)="chosen.set($event)" />
+    <p role="status">{{ chosen() }}</p>
+  \`,
+})
+export class ContractActions {
+  protected readonly actions: readonly AveMenuEntry<Action>[] = [
+    { value: 'open', label: 'Открыть', icon: 'file-text' },
+    { value: 'edit', label: 'Изменить', icon: 'pencil' },
+    { value: 'copy', label: 'Дублировать', icon: 'copy' },
+    { separator: true },
+    { value: 'export', label: 'Выгрузить в PDF', icon: 'download' },
+    { value: 'archive', label: 'Перенести в архив', icon: 'archive', disabled: true },
+    { separator: true },
+    { value: 'delete', label: 'Удалить договор', icon: 'trash', danger: true },
+  ];
+  protected readonly chosen = signal('');
+}`,
+        language: 'typescript',
       },
     },
   },
@@ -257,14 +281,24 @@ export const LongText: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-menu label="Действия" [items]="actions" />
+        code: `import { Component } from '@angular/core';
+import { AveMenu, type AveMenuEntry } from '@avelune/ui/menu';
 
-actions: AveMenuEntry<Action>[] = [
-  { value: 'open', label: 'Отправить договор на повторное согласование юридическому отделу' },
-  { value: 'copy', label: 'Hujjatni boʻlim boshligʻiga kelishish uchun yuborish' },
-  { value: 'delete', label: 'Удалить черновик договора без возможности восстановления', danger: true },
-];`,
-        language: 'html',
+type Action = 'open' | 'copy' | 'delete';
+
+@Component({
+  selector: 'app-contract-actions',
+  imports: [AveMenu],
+  template: \`<ave-menu label="Действия" [items]="actions" />\`,
+})
+export class ContractActions {
+  protected readonly actions: readonly AveMenuEntry<Action>[] = [
+    { value: 'open', label: 'Отправить договор на повторное согласование юридическому отделу' },
+    { value: 'copy', label: 'Hujjatni boʻlim boshligʻiga kelishish uchun yuborish' },
+    { value: 'delete', label: 'Удалить черновик договора без возможности восстановления', danger: true },
+  ];
+}`,
+        language: 'typescript',
       },
     },
   },

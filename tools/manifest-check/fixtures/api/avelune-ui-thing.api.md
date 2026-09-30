@@ -8,7 +8,7 @@ import * as i1 from '@angular/aria/thing';
 // @alpha
 export class AveThing<T> {
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveThing<any>, "ave-thing", never, { "label": { "alias": "label"; "required": true; "isSignal": true; }; "open": { "alias": "open"; "required": false; "isSignal": true; }; }, { "open": "openChange"; "closed": "closed"; }, never, ["*"], true, [{ directive: typeof i1.ThingGroup; inputs: { "multiExpandable": "multiple"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<AveThing<any>, "ave-thing", never, { "label": { "alias": "label"; "required": true; "isSignal": true; }; "open": { "alias": "open"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; }, { "open": "openChange"; "closed": "closed"; }, never, ["*"], true, [{ directive: typeof i1.ThingGroup; inputs: { "multiExpandable": "multiple"; }; outputs: {}; }]>;
 }
 
 // @alpha
@@ -22,5 +22,28 @@ export class AveThingEnd {
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AveThingEnd, "[aveThingEnd]", never, {}, {}, never, never, true, never>;
 }
+
+export { AveThingBrand }
+
+// @alpha
+export interface AveThingOption {
+    readonly hint?: string;
+    readonly title: string;
+    // @internal
+    readonly order?: number;
+    select(): void;
+}
+
+// @alpha
+export type AveThingSize = 'sm' | 'md';
+
+// @internal
+export function aveThingOrder(): number;
+
+// @alpha
+export const aveThingPlumbing: string;
+
+// @alpha
+export function provideAveThings(): EnvironmentProviders;
 
 ```

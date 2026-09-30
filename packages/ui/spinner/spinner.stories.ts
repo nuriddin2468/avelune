@@ -104,9 +104,7 @@ export default meta;
 export const Default: Story = {
   render: frame('default'),
   parameters: {
-    docs: {
-      source: { code: '<ave-spinner [loading]="documents.isLoading()" label="Loading documents" />', language: 'html' },
-    },
+    docs: { source: { code: '<ave-spinner label="Loading documents" />', language: 'html' } },
   },
   play: async ({ canvasElement }) => {
     await shown(canvasElement);
@@ -178,6 +176,10 @@ export const InContext: Story = {
         code: `<section aria-labelledby="contracts-title" aria-busy="true">
   <h2 id="contracts-title">Договоры подразделения</h2>
   <p><ave-spinner size="sm" label="Загрузка договоров" /> Загружаем договоры…</p>
+</section>
+<section aria-labelledby="archive-title" aria-busy="true" lang="uz-Latn">
+  <h2 id="archive-title">Hujjatlar arxivi</h2>
+  <p><ave-spinner size="sm" label="Arxiv yuklanmoqda" /> Arxiv yuklanmoqda…</p>
 </section>`,
         language: 'html',
       },

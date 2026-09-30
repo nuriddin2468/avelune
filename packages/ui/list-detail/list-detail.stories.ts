@@ -149,10 +149,17 @@ function narrow(canvasElement: HTMLElement): boolean {
 
 const snippet = `<ave-list-detail heading="Подразделения" description="Структура организации и сотрудники подразделений." [(detail)]="reading">
   <ave-tree aveListDetailList label="Подразделения" [nodes]="nodes" [(selected)]="selected" (selectedChange)="reading.set(true)" />
-  <ave-card aveListDetailDetail>
-    <h2 aveCardTitle>{{ department().name }}</h2>
-    …
-  </ave-card>
+  @if (department(); as department) {
+    <ave-card aveListDetailDetail>
+      <h2 aveCardTitle>{{ department.name }}</h2>
+      <ave-badge aveCardEnd>{{ department.staff }} сотр.</ave-badge>
+      <p>Руководитель: {{ department.head }}</p>
+    </ave-card>
+  } @else {
+    <ave-empty-state aveListDetailDetail icon="network" heading="Выберите подразделение">
+      <p>Его руководитель, телефон и сотрудники появятся здесь.</p>
+    </ave-empty-state>
+  }
 </ave-list-detail>`;
 
 const meta: Meta<ListDetailStories> = {
@@ -187,9 +194,15 @@ export const Detail: Story = {
     docs: {
       source: {
         code: `<!-- Below container.md: the record under "Назад к списку" while detail is true. -->
-<ave-list-detail heading="Подразделения" [(detail)]="reading" (detailChange)="back($event)">
+<ave-list-detail heading="Подразделения" description="Структура организации и сотрудники подразделений." [(detail)]="reading">
   <ave-tree aveListDetailList label="Подразделения" [nodes]="nodes" [(selected)]="selected" (selectedChange)="reading.set(true)" />
-  <ave-card aveListDetailDetail>…</ave-card>
+  @if (department(); as department) {
+    <ave-card aveListDetailDetail>
+      <h2 aveCardTitle>{{ department.name }}</h2>
+      <ave-badge aveCardEnd>{{ department.staff }} сотр.</ave-badge>
+      <p>Руководитель: {{ department.head }}</p>
+    </ave-card>
+  }
 </ave-list-detail>`,
         language: 'html',
       },
@@ -216,9 +229,11 @@ export const Empty: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-list-detail heading="Подразделения">
+        code: `<ave-list-detail heading="Подразделения" description="Структура организации и сотрудники подразделений.">
   <ave-tree aveListDetailList label="Подразделения" [nodes]="nodes" [(selected)]="selected" />
-  <ave-empty-state aveListDetailDetail icon="network" heading="Выберите подразделение">…</ave-empty-state>
+  <ave-empty-state aveListDetailDetail icon="network" heading="Выберите подразделение">
+    <p>Его руководитель, телефон и сотрудники появятся здесь.</p>
+  </ave-empty-state>
 </ave-list-detail>`,
         language: 'html',
       },
@@ -237,9 +252,13 @@ export const LongText: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-list-detail heading="Tashkiliy tuzilma va boʻlinmalar" backLabel="Barcha boʻlinmalar" lang="uz-Latn">
+        code: `<ave-list-detail heading="Tashkiliy tuzilma va boʻlinmalar" description="Tashkilotning boʻlinmalari, rahbarlari va xodimlari." backLabel="Barcha boʻlinmalar" lang="uz-Latn">
   <ave-tree aveListDetailList label="Boʻlinmalar" [nodes]="nodes" [(selected)]="selected" />
-  <ave-card aveListDetailDetail>…</ave-card>
+  <ave-card aveListDetailDetail>
+    <h2 aveCardTitle>Oʻzbekiston Respublikasi Moliya vazirligi huzuridagi Gʻaznachilik qoʻmitasi</h2>
+    <ave-badge aveCardEnd>2 nafar xodim</ave-badge>
+    <p>Rahbar: Rustam Nazarov</p>
+  </ave-card>
 </ave-list-detail>`,
         language: 'html',
       },

@@ -1,5 +1,6 @@
-// The kit's components and directives as the committed API reports declare them (ADR 0007): the class, its selector,
-// the names its inputs and outputs have in a template, and those its host directives add.
+// The kit's public API as the committed API reports declare it (ADR 0007): each component and directive with its
+// selector, the names its inputs and outputs have in a template and those its host directives add; and every export,
+// with the fields of its interfaces (ADR 0101).
 
 /** A component or a directive that an application places in a template. */
 export interface KitComponent {
@@ -72,6 +73,42 @@ export function parseApiReport(entry: string, report: string): KitComponent[] {
     });
   }
   return components;
+}
+
+/** An export of an entry point that is not `@internal`: a class, a function, a constant, a type or an interface. */
+export interface KitExport {
+  readonly entry: string;
+  readonly name: string;
+  /** The fields and methods of an interface, which an application writes or reads; none for other exports. */
+  readonly fields: readonly string[];
+}
+
+const EXPORT = /^export (?:declare )?(?:abstract )?(?:class|function|const|type|interface) (\w+)|^export \{ (\w+) \}/gm;
+
+/** Every export of one entry point's report that is not `@internal`, with the fields of its interfaces. */
+export function parseExports(entry: string, report: string): KitExport[] {
+  const exports: KitExport[] = [];
+  for (const match of report.matchAll(EXPORT)) {
+    const name = match[1] ?? match[2] ?? '';
+    const before = report.slice(0, match.index).trimEnd().split('\n').at(-1) ?? '';
+    if (before.startsWith('// @internal')) continue;
+    const fields: string[] = [];
+    if (match[0].includes(' interface ')) {
+      const end = report.indexOf('\n}', match.index);
+      const body = report.slice(report.indexOf('{\n', match.index) + 2, end);
+      // Members sit four spaces in; a member's own lines sit deeper.
+      let internal = false;
+      for (const line of body.split('\n')) {
+        if (line.startsWith('    // @internal')) internal = true;
+        const member = /^ {4}(?:readonly )?(\w+)\??[:(<]/.exec(line);
+        if (member?.[1] === undefined) continue;
+        if (!internal) fields.push(member[1]);
+        internal = false;
+      }
+    }
+    exports.push({ entry, name, fields });
+  }
+  return exports;
 }
 
 /** The entry point a report describes: `avelune-ui-date-picker.api.md` → `date-picker`; testing reports have none. */

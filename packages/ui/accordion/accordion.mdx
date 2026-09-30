@@ -26,12 +26,16 @@ import { AveAccordion, AveAccordionItem } from '@avelune/ui/accordion';
 
 ## Anatomy
 
-Items one under another between `border.subtle` lines. Each is a heading of the accordion's `level` (3 by default) holding a trigger as wide as the item, at least the large control's height, with the heading's words in `font.heading-sm` and a chevron at the inline end, turned over while open; under it the panel's content, 8px from its sides and 16px from the line below.
+Items one under another between `border.subtle` lines. Each is a heading of the accordion's `level` (`2`, `3` by default, `4`, `5` or `6`) holding a trigger as wide as the item, at least the large control's height, with the heading's words in `font.heading-sm` and a chevron at the inline end, turned over while open; under it the panel's content, 8px from its sides and 16px from the line below.
 
 ```html
 <ave-accordion [level]="3">
-  <ave-accordion-item heading="Штрафы и пени" [(expanded)]="fines">…</ave-accordion-item>
-  <ave-accordion-item heading="Форс-мажор">…</ave-accordion-item>
+  <ave-accordion-item heading="Штрафы и пени" [(expanded)]="fines">
+    <p>Пеня 0,1% за каждый день просрочки.</p>
+  </ave-accordion-item>
+  <ave-accordion-item heading="Форс-мажор">
+    <p>Стороны освобождаются от ответственности.</p>
+  </ave-accordion-item>
 </ave-accordion>
 ```
 
@@ -62,7 +66,7 @@ Tab reaches each heading. Enter or Space opens and closes it; Down and Up move t
 ## Accessibility
 
 - Each trigger is a button inside a heading, with `aria-expanded` and `aria-controls`; its panel is a region named by it, inert while closed.
-- Choose `level` so the headings continue the page's outline.
+- Choose `level` (`2`, `3`, `4`, `5` or `6`) so the headings continue the page's outline.
 
 ## Motion
 

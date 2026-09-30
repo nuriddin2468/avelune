@@ -1,0 +1,44 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as TypographyStories from './typography.stories';
+
+<Meta of={TypographyStories} />
+
+# Typography
+
+Twelve text styles on Avelune Sans (IBM Plex Sans), with Avelune Mono (IBM Plex Mono) for code (ADR 0018). Body text is 14/20, every line height is a multiple of 4, and there are three weights: 400, 500 and 600. The fonts cover Latin, Cyrillic and Uzbek Latin and Cyrillic.
+
+## Using type
+
+- A text style is one custom property that holds the whole `font` shorthand: `font: var(--ave-font-body-md)`. Add its letter spacing separately: `letter-spacing: var(--ave-font-body-md-letter-spacing)`.
+- `tokens.css` also gives each style's parts, for a case where only one is needed: `--ave-font-body-md-family`, `--ave-font-body-md-size`, `--ave-font-body-md-weight`, `--ave-font-body-md-line-height` and `--ave-font-body-md-letter-spacing`. The same suffixes exist for every style.
+- Pick the style by its role: `display` once per screen at most, `heading-*` for titles, `body-*` for reading text, `label-*` for controls and fields, `caption` for hints and timestamps, `code` for identifiers and logs.
+- Plain HTML already takes the right style from the global stylesheet: `h1` to `h4` map to the heading styles, `p` to `body-md`, `pre` to `code` (see Foundations/Global styles). Use a token only when an element needs a style its tag does not give.
+- Never write a raw font size, weight or family.
+
+## Token reference
+
+### Text styles and families
+
+{/* tokens:font */}
+
+| Token                  | CSS variable                 | Value                                                                                                                                        | Description                                                    |
+| ---------------------- | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `font.family.sans`     | `--ave-font-family-sans`     | `"Avelune Sans", "Avelune Sans Fallback",`<br />`sans-serif`                                                                                 |                                                                |
+| `font.family.mono`     | `--ave-font-family-mono`     | `"Avelune Mono", "Avelune Mono Fallback",`<br />`ui-monospace, "SFMono-Regular", "Menlo",`<br />`"Consolas", monospace`                      |                                                                |
+| `font.weight.regular`  | `--ave-font-weight-regular`  | `400`                                                                                                                                        | Body text.                                                     |
+| `font.weight.medium`   | `--ave-font-weight-medium`   | `500`                                                                                                                                        | Labels and controls.                                           |
+| `font.weight.semibold` | `--ave-font-weight-semibold` | `600`                                                                                                                                        | Headings and strong emphasis.                                  |
+| `font.display`         | `--ave-font-display`         | `600 32px/40px "Avelune Sans",`<br />`"Avelune Sans Fallback", sans-serif`                                                                   | 32/40. One per screen at most.                                 |
+| `font.heading-xl`      | `--ave-font-heading-xl`      | `600 24px/32px "Avelune Sans",`<br />`"Avelune Sans Fallback", sans-serif`                                                                   | 24/32. Page title.                                             |
+| `font.heading-lg`      | `--ave-font-heading-lg`      | `600 20px/28px "Avelune Sans",`<br />`"Avelune Sans Fallback", sans-serif`                                                                   | 20/28. Section title, dialog title.                            |
+| `font.heading-md`      | `--ave-font-heading-md`      | `600 16px/24px "Avelune Sans",`<br />`"Avelune Sans Fallback", sans-serif`                                                                   | 16/24. Card and panel title.                                   |
+| `font.heading-sm`      | `--ave-font-heading-sm`      | `600 14px/20px "Avelune Sans",`<br />`"Avelune Sans Fallback", sans-serif`                                                                   | 14/20. Group title inside a form or a list.                    |
+| `font.body-lg`         | `--ave-font-body-lg`         | `400 16px/24px "Avelune Sans",`<br />`"Avelune Sans Fallback", sans-serif`                                                                   | 16/24. Long-form reading.                                      |
+| `font.body-md`         | `--ave-font-body-md`         | `400 14px/20px "Avelune Sans",`<br />`"Avelune Sans Fallback", sans-serif`                                                                   | 14/20. The base text of the kit (BASE_TEXT).                   |
+| `font.body-sm`         | `--ave-font-body-sm`         | `400 12px/16px "Avelune Sans",`<br />`"Avelune Sans Fallback", sans-serif`                                                                   | 12/16. Secondary text in dense tables and lists.               |
+| `font.label-md`        | `--ave-font-label-md`        | `500 14px/20px "Avelune Sans",`<br />`"Avelune Sans Fallback", sans-serif`                                                                   | 14/20. Labels of controls and form fields.                     |
+| `font.label-sm`        | `--ave-font-label-sm`        | `500 12px/16px "Avelune Sans",`<br />`"Avelune Sans Fallback", sans-serif`                                                                   | 12/16. Labels of small controls, badges, tags.                 |
+| `font.caption`         | `--ave-font-caption`         | `400 12px/16px "Avelune Sans",`<br />`"Avelune Sans Fallback", sans-serif`                                                                   | 12/16. Hints, helper and error text under a field, timestamps. |
+| `font.code`            | `--ave-font-code`            | `400 13px/20px "Avelune Mono",`<br />`"Avelune Mono Fallback", ui-monospace,`<br />`"SFMono-Regular", "Menlo", "Consolas",`<br />`monospace` | 13/20 monospace. Inline code, identifiers, logs.               |
+
+{/* /tokens */}

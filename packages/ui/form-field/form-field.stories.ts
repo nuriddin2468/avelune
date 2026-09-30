@@ -137,7 +137,7 @@ export const Default: Story = {
     docs: {
       source: {
         code: `<ave-form-field label="Contract number">
-  <input aveInput type="text" required />
+  <input aveInput type="text" required placeholder="ДК-2026/000" />
   <p aveHint>As written on the signed copy.</p>
 </ave-form-field>`,
         language: 'html',
@@ -161,9 +161,25 @@ export const States: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-form-field label="With an error">
-  <input aveInput type="text" [formField]="contract.number" />
+        code: `<ave-form-field label="Optional">
+  <input aveInput type="text" />
+</ave-form-field>
+<ave-form-field label="Required">
+  <input aveInput type="text" required />
+</ave-form-field>
+<ave-form-field label="With a hint">
+  <input aveInput type="text" />
+  <p aveHint>As written on the signed copy.</p>
+</ave-form-field>
+<ave-form-field label="With an error">
+  <input aveInput type="text" value="2026/114" aria-invalid="true" required />
   <p aveError>Enter the contract number, for example ДК-2026/114.</p>
+</ave-form-field>
+<ave-form-field label="Readonly">
+  <input aveInput type="text" value="ДК-2026/114" readonly />
+</ave-form-field>
+<ave-form-field label="Disabled">
+  <input aveInput type="text" value="ДК-2026/114" disabled />
 </ave-form-field>`,
         language: 'html',
       },
@@ -248,7 +264,15 @@ export const LongText: Story = {
   parameters: {
     docs: {
       source: {
-        code: '<ave-form-field label="Наименование организации-контрагента…">…</ave-form-field>',
+        code: `<ave-form-field label="Наименование организации-контрагента в соответствии с учредительными документами" lang="ru">
+  <input aveInput type="text" required aria-invalid="true" />
+  <p aveHint>Полное наименование, как в свидетельстве о государственной регистрации юридического лица.</p>
+  <p aveError>Укажите наименование организации: поле не может быть пустым.</p>
+</ave-form-field>
+<ave-form-field label="Kontragent tashkilotning taʼsis hujjatlaridagi toʻliq nomi" lang="uz-Latn">
+  <input aveInput type="text" />
+  <p aveHint>Davlat roʻyxatidan oʻtganlik toʻgʻrisidagi guvohnomadagi kabi.</p>
+</ave-form-field>`,
         language: 'html',
       },
     },

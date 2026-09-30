@@ -218,7 +218,7 @@ export default meta;
 export const Default: Story = {
   decorators: [locale('ru'), componentWrapperDecorator(DateRangeStoryFrame)],
   parameters: {
-    docs: { source: { code: '<ave-date-range-picker [formField]="contract.period" />', language: 'html' } },
+    docs: { source: { code: '<ave-date-range-picker label="Срок действия" [value]="period" />', language: 'html' } },
   },
   play: async ({ canvasElement }) => {
     const [start, end] = within(canvasElement).getAllByRole('textbox');
@@ -234,7 +234,7 @@ export const Open: Story = {
   tags: ['forced-colors'],
   decorators: [locale('ru'), componentWrapperDecorator(DateRangeStoryFrame)],
   parameters: {
-    docs: { source: { code: '<ave-date-range-picker [formField]="contract.period" />', language: 'html' } },
+    docs: { source: { code: '<ave-date-range-picker label="Срок действия" [value]="period" />', language: 'html' } },
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -251,7 +251,7 @@ export const Choosing: Story = {
   decorators: [locale('ru'), componentWrapperDecorator(DateRangeStoryFrame)],
   render: () => ({ template: `<ave-date-range-picker label="Срок действия" />` }),
   parameters: {
-    docs: { source: { code: '<ave-date-range-picker [formField]="contract.period" />', language: 'html' } },
+    docs: { source: { code: '<ave-date-range-picker label="Срок действия" />', language: 'html' } },
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -272,8 +272,10 @@ export const States: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-date-range-picker readonly />
-<ave-date-range-picker disabled />`,
+        code: `<ave-date-range-picker label="Empty" />
+<ave-date-range-picker label="Filled" [value]="period" />
+<ave-date-range-picker label="Readonly" readonly [value]="period" />
+<ave-date-range-picker label="Disabled" disabled [value]="period" />`,
         language: 'html',
       },
     },
@@ -296,8 +298,8 @@ export const Forms: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-date-range-picker [formField]="contract.period" />
-<ave-date-range-picker [formControl]="period" />`,
+        code: `<ave-date-range-picker label="Period (Signal Forms)" [formField]="contract.period" />
+<ave-date-range-picker label="Period (Reactive Forms)" [formControl]="period" />`,
         language: 'html',
       },
     },
@@ -327,9 +329,13 @@ export const LongText: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-form-field label="Shartnomaning amal qilish muddati (…)">
+        code: `<ave-form-field label="Shartnomaning amal qilish muddati (majburiyatlar toʻliq bajarilgunga qadar)">
   <ave-date-range-picker [formField]="contract.term" />
-  <p aveHint>…</p>
+  <p aveHint>Kuchga kirgan kundan boshlab majburiyatlar toʻliq bajarilgunga qadar.</p>
+</ave-form-field>
+<ave-form-field label="Sinov muddati">
+  <ave-date-range-picker [formField]="contract.probation" />
+  <p aveError>Sinov muddatini kiriting, masalan 01/04/2026&nbsp;– 30/06/2026.</p>
 </ave-form-field>`,
         language: 'html',
       },
@@ -374,8 +380,12 @@ export const Sizes: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<input aveInput type="text" size="sm" />
-<ave-date-range-picker size="sm" [formField]="contract.period" />`,
+        code: `<input aveInput type="text" size="sm" aria-label="Number, sm" value="ДК-2026/114" />
+<ave-date-range-picker label="Term, sm" size="sm" [value]="period" />
+<input aveInput type="text" size="md" aria-label="Number, md" value="ДК-2026/114" />
+<ave-date-range-picker label="Term, md" size="md" [value]="period" />
+<input aveInput type="text" size="lg" aria-label="Number, lg" value="ДК-2026/114" />
+<ave-date-range-picker label="Term, lg" size="lg" [value]="period" />`,
         language: 'html',
       },
     },
@@ -401,7 +411,12 @@ export const Compact: Story = {
     docs: {
       source: {
         code: `<div data-density="compact">
-  <ave-date-range-picker />
+  <input aveInput type="text" size="sm" aria-label="Number, sm" value="ДК-2026/114" />
+  <ave-date-range-picker label="Term, sm" size="sm" [value]="period" />
+  <input aveInput type="text" size="md" aria-label="Number, md" value="ДК-2026/114" />
+  <ave-date-range-picker label="Term, md" size="md" [value]="period" />
+  <input aveInput type="text" size="lg" aria-label="Number, lg" value="ДК-2026/114" />
+  <ave-date-range-picker label="Term, lg" size="lg" [value]="period" />
 </div>`,
         language: 'html',
       },
@@ -423,7 +438,16 @@ export const Compact: Story = {
 export const Clearing: Story = {
   decorators: [locale('ru')],
   render: () => ({ template: '<ave-date-range-picker-clearing />', moduleMetadata: { imports: [DateRangeClearing] } }),
-  parameters: { docs: { source: { code: '<ave-date-range-picker [formField]="request.leave" />', language: 'html' } } },
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-date-range-picker label="Отпуск" [(value)]="leave" />
+<ave-date-range-picker label="Командировка" />
+<ave-date-range-picker label="Срок действия (обязательный)" [formField]="contract.term" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     // The dash's column follows the font: measure once the kit's font has replaced the fallback.
     await document.fonts.ready;
@@ -484,8 +508,30 @@ export const Presets: Story = {
   parameters: {
     docs: {
       source: {
-        code: "<ave-date-range-picker [presets]=\"['today', 'thisWeek', 'lastMonth', 'last30Days', …]\" [formField]=\"report.period\" />",
-        language: 'html',
+        code: `import { Component } from '@angular/core';
+import { AveDateRangePicker, type AveDateRangePreset } from '@avelune/ui/date-picker';
+
+@Component({
+  selector: 'app-report-period',
+  imports: [AveDateRangePicker],
+  template: \`<ave-date-range-picker label="Период отчёта" [presets]="presets" />\`,
+})
+export class ReportPeriod {
+  protected readonly presets: readonly AveDateRangePreset[] = [
+    'today',
+    'yesterday',
+    'thisWeek',
+    'lastWeek',
+    'thisMonth',
+    'lastMonth',
+    'thisQuarter',
+    'thisYear',
+    'last7Days',
+    'last30Days',
+    { label: 'Первое полугодие 2026 г.', start: '2026-01-01', end: '2026-06-30' },
+  ];
+}`,
+        language: 'typescript',
       },
     },
   },
@@ -521,7 +567,42 @@ export const PresetsBounds: Story = {
   },
   parameters: {
     docs: {
-      source: { code: '<ave-date-range-picker [minDate]="…" [maxDate]="…" [presets]="presets" />', language: 'html' },
+      source: {
+        code: `import { Component } from '@angular/core';
+import { AveDateRangePicker, type AveDateRangePreset } from '@avelune/ui/date-picker';
+
+@Component({
+  selector: 'app-report-period',
+  imports: [AveDateRangePicker],
+  template: \`
+    <ave-date-range-picker
+      label="Hisobot davri"
+      [minDate]="minDate"
+      [maxDate]="maxDate"
+      [presets]="presets"
+    />
+  \`,
+})
+export class ReportPeriod {
+  // This month, as ISO dates.
+  protected readonly minDate = '2026-09-01';
+  protected readonly maxDate = '2026-09-30';
+  protected readonly presets: readonly AveDateRangePreset[] = [
+    'today',
+    'yesterday',
+    'thisWeek',
+    'lastWeek',
+    'thisMonth',
+    'lastMonth',
+    'thisQuarter',
+    'thisYear',
+    'last7Days',
+    'last30Days',
+    { label: 'Первое полугодие 2026 г.', start: '2026-01-01', end: '2026-06-30' },
+  ];
+}`,
+        language: 'typescript',
+      },
     },
   },
   play: async ({ canvasElement }) => {

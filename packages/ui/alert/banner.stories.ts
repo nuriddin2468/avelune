@@ -121,7 +121,7 @@ export const Default: Story = {
     docs: {
       source: {
         code: `<ave-banner variant="warning" dismissible (dismiss)="maintenanceSeen.set(true)">
-  В субботу с 22:00 до 02:00 система будет недоступна. <a href="…">Подробнее о работах</a>
+  В субботу с 22:00 до 02:00 система будет недоступна. <a href="/maintenance">Подробнее о работах</a>
 </ave-banner>`,
         language: 'html',
       },
@@ -141,12 +141,12 @@ export const Variants: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-banner>Доступна новая версия справочника контрагентов.</ave-banner>
+        code: `<ave-banner variant="info">Доступна новая версия справочника контрагентов.</ave-banner>
 <ave-banner variant="success">Лицензия продлена до 31.12.2027.</ave-banner>
 <ave-banner variant="warning">В субботу с 22:00 до 02:00 система будет недоступна.</ave-banner>
 <ave-banner variant="danger">Сервер согласования не отвечает. Договоры сохраняются, но не отправляются.</ave-banner>
 <ave-banner variant="warning" dismissible (dismiss)="licenceSeen.set(true)">
-  Лицензия истекает через 5 дней. <a href="…">Продлить лицензию</a>
+  Лицензия истекает через 5 дней. <a href="/licence">Продлить лицензию</a>
 </ave-banner>`,
         language: 'html',
       },
@@ -167,9 +167,9 @@ export const LongText: Story = {
       source: {
         code: `<ave-banner variant="warning" dismissible (dismiss)="worksSeen.set(true)">
   Shanba kuni soat 22:00 dan 02:00 gacha tizimda rejali texnik ishlar olib boriladi, bu vaqtda hujjatlarni yuborish
-  va kelishish imkoniyati boʻlmaydi. <a href="…">Batafsil</a>
+  va kelishish imkoniyati boʻlmaydi. <a href="/maintenance">Batafsil</a>
 </ave-banner>
-<ave-banner>
+<ave-banner variant="info">
   С 1 апреля 2026 года договоры с суммой больше одного миллиарда сумов согласует финансовый директор.
 </ave-banner>`,
         language: 'html',

@@ -93,7 +93,8 @@ export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: '<label aveChoice><input type="checkbox" aveSwitch [formField]="settings.notices" /> Email notices</label>',
+        code: `<label aveChoice><input type="checkbox" aveSwitch checked /> Email notices</label>
+<label aveChoice><input type="checkbox" aveSwitch /> Compact tables</label>`,
         language: 'html',
       },
     },
@@ -117,8 +118,12 @@ export const States: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<input type="checkbox" aveSwitch aria-invalid="true" />
-<input type="checkbox" aveSwitch disabled />`,
+        code: `<label aveChoice><input type="checkbox" aveSwitch /> Off</label>
+<label aveChoice><input type="checkbox" aveSwitch checked /> On</label>
+<label aveChoice><input type="checkbox" aveSwitch /> Focused</label>
+<label aveChoice><input type="checkbox" aveSwitch aria-invalid="true" /> Invalid</label>
+<label aveChoice><input type="checkbox" aveSwitch disabled /> Disabled, off</label>
+<label aveChoice><input type="checkbox" aveSwitch checked disabled /> Disabled, on</label>`,
         language: 'html',
       },
     },
@@ -141,9 +146,26 @@ export const Forms: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<input type="checkbox" aveSwitch [formField]="settings.notices" />
-<input type="checkbox" aveSwitch [formControl]="compact" />`,
-        language: 'html',
+        code: `import { Component, signal } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormField, form } from '@angular/forms/signals';
+import { AveChoice } from '@avelune/ui/checkbox';
+import { AveSwitch } from '@avelune/ui/switch';
+
+@Component({
+  selector: 'app-notice-settings',
+  imports: [AveChoice, AveSwitch, FormField, ReactiveFormsModule],
+  template: \`
+    <label aveChoice><input type="checkbox" aveSwitch [formField]="settings.notices" /> Email notices</label>
+    <label aveChoice><input type="checkbox" aveSwitch [formControl]="compact" /> Compact tables</label>
+  \`,
+})
+export class NoticeSettings {
+  protected readonly model = signal({ notices: false });
+  protected readonly settings = form(this.model);
+  protected readonly compact = new FormControl(true, { nonNullable: true });
+}`,
+        language: 'typescript',
       },
     },
   },
@@ -163,7 +185,14 @@ export const LongText: Story = {
   parameters: {
     docs: {
       source: {
-        code: '<label aveChoice><input type="checkbox" aveSwitch checked /> Присылать уведомления о каждом новом согласовании договоров…</label>',
+        code: `<label aveChoice lang="ru">
+  <input type="checkbox" aveSwitch checked />
+  Присылать уведомления о каждом новом согласовании договоров моего подразделения на электронную почту
+</label>
+<label aveChoice lang="uz-Latn">
+  <input type="checkbox" aveSwitch />
+  Hujjatlar arxivini har kuni kechqurun avtomatik ravishda zaxiralash
+</label>`,
         language: 'html',
       },
     },

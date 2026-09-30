@@ -178,7 +178,11 @@ export const Variants: Story = {
   parameters: {
     docs: {
       source: {
-        code: '<button aveIconButton type="button" icon="pencil" label="Edit" variant="ghost"></button>',
+        code: `<!-- Registered with provideAveIcons([lucidePencil]). -->
+<button aveIconButton type="button" icon="pencil" label="Edit, primary" variant="primary"></button>
+<button aveIconButton type="button" icon="pencil" label="Edit, secondary" variant="secondary"></button>
+<button aveIconButton type="button" icon="pencil" label="Edit, ghost" variant="ghost"></button>
+<button aveIconButton type="button" icon="pencil" label="Edit, danger" variant="danger"></button>`,
         language: 'html',
       },
     },
@@ -195,8 +199,18 @@ export const Sizes: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<button aveButton type="button" size="sm">Export</button>
-<button aveIconButton type="button" icon="download" label="Download" size="sm"></button>`,
+        code: `<!-- Registered with provideAveIcons([lucideDownload, lucideEllipsis]). -->
+<button aveButton type="button" size="sm">Export</button>
+<button aveIconButton type="button" icon="download" label="Download" size="sm"></button>
+<button aveIconButton type="button" icon="ellipsis" label="More actions" variant="ghost" size="sm"></button>
+
+<button aveButton type="button" size="md">Export</button>
+<button aveIconButton type="button" icon="download" label="Download" size="md"></button>
+<button aveIconButton type="button" icon="ellipsis" label="More actions" variant="ghost" size="md"></button>
+
+<button aveButton type="button" size="lg">Export</button>
+<button aveIconButton type="button" icon="download" label="Download" size="lg"></button>
+<button aveIconButton type="button" icon="ellipsis" label="More actions" variant="ghost" size="lg"></button>`,
         language: 'html',
       },
     },
@@ -220,8 +234,11 @@ export const States: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<button aveIconButton type="button" icon="trash" label="Delete row" disabled disabledInteractive></button>
-<button aveIconButton type="button" icon="trash" label="Delete row" [loading]="deleting()"></button>`,
+        code: `<!-- Registered with provideAveIcons([lucideTrash]). -->
+<button aveIconButton type="button" icon="trash" label="Delete, enabled"></button>
+<button aveIconButton type="button" icon="trash" label="Delete, disabled" disabled></button>
+<button aveIconButton type="button" icon="trash" label="Delete, disabled but focusable" disabled disabledInteractive></button>
+<button aveIconButton type="button" icon="trash" label="Delete, loading" loading></button>`,
         language: 'html',
       },
     },
@@ -251,9 +268,14 @@ export const InARow: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<button aveIconButton type="button" icon="chevron-left" label="Previous document" variant="ghost" size="sm"></button>
-<span>Документ 3 из 12</span>
-<button aveIconButton type="button" icon="chevron-right" label="Next document" variant="ghost" size="sm"></button>`,
+        code: `<div role="group" aria-label="Document">
+  <button aveIconButton type="button" icon="chevron-left" label="Previous document" variant="ghost" size="sm"></button>
+  <span>Документ 3 из 12</span>
+  <button aveIconButton type="button" icon="chevron-right" label="Next document" variant="ghost" size="sm"></button>
+  <button aveIconButton type="button" icon="pencil" label="Edit document" variant="ghost" size="sm"></button>
+  <button aveIconButton type="button" icon="trash" label="Delete document" variant="ghost" size="sm"></button>
+  <button aveIconButton type="button" icon="x" label="Close document" variant="ghost" size="sm"></button>
+</div>`,
         language: 'html',
       },
     },

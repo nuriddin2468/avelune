@@ -174,16 +174,35 @@ export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-settings-page heading="Настройки" description="Изменения сохраняются сразу." home="/settings" [sections]="sections">
-  <router-outlet />
-</ave-settings-page>
+        code: `import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { lucideBell, lucidePalette, lucideStamp, lucideUser } from '@avelune/icons/lucide';
+import { provideAveIcons } from '@avelune/ui/icon';
+import { AveSettingsPage, type AveSettingsSection } from '@avelune/ui/settings-page';
 
-sections: AveSettingsSection[] = [
-  { label: 'Профиль', link: '/settings/profile', icon: 'user' },
-  { label: 'Оформление', link: '/settings/appearance', icon: 'palette' },
-  { label: 'Бренд организации', link: '/settings/brand', icon: 'stamp' },
-  { label: 'Уведомления', link: '/settings/notifications', icon: 'bell' },
-];`,
+@Component({
+  selector: 'app-settings',
+  imports: [AveSettingsPage, RouterOutlet],
+  providers: [provideAveIcons([lucideBell, lucidePalette, lucideStamp, lucideUser])],
+  template: \`
+    <ave-settings-page
+      heading="Настройки"
+      description="Изменения сохраняются сразу."
+      home="/settings"
+      [sections]="sections"
+    >
+      <router-outlet />
+    </ave-settings-page>
+  \`,
+})
+export class Settings {
+  protected readonly sections: readonly AveSettingsSection[] = [
+    { label: 'Профиль', link: '/settings/profile', icon: 'user' },
+    { label: 'Оформление', link: '/settings/appearance', icon: 'palette' },
+    { label: 'Бренд организации', link: '/settings/brand', icon: 'stamp' },
+    { label: 'Уведомления', link: '/settings/notifications', icon: 'bell' },
+  ];
+}`,
         language: 'typescript',
       },
     },
@@ -206,7 +225,9 @@ export const Phone: Story = {
     docs: {
       source: {
         code: `<!-- Below container.md, at a section's address: the section under "Все настройки". -->
-<ave-settings-page heading="Настройки" [sections]="sections"><router-outlet /></ave-settings-page>`,
+<ave-settings-page heading="Настройки" description="Изменения сохраняются сразу." [sections]="sections">
+  <router-outlet />
+</ave-settings-page>`,
         language: 'html',
       },
     },
@@ -230,7 +251,7 @@ export const LongText: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-settings-page heading="Tizim va tashkilot sozlamalari" sectionsLabel="Sozlamalar boʻlimlari" backLabel="Barcha sozlamalar" [sections]="sections" lang="uz-Latn">
+        code: `<ave-settings-page heading="Tizim va tashkilot sozlamalari" description="Oʻzgarishlar darhol saqlanadi." sectionsLabel="Sozlamalar boʻlimlari" backLabel="Barcha sozlamalar" [sections]="sections" lang="uz-Latn">
   <router-outlet />
 </ave-settings-page>`,
         language: 'html',

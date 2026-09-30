@@ -1,0 +1,16 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as BrandStories from './brand.stories';
+
+<Meta of={BrandStories} />
+
+# Brand
+
+This page shows the brand generator of `@avelune/tokens/brand` (ADR 0089) at work: every preset, and six stress colours at the edges (pale, vivid, near black and white, red, green), each drawn as a set of kit components on an island of the page's theme. Under each sample a line says what the generator changed to keep every text pair at its contrast minimum, or `exact` when it changed nothing.
+
+Brand has no tokens of its own. It regenerates the `color.accent` family and `color.brand.mark`, tints the neutrals (`color.bg`, `color.fg` and `color.border`, so `color.fg.link` and `color.border.focus` follow the accent) toward the brand, and moves `color.danger` away from a brand that is close to red. `color.info`, `color.success` and `color.warning` keep their hues. All of them are listed on Foundations/Colour.
+
+## Using it
+
+- An application sets the brand colour with `AveTheme.setBrand(input)`. It accepts a `#rrggbb` colour or a preset name, resolves with a report of what the generator adapted, and `setBrand(null)` returns to the kit's or the product's own colours.
+- The types are `AveBrandInput`, `AveBrandPresetName`, `AveBrandReport` and `AveBrandAdjustment`, and the presets are `aveBrandPresets` and `aveBrandPresetNames`, all from `@avelune/ui/theme`.
+- Read Guides/Theme for the full API and where to call it.

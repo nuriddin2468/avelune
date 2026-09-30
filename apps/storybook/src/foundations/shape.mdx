@@ -1,0 +1,72 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as ShapeStories from './shape.stories';
+
+<Meta of={ShapeStories} />
+
+# Radius and elevation
+
+Radii follow the hierarchy of elements, and nested corners are concentric: an inner radius equals the outer radius minus the gap between them. Four elevation levels are each a two-layer shadow; overlays carry a subtle border in both themes, and in the dark theme higher surfaces are also lighter.
+
+## Using shape
+
+- Assign a radius by the element's rank, never one radius for everything: `radius.sm` for small parts (a checkbox, a tag, a badge), `radius.md` and `radius.lg` for controls, panels and overlays, `radius.full` for anything fully round.
+- Elevation is `box-shadow: var(--ave-elevation-popover)`. Use the level of the element's role: `flat` for content on the page, `raised` for cards that lift, `popover` for menus and popovers, `dialog` for dialogs.
+- `border-width.default` is the hairline of borders and dividers; `border-width.selected` marks a selected item.
+- `z-index.*` orders elements outside the top layer, in one sequence. A native `<dialog>` and `[popover]` render in the top layer and ignore `z-index`.
+- Write every value as a token: `border-radius: var(--ave-radius-md)`. Never a raw pixel, shadow or z-index number.
+
+## Token reference
+
+### Radius (`radius`)
+
+{/* tokens:radius */}
+
+| Token         | CSS variable        | Value    | Description                                                       |
+| ------------- | ------------------- | -------- | ----------------------------------------------------------------- |
+| `radius.sm`   | `--ave-radius-sm`   | `4px`    | Small parts: checkbox, tag, badge, items nested inside a control. |
+| `radius.md`   | `--ave-radius-md`   | `8px`    | Controls and the items of menus and lists.                        |
+| `radius.lg`   | `--ave-radius-lg`   | `12px`   | Containers: card, popover, menu, dialog, drawer.                  |
+| `radius.full` | `--ave-radius-full` | `9999px` | Pills, avatars, switch tracks.                                    |
+
+{/* /tokens */}
+
+### Border width (`border-width`)
+
+{/* tokens:border-width */}
+
+| Token                   | CSS variable                  | Value | Description              |
+| ----------------------- | ----------------------------- | ----- | ------------------------ |
+| `border-width.default`  | `--ave-border-width-default`  | `1px` |                          |
+| `border-width.selected` | `--ave-border-width-selected` | `2px` | Selected cards and tabs. |
+
+{/* /tokens */}
+
+### Elevation (`elevation`)
+
+{/* tokens:elevation */}
+
+| Token               | CSS variable              | Value                                                           | Dark                                                            | Description                                                  |
+| ------------------- | ------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------ |
+| `elevation.flat`    | `--ave-elevation-flat`    | `0px 0px 0px 0px #1e1b1a0a,`<br />`0px 0px 0px 0px #1e1b1a0a`   | `0px 0px 0px 0px #1e1b1a0a,`<br />`0px 0px 0px 0px #1e1b1a0a`   | Level 0: on the surface, no shadow.                          |
+| `elevation.raised`  | `--ave-elevation-raised`  | `0px 1px 2px 0px #1e1b1a14,`<br />`0px 2px 4px 0px #1e1b1a0a`   | `0px 1px 2px 0px #1e1b1a52,`<br />`0px 2px 4px 0px #1e1b1a29`   | Level 1: cards and sticky headers that lift off the surface. |
+| `elevation.popover` | `--ave-elevation-popover` | `0px 2px 4px 0px #1e1b1a14,`<br />`0px 8px 16px 0px #1e1b1a1f`  | `0px 2px 4px 0px #1e1b1a52,`<br />`0px 8px 16px 0px #1e1b1a7a`  | Level 2: menus, popovers, select popups, tooltips.           |
+| `elevation.dialog`  | `--ave-elevation-dialog`  | `0px 4px 8px 0px #1e1b1a1f,`<br />`0px 16px 32px 0px #1e1b1a29` | `0px 4px 8px 0px #1e1b1a52,`<br />`0px 16px 32px 0px #1e1b1a7a` | Level 3: dialogs and drawers.                                |
+
+{/* /tokens */}
+
+### Stacking order (`z-index`)
+
+{/* tokens:z-index */}
+
+| Token              | CSS variable             | Value  | Description |
+| ------------------ | ------------------------ | ------ | ----------- |
+| `z-index.base`     | `--ave-z-index-base`     | `0`    |             |
+| `z-index.dropdown` | `--ave-z-index-dropdown` | `1000` |             |
+| `z-index.sticky`   | `--ave-z-index-sticky`   | `1100` |             |
+| `z-index.backdrop` | `--ave-z-index-backdrop` | `1200` |             |
+| `z-index.modal`    | `--ave-z-index-modal`    | `1300` |             |
+| `z-index.popover`  | `--ave-z-index-popover`  | `1400` |             |
+| `z-index.toast`    | `--ave-z-index-toast`    | `1500` |             |
+| `z-index.tooltip`  | `--ave-z-index-tooltip`  | `1600` |             |
+
+{/* /tokens */}

@@ -1,0 +1,15 @@
+{
+  "components": {
+    "guides-things--docs": {
+      "id": "guides-things--docs",
+      "docs": {
+        "guides-things--docs": {
+          "id": "guides-things--docs",
+          "name": "Docs",
+          "path": "../../packages/ui/thing/setup.mdx",
+          "content": "# Things\n\n`provideAveThings()` registers the things, in the colours of an `AveThingBrand`.\n"
+        }
+      }
+    }
+  }
+}

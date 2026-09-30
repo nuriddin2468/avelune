@@ -1,15 +1,46 @@
 // The components a story file declares for itself: frames that lay stories out, which a snippet must never show.
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import ts from 'typescript';
 import type { Frames } from './check.ts';
 
-/** The selectors and class names of the components and directives declared in `source`, a story file. */
+/**
+ * The selectors and class names of the components and directives declared in `source`, a story file. Read from its
+ * syntax, so a whole component written inside a snippet's string is not one (ADR 0101).
+ */
 export function framesOf(source: string): Frames {
-  const declarations = [...source.matchAll(/@(?:Component|Directive)\(\{[\s\S]*?\}\)\s*(?:export\s+)?class (\w+)/g)];
-  return {
-    selectors: declarations.flatMap((match) => [...match[0].matchAll(/selector: '([^']+)'/g)].map((m) => m[1] ?? '')),
-    classNames: declarations.map((match) => match[1] ?? ''),
+  const file = ts.createSourceFile('frames.stories.ts', source, ts.ScriptTarget.Latest, true);
+  const selectors: string[] = [];
+  const classNames: string[] = [];
+  const visit = (node: ts.Node): void => {
+    if (ts.isClassDeclaration(node) && node.name !== undefined) {
+      const call = ts
+        .getDecorators(node)
+        ?.map((decorator) => decorator.expression)
+        .find(
+          (expression): expression is ts.CallExpression =>
+            ts.isCallExpression(expression) &&
+            ts.isIdentifier(expression.expression) &&
+            ['Component', 'Directive'].includes(expression.expression.text),
+        );
+      if (call !== undefined) {
+        classNames.push(node.name.text);
+        const [config] = call.arguments;
+        for (const property of config !== undefined && ts.isObjectLiteralExpression(config) ? config.properties : []) {
+          if (
+            ts.isPropertyAssignment(property) &&
+            property.name.getText(file) === 'selector' &&
+            ts.isStringLiteralLike(property.initializer)
+          ) {
+            selectors.push(property.initializer.text);
+          }
+        }
+      }
+    }
+    ts.forEachChild(node, visit);
   };
+  visit(file);
+  return { selectors, classNames };
 }
 
 /** Every frame of the kit's story files under `packages/ui`. */

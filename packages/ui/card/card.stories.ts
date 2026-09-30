@@ -129,7 +129,20 @@ export const Default: Story = {
         code: `<ave-card>
   <h2 aveCardTitle>Поставка офисной мебели</h2>
   <ave-badge aveCardEnd variant="success">Подписан</ave-badge>
-  <dl>…</dl>
+  <dl>
+    <div>
+      <dt>Контрагент</dt>
+      <dd>ООО «Мебель Сервис»</dd>
+    </div>
+    <div>
+      <dt>Сумма без НДС</dt>
+      <dd>48 500 000,00 сум</dd>
+    </div>
+    <div>
+      <dt>Действует до</dt>
+      <dd>31.12.2026</dd>
+    </div>
+  </dl>
   <div aveCardFooter>
     <button aveButton type="button">Продлить</button>
     <a aveButton variant="primary" routerLink="/contracts/114">Открыть договор</a>
@@ -156,13 +169,29 @@ export const Grid: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<li>
-  <ave-card>
-    <h3 aveCardTitle><a aveLink routerLink="/contracts/114">Поставка офисной мебели</a></h3>
-    <ave-badge aveCardEnd variant="success">Подписан</ave-badge>
-    <p>ДК-2025/114 · ООО «Мебель Сервис»</p>
-  </ave-card>
-</li>`,
+        code: `<ul aria-label="Договоры на продление">
+  <li>
+    <ave-card>
+      <h3 aveCardTitle><a aveLink routerLink="/contracts/ДК-2025/114">Поставка офисной мебели</a></h3>
+      <ave-badge aveCardEnd variant="success">Подписан</ave-badge>
+      <p>ДК-2025/114 · ООО «Мебель Сервис»</p>
+    </ave-card>
+  </li>
+  <li>
+    <ave-card>
+      <h3 aveCardTitle><a aveLink routerLink="/contracts/ДК-2025/112">Аренда склада в Сергелийском районе</a></h3>
+      <ave-badge aveCardEnd variant="warning">Истекает</ave-badge>
+      <p>ДК-2025/112 · ИП Каримов А.</p>
+    </ave-card>
+  </li>
+  <li>
+    <ave-card>
+      <h3 aveCardTitle><a aveLink routerLink="/contracts/ДК-2025/109">Лицензии на систему документооборота</a></h3>
+      <ave-badge aveCardEnd variant="danger">Истёк</ave-badge>
+      <p>ДК-2025/109 · ООО «Софт Лайн»</p>
+    </ave-card>
+  </li>
+</ul>`,
         language: 'html',
       },
     },

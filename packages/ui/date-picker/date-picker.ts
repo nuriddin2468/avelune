@@ -134,7 +134,7 @@ export class AveDatePicker implements ControlValueAccessor {
   protected readonly earliest = this.minDate;
   protected readonly latest = this.maxDate;
 
-  /** The size: the box of an Input of that size. */
+  /** The size: the box of an Input of that size, `sm`, `md` (default) or `lg`. */
   readonly size = input<AveDatePickerSize>('md');
 
   /** Whether the field is disabled. A form binding sets it too. */

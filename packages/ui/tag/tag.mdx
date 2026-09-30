@@ -32,6 +32,18 @@ The words in `font.label-sm`, 8px from the start, in an outlined rectangle: `bor
 <ave-tag removable (remove)="drop(region)">{{ region.label }}</ave-tag>
 ```
 
+For a list of values, repeat the tag with `@for`:
+
+```html
+<ul aria-labelledby="regions">
+  @for (region of regions(); track region.value) {
+  <li>
+    <ave-tag removable (remove)="drop(region)">{{ region.label }}</ave-tag>
+  </li>
+  }
+</ul>
+```
+
 ## Sizes
 
 | Size           | Height | Remove button | Use for                                                         |

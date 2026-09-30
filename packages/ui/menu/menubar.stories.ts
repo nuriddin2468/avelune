@@ -116,13 +116,67 @@ export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-menubar label="Шаблон договора" [menus]="menus" (itemSelected)="run($event)" />
+        code: `import { Component, signal } from '@angular/core';
+import { lucideFileDown, lucideFilePlus, lucidePrinter, lucideSave, lucideSearch } from '@avelune/icons/lucide';
+import { provideAveIcons } from '@avelune/ui/icon';
+import { AveMenubar, type AveMenubarMenu } from '@avelune/ui/menu';
 
-menus: AveMenubarMenu<Command>[] = [
-  { label: 'Файл', items: [{ value: 'save', label: 'Сохранить', icon: 'save' }, …] },
-  { label: 'Правка', items: [{ value: 'undo', label: 'Отменить' }, …] },
-];`,
-        language: 'html',
+type Command =
+  | 'new' | 'save' | 'export' | 'print' | 'close'
+  | 'undo' | 'redo' | 'find'
+  | 'counterparty' | 'amount' | 'date'
+  | 'fields' | 'preview';
+
+@Component({
+  selector: 'app-template-menubar',
+  imports: [AveMenubar],
+  providers: [provideAveIcons([lucideFileDown, lucideFilePlus, lucidePrinter, lucideSave, lucideSearch])],
+  template: \`
+    <ave-menubar label="Шаблон договора" [menus]="menus" (itemSelected)="chosen.set($event)" />
+    <p role="status">{{ chosen() }}</p>
+  \`,
+})
+export class TemplateMenubar {
+  protected readonly menus: readonly AveMenubarMenu<Command>[] = [
+    {
+      label: 'Файл',
+      items: [
+        { value: 'new', label: 'Новый шаблон', icon: 'file-plus' },
+        { value: 'save', label: 'Сохранить', icon: 'save' },
+        { value: 'export', label: 'Выгрузить в PDF', icon: 'file-down' },
+        { value: 'print', label: 'Печать', icon: 'printer' },
+        { separator: true },
+        { value: 'close', label: 'Закрыть шаблон' },
+      ],
+    },
+    {
+      label: 'Правка',
+      items: [
+        { value: 'undo', label: 'Отменить' },
+        { value: 'redo', label: 'Повторить', disabled: true },
+        { separator: true },
+        { value: 'find', label: 'Найти и заменить', icon: 'search' },
+      ],
+    },
+    {
+      label: 'Вставка',
+      items: [
+        { value: 'counterparty', label: 'Поле контрагента' },
+        { value: 'amount', label: 'Поле суммы' },
+        { value: 'date', label: 'Дата подписания' },
+      ],
+    },
+    {
+      label: 'Вид',
+      items: [
+        { value: 'fields', label: 'Показать поля' },
+        { value: 'preview', label: 'Предпросмотр' },
+      ],
+    },
+  ];
+  protected readonly chosen = signal<Command | ''>('');
+}`,
+        language: 'typescript',
       },
     },
   },
@@ -154,23 +208,67 @@ export const Open: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-menubar label="Шаблон договора" [menus]="menus" (itemSelected)="run($event)" />
+        code: `import { Component, signal } from '@angular/core';
+import { lucideFileDown, lucideFilePlus, lucidePrinter, lucideSave, lucideSearch } from '@avelune/icons/lucide';
+import { provideAveIcons } from '@avelune/ui/icon';
+import { AveMenubar, type AveMenubarMenu } from '@avelune/ui/menu';
 
-menus: AveMenubarMenu<Command>[] = [
-  {
-    label: 'Файл',
-    items: [
-      { value: 'new', label: 'Новый шаблон', icon: 'file-plus' },
-      { value: 'save', label: 'Сохранить', icon: 'save' },
-      { value: 'export', label: 'Выгрузить в PDF', icon: 'file-down' },
-      { value: 'print', label: 'Печать', icon: 'printer' },
-      { separator: true },
-      { value: 'close', label: 'Закрыть шаблон' },
-    ],
-  },
-  { label: 'Правка', items: [{ value: 'undo', label: 'Отменить' }, …] },
-];`,
-        language: 'html',
+type Command =
+  | 'new' | 'save' | 'export' | 'print' | 'close'
+  | 'undo' | 'redo' | 'find'
+  | 'counterparty' | 'amount' | 'date'
+  | 'fields' | 'preview';
+
+@Component({
+  selector: 'app-template-menubar',
+  imports: [AveMenubar],
+  providers: [provideAveIcons([lucideFileDown, lucideFilePlus, lucidePrinter, lucideSave, lucideSearch])],
+  template: \`
+    <ave-menubar label="Шаблон договора" [menus]="menus" (itemSelected)="chosen.set($event)" />
+    <p role="status">{{ chosen() }}</p>
+  \`,
+})
+export class TemplateMenubar {
+  protected readonly menus: readonly AveMenubarMenu<Command>[] = [
+    {
+      label: 'Файл',
+      items: [
+        { value: 'new', label: 'Новый шаблон', icon: 'file-plus' },
+        { value: 'save', label: 'Сохранить', icon: 'save' },
+        { value: 'export', label: 'Выгрузить в PDF', icon: 'file-down' },
+        { value: 'print', label: 'Печать', icon: 'printer' },
+        { separator: true },
+        { value: 'close', label: 'Закрыть шаблон' },
+      ],
+    },
+    {
+      label: 'Правка',
+      items: [
+        { value: 'undo', label: 'Отменить' },
+        { value: 'redo', label: 'Повторить', disabled: true },
+        { separator: true },
+        { value: 'find', label: 'Найти и заменить', icon: 'search' },
+      ],
+    },
+    {
+      label: 'Вставка',
+      items: [
+        { value: 'counterparty', label: 'Поле контрагента' },
+        { value: 'amount', label: 'Поле суммы' },
+        { value: 'date', label: 'Дата подписания' },
+      ],
+    },
+    {
+      label: 'Вид',
+      items: [
+        { value: 'fields', label: 'Показать поля' },
+        { value: 'preview', label: 'Предпросмотр' },
+      ],
+    },
+  ];
+  protected readonly chosen = signal<Command | ''>('');
+}`,
+        language: 'typescript',
       },
     },
   },
@@ -195,25 +293,46 @@ export const LongText: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-menubar label="Shablon" [menus]="menus" lang="uz-Latn" (itemSelected)="run($event)" />
+        code: `import { Component, signal } from '@angular/core';
+import { lucideFileDown, lucideSave } from '@avelune/icons/lucide';
+import { provideAveIcons } from '@avelune/ui/icon';
+import { AveMenubar, type AveMenubarMenu } from '@avelune/ui/menu';
 
-menus: AveMenubarMenu<Command>[] = [
-  {
-    label: 'Fayl',
-    items: [
-      { value: 'save', label: 'Shablonni saqlash', icon: 'save' },
-      { value: 'export', label: 'Oʻzbekiston Respublikasi vazirliklari uchun PDF formatida yuklab olish', icon: 'file-down' },
-    ],
-  },
-  {
-    label: 'Maʼlumotnomalar',
-    items: [
-      { value: 'counterparty', label: 'Вставить реквизиты контрагента из справочника организаций' },
-      { value: 'bank', label: 'Bank rekvizitlari' },
-    ],
-  },
-];`,
-        language: 'html',
+type Command = 'save' | 'export' | 'counterparty' | 'bank';
+
+@Component({
+  selector: 'app-template-menubar',
+  imports: [AveMenubar],
+  providers: [provideAveIcons([lucideFileDown, lucideSave])],
+  template: \`
+    <ave-menubar label="Shablon" [menus]="menus" lang="uz-Latn" (itemSelected)="chosen.set($event)" />
+    <p role="status">{{ chosen() }}</p>
+  \`,
+})
+export class TemplateMenubar {
+  protected readonly menus: readonly AveMenubarMenu<Command>[] = [
+    {
+      label: 'Fayl',
+      items: [
+        { value: 'save', label: 'Shablonni saqlash', icon: 'save' },
+        {
+          value: 'export',
+          label: 'Oʻzbekiston Respublikasi vazirliklari uchun PDF formatida yuklab olish',
+          icon: 'file-down',
+        },
+      ],
+    },
+    {
+      label: 'Maʼlumotnomalar',
+      items: [
+        { value: 'counterparty', label: 'Вставить реквизиты контрагента из справочника организаций' },
+        { value: 'bank', label: 'Bank rekvizitlari' },
+      ],
+    },
+  ];
+  protected readonly chosen = signal<Command | ''>('');
+}`,
+        language: 'typescript',
       },
     },
   },

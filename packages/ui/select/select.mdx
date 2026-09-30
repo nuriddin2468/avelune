@@ -65,7 +65,7 @@ readonly countries: AveOption<string>[] = [
 
 ### Templates
 
-When the fields are not enough, `<ng-template aveOption let-option>` draws the inside of every option, and `<ng-template aveSelectValue let-option>` the chosen value in the trigger. The kit keeps its row around them: the height, the padding, the check, the chevron and the clear button. `[aveOptionOf]` types `option` with the options' value.
+When the fields are not enough, `<ng-template aveOption let-option>` draws the inside of every option, and `<ng-template aveSelectValue let-option>` the chosen value in the trigger. The kit keeps its row around them: the height, the padding, the check, the chevron and the clear button. `[aveOptionOf]` types `option` with the options' value: `let-option` is then an option, and `option.value` is the value of one of the options. The context the template gets is an `AveOptionContext<V>`, whose only field is `$implicit`, the option.
 
 ```html
 <ave-select [options]="accounts" [formField]="payment.account">

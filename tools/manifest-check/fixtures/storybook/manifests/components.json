@@ -4,8 +4,12 @@
     "components-thing": {
       "id": "components-thing",
       "name": "AveThing",
-      "docgen": { "$ref": "../services/core/docgen/components-thing.json#/components/components-thing" },
-      "stories": { "$ref": "../services/core/story-docs/components-thing.json#/components/components-thing" },
+      "docgen": {
+        "$ref": "../services/core/docgen/components-thing.json#/components/components-thing"
+      },
+      "stories": {
+        "$ref": "../services/core/story-docs/components-thing.json#/components/components-thing"
+      },
       "docs": {
         "components-thing--docs": {
           "id": "components-thing--docs",
@@ -19,8 +23,22 @@
     "foundations-colour": {
       "id": "foundations-colour",
       "name": "foundations-colour",
-      "stories": { "$ref": "../services/core/story-docs/foundations-colour.json#/components/foundations-colour" }
+      "stories": {
+        "$ref": "../services/core/story-docs/foundations-colour.json#/components/foundations-colour"
+      },
+      "docs": {
+        "foundations-colour--docs": {
+          "id": "foundations-colour--docs",
+          "name": "Docs",
+          "mdx": {
+            "$ref": "../services/addon-docs/mdx/foundations-colour.json#/components/foundations-colour/docs/foundations-colour--docs"
+          }
+        }
+      }
     }
   },
-  "meta": { "docgen": "angular-component-meta", "durationMs": 0 }
+  "meta": {
+    "docgen": "angular-component-meta",
+    "durationMs": 0
+  }
 }

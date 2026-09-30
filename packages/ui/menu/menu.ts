@@ -156,13 +156,16 @@ export class AveMenu<V> {
   /** The button's words ("Действия"); with an `icon`, its name and tooltip instead. */
   readonly label = input.required<string>();
 
-  /** The actions, in order, with separators between groups. */
+  /**
+   * The actions, in order, with separators between groups: each entry is an `AveMenuItem` (`value`, `label`, and
+   * optionally `icon`, `danger`, `disabled`) or an `AveMenuSeparator` (`{ separator: true }`).
+   */
   readonly items = input.required<readonly AveMenuEntry<V>[]>();
 
   /** Draws the button as an icon alone (an IconButton), named and titled by `label`: `ellipsis` for row actions. */
   readonly icon = input<AveIconName>();
 
-  /** The button's emphasis, as a Button's: `secondary` (default), `ghost` in rows and toolbars. */
+  /** The button's emphasis, as a Button's: `primary`, `secondary` (default), `ghost` in rows and toolbars, or `danger`. */
   readonly variant = input<AveButtonVariant>('secondary');
 
   /** The button's size, as a Button's: `sm`, `md` (default), `lg`. */

@@ -17,11 +17,11 @@ let nextField = 0;
  * <ave-form-field label="Contract number">
  *   <input aveInput type="text" [formField]="form.number" />
  *   <p aveHint>As written on the signed copy.</p>
- *   @if (form.number().errors().length > 0) {
- *     <p aveError>Enter the contract number, for example ДК-2026/114.</p>
- *   }
+ *   <p aveError>Enter the contract number, for example ДК-2026/114.</p>
  * </ave-form-field>
  * ```
+ *
+ * With a form binding, the docs page shows the error in an `@if` block of the field's errors.
  *
  * @beta
  */

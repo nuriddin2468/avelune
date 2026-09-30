@@ -200,6 +200,14 @@ export default meta;
 /** One input, with controls. */
 export const Default: Story = {
   decorators: [moduleMetadata({ imports: [InputStoryFrame] }), componentWrapperDecorator(InputStoryFrame)],
+  parameters: {
+    docs: {
+      source: {
+        code: '<input aveInput type="text" aria-label="Contract number" placeholder="ДК-2026/000" size="md" />',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('textbox', { name: 'Contract number' })).toBeVisible();
   },
@@ -211,8 +219,12 @@ export const Sizes: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<input aveInput type="search" size="sm" aria-label="Search" />
-<button aveButton type="button" size="sm">Search</button>`,
+        code: `<input aveInput type="search" size="sm" aria-label="Search, sm" placeholder="Search documents" />
+<button aveButton type="button" size="sm">Search</button>
+<input aveInput type="search" size="md" aria-label="Search, md" placeholder="Search documents" />
+<button aveButton type="button" size="md">Search</button>
+<input aveInput type="search" size="lg" aria-label="Search, lg" placeholder="Search documents" />
+<button aveButton type="button" size="lg">Search</button>`,
         language: 'html',
       },
     },
@@ -234,9 +246,11 @@ export const States: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<input aveInput type="text" aria-invalid="true" />
-<input aveInput type="text" readonly />
-<input aveInput type="text" disabled />`,
+        code: `<input aveInput type="text" aria-label="Empty" placeholder="ДК-2026/000" />
+<input aveInput type="text" aria-label="Filled" value="ДК-2026/114" />
+<input aveInput type="text" aria-label="Invalid" value="2026/114" aria-invalid="true" />
+<input aveInput type="text" aria-label="Readonly" value="ДК-2026/114" readonly />
+<input aveInput type="text" aria-label="Disabled" value="ДК-2026/114" disabled />`,
         language: 'html',
       },
     },
@@ -264,12 +278,30 @@ export const SignalForms: Story = {
     docs: {
       source: {
         language: 'typescript',
-        code: `readonly contact = form(signal({ email: '' }), (path) => {
-  required(path.email);
-  email(path.email);
-});
+        code: `import { Component, signal } from '@angular/core';
+import { FormField, email, form, required } from '@angular/forms/signals';
+import { AveInput } from '@avelune/ui/input';
 
-// <input aveInput type="email" [formField]="contact.email" />`,
+@Component({
+  selector: 'app-contact-email',
+  imports: [AveInput, FormField],
+  template: \`
+    <label>
+      Email
+      <input aveInput type="email" [formField]="contact.email" />
+    </label>
+    <p role="status">
+      {{ contact.email().invalid() ? 'Invalid' : 'Valid' }} · {{ contact.email().touched() ? 'touched' : 'untouched' }}
+    </p>
+  \`,
+})
+export class ContactEmail {
+  protected readonly model = signal({ email: '' });
+  protected readonly contact = form(this.model, (path) => {
+    required(path.email);
+    email(path.email);
+  });
+}`,
       },
     },
   },
@@ -290,9 +322,29 @@ export const ReactiveForms: Story = {
     docs: {
       source: {
         language: 'typescript',
-        code: `readonly email = new FormControl('', { validators: [Validators.required, Validators.email] });
+        code: `import { Component } from '@angular/core';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AveInput } from '@avelune/ui/input';
 
-// <input aveInput type="email" [formControl]="email" />`,
+@Component({
+  selector: 'app-contact-email',
+  imports: [AveInput, ReactiveFormsModule],
+  template: \`
+    <label>
+      Email
+      <input aveInput type="email" [formControl]="email" />
+    </label>
+    <p role="status">
+      {{ email.invalid ? 'Invalid' : 'Valid' }} · {{ email.touched ? 'touched' : 'untouched' }}
+    </p>
+  \`,
+})
+export class ContactEmail {
+  protected readonly email = new FormControl('', {
+    nonNullable: true,
+    validators: [Validators.required, Validators.email],
+  });
+}`,
       },
     },
   },
@@ -315,7 +367,18 @@ export const LongText: Story = {
   parameters: {
     docs: {
       source: {
-        code: '<input aveInput type="text" value="Государственное унитарное предприятие…" />',
+        code: `<input
+  aveInput
+  type="text"
+  aria-label="Наименование организации"
+  value="Государственное унитарное предприятие «Центр электронного документооборота»"
+/>
+<input
+  aveInput
+  type="text"
+  aria-label="Tashkilot nomi"
+  placeholder="Oʻzbekiston Respublikasi Vazirlar Mahkamasi huzuridagi agentlik"
+/>`,
         language: 'html',
       },
     },
@@ -337,7 +400,12 @@ export const Compact: Story = {
     docs: {
       source: {
         code: `<div data-density="compact">
-  <input aveInput type="search" aria-label="Search" />
+  <input aveInput type="search" size="sm" aria-label="Search, sm" placeholder="Search documents" />
+  <button aveButton type="button" size="sm">Search</button>
+  <input aveInput type="search" size="md" aria-label="Search, md" placeholder="Search documents" />
+  <button aveButton type="button" size="md">Search</button>
+  <input aveInput type="search" size="lg" aria-label="Search, lg" placeholder="Search documents" />
+  <button aveButton type="button" size="lg">Search</button>
 </div>`,
         language: 'html',
       },

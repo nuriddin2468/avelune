@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "docs": {
+    "guides-things--docs": {
+      "id": "guides-things--docs",
+      "name": "Docs",
+      "mdx": {
+        "$ref": "../services/addon-docs/mdx/guides-things--docs.json#/components/guides-things--docs/docs/guides-things--docs"
+      }
+    }
+  }
+}

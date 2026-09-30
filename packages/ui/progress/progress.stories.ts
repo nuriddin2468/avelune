@@ -202,9 +202,14 @@ export const Variants: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<progress aveProgress [value]="sent()" [max]="size()"></progress>
-<progress aveProgress variant="success" value="1"></progress>
-<progress aveProgress variant="danger" [value]="sent()" [max]="size()"></progress>`,
+        code: `<label for="sending">Договор поставки.pdf</label> <span>45 %</span>
+<progress aveProgress id="sending" variant="accent" value="0.45"></progress>
+
+<label for="sent">Приложение 1.xlsx</label> <span>Загружено</span>
+<progress aveProgress id="sent" variant="success" value="1"></progress>
+
+<label for="failed">Скан паспорта.jpg</label> <span>Не загружено</span>
+<progress aveProgress id="failed" variant="danger" value="0.7"></progress>`,
         language: 'html',
       },
     },
@@ -223,8 +228,11 @@ export const Sizes: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<progress aveProgress size="sm" value="0.3"></progress>
-<progress aveProgress value="0.3"></progress>`,
+        code: `<label for="import-sm">Импорт контрагентов · sm</label> <span>30 %</span>
+<progress aveProgress id="import-sm" size="sm" value="0.3"></progress>
+
+<label for="import-md">Импорт контрагентов · md</label> <span>30 %</span>
+<progress aveProgress id="import-md" size="md" value="0.3"></progress>`,
         language: 'html',
       },
     },

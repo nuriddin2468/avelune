@@ -154,9 +154,18 @@ export const States: Story = {
       source: {
         language: 'html',
         code: `<fieldset aveChoiceGroup legend="Delivery">
-  <label aveChoice><input type="radio" aveRadio name="delivery" value="courier" /> Courier</label>
+  <label aveChoice><input type="radio" aveRadio name="delivery" value="courier" checked /> Courier</label>
   <label aveChoice><input type="radio" aveRadio name="delivery" value="pickup" /> Pickup point</label>
   <p aveHint>Pickup is free.</p>
+</fieldset>
+<fieldset aveChoiceGroup legend="Notify">
+  <label aveChoice><input type="checkbox" aveCheckbox /> By email</label>
+  <label aveChoice><input type="checkbox" aveCheckbox /> By SMS</label>
+  <p aveError>Choose at least one way to notify.</p>
+</fieldset>
+<fieldset aveChoiceGroup legend="Archive" disabled>
+  <label aveChoice><input type="radio" aveRadio name="archive" value="keep" checked /> Keep for 5 years</label>
+  <label aveChoice><input type="radio" aveRadio name="archive" value="forever" /> Keep for good</label>
 </fieldset>`,
       },
     },
@@ -179,15 +188,52 @@ export const SignalForms: Story = {
     docs: {
       source: {
         language: 'typescript',
-        code: `readonly order = form(signal({ delivery: "", notify: { email: false, sms: false } }), (path) => {
-  required(path.delivery);
-  validate(path.notify, ({ value }) => (value().email || value().sms ? undefined : { kind: "channel" }));
-});
+        code: `import { Component, signal } from '@angular/core';
+import { FormField, form, required, submit, validate } from '@angular/forms/signals';
+import { AveButton } from '@avelune/ui/button';
+import { AveCheckbox, AveChoice } from '@avelune/ui/checkbox';
+import { AveChoiceGroup, AveError, AveHint } from '@avelune/ui/form-field';
+import { AveRadio } from '@avelune/ui/radio';
 
-// <fieldset aveChoiceGroup legend="Delivery">
-//   <label aveChoice><input type="radio" aveRadio value="courier" [formField]="order.delivery" /> Courier</label>
-//   @if (order.delivery().errors().length > 0) { <p aveError>Choose how to deliver the order.</p> }
-// </fieldset>`,
+@Component({
+  selector: 'app-order-delivery',
+  imports: [AveButton, AveCheckbox, AveChoice, AveChoiceGroup, AveError, AveHint, AveRadio, FormField],
+  template: \`
+    <form novalidate (submit)="send($event)">
+      <fieldset aveChoiceGroup legend="Delivery">
+        <label aveChoice><input type="radio" aveRadio value="courier" [formField]="order.delivery" /> Courier</label>
+        <label aveChoice><input type="radio" aveRadio value="pickup" [formField]="order.delivery" /> Pickup point</label>
+        <label aveChoice><input type="radio" aveRadio value="post" [formField]="order.delivery" /> Post</label>
+        <p aveHint>Pickup is free.</p>
+        @if (order.delivery().errors().length > 0) {
+          <p aveError>Choose how to deliver the order.</p>
+        }
+      </fieldset>
+      <fieldset aveChoiceGroup legend="Notify">
+        <label aveChoice><input type="checkbox" aveCheckbox [formField]="order.notify.email" /> By email</label>
+        <label aveChoice><input type="checkbox" aveCheckbox [formField]="order.notify.sms" /> By SMS</label>
+        @if (order.notify().errors().length > 0) {
+          <p aveError>Choose at least one way to notify.</p>
+        }
+      </fieldset>
+      <button aveButton type="submit" variant="primary">Place the order</button>
+    </form>
+  \`,
+})
+export class OrderDelivery {
+  protected readonly model = signal({ delivery: '', notify: { email: false, sms: false } });
+  protected readonly order = form(this.model, (path) => {
+    required(path.delivery);
+    validate(path.notify, (context) =>
+      context.value().email || context.value().sms ? undefined : { kind: 'channel' },
+    );
+  });
+
+  protected send(event: Event): void {
+    event.preventDefault();
+    void submit(this.order, { action: () => Promise.resolve(undefined) });
+  }
+}`,
       },
     },
   },
@@ -216,15 +262,30 @@ export const ReactiveForms: Story = {
     docs: {
       source: {
         language: 'typescript',
-        code: `readonly order = new FormGroup({
-  delivery: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-});
+        code: `import { Component } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AveChoice } from '@avelune/ui/checkbox';
+import { AveChoiceGroup, AveError } from '@avelune/ui/form-field';
+import { AveRadio } from '@avelune/ui/radio';
 
-// <fieldset aveChoiceGroup legend="Delivery" [formGroup]="order">
-//   <label aveChoice><input type="radio" aveRadio value="courier" formControlName="delivery" /> Courier</label>
-//   <label aveChoice><input type="radio" aveRadio value="pickup" formControlName="delivery" /> Pickup point</label>
-//   @if (order.controls.delivery.invalid) { <p aveError>Choose how to deliver the order.</p> }
-// </fieldset>`,
+@Component({
+  selector: 'app-order-delivery',
+  imports: [AveChoice, AveChoiceGroup, AveError, AveRadio, ReactiveFormsModule],
+  template: \`
+    <fieldset aveChoiceGroup legend="Delivery" [formGroup]="order">
+      <label aveChoice><input type="radio" aveRadio value="courier" formControlName="delivery" /> Courier</label>
+      <label aveChoice><input type="radio" aveRadio value="pickup" formControlName="delivery" /> Pickup point</label>
+      @if (order.controls.delivery.invalid) {
+        <p aveError>Choose how to deliver the order.</p>
+      }
+    </fieldset>
+  \`,
+})
+export class OrderDelivery {
+  protected readonly order = new FormGroup({
+    delivery: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+  });
+}`,
       },
     },
   },

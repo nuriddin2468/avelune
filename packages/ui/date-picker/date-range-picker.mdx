@@ -45,6 +45,8 @@ The start input, a dash, and the end input with the calendar button, in two equa
 
 For the periods people ask for again and again, `presets` puts a list of them in the calendar's panel (ADR 0054): the kit's own, by name, in the application's language, and the application's own, with their label and dates. None are shown unless the application asks.
 
+A preset is an `AveDateRangePreset`: either an `AveDateRangePresetName`, one of the names in the table below, or an `AveDateRangeCustomPreset`, an object with a `label` (what the preset says, in the application's language), a `start` and an `end` (ISO dates, the end never before the start).
+
 ```ts
 import type { AveDateRangePreset } from '@avelune/ui/date-picker';
 

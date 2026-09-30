@@ -235,6 +235,14 @@ type Story = StoryObj<AveButton>;
 /** One button, with controls. */
 export const Default: Story = {
   decorators: [moduleMetadata({ imports: [ButtonStoryFrame] }), componentWrapperDecorator(ButtonStoryFrame)],
+  parameters: {
+    docs: {
+      source: {
+        code: '<button aveButton type="button" variant="primary" size="md">Save changes</button>',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('button', { name: 'Save changes' })).toBeVisible();
   },
@@ -249,7 +257,12 @@ export const Variants: Story = {
         code: `<button aveButton type="button" variant="primary">Send for approval</button>
 <button aveButton type="button">Save draft</button>
 <button aveButton type="button" variant="ghost">Preview</button>
-<button aveButton type="button" variant="danger">Delete document</button>`,
+<button aveButton type="button" variant="danger">Delete document</button>
+
+<div role="group" aria-label="A form's actions">
+  <button aveButton type="button">Cancel</button>
+  <button aveButton type="button" variant="primary">Save changes</button>
+</div>`,
         language: 'html',
       },
     },
@@ -293,6 +306,8 @@ export const Compact: Story = {
         code: `<!-- Density is set once for the application (AveTheme.setDensity), or for a region. -->
 <div data-density="compact">
   <button aveButton type="button" variant="primary" size="sm">Save changes</button>
+  <button aveButton type="button" variant="primary">Save changes</button>
+  <button aveButton type="button" variant="primary" size="lg">Save changes</button>
 </div>`,
         language: 'html',
       },
@@ -317,10 +332,26 @@ export const States: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<button aveButton type="button" variant="primary">Save</button>
+        code: `<!-- Repeated for each variant: primary, secondary, ghost, danger. -->
+<button aveButton type="button" variant="primary">Save</button>
 <button aveButton type="button" variant="primary" disabled>Save</button>
 <button aveButton type="button" variant="primary" disabled disabledInteractive>Save</button>
-<button aveButton type="button" variant="primary" [loading]="saving()">Save</button>`,
+<button aveButton type="button" variant="primary" [loading]="saving()">Save</button>
+
+<button aveButton type="button" variant="secondary">Save</button>
+<button aveButton type="button" variant="secondary" disabled>Save</button>
+<button aveButton type="button" variant="secondary" disabled disabledInteractive>Save</button>
+<button aveButton type="button" variant="secondary" [loading]="saving()">Save</button>
+
+<button aveButton type="button" variant="ghost">Save</button>
+<button aveButton type="button" variant="ghost" disabled>Save</button>
+<button aveButton type="button" variant="ghost" disabled disabledInteractive>Save</button>
+<button aveButton type="button" variant="ghost" [loading]="saving()">Save</button>
+
+<button aveButton type="button" variant="danger">Save</button>
+<button aveButton type="button" variant="danger" disabled>Save</button>
+<button aveButton type="button" variant="danger" disabled disabledInteractive>Save</button>
+<button aveButton type="button" variant="danger" [loading]="saving()">Save</button>`,
         language: 'html',
       },
     },
@@ -411,10 +442,11 @@ export const WithIcons: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<!-- Registered with provideAveIcons([lucidePlus, lucideDownload, lucideArrowRight]). -->
+        code: `<!-- Registered with provideAveIcons([lucidePlus, lucideDownload, lucideArrowRight, lucideFunnel]). -->
 <button aveButton type="button" variant="primary"><ave-icon name="plus" decorative />Create document</button>
 <button aveButton type="button"><ave-icon name="download" decorative />Download report</button>
-<button aveButton type="button">Next step<ave-icon name="arrow-right" decorative /></button>`,
+<button aveButton type="button">Next step<ave-icon name="arrow-right" decorative /></button>
+<button aveButton type="button" variant="ghost" size="sm"><ave-icon name="funnel" decorative />Filters</button>`,
         language: 'html',
       },
     },
@@ -441,8 +473,12 @@ export const LongText: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<button aveButton type="button" variant="primary">
+        code: `<button aveButton type="button" variant="primary" lang="ru">
   Отправить документ на согласование руководителю отдела
+</button>
+<button aveButton type="button" lang="uz-Latn">Hujjatni boʻlim boshligʻiga kelishish uchun yuborish</button>
+<button aveButton type="button" variant="ghost" lang="uz-Cyrl">
+  Ҳужжатни бўлим бошлиғига келишиш учун юбориш
 </button>`,
         language: 'html',
       },
@@ -468,7 +504,10 @@ export const Links: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<a aveButton variant="primary" href="/documents/new">Create document</a>
+        code: `<a aveButton variant="primary" href="/documents/new">Send for approval</a>
+<a aveButton href="/documents/draft">Save draft</a>
+<a aveButton variant="ghost" href="/documents/preview">Preview</a>
+<a aveButton variant="danger" href="/documents/delete">Delete document</a>
 <a aveButton href="/archive" disabled>Open archive</a>
 <a aveButton href="/archive" disabled disabledInteractive>Open archive</a>`,
         language: 'html',

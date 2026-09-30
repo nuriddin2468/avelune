@@ -5,18 +5,54 @@
       "name": "AveThing",
       "path": "../../packages/ui/thing/thing.stories.ts",
       "argTypes": {
-        "label": { "name": "label", "description": "What the thing is called.", "table": { "category": "inputs" } },
-        "open": { "name": "open", "description": "Whether the thing is open.", "table": { "category": "inputs" } },
-        "openChange": { "name": "openChange", "description": "", "table": { "category": "outputs" } }
+        "label": {
+          "name": "label",
+          "description": "What the thing is called.",
+          "table": {
+            "category": "inputs"
+          }
+        },
+        "open": {
+          "name": "open",
+          "description": "Whether the thing is open.",
+          "table": {
+            "category": "inputs"
+          }
+        },
+        "size": {
+          "name": "size",
+          "description": "The size: `sm` or `md`.",
+          "type": {
+            "name": "enum",
+            "value": ["sm", "md"]
+          },
+          "table": {
+            "category": "inputs",
+            "type": {
+              "summary": "AveThingSize"
+            }
+          }
+        },
+        "openChange": {
+          "name": "openChange",
+          "description": "",
+          "table": {
+            "category": "outputs"
+          }
+        }
       },
       "renderer": "angular",
       "angularComponentMeta": {
         "name": "AveThing",
         "selector": "ave-thing",
         "standalone": true,
-        "inputs": ["label", "open"],
+        "inputs": ["label", "open", "size"],
         "outputs": ["closed", "openChange"],
         "enums": []
+      },
+      "description": "A thing that holds items.",
+      "jsDocTags": {
+        "alpha": [""]
       }
     }
   }

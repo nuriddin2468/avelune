@@ -1,0 +1,100 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as SpacingStories from './spacing.stories';
+
+<Meta of={SpacingStories} />
+
+# Spacing and size
+
+A 4px grid. Spacing tokens are named by their multiple: `space.4` is 16px, and they are the only semantic tokens with numbers in their names. Control heights and paddings come through component tokens, so compact density changes them without any change in your CSS.
+
+## Using space and size
+
+- Related elements sit 8px apart (`space.2`), form fields 16px (`space.4`), sections 32 to 48px (`space.8` to `space.12`).
+- Write spacing as `padding: var(--ave-space-4)` or `gap: var(--ave-space-2)`. Never a raw pixel value.
+- `size.control.*` are control heights, `size.icon.*` are icon boxes and `size.target.*` are hit areas; the smallest target of anything interactive is `size.target.min`.
+- `control.height.*` and `control.padding-inline.*` are what kit controls read; they follow density. Use them for an own control that must line up with kit controls of the same size.
+- `container.*` are widths where a component changes its own layout (container queries). `breakpoint.*` are widths where the page layout changes. CSS cannot read a custom property inside a media or container query, so use these values through the typed tokens and a lint check, not as ad-hoc numbers.
+
+## Token reference
+
+### Spacing scale (`space`)
+
+{/* tokens:space */}
+
+| Token      | CSS variable     | Value  | Description |
+| ---------- | ---------------- | ------ | ----------- |
+| `space.1`  | `--ave-space-1`  | `4px`  |             |
+| `space.2`  | `--ave-space-2`  | `8px`  |             |
+| `space.3`  | `--ave-space-3`  | `12px` |             |
+| `space.4`  | `--ave-space-4`  | `16px` |             |
+| `space.5`  | `--ave-space-5`  | `20px` |             |
+| `space.6`  | `--ave-space-6`  | `24px` |             |
+| `space.8`  | `--ave-space-8`  | `32px` |             |
+| `space.10` | `--ave-space-10` | `40px` |             |
+| `space.12` | `--ave-space-12` | `48px` |             |
+| `space.16` | `--ave-space-16` | `64px` |             |
+
+{/* /tokens */}
+
+### Sizes (`size`)
+
+Control heights, icon boxes and target sizes.
+
+{/* tokens:size */}
+
+| Token                | CSS variable               | Value  | Description                                        |
+| -------------------- | -------------------------- | ------ | -------------------------------------------------- |
+| `size.control.xs`    | `--ave-size-control-xs`    | `28px` | Reached only through compact density (compact sm). |
+| `size.control.sm`    | `--ave-size-control-sm`    | `32px` |                                                    |
+| `size.control.md`    | `--ave-size-control-md`    | `36px` | The default control height for 14/20 text.         |
+| `size.control.lg`    | `--ave-size-control-lg`    | `40px` |                                                    |
+| `size.icon.sm`       | `--ave-size-icon-sm`       | `16px` |                                                    |
+| `size.icon.md`       | `--ave-size-icon-md`       | `20px` |                                                    |
+| `size.icon.lg`       | `--ave-size-icon-lg`       | `24px` |                                                    |
+| `size.target.min`    | `--ave-size-target-min`    | `24px` | WCAG 2.5.8 Target Size (Minimum).                  |
+| `size.target.coarse` | `--ave-size-target-coarse` | `44px` | Under the media query (pointer: coarse).           |
+
+{/* /tokens */}
+
+### Controls (`control`)
+
+Heights and paddings shared by every control of a size. Compact density moves each one step down.
+
+{/* tokens:control */}
+
+| Token                       | CSS variable                      | Value  | Compact | Description |
+| --------------------------- | --------------------------------- | ------ | ------- | ----------- |
+| `control.height.sm`         | `--ave-control-height-sm`         | `32px` | `28px`  |             |
+| `control.height.md`         | `--ave-control-height-md`         | `36px` | `32px`  |             |
+| `control.height.lg`         | `--ave-control-height-lg`         | `40px` | `36px`  |             |
+| `control.padding-inline.sm` | `--ave-control-padding-inline-sm` | `12px` | `8px`   |             |
+| `control.padding-inline.md` | `--ave-control-padding-inline-md` | `16px` | `12px`  |             |
+| `control.padding-inline.lg` | `--ave-control-padding-inline-lg` | `20px` | `16px`  |             |
+
+{/* /tokens */}
+
+### Container widths (`container`)
+
+{/* tokens:container */}
+
+| Token          | CSS variable         | Value   | Description |
+| -------------- | -------------------- | ------- | ----------- |
+| `container.xs` | `--ave-container-xs` | `320px` |             |
+| `container.sm` | `--ave-container-sm` | `480px` |             |
+| `container.md` | `--ave-container-md` | `640px` |             |
+| `container.lg` | `--ave-container-lg` | `960px` |             |
+
+{/* /tokens */}
+
+### Breakpoints (`breakpoint`)
+
+{/* tokens:breakpoint */}
+
+| Token           | CSS variable          | Value    | Description |
+| --------------- | --------------------- | -------- | ----------- |
+| `breakpoint.sm` | `--ave-breakpoint-sm` | `600px`  |             |
+| `breakpoint.md` | `--ave-breakpoint-md` | `840px`  |             |
+| `breakpoint.lg` | `--ave-breakpoint-lg` | `1200px` |             |
+| `breakpoint.xl` | `--ave-breakpoint-xl` | `1600px` |             |
+
+{/* /tokens */}

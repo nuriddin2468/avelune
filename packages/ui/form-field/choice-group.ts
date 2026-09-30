@@ -27,11 +27,11 @@ interface GroupControl {
  * <fieldset aveChoiceGroup legend="Delivery">
  *   <label aveChoice><input type="radio" aveRadio value="courier" [formField]="order.delivery" /> Courier</label>
  *   <label aveChoice><input type="radio" aveRadio value="pickup" [formField]="order.delivery" /> Pickup</label>
- *   @if (order.delivery().errors().length > 0) {
- *     <p aveError>Choose how to deliver the order.</p>
- *   }
+ *   <p aveError>Choose how to deliver the order.</p>
  * </fieldset>
  * ```
+ *
+ * With a form binding, the docs page shows the error in an `@if` block of the group's errors.
  *
  * @beta
  */

@@ -264,7 +264,11 @@ export class AveDataTable<R, K = unknown> {
   /** Who sorts and pages the rows: the table (`local`, the default) or the server (`server`). */
   readonly source = input<AveDataTableSource>('local');
 
-  /** How the rows are sorted, or `null` for their own order; a header's button changes it. */
+  /**
+   * How the rows are sorted, or `null` for their own order; a header's button changes it. It holds an `AveSort`: its
+   * `column`, the `key` of the sorted column, and its `direction`, an `AveSortDirection`, `ascending` or
+   * `descending`. Example: `{ column: 'amount', direction: 'descending' }`.
+   */
   readonly sort = model<AveSort | null>(null);
 
   /** Whether the rows have checkboxes, and the header one for the page. */

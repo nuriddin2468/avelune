@@ -1,0 +1,175 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as ColourStories from './colour.stories';
+
+<Meta of={ColourStories} />
+
+# Colour
+
+Colour tokens are semantic: they name a job (the page background, secondary text, the fill of a primary action), not a hue. Each has a light and a dark value, and the theme switches them, so a page that uses only these tokens is correct in both themes without a second stylesheet (ADR 0016, 0017).
+
+## Using colour
+
+- Pick the token by its job. Text and icons use `color.fg.*`, surfaces and fills use `color.bg.*`, lines and outlines use `color.border.*`.
+- A fill and the text on it are a pair: `color.accent.bg` takes `color.fg.on-accent`, `color.danger.bg` takes `color.fg.on-danger`, and so on. The pairs are checked for contrast in both themes.
+- Reference a token in CSS as `var(--ave-color-bg-surface)`. Never write a raw colour, and never reference a primitive colour scale: primitives are not part of the public CSS.
+- `color.brand.*` is the exact brand colour, for logos, illustrations and data marks only. Never use it for text or as a text background.
+- To change the brand colour of a product or a tenant at run time, see Foundations/Brand and Guides/Theme.
+
+## Token reference
+
+### Surfaces and state layers (`color.bg`)
+
+Surfaces from the canvas up to raised overlays, the state layers of hovered and pressed items, disabled fills, tracks, placeholders and the tooltip surface. In the dark theme higher surfaces are lighter.
+
+{/* tokens:color.bg */}
+
+| Token                            | CSS variable                           | Value       | Dark        | Description                                                                                                                                                                                                      |
+| -------------------------------- | -------------------------------------- | ----------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `color.bg.canvas`                | `--ave-color-bg-canvas`                | `#fcf9f9`   | `#1e1b1a`   | The app background behind every surface.                                                                                                                                                                         |
+| `color.bg.surface`               | `--ave-color-bg-surface`               | `#ffffff`   | `#282423`   | Content surfaces on the canvas: panels, cards, tables, form areas.                                                                                                                                               |
+| `color.bg.surface-raised`        | `--ave-color-bg-surface-raised`        | `#ffffff`   | `#342f2d`   | Surfaces above the page: popovers, menus, dialogs, toasts. In dark, higher surfaces are lighter.                                                                                                                 |
+| `color.bg.surface-sunken`        | `--ave-color-bg-surface-sunken`        | `#f5f3f2`   | `#1e1b1a`   | Recessed areas inside a surface: wells, code blocks, table headers.                                                                                                                                              |
+| `color.bg.backdrop`              | `--ave-color-bg-backdrop`              | `#1e1b1a7a` | `#1e1b1aa3` | The scrim behind modal dialogs and drawers.                                                                                                                                                                      |
+| `color.bg.hover`                 | `--ave-color-bg-hover`                 | `#1e1b1a0a` | `#ffffff0a` | State layer for a hovered item that has no fill of its own (ghost buttons, menu items, rows), over the canvas, a surface or a raised surface. Not over surface-sunken, where subtle text would drop below 4.5:1. |
+| `color.bg.active`                | `--ave-color-bg-active`                | `#1e1b1a14` | `#ffffff14` | State layer for the same items while pressed.                                                                                                                                                                    |
+| `color.bg.disabled`              | `--ave-color-bg-disabled`              | `#f5f3f2`   | `#342f2d`   | Fill of a disabled control that has a fill when enabled.                                                                                                                                                         |
+| `color.bg.track`                 | `--ave-color-bg-track`                 | `#e9e5e4`   | `#443e3c`   | The empty part of a bar that fills to show an amount: a progress bar's track. Visible on every surface; the accent, success and danger fills on it keep 3:1 (WCAG 1.4.11).                                       |
+| `color.bg.placeholder`           | `--ave-color-bg-placeholder`           | `#e9e5e4`   | `#443e3c`   | The fill of content that is on its way: a skeleton's lines and blocks. Visible on every surface in both themes; decorative, hidden from assistive technology, so no contrast minimum.                            |
+| `color.bg.placeholder-highlight` | `--ave-color-bg-placeholder-highlight` | `#fcf9f9`   | `#595250`   | The band of light that sweeps across color.bg.placeholder while it waits (ave-motion-shimmer); lighter than the fill in both themes. Under reduced motion the band stays out of sight.                           |
+| `color.bg.tooltip`               | `--ave-color-bg-tooltip`               | `#443e3c`   | `#595250`   | The small surface of a tooltip, which stands apart from every surface and popover under it: darker than all of them in light, lighter than all of them in dark.                                                  |
+
+{/* /tokens */}
+
+### Text and icons (`color.fg`)
+
+Text and icons in a role, and the on-colours that sit on a filled surface.
+
+{/* tokens:color.fg */}
+
+| Token                 | CSS variable                | Value     | Dark      | Description                                                                                                        |
+| --------------------- | --------------------------- | --------- | --------- | ------------------------------------------------------------------------------------------------------------------ |
+| `color.fg.default`    | `--ave-color-fg-default`    | `#282423` | `#e9e5e4` | Primary text and icons.                                                                                            |
+| `color.fg.muted`      | `--ave-color-fg-muted`      | `#595250` | `#d4cecc` | Secondary text: descriptions, metadata, inactive tabs.                                                             |
+| `color.fg.subtle`     | `--ave-color-fg-subtle`     | `#6e6765` | `#b7afad` | Tertiary text: placeholders, hints. Still 4.5:1; it is text.                                                       |
+| `color.fg.disabled`   | `--ave-color-fg-disabled`   | `#b7afad` | `#6e6765` | Text and icons of disabled controls. Exempt from contrast minimums (WCAG 1.4.3); never the only sign of the state. |
+| `color.fg.on-accent`  | `--ave-color-fg-on-accent`  | `#ffffff` | `#1e1b1a` | Text and icons on color.accent.bg and its hover and active states.                                                 |
+| `color.fg.on-info`    | `--ave-color-fg-on-info`    | `#ffffff` | `#1e1b1a` | Text and icons on color.info.bg.                                                                                   |
+| `color.fg.on-success` | `--ave-color-fg-on-success` | `#ffffff` | `#1e1b1a` | Text and icons on color.success.bg.                                                                                |
+| `color.fg.on-warning` | `--ave-color-fg-on-warning` | `#ffffff` | `#1e1b1a` | Text and icons on color.warning.bg.                                                                                |
+| `color.fg.on-danger`  | `--ave-color-fg-on-danger`  | `#ffffff` | `#1e1b1a` | Text and icons on color.danger.bg.                                                                                 |
+| `color.fg.on-tooltip` | `--ave-color-fg-on-tooltip` | `#ffffff` | `#fcf9f9` | Text of a tooltip, on color.bg.tooltip.                                                                            |
+| `color.fg.link`       | `--ave-color-fg-link`       | `#b53700` | `#ff8d6a` | Inline links.                                                                                                      |
+
+{/* /tokens */}
+
+### Borders (`color.border`)
+
+Decorative dividers, outlines of containers, the stronger boundary of form controls, and the focus ring colour.
+
+{/* tokens:color.border */}
+
+| Token                  | CSS variable                 | Value     | Dark      | Description                                                                                            |
+| ---------------------- | ---------------------------- | --------- | --------- | ------------------------------------------------------------------------------------------------------ |
+| `color.border.subtle`  | `--ave-color-border-subtle`  | `#e9e5e4` | `#443e3c` | Dividers and the edges of surfaces; decorative, no contrast minimum.                                   |
+| `color.border.default` | `--ave-color-border-default` | `#d4cecc` | `#595250` | Outlines of containers and secondary controls whose label identifies them.                             |
+| `color.border.strong`  | `--ave-color-border-strong`  | `#8c8482` | `#8c8482` | Boundaries a user needs to find a control (inputs, checkboxes): 3:1 against the surface (WCAG 1.4.11). |
+| `color.border.focus`   | `--ave-color-border-focus`   | `#b53700` | `#ff8d6a` | The focus ring.                                                                                        |
+
+{/* /tokens */}
+
+### Brand (`color.brand`)
+
+The exact brand colour, for marks that are not text.
+
+{/* tokens:color.brand */}
+
+| Token              | CSS variable             | Value     | Dark      | Description                                                                                                           |
+| ------------------ | ------------------------ | --------- | --------- | --------------------------------------------------------------------------------------------------------------------- |
+| `color.brand.mark` | `--ave-color-brand-mark` | `#e95420` | `#e95420` | The exact brand colour, for logos, illustrations and data marks only. Never text, never a text background (ADR 0011). |
+
+{/* /tokens */}
+
+### Accent (`color.accent`)
+
+The colour of primary actions, selection and focus: a solid fill, its hover and active states, a tinted background and a border.
+
+{/* tokens:color.accent */}
+
+| Token                    | CSS variable                   | Value     | Dark      | Description                                                                                                                                                                                                                                      |
+| ------------------------ | ------------------------------ | --------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `color.accent.bg`        | `--ave-color-accent-bg`        | `#b53700` | `#ff8d6a` | Solid fill for primary actions, selection and focus. Text on it uses color.fg.on-accent. Light theme: the nearest step to the brand colour that carries white text at 4.5:1; dark theme: a lighter, calmer step with dark text (ADR 0011, 0021). |
+| `color.accent.bg-hover`  | `--ave-color-accent-bg-hover`  | `#932b00` | `#ffbea9` |                                                                                                                                                                                                                                                  |
+| `color.accent.bg-active` | `--ave-color-accent-bg-active` | `#721f00` | `#ffded4` |                                                                                                                                                                                                                                                  |
+| `color.accent.bg-subtle` | `--ave-color-accent-bg-subtle` | `#fff0eb` | `#541b08` | Tinted background: selected rows, inline alerts.                                                                                                                                                                                                 |
+| `color.accent.fg`        | `--ave-color-accent-fg`        | `#b53700` | `#ff8d6a` | Text and icons in this colour on any surface or on bg-subtle.                                                                                                                                                                                    |
+| `color.accent.border`    | `--ave-color-accent-border`    | `#e95420` | `#e95420` | Boundary in this colour, 3:1 against the surface (an invalid input, a selected card).                                                                                                                                                            |
+
+{/* /tokens */}
+
+### Info (`color.info`)
+
+Neutral, informational messages.
+
+{/* tokens:color.info */}
+
+| Token                  | CSS variable                 | Value     | Dark      | Description                                                                           |
+| ---------------------- | ---------------------------- | --------- | --------- | ------------------------------------------------------------------------------------- |
+| `color.info.bg`        | `--ave-color-info-bg`        | `#0066c8` | `#79b4ff` | Solid fill. Neutral information. Text on it uses color.fg.on-info.                    |
+| `color.info.bg-hover`  | `--ave-color-info-bg-hover`  | `#0052a2` | `#b0d2ff` |                                                                                       |
+| `color.info.bg-active` | `--ave-color-info-bg-active` | `#003e7e` | `#d6e8ff` |                                                                                       |
+| `color.info.bg-subtle` | `--ave-color-info-bg-subtle` | `#ecf4ff` | `#0f3058` | Tinted background: selected rows, inline alerts.                                      |
+| `color.info.fg`        | `--ave-color-info-fg`        | `#0066c8` | `#79b4ff` | Text and icons in this colour on any surface or on bg-subtle.                         |
+| `color.info.border`    | `--ave-color-info-border`    | `#2885ef` | `#2885ef` | Boundary in this colour, 3:1 against the surface (an invalid input, a selected card). |
+
+{/* /tokens */}
+
+### Success (`color.success`)
+
+Completed and valid states.
+
+{/* tokens:color.success */}
+
+| Token                     | CSS variable                    | Value     | Dark      | Description                                                                           |
+| ------------------------- | ------------------------------- | --------- | --------- | ------------------------------------------------------------------------------------- |
+| `color.success.bg`        | `--ave-color-success-bg`        | `#007f38` | `#65ca7f` | Solid fill. A completed or positive result. Text on it uses color.fg.on-success.      |
+| `color.success.bg-hover`  | `--ave-color-success-bg-hover`  | `#00662c` | `#a3e1af` |                                                                                       |
+| `color.success.bg-active` | `--ave-color-success-bg-active` | `#004e20` | `#cff0d5` |                                                                                       |
+| `color.success.bg-subtle` | `--ave-color-success-bg-subtle` | `#e9f8eb` | `#0a3b1a` | Tinted background: selected rows, inline alerts.                                      |
+| `color.success.fg`        | `--ave-color-success-fg`        | `#007f38` | `#65ca7f` | Text and icons in this colour on any surface or on bg-subtle.                         |
+| `color.success.border`    | `--ave-color-success-border`    | `#03a14a` | `#03a14a` | Boundary in this colour, 3:1 against the surface (an invalid input, a selected card). |
+
+{/* /tokens */}
+
+### Warning (`color.warning`)
+
+States that need attention but do not block.
+
+{/* tokens:color.warning */}
+
+| Token                     | CSS variable                    | Value     | Dark      | Description                                                                                      |
+| ------------------------- | ------------------------------- | --------- | --------- | ------------------------------------------------------------------------------------------------ |
+| `color.warning.bg`        | `--ave-color-warning-bg`        | `#905c00` | `#e9a035` | Solid fill. A risk the user should check before continuing. Text on it uses color.fg.on-warning. |
+| `color.warning.bg-hover`  | `--ave-color-warning-bg-hover`  | `#744a00` | `#f6c68a` |                                                                                                  |
+| `color.warning.bg-active` | `--ave-color-warning-bg-active` | `#593800` | `#fce1c2` |                                                                                                  |
+| `color.warning.bg-subtle` | `--ave-color-warning-bg-subtle` | `#fef1e3` | `#452a00` | Tinted background: selected rows, inline alerts.                                                 |
+| `color.warning.fg`        | `--ave-color-warning-fg`        | `#905c00` | `#e9a035` | Text and icons in this colour on any surface or on bg-subtle.                                    |
+| `color.warning.border`    | `--ave-color-warning-border`    | `#b67700` | `#b67700` | Boundary in this colour, 3:1 against the surface (an invalid input, a selected card).            |
+
+{/* /tokens */}
+
+### Danger (`color.danger`)
+
+Errors and destructive actions. Never the only sign of a state: pair it with text or an icon.
+
+{/* tokens:color.danger */}
+
+| Token                    | CSS variable                   | Value     | Dark      | Description                                                                           |
+| ------------------------ | ------------------------------ | --------- | --------- | ------------------------------------------------------------------------------------- |
+| `color.danger.bg`        | `--ave-color-danger-bg`        | `#c5002b` | `#ff8987` | Solid fill. Errors and destructive actions. Text on it uses color.fg.on-danger.       |
+| `color.danger.bg-hover`  | `--ave-color-danger-bg-hover`  | `#a00021` | `#ffbcb8` |                                                                                       |
+| `color.danger.bg-active` | `--ave-color-danger-bg-active` | `#7c0017` | `#ffdddb` |                                                                                       |
+| `color.danger.bg-subtle` | `--ave-color-danger-bg-subtle` | `#ffefee` | `#571619` | Tinted background: selected rows, inline alerts.                                      |
+| `color.danger.fg`        | `--ave-color-danger-fg`        | `#c5002b` | `#ff8987` | Text and icons in this colour on any surface or on bg-subtle.                         |
+| `color.danger.border`    | `--ave-color-danger-border`    | `#ea3b48` | `#ea3b48` | Boundary in this colour, 3:1 against the surface (an invalid input, a selected card). |
+
+{/* /tokens */}

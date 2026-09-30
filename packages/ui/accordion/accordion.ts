@@ -12,8 +12,8 @@ import { AVE_ACCORDION, type AveAccordionLevel } from './types';
  *
  * ```html
  * <ave-accordion [level]="3">
- *   <ave-accordion-item heading="Штрафы и пени">…</ave-accordion-item>
- *   <ave-accordion-item heading="Форс-мажор">…</ave-accordion-item>
+ *   <ave-accordion-item heading="Штрафы и пени"><p>Пеня 0,1% за каждый день просрочки.</p></ave-accordion-item>
+ *   <ave-accordion-item heading="Форс-мажор"><p>Стороны освобождаются от ответственности.</p></ave-accordion-item>
  * </ave-accordion>
  * ```
  *
@@ -28,6 +28,9 @@ import { AVE_ACCORDION, type AveAccordionLevel } from './types';
   styleUrl: './accordion.css',
 })
 export class AveAccordion {
-  /** The heading level of the items: the page's next level under the heading above the accordion. 3 by default. */
+  /**
+   * The heading level of the items: the page's next level under the heading above the accordion. `2`, `3` (default), `4`, `5`
+   * or `6`.
+   */
   readonly level = input<AveAccordionLevel>(3);
 }

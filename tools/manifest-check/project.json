@@ -7,18 +7,49 @@
   "targets": {
     "check": {
       "executor": "nx:run-commands",
-      "dependsOn": [{ "projects": ["storybook"], "target": "build" }],
+      "dependsOn": [
+        {
+          "projects": ["storybook"],
+          "target": "build"
+        }
+      ],
       "inputs": [
         "production",
         "{workspaceRoot}/dist/apps/storybook/manifests/**",
         "{workspaceRoot}/dist/apps/storybook/services/**",
         "{workspaceRoot}/packages/ui/api/*.api.md",
-        "{workspaceRoot}/packages/ui/**/*.stories.ts"
+        "{workspaceRoot}/packages/ui/**/*.stories.ts",
+        "{workspaceRoot}/packages/ui/**/*.mdx",
+        "{workspaceRoot}/packages/ui/styles/*.css",
+        "{workspaceRoot}/packages/tokens/src/**/*",
+        "{workspaceRoot}/apps/storybook/src/**/*"
       ],
       "cache": true,
       "options": {
         "cwd": "{projectRoot}",
         "command": "node src/cli.ts"
+      }
+    },
+    "foundations": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        {
+          "projects": ["tokens"],
+          "target": "build"
+        }
+      ],
+      "inputs": [
+        "production",
+        "{workspaceRoot}/apps/storybook/src/foundations/*.mdx",
+        "{workspaceRoot}/packages/tokens/src/**/*",
+        {
+          "externalDependencies": ["prettier"]
+        }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node src/foundations-cli.ts"
       }
     },
     "test": {

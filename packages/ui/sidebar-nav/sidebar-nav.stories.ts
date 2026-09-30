@@ -129,14 +129,48 @@ export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-sidebar-nav [label]="label()" [items]="pages" />
+        code: `import { Component } from '@angular/core';
+import {
+  lucideBookOpen,
+  lucideChartColumn,
+  lucideFileText,
+  lucideHouse,
+  lucideInbox,
+  lucideSettings,
+  lucideUsers,
+} from '@avelune/icons/lucide';
+import { provideAveIcons } from '@avelune/ui/icon';
+import { AveSidebarNav, type AveSidebarEntry } from '@avelune/ui/sidebar-nav';
 
-pages: AveSidebarEntry[] = [
-  { label: 'Главная', link: '/', icon: 'house', exact: true },
-  { label: 'Договоры', link: '/contracts', icon: 'file-text', count: 2 },
-  { label: 'Справочники', icon: 'book-open', items: [{ label: 'Контрагенты', link: '/directories/counterparties' }] },
-  { heading: 'Администрирование', items: [{ label: 'Настройки', link: '/settings', icon: 'settings' }] },
-];`,
+@Component({
+  selector: 'app-navigation',
+  imports: [AveSidebarNav],
+  providers: [provideAveIcons([lucideBookOpen, lucideChartColumn, lucideFileText, lucideHouse, lucideInbox, lucideSettings, lucideUsers])],
+  template: \`<ave-sidebar-nav label="Разделы" [items]="pages" />\`,
+})
+export class Navigation {
+  protected readonly pages: readonly AveSidebarEntry[] = [
+    { label: 'Главная', link: '/', icon: 'house', exact: true },
+    { label: 'Входящие', link: '/inbox', icon: 'inbox' },
+    { label: 'Договоры', link: '/contracts', icon: 'file-text', count: 2 },
+    {
+      label: 'Справочники',
+      icon: 'book-open',
+      items: [
+        { label: 'Контрагенты', link: '/directories/counterparties' },
+        { label: 'Подразделения', link: '/directories/departments' },
+      ],
+    },
+    { label: 'Отчёты', link: '/reports', icon: 'chart-column' },
+    {
+      heading: 'Администрирование',
+      items: [
+        { label: 'Пользователи', link: '/users', icon: 'users' },
+        { label: 'Настройки', link: '/settings', icon: 'settings' },
+      ],
+    },
+  ];
+}`,
         language: 'typescript',
       },
     },
@@ -164,20 +198,48 @@ export const InGroup: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-sidebar-nav label="Разделы документооборота" [items]="pages" />
+        code: `import { Component } from '@angular/core';
+import {
+  lucideBookOpen,
+  lucideChartColumn,
+  lucideFileText,
+  lucideHouse,
+  lucideInbox,
+  lucideSettings,
+  lucideUsers,
+} from '@avelune/icons/lucide';
+import { provideAveIcons } from '@avelune/ui/icon';
+import { AveSidebarNav, type AveSidebarEntry } from '@avelune/ui/sidebar-nav';
 
-pages: AveSidebarEntry[] = [
-  { label: 'Главная', link: '/', icon: 'house', exact: true },
-  {
-    label: 'Справочники',
-    icon: 'book-open',
-    items: [
-      { label: 'Контрагенты', link: '/directories/counterparties' },
-      { label: 'Подразделения', link: '/directories/departments' }, // the current page: the group opens
-    ],
-  },
-  { heading: 'Администрирование', items: [{ label: 'Настройки', link: '/settings', icon: 'settings' }] },
-];`,
+@Component({
+  selector: 'app-navigation',
+  imports: [AveSidebarNav],
+  providers: [provideAveIcons([lucideBookOpen, lucideChartColumn, lucideFileText, lucideHouse, lucideInbox, lucideSettings, lucideUsers])],
+  template: \`<ave-sidebar-nav label="Разделы документооборота" [items]="pages" />\`,
+})
+export class Navigation {
+  protected readonly pages: readonly AveSidebarEntry[] = [
+    { label: 'Главная', link: '/', icon: 'house', exact: true },
+    { label: 'Входящие', link: '/inbox', icon: 'inbox' },
+    { label: 'Договоры', link: '/contracts', icon: 'file-text', count: 2 },
+    {
+      label: 'Справочники',
+      icon: 'book-open',
+      items: [
+        { label: 'Контрагенты', link: '/directories/counterparties' },
+        { label: 'Подразделения', link: '/directories/departments' },
+      ],
+    },
+    { label: 'Отчёты', link: '/reports', icon: 'chart-column' },
+    {
+      heading: 'Администрирование',
+      items: [
+        { label: 'Пользователи', link: '/users', icon: 'users' },
+        { label: 'Настройки', link: '/settings', icon: 'settings' },
+      ],
+    },
+  ];
+}`,
         language: 'typescript',
       },
     },
@@ -198,21 +260,40 @@ export const LongText: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-sidebar-nav label="Boʻlimlar" [items]="pages" lang="uz-Latn" />
+        code: `import { Component } from '@angular/core';
+import {
+  lucideBookOpen,
+  lucideHouse,
+  lucideInbox,
+  lucideUsers,
+} from '@avelune/icons/lucide';
+import { provideAveIcons } from '@avelune/ui/icon';
+import { AveSidebarNav, type AveSidebarEntry } from '@avelune/ui/sidebar-nav';
 
-pages: AveSidebarEntry[] = [
-  { label: 'Bosh sahifa', link: '/', icon: 'house', exact: true },
-  { label: 'Kelib tushgan hujjatlar va murojaatlar', link: '/inbox', icon: 'inbox' },
-  {
-    label: 'Маълумотномалар',
-    icon: 'book-open',
-    items: [
-      { label: 'Oʻzbekiston Respublikasi vazirliklari va idoralari', link: '/directories/ministries' },
-      { label: 'Контрагенты и их банковские реквизиты', link: '/directories/counterparties' },
-    ],
-  },
-  { heading: 'Maʼmuriyat va tizim sozlamalari', items: [{ label: 'Foydalanuvchilar', link: '/users', icon: 'users' }] },
-];`,
+@Component({
+  selector: 'app-navigation',
+  imports: [AveSidebarNav],
+  providers: [provideAveIcons([lucideBookOpen, lucideHouse, lucideInbox, lucideUsers])],
+  template: \`<ave-sidebar-nav label="Boʻlimlar" [items]="pages" lang="uz-Latn" />\`,
+})
+export class Navigation {
+  protected readonly pages: readonly AveSidebarEntry[] = [
+    { label: 'Bosh sahifa', link: '/', icon: 'house', exact: true },
+    { label: 'Kelib tushgan hujjatlar va murojaatlar', link: '/inbox', icon: 'inbox' },
+    {
+      label: 'Маълумотномалар',
+      icon: 'book-open',
+      items: [
+        { label: 'Oʻzbekiston Respublikasi vazirliklari va idoralari', link: '/directories/ministries' },
+        { label: 'Контрагенты и их банковские реквизиты', link: '/directories/counterparties' },
+      ],
+    },
+    {
+      heading: 'Maʼmuriyat va tizim sozlamalari',
+      items: [{ label: 'Foydalanuvchilar', link: '/users', icon: 'users' }],
+    },
+  ];
+}`,
         language: 'typescript',
       },
     },

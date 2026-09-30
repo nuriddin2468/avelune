@@ -28,6 +28,8 @@ import { AveMask, aveMaskPattern } from '@avelune/ui/mask';
 
 <Canvas of={MaskStories.Presets} />
 
+`aveMask` takes an `AveMaskPreset`, one of the names in this table, an `AveMaskPattern` or a `RegExp`.
+
 | Preset     | Shown                      | The form holds                     |
 | ---------- | -------------------------- | ---------------------------------- |
 | `phone`    | `+998 90 123-45-67`        | `+998901234567` (E.164)            |
@@ -48,6 +50,7 @@ The phone adds `+998 ` when the field gets focus and takes it away when the pers
 - A pattern: `0` a digit, `A` a Latin letter (written upper case), `a` any letter, `*` a letter or a digit, and `\` before one of them to write it as it is. Everything else is written for the person: `{ pattern: 'ДК-0000/000' }`.
 - The form holds the characters typed into the pattern's places. `value: 'shown'` holds the text as shown instead, when the written characters belong to the value.
 - A `RegExp` is a filter: the whole text must match it after every change, so write one that accepts a partial text (`/^[A-Z0-9-]{0,12}$/`). The form holds the text.
+- `AveMaskPattern` takes `pattern`, and two options. `value` is `'typed'` (the default) or `'shown'`. `inputMode` is the keyboard a phone shows, an `AveMaskInputMode`: `'numeric'` for a pattern of digits only and `'text'` otherwise, unless you give it, or `'tel'`. `{ pattern: '00-000', inputMode: 'tel' }` asks for the phone's keypad.
 - Define patterns and filters in the component (`protected readonly code = /…/`); templates cannot hold a `RegExp`.
 
 ## States

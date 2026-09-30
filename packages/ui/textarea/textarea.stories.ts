@@ -220,6 +220,14 @@ export default meta;
 /** One textarea, with controls. */
 export const Default: Story = {
   decorators: [moduleMetadata({ imports: [TextareaStoryFrame] }), componentWrapperDecorator(TextareaStoryFrame)],
+  parameters: {
+    docs: {
+      source: {
+        code: '<textarea aveTextarea aria-label="Subject" placeholder="Кратко: что поставляется и куда" lang="ru" size="md" rows="3"></textarea>',
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const field = within(canvasElement).getByRole('textbox', { name: 'Subject' });
     await expect(field).toBeVisible();
@@ -234,9 +242,15 @@ export const Sizes: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<input aveInput type="text" size="sm" />
-<textarea aveTextarea size="sm" rows="1"></textarea>
-<textarea aveTextarea size="sm"></textarea>`,
+        code: `<input aveInput type="text" size="sm" aria-label="Number, sm" value="ДК-2026/114" />
+<textarea aveTextarea size="sm" rows="1" aria-label="One line, sm" placeholder="One line"></textarea>
+<textarea aveTextarea size="sm" aria-label="Subject, sm" placeholder="Three lines, the default"></textarea>
+<input aveInput type="text" size="md" aria-label="Number, md" value="ДК-2026/114" />
+<textarea aveTextarea size="md" rows="1" aria-label="One line, md" placeholder="One line"></textarea>
+<textarea aveTextarea size="md" aria-label="Subject, md" placeholder="Three lines, the default"></textarea>
+<input aveInput type="text" size="lg" aria-label="Number, lg" value="ДК-2026/114" />
+<textarea aveTextarea size="lg" rows="1" aria-label="One line, lg" placeholder="One line"></textarea>
+<textarea aveTextarea size="lg" aria-label="Subject, lg" placeholder="Three lines, the default"></textarea>`,
         language: 'html',
       },
     },
@@ -261,9 +275,12 @@ export const States: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<textarea aveTextarea aria-invalid="true"></textarea>
-<textarea aveTextarea readonly></textarea>
-<textarea aveTextarea disabled></textarea>`,
+        code: `<textarea aveTextarea aria-label="Empty" placeholder="Кратко: что поставляется и куда"></textarea>
+<textarea aveTextarea aria-label="Filled">Поставка серверного оборудования для трёх филиалов, с монтажом и пусконаладкой.</textarea>
+<textarea aveTextarea aria-label="Focused">Поставка серверного оборудования для трёх филиалов, с монтажом и пусконаладкой.</textarea>
+<textarea aveTextarea aria-label="Invalid" aria-invalid="true">Поставка</textarea>
+<textarea aveTextarea aria-label="Readonly" readonly>Поставка серверного оборудования для трёх филиалов, с монтажом и пусконаладкой.</textarea>
+<textarea aveTextarea aria-label="Disabled" disabled>Поставка серверного оборудования для трёх филиалов, с монтажом и пусконаладкой.</textarea>`,
         language: 'html',
       },
     },
@@ -290,12 +307,31 @@ export const SignalForms: Story = {
   parameters: {
     docs: {
       source: {
-        code: `readonly contract = form(signal({ subject: '' }), (path) => {
-  required(path.subject);
-  minLength(path.subject, 10);
-});
+        code: `import { Component, signal } from '@angular/core';
+import { FormField, form, minLength, required } from '@angular/forms/signals';
+import { AveTextarea } from '@avelune/ui/textarea';
 
-// <textarea aveTextarea [formField]="contract.subject"></textarea>`,
+@Component({
+  selector: 'app-contract-subject',
+  imports: [AveTextarea, FormField],
+  template: \`
+    <label>
+      Subject
+      <textarea aveTextarea [formField]="contract.subject"></textarea>
+    </label>
+    <p role="status">
+      {{ contract.subject().invalid() ? 'Invalid' : 'Valid' }} ·
+      {{ contract.subject().touched() ? 'touched' : 'untouched' }}
+    </p>
+  \`,
+})
+export class ContractSubject {
+  protected readonly model = signal({ subject: '' });
+  protected readonly contract = form(this.model, (path) => {
+    required(path.subject);
+    minLength(path.subject, 10);
+  });
+}`,
         language: 'typescript',
       },
     },
@@ -320,9 +356,29 @@ export const ReactiveForms: Story = {
   parameters: {
     docs: {
       source: {
-        code: `readonly subject = new FormControl('', { validators: [Validators.required, Validators.minLength(10)] });
+        code: `import { Component } from '@angular/core';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AveTextarea } from '@avelune/ui/textarea';
 
-// <textarea aveTextarea [formControl]="subject"></textarea>`,
+@Component({
+  selector: 'app-contract-subject',
+  imports: [AveTextarea, ReactiveFormsModule],
+  template: \`
+    <label>
+      Subject
+      <textarea aveTextarea [formControl]="subject"></textarea>
+    </label>
+    <p role="status">
+      {{ subject.invalid ? 'Invalid' : 'Valid' }} · {{ subject.touched ? 'touched' : 'untouched' }}
+    </p>
+  \`,
+})
+export class ContractSubject {
+  protected readonly subject = new FormControl('', {
+    nonNullable: true,
+    validators: [Validators.required, Validators.minLength(10)],
+  });
+}`,
         language: 'typescript',
       },
     },
@@ -343,7 +399,15 @@ export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
   parameters: {
-    docs: { source: { code: '<textarea aveTextarea [formField]="contract.subject"></textarea>', language: 'html' } },
+    docs: {
+      source: {
+        code: `<textarea aveTextarea aria-label="Предмет договора" lang="ru">Поставка, монтаж и пусконаладка серверного и сетевого оборудования для региональных филиалов Государственного унитарного предприятия «Центр электронного документооборота», включая обучение персонала, гарантийное обслуживание в течение тридцати шести месяцев и передачу исполнительной документации.</textarea>
+<textarea aveTextarea aria-label="Shartnoma predmeti" lang="uz-Latn">Oʻzbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Elektron hujjat aylanishi markazining hududiy filiallari uchun server va tarmoq uskunalarini yetkazib berish, oʻrnatish va ishga tushirish.</textarea>
+<textarea aveTextarea aria-label="Одно длинное слово" lang="ru" rows="2">Электронногодокументооборотаиархивногохранениядокументовпредприятия</textarea>
+<textarea aveTextarea aria-label="Пусто" lang="ru" rows="2"></textarea>`,
+        language: 'html',
+      },
+    },
   },
   play: async ({ canvasElement }) => {
     const column = canvasElement.querySelector('.narrow');
@@ -365,7 +429,15 @@ export const Compact: Story = {
     docs: {
       source: {
         code: `<div data-density="compact">
-  <textarea aveTextarea size="sm" rows="1"></textarea>
+  <input aveInput type="text" size="sm" aria-label="Number, sm" value="ДК-2026/114" />
+  <textarea aveTextarea size="sm" rows="1" aria-label="One line, sm"></textarea>
+  <textarea aveTextarea size="sm" aria-label="Subject, sm"></textarea>
+  <input aveInput type="text" size="md" aria-label="Number, md" value="ДК-2026/114" />
+  <textarea aveTextarea size="md" rows="1" aria-label="One line, md"></textarea>
+  <textarea aveTextarea size="md" aria-label="Subject, md"></textarea>
+  <input aveInput type="text" size="lg" aria-label="Number, lg" value="ДК-2026/114" />
+  <textarea aveTextarea size="lg" rows="1" aria-label="One line, lg"></textarea>
+  <textarea aveTextarea size="lg" aria-label="Subject, lg"></textarea>
 </div>`,
         language: 'html',
       },

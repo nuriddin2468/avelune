@@ -164,9 +164,22 @@ export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: `private readonly toaster = inject(AveToaster);
+        code: `import { Component, inject } from '@angular/core';
+import { AveButton } from '@avelune/ui/button';
+import { AveToaster } from '@avelune/ui/toast';
 
-this.toaster.show({ message: 'Документ сохранён', variant: 'success' });`,
+@Component({
+  selector: 'app-contract-registry',
+  imports: [AveButton],
+  template: \`<button aveButton type="button" (click)="save()">Сохранить документ</button>\`,
+})
+export class ContractRegistry {
+  private readonly toaster = inject(AveToaster);
+
+  protected save(): void {
+    this.toaster.show({ message: 'Документ сохранён', variant: 'success' });
+  }
+}`,
         language: 'typescript',
       },
     },
@@ -187,13 +200,33 @@ export const Variants: Story = {
   parameters: {
     docs: {
       source: {
-        code: `this.toaster.show({ message: 'Выгрузка реестра началась. Файл появится в разделе «Загрузки».' });
-this.toaster.show({ message: 'Срок согласования договора ДК-2026/114 истекает завтра.', variant: 'warning' });
-this.toaster.show({
-  message: 'Не удалось отправить договор на согласование.',
-  variant: 'danger',
-  action: { label: 'Повторить', run: () => this.send(contract) },
-});`,
+        code: `import { Component, inject } from '@angular/core';
+import { AveButton } from '@avelune/ui/button';
+import { AveToaster } from '@avelune/ui/toast';
+
+@Component({
+  selector: 'app-contract-notices',
+  imports: [AveButton],
+  template: \`<button aveButton type="button" (click)="notify()">Показать уведомления</button>\`,
+})
+export class ContractNotices {
+  private readonly toaster = inject(AveToaster);
+
+  protected notify(): void {
+    this.toaster.show({ message: 'Выгрузка реестра началась. Файл появится в разделе «Загрузки».' });
+    this.toaster.show({ message: 'Срок согласования договора ДК-2026/114 истекает завтра.', variant: 'warning' });
+    this.send();
+  }
+
+  private send(): void {
+    // Shown when sending the contract fails; the action tries again.
+    this.toaster.show({
+      message: 'Не удалось отправить договор на согласование.',
+      variant: 'danger',
+      action: { label: 'Повторить', run: () => this.send() },
+    });
+  }
+}`,
         language: 'typescript',
       },
     },
@@ -212,11 +245,43 @@ export const Undo: Story = {
   parameters: {
     docs: {
       source: {
-        code: `this.toaster.show({
-  message: \`\${contract.number} удалён\`,
-  variant: 'success',
-  action: { label: 'Отменить', run: () => this.restore(contract) },
-});`,
+        code: `import { Component, inject, signal } from '@angular/core';
+import { AveButton } from '@avelune/ui/button';
+import { AveToaster } from '@avelune/ui/toast';
+
+@Component({
+  selector: 'app-contract-rows',
+  imports: [AveButton],
+  template: \`
+    <ul>
+      @for (row of rows(); track row) {
+        <li>
+          <span>{{ row }}</span>
+          <button aveButton type="button" size="sm" variant="ghost" (click)="remove(row)">Удалить</button>
+        </li>
+      }
+    </ul>
+  \`,
+})
+export class ContractRows {
+  private readonly toaster = inject(AveToaster);
+  protected readonly rows = signal(['Договор ДК-2026/112', 'Договор ДК-2026/113', 'Договор ДК-2026/114']);
+
+  protected remove(row: string): void {
+    const at = this.rows().indexOf(row);
+    this.rows.update((rows) => rows.filter((candidate) => candidate !== row));
+    this.toaster.show({
+      message: \`\${row} удалён\`,
+      variant: 'success',
+      action: {
+        label: 'Отменить',
+        run: () => {
+          this.rows.update((rows) => [...rows.slice(0, at), row, ...rows.slice(at)]);
+        },
+      },
+    });
+  }
+}`,
         language: 'typescript',
       },
     },
@@ -244,10 +309,25 @@ export const Queue: Story = {
   parameters: {
     docs: {
       source: {
-        code: `this.toaster.show({ message: 'Договор ДК-2026/101 отправлен', variant: 'success' });
-this.toaster.show({ message: 'Договор ДК-2026/102 отправлен', variant: 'success' });
-this.toaster.show({ message: 'Договор ДК-2026/103 отправлен', variant: 'success' });
-this.toaster.show({ message: 'Договор ДК-2026/104 отправлен', variant: 'success' }); // waits its turn`,
+        code: `import { Component, inject } from '@angular/core';
+import { AveButton } from '@avelune/ui/button';
+import { AveToaster } from '@avelune/ui/toast';
+
+@Component({
+  selector: 'app-approval-send',
+  imports: [AveButton],
+  template: \`<button aveButton type="button" (click)="send()">Отправить на согласование</button>\`,
+})
+export class ApprovalSend {
+  private readonly toaster = inject(AveToaster);
+
+  protected send(): void {
+    // Three show at once; the fourth waits its turn and shows as soon as one is closed.
+    for (const contract of ['ДК-2026/101', 'ДК-2026/102', 'ДК-2026/103', 'ДК-2026/104']) {
+      this.toaster.show({ message: \`Договор \${contract} отправлен\`, variant: 'success' });
+    }
+  }
+}`,
         language: 'typescript',
       },
     },
@@ -274,11 +354,29 @@ export const LongText: Story = {
   parameters: {
     docs: {
       source: {
-        code: `this.toaster.show({
-  message: 'Samarqand viloyati sogʻliqni saqlash boshqarmasi bilan tuzilgan shartnoma kelishuv uchun yuridik boʻlimga yuborildi',
-  variant: 'success',
-  action: { label: 'Ochish', run: () => this.open(contract) },
-});`,
+        code: `import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { AveButton } from '@avelune/ui/button';
+import { AveToaster } from '@avelune/ui/toast';
+
+@Component({
+  selector: 'app-approval-send',
+  imports: [AveButton],
+  template: \`<button aveButton type="button" (click)="send()">Kelishuvga yuborish</button>\`,
+})
+export class ApprovalSend {
+  private readonly toaster = inject(AveToaster);
+  private readonly router = inject(Router);
+
+  protected send(): void {
+    this.toaster.show({
+      message:
+        'Samarqand viloyati sogʻliqni saqlash boshqarmasi bilan tuzilgan shartnoma kelishuv uchun yuridik boʻlimga yuborildi',
+      variant: 'success',
+      action: { label: 'Ochish', run: () => void this.router.navigateByUrl('/contracts/114') },
+    });
+  }
+}`,
         language: 'typescript',
       },
     },
@@ -301,8 +399,37 @@ export const OverADialog: Story = {
   parameters: {
     docs: {
       source: {
-        code: `// From a modal dialog: while it is open, the notifications show inside it.
-this.toaster.show({ message: 'Реквизиты сохранены', variant: 'success' });`,
+        code: `import { Component, inject, signal } from '@angular/core';
+import { AveButton } from '@avelune/ui/button';
+import { AveDialog, AveDialogActions } from '@avelune/ui/dialog';
+import { AveFormField } from '@avelune/ui/form-field';
+import { AveInput } from '@avelune/ui/input';
+import { AveToaster } from '@avelune/ui/toast';
+
+@Component({
+  selector: 'app-counterparty-details',
+  imports: [AveButton, AveDialog, AveDialogActions, AveFormField, AveInput],
+  template: \`
+    <button aveButton type="button" (click)="editing.set(true)">Изменить реквизиты</button>
+    <dialog aveDialog heading="Реквизиты контрагента" size="sm" [(open)]="editing">
+      <ave-form-field label="ИНН">
+        <input aveInput type="text" inputmode="numeric" value="305123456" />
+      </ave-form-field>
+      <div aveDialogActions>
+        <button aveButton type="button" variant="primary" (click)="save()">Сохранить</button>
+      </div>
+    </dialog>
+  \`,
+})
+export class CounterpartyDetails {
+  private readonly toaster = inject(AveToaster);
+  protected readonly editing = signal(false);
+
+  protected save(): void {
+    // While the modal dialog is open, the notifications show inside it.
+    this.toaster.show({ message: 'Реквизиты сохранены', variant: 'success' });
+  }
+}`,
         language: 'typescript',
       },
     },
@@ -330,8 +457,23 @@ export const Compact: Story = {
   parameters: {
     docs: {
       source: {
-        code: `// <html data-density="compact">: the notifications take the page's density, 44px tall.
-this.toaster.show({ message: 'Документ сохранён', variant: 'success' });`,
+        code: `import { Component, inject } from '@angular/core';
+import { AveButton } from '@avelune/ui/button';
+import { AveToaster } from '@avelune/ui/toast';
+
+// The page's root element has data-density="compact": the notifications take that density, 44px tall.
+@Component({
+  selector: 'app-contract-registry',
+  imports: [AveButton],
+  template: \`<button aveButton type="button" (click)="save()">Сохранить документ</button>\`,
+})
+export class ContractRegistry {
+  private readonly toaster = inject(AveToaster);
+
+  protected save(): void {
+    this.toaster.show({ message: 'Документ сохранён', variant: 'success' });
+  }
+}`,
         language: 'typescript',
       },
     },

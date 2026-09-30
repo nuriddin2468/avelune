@@ -4,7 +4,7 @@ This file is both the plan and the progress tracker. A fresh session resumes fro
 
 **Current position:** Phase 5 closed (2026-09-30): the product owner passed Wave 6's STOP and closed Waves 1 to 6, with every component and pattern in beta ("Wave 6 STOP" below). After the STOP, one commit each: the drawer's slide from the inline end (ADR 0067, addendum), the input mask (ADR 0100), and the move to beta. **Next:** Phase 6 (consumer integration), its first unchecked item, in a fresh session (product owner, 2026-09-30). The repository's remote is GitHub now ("Parameters"), so Phase 3's deferred CI item can be planned for GitHub Actions, in an ADR over the prepared `.gitlab-ci.yml`.
 
-Every check without Docker passed on 2026-09-30 after the mask and the move to beta: 505 unit tests, 295 story tests, lint, types, Stylelint, the API reports, the size budgets and the components manifest (89 components and directives, a snippet for each of the kit's 285 stories). Before the mask, the full visual suite passed in compare mode (1316 checks), `invariants:e2e` (28, on 11 screens) and `test-check:e2e` (19). The release age is 16 hours since 2026-09-25 (ADR 0042). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-25.
+Every check without Docker passed on 2026-09-30 after the mask and the move to beta: 505 unit tests, 295 story tests, lint, types, Stylelint, the API reports, the size budgets and the components manifest (89 components and directives, a snippet for each of the kit's 285 stories). They passed again after the Storybook MCP fixes (ADR 0101, 0102, below), with the manifests' new rules and the Foundations token tables (152 tokens on 7 pages). The visual suite has not run since: with Docker, `pnpm visual` sweeps the ten new docs pages (axe was clean on all 65 docs pages in both themes outside the container); the stories render as before, since only their snippets changed. Before the mask, the full visual suite passed in compare mode (1316 checks), `invariants:e2e` (28, on 11 screens) and `test-check:e2e` (19). The release age is 16 hours since 2026-09-25 (ADR 0042). Phase 3 is done except the CI, changesets and CODEOWNERS item, which is deferred until a GitLab remote exists (product owner, 2026-09-24). Vitest 5 stays blocked by `@storybook/addon-vitest` 10.6 (peers `^3 || ^4`), re-checked 2026-09-25.
 
 ## Parameters
 
@@ -360,6 +360,27 @@ Wave 6 STOP passed (product owner, 2026-09-30): the wave's looks, the brand pres
 - **Every component and pattern in beta:** `@beta` in every declaration of `@avelune/ui` that was `@alpha`, `@avelune/ui/theme`, `/i18n` and `/overlay` included; the API reports differ in those tags only (277 lines). The visual reviews of Waves 2 to 5, which the product owner was to start, are closed with the waves: their stories pass the visual suite, and Wave 6's review found nothing of theirs.
 - **The drawer's slide from the inline end** (ADR 0067, addendum): the dialog clipped with `overflow: hidden`, a scroll container, and the browser scrolled it to the control it focused in the still-hidden panel, which then only faded in. It clips with `overflow: clip` now; the Default story checks the first frame.
 - **A mask for inputs** ("a regex or the like, for phone numbers and so on; think it through"): `@avelune/ui/mask` (ADR 0100), on Maskito 5.6.0. Uzbek presets (a phone as `+998 90 123-45-67`, held as E.164; STIR, PINFL, passport, card, account, MFO, postcode), a pattern or a `RegExp`, the clean value in both form APIs, and `aveMaskPattern` for a complete value. Not taken: a number mask for amounts, other countries' phones, a card's Luhn check.
+
+Storybook MCP, audited and fixed (2026-09-30, ADR 0101, 0102; the product owner asked for every finding to be fixed):
+- The audit: nine Sonnet agents compared `docs-show` and `docs-show-story` of all 55 kit entries with the source. The 207 inputs, 45 outputs and 285 stories matched. Four problems were real. Derived snippets did not compile (`size = 'md'` is a string). Snippets left things out with `…` or bound a frame's members. Four class descriptions were cut by an `@for` in a JSDoc example. And nothing reached an agent for `theme`, `i18n`, the tokens, or the Foundations and "Custom icons" pages.
+- `manifest-check` holds the manifests to more rules now:
+  - every export and every interface field is named somewhere an agent reads it;
+  - an alias-typed input lists its members;
+  - a component's JSDoc carries release tags only;
+  - no snippet is derived from args, and none has a loose `…`;
+  - a snippet is markup alone or a whole component;
+  - every public token and global class is on a Foundations page.
+
+  The exemptions for the kit's own plumbing are in `config.ts`. `manifest-check:foundations` generates each Foundations page's token table from `@avelune/tokens`. There are 52 rule tests.
+- Content:
+  - every story has a literal snippet that shows what it renders;
+  - 45 snippets are whole components, and they, with 67 modules on docs pages, compiled under `strictTemplates` (checked once, by hand);
+  - docs pages for the seven Foundations story files and the "Custom icons" guide;
+  - standalone guides "Theme" and "Messages and formats";
+  - the missing types and fields on the component pages.
+
+  Component sources changed in comments only, and story files outside their snippets not at all (both compared on the syntax tree).
+- The docs container reads the Theme toolbar from the channel on a page without stories, so the guides follow it too.
 
 ## Component waves
 

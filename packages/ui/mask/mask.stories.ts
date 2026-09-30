@@ -228,10 +228,10 @@ export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-form-field label="Телефон контрагента">
-  <input aveInput aveMask="phone" type="tel" autocomplete="tel" [formField]="contract.phone" />
-  <p aveHint>Например, +998 90 123-45-67</p>
-</ave-form-field>`,
+        code: `<label for="phone">Телефон контрагента</label>
+<input id="phone" aveInput aveMask="phone" type="tel" autocomplete="tel" [(value)]="phone" aria-describedby="phone-hint" />
+<span id="phone-hint">Например, +998 90 123-45-67</span>
+<p role="status">Значение формы: {{ phone() || '—' }}</p>`,
         language: 'html',
       },
     },
@@ -278,11 +278,29 @@ export const Patterns: Story = {
   parameters: {
     docs: {
       source: {
-        code: `protected readonly contractNumber: AveMaskPattern = { pattern: 'ДК-0000/000', value: 'shown' };
-protected readonly warehouseCode = /^[A-Z0-9-]{0,12}$/;
+        code: `import { Component, signal } from '@angular/core';
+import { AveInput } from '@avelune/ui/input';
+import { AveMask, type AveMaskPattern } from '@avelune/ui/mask';
 
-// <input aveInput [aveMask]="contractNumber" [formField]="contract.number" />
-// <input aveInput [aveMask]="warehouseCode" [formField]="stock.code" />`,
+@Component({
+  selector: 'app-contract-codes',
+  imports: [AveInput, AveMask],
+  template: \`
+    <label for="number">Номер договора</label>
+    <input id="number" aveInput [aveMask]="contractNumber" [(value)]="number" aria-describedby="number-hint" />
+    <span id="number-hint">Например, ДК-2026/114</span>
+    <label for="code">Код склада</label>
+    <input id="code" aveInput [aveMask]="warehouseCode" [(value)]="code" aria-describedby="code-hint" />
+    <span id="code-hint">Заглавные латинские буквы, цифры и дефис, до 12 знаков</span>
+    <p role="status">Номер: {{ number() || '—' }}, код: {{ code() || '—' }}</p>
+  \`,
+})
+export class ContractCodes {
+  protected readonly contractNumber: AveMaskPattern = { pattern: 'ДК-0000/000', value: 'shown' };
+  protected readonly warehouseCode = /^[A-Z0-9-]{0,12}$/;
+  protected readonly number = signal('');
+  protected readonly code = signal('');
+}`,
         language: 'typescript',
       },
     },
@@ -306,9 +324,12 @@ export const States: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<input aveInput aveMask="phone" size="sm" type="tel" />
-<input aveInput aveMask="stir" readonly />
-<input aveInput aveMask="card" disabled />`,
+        code: `<input aveInput aveMask="phone" size="sm" type="tel" value="+998901234567" />
+<input aveInput aveMask="phone" size="lg" type="tel" value="+998901234567" />
+<!-- A number typed in part: the application marks it invalid. -->
+<input aveInput aveMask="phone" type="tel" value="+99890123" aria-invalid="true" />
+<input aveInput aveMask="stir" value="302345678" readonly />
+<input aveInput aveMask="card" value="8600123456789012" disabled />`,
         language: 'html',
       },
     },
@@ -326,12 +347,27 @@ export const SignalForms: Story = {
   parameters: {
     docs: {
       source: {
-        code: `readonly contact = form(signal({ phone: '' }), (path) => {
-  required(path.phone);
-  pattern(path.phone, aveMaskPattern('phone'));
-});
+        code: `import { Component, signal } from '@angular/core';
+import { FormField, form, pattern, required } from '@angular/forms/signals';
+import { AveInput } from '@avelune/ui/input';
+import { AveMask, aveMaskPattern } from '@avelune/ui/mask';
 
-// <input aveInput aveMask="phone" type="tel" [formField]="contact.phone" />`,
+@Component({
+  selector: 'app-contact-phone',
+  imports: [AveInput, AveMask, FormField],
+  template: \`
+    <label for="phone">Телефон контрагента</label>
+    <input id="phone" aveInput aveMask="phone" type="tel" autocomplete="tel" [formField]="contact.phone" aria-describedby="phone-hint" />
+    <span id="phone-hint">Например, +998 90 123-45-67</span>
+    <p role="status">Значение формы: {{ contact.phone().value() || '—' }}</p>
+  \`,
+})
+export class ContactPhone {
+  protected readonly contact = form(signal({ phone: '' }), (path) => {
+    required(path.phone);
+    pattern(path.phone, aveMaskPattern('phone'));
+  });
+}`,
         language: 'typescript',
       },
     },
@@ -360,10 +396,13 @@ export const LongText: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-form-field label="Kontragentning telefon raqami (ish vaqtida bogʻlanish uchun)">
-  <input aveInput aveMask="phone" type="tel" />
-  <p aveHint>Masalan, +998 90 123-45-67: mamlakat kodi avtomatik qoʻshiladi</p>
-</ave-form-field>`,
+        code: `<label for="phone">Kontragentning telefon raqami (ish vaqtida bogʻlanish uchun)</label>
+<input id="phone" aveInput aveMask="phone" type="tel" value="+998901234567" aria-describedby="phone-hint" />
+<span id="phone-hint">Masalan, +998 90 123-45-67: mamlakat kodi avtomatik qoʻshiladi</span>
+
+<label for="pinfl">Jismoniy shaxsning shaxsiy identifikatsiya raqami (JShShIR)</label>
+<input id="pinfl" aveInput aveMask="pinfl" value="31203865210024" aria-describedby="pinfl-hint" />
+<span id="pinfl-hint">14 ta raqam, pasport yoki ID-kartaning orqa tomonida</span>`,
         language: 'html',
       },
     },

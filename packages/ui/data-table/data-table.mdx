@@ -55,11 +55,25 @@ readonly byId = (row: Contract) => row.id;
 ```
 
 - `value` is what a cell shows without a template (numbers written for the locale) and what sorting compares: give a date column its ISO date, and draw it in a template.
+- `value` returns an `AveCellValue`: a `string`, a `number` or `null`. `null` shows nothing and sorts last.
+- A cell template's context is an `AveCellContext<R>`: its `$implicit` field is the row, which `let-contract` names.
 - `rowHeader` makes a column the rows' titles; a row's checkbox is named by it ("Выбрать ДК-2026/114").
 
 ## Sorting
 
 A sortable header is a button with an arrow. The first press sorts ascending, the next turns the order over, and the page goes back to the first. Local rows are compared by `value`: numbers as numbers, text by the locale's collation with the numbers inside it in order ("ДК-2" before "ДК-10"), empty values last. With `source="server"` the table leaves the rows in the server's order: read `sort` and ask the server for the page.
+
+`sort` is a two-way model that holds an `AveSort`, or `null` while the rows keep their own order. An `AveSort` has two fields: `column`, the `key` of the sorted column, and `direction`, an `AveSortDirection`: `ascending` or `descending`. `sortChange` emits the new `AveSort` whenever a header's button is pressed.
+
+```ts
+import type { AveSort } from '@avelune/ui/data-table';
+
+readonly sort = signal<AveSort | null>({ column: 'amount', direction: 'descending' });
+```
+
+```html
+<ave-data-table label="Договоры" [rows]="contracts()" [columns]="columns" [rowKey]="byId" [(sort)]="sort" />
+```
 
 ## Choosing rows
 

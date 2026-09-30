@@ -228,7 +228,7 @@ export class AveMultiselect<V> implements ControlValueAccessor {
   /** What the trigger says while nothing is chosen ("Choose approvers"). It never replaces a label. */
   readonly placeholder = input('');
 
-  /** The size: the box of an Input of that size. */
+  /** The size, the box of an Input of that size: `sm`, `md` (default) or `lg`. */
   readonly size = input<AveSelectSize>('md');
 
   /** Whether the multiselect is disabled. A form binding sets it too. */

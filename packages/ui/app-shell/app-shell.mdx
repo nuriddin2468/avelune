@@ -48,14 +48,20 @@ import { AveAppShell, AveAppShellActions, AveAppShellBanner, type AveAppLogo } f
       aveTooltip="Тёмная тема"
     ></button>
   </div>
-  <ave-banner aveAppShellBanner variant="warning" dismissible (dismiss)="maintenanceSeen.set(true)">…</ave-banner>
+  <ave-banner aveAppShellBanner variant="warning" dismissible (dismiss)="maintenanceSeen.set(true)">
+    В субботу с 22:00 до 02:00 система будет недоступна: плановые работы.
+  </ave-banner>
   <router-outlet />
 </ave-app-shell>
 ```
 
 ## Logo
 
-`logo` is the product's or the tenant's image, `{ src, darkSrc?, alt }`. It is 32px tall, at most 160px wide, and drawn whole.
+`logo` holds an `AveAppLogo`, the product's or the tenant's image: `src`, the address of the image on the light bar (a URL, or a `data:` URL the tenant uploaded); `darkSrc`, optionally, its address on the dark bar; and `alt`. It is 32px tall, at most 160px wide, and drawn whole.
+
+```ts
+const logo: AveAppLogo = { src: '/logo.svg', darkSrc: '/logo-dark.svg', alt: 'Альфа Технологии' };
+```
 
 - `darkSrc` is the image for the dark bar, for a logo whose dark parts the dark surface would hide. The shell chooses it by the theme the page shows (`aveColorScheme()` from `@avelune/ui/theme`).
 - `alt` names the organisation the logo stands for ("Альфа Технологии"), or is `''` when the product's name beside it says the same. The link home is named by both.
@@ -64,7 +70,7 @@ import { AveAppShell, AveAppShellActions, AveAppShellBanner, type AveAppLogo } f
 
 ## Navigation
 
-The shell draws the navigation twice, in the column and in the drawer, so it takes the pages as data, as SidebarNav does (ADR 0072). CSS decides which one shows. The drawer (`navigationOpen`, a model) closes when a link is followed and when the window widens to `breakpoint.md`.
+The shell draws the navigation twice, in the column and in the drawer, so it takes the pages as data, as SidebarNav does (ADR 0072). Each entry is an `AveSidebarEntry`: a page `{ label, link, icon?, exact?, count? }`, a group `{ label, icon?, items }` or a section `{ heading, items }`; the SidebarNav page has the details. CSS decides which one shows. The drawer (`navigationOpen`, a model) closes when a link is followed and when the window widens to `breakpoint.md`.
 
 The stories "Navigation drawer", "Skip link", "Without navigation" and "Long text" show the rest, each on its own page: every shell draws a banner landmark and `main`, so this page shows one shell and its landmarks stay unique.
 

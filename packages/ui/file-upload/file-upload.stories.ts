@@ -171,7 +171,7 @@ export const Default: Story = {
     docs: {
       source: {
         code: `<ave-form-field label="Скан подписанного договора">
-  <ave-file-upload accept=".pdf,image/*" [maxSize]="20 * 1024 * 1024" [formField]="contract.scan" />
+  <ave-file-upload accept=".pdf,image/*" [maxSize]="20 * 1024 * 1024" />
   <p aveHint>PDF или изображение, до 20 МБ.</p>
 </ave-form-field>`,
         language: 'html',
@@ -200,7 +200,10 @@ export const Files: Story = {
   parameters: {
     docs: {
       source: {
-        code: '<ave-file-upload multiple accept=".pdf,image/*" [maxSize]="5 * 1024 * 1024" [maxFiles]="3" />',
+        code: `<ave-form-field label="Приложения к письму">
+  <ave-file-upload multiple accept=".pdf,image/*" [maxSize]="5 * 1024 * 1024" [maxFiles]="3" />
+  <p aveHint>PDF или изображения, до 5 МБ, не больше трёх.</p>
+</ave-form-field>`,
         language: 'html',
       },
     },
@@ -226,7 +229,16 @@ export const States: Story = {
   tags: ['forced-colors'],
   decorators: [locale('ru')],
   render: frame('states'),
-  parameters: { docs: { source: { code: '<ave-file-upload multiple disabled />', language: 'html' } } },
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-file-upload label="Empty" multiple />
+<ave-file-upload label="With files" multiple [value]="files" />
+<ave-file-upload label="Disabled" multiple disabled [value]="files" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const zone = canvasElement.querySelector('[data-dragging-target] .zone');
     const transfer = new DataTransfer();
@@ -245,8 +257,8 @@ export const Forms: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-file-upload multiple [formField]="letter.attachments" />
-<ave-file-upload [formControl]="scan" />`,
+        code: `<ave-file-upload label="Attachments (Signal Forms)" multiple [formField]="letter.attachments" />
+<ave-file-upload label="Scan (Reactive Forms)" [formControl]="scan" />`,
         language: 'html',
       },
     },
@@ -273,7 +285,17 @@ export const LongText: Story = {
   render: () => ({ template: '<ave-file-upload-long />', moduleMetadata: { imports: [FileUploadLong] } }),
   parameters: {
     docs: {
-      source: { code: '<ave-file-upload multiple accept=".pdf" [formField]="contract.protocol" />', language: 'html' },
+      source: {
+        code: `<ave-form-field label="Протокол разногласий к договору поставки, подписанный обеими сторонами">
+  <ave-file-upload multiple accept=".pdf" [maxSize]="5 * 1024 * 1024" [formField]="contract.protocol" />
+  <p aveHint>Только PDF, до 5 МБ каждый; скан или файл с электронной подписью, не больше десяти страниц.</p>
+</ave-form-field>
+<ave-form-field label="Доверенность представителя">
+  <ave-file-upload [formField]="contract.power" />
+  <p aveError>Прикрепите доверенность: без неё договор не примут к регистрации.</p>
+</ave-form-field>`,
+        language: 'html',
+      },
     },
   },
   play: async ({ canvasElement }) => {
@@ -295,6 +317,23 @@ export const UzbekLatin: Story = {
   name: 'Uzbek (Latin)',
   decorators: [locale('uz-Latn'), componentWrapperDecorator(FileUploadStoryFrame)],
   render: () => ({ template: `<ave-file-upload label="Ilovalar" multiple accept=".pdf" />` }),
+  parameters: {
+    docs: {
+      source: {
+        code: `import { Component, LOCALE_ID } from '@angular/core';
+import { AveFileUpload } from '@avelune/ui/file-upload';
+
+@Component({
+  selector: 'app-attachments',
+  imports: [AveFileUpload],
+  providers: [{ provide: LOCALE_ID, useValue: 'uz-Latn' }],
+  template: \`<ave-file-upload label="Ilovalar" multiple accept=".pdf" />\`,
+})
+export class Attachments {}`,
+        language: 'typescript',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     drop(canvasElement, [file('Shartnoma.pdf', 2.4 * megabyte), file('Smeta.xlsx', 1000, 'text/csv')]);
     const list = await within(canvasElement).findByRole('list', { name: 'Fayllar' });
@@ -312,7 +351,8 @@ export const Compact: Story = {
     docs: {
       source: {
         code: `<div data-density="compact">
-  <ave-file-upload multiple />
+  <ave-file-upload label="Empty" multiple />
+  <ave-file-upload label="With files" multiple [value]="files" />
 </div>`,
         language: 'html',
       },

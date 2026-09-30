@@ -9,7 +9,9 @@ import { AVE_ACCORDION } from './types';
  * panel is inert.
  *
  * ```html
- * <ave-accordion-item heading="Форс-мажор" [(expanded)]="forceMajeure">…</ave-accordion-item>
+ * <ave-accordion-item heading="Форс-мажор" [(expanded)]="forceMajeure">
+ * <p>Стороны освобождаются от ответственности.</p>
+ * </ave-accordion-item>
  * ```
  *
  * @beta

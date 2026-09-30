@@ -1,0 +1,107 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as MotionStories from './motion.stories';
+
+<Meta of={MotionStories} />
+
+# Motion
+
+Five durations and four easings (brief §6.2), and a catalog of sixteen classes that kit components put on elements as they enter and leave. All durations, easings, distances and scales are tokens, so reduced motion is the tokens' own override: distances become 0, nothing scales, slow and slower shorten to 150ms, and a skeleton is a static fill. The fades stay.
+
+## Using motion in an application
+
+- Time your own transitions and animations with the duration and easing tokens: `transition: opacity var(--ave-duration-fast) var(--ave-easing-standard)`. Use `easing.enter` for elements that appear, `easing.exit` for elements that leave, and `easing.spring` for the switch thumb and toasts only.
+- Name the properties you transition. Never write `transition: all`.
+- Never write your own `@keyframes`: the keyframes live in the kit's catalog. If an element needs a motion the catalog lacks, ask for a catalog entry.
+- Animate what the browser can composite (opacity, `translate`, `scale`); a size that changes is opened with the grid-rows technique the list classes use, not by animating `height`.
+- Do not add your own reduced-motion branch for the tokens: they already change under `prefers-reduced-motion: reduce` and `[data-motion="reduced"]`.
+
+## The catalog
+
+Components add these classes with `animate.enter` and `animate.leave`. An application uses them the same way for its own overlays and lists.
+
+| Class                       | What it is for                                                                            | Reduced motion                             |
+| --------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `ave-motion-backdrop-enter` | The scrim behind a dialog or drawer fades in.                                             | Kept: a fade.                              |
+| `ave-motion-backdrop-exit`  | The scrim fades out.                                                                      | Kept: a fade.                              |
+| `ave-motion-dialog-enter`   | A dialog panel fades in from the entry scale.                                             | Fades in without scaling.                  |
+| `ave-motion-dialog-exit`    | A dialog panel fades out to the entry scale.                                              | Fades out without scaling.                 |
+| `ave-motion-drawer-enter`   | A drawer slides its whole width in from its edge.                                         | Does not slide: fades in where it stands.  |
+| `ave-motion-drawer-exit`    | A drawer slides back out.                                                                 | Does not slide: fades out where it stands. |
+| `ave-motion-list-enter`     | A list row fades in and opens from no height, staggered after the rows that came with it. | Opens at once, no stagger; the fade stays. |
+| `ave-motion-list-exit`      | A list row fades out and closes.                                                          | Closes at once; the fade stays.            |
+| `ave-motion-popover-enter`  | A menu, select popup or popover fades in from the entry scale.                            | Fades in without scaling.                  |
+| `ave-motion-popover-exit`   | A menu, select popup or popover fades out.                                                | Kept: a fade.                              |
+| `ave-motion-shimmer`        | The band of light that sweeps across a skeleton, linear and endless.                      | Stops: the skeleton is a static fill.      |
+| `ave-motion-spin`           | A spinner turning at a constant rate.                                                     | Keeps turning: rotation is not movement.   |
+| `ave-motion-toast-enter`    | A toast slides `motion.distance.lg` in from its edge with a fade, on the spring.          | Fades in without sliding.                  |
+| `ave-motion-toast-exit`     | A toast slides out with a fade.                                                           | Fades out without sliding.                 |
+| `ave-motion-tooltip-enter`  | A tooltip fades in while moving `motion.distance.sm` away from its anchor.                | Fades in without moving.                   |
+| `ave-motion-tooltip-exit`   | A tooltip fades out without moving.                                                       | Kept: a fade.                              |
+
+A popup that opens on a side sets `data-side` on the element: tooltips, toasts and drawers read it to choose the edge they come from.
+
+## Token reference
+
+### Durations (`duration`)
+
+{/* tokens:duration */}
+
+| Token              | CSS variable             | Value   | Reduced motion | Description                                                            |
+| ------------------ | ------------------------ | ------- | -------------- | ---------------------------------------------------------------------- |
+| `duration.instant` | `--ave-duration-instant` | `70ms`  |                | Colour, background and border changes on hover.                        |
+| `duration.fast`    | `--ave-duration-fast`    | `120ms` |                | Small state changes; exits of popovers and tooltips; the switch thumb. |
+| `duration.normal`  | `--ave-duration-normal`  | `200ms` |                | Menus, popovers and tooltips entering; accordion; tabs indicator.      |
+| `duration.slow`    | `--ave-duration-slow`    | `300ms` | `150ms`        | Dialogs and drawers entering.                                          |
+| `duration.slower`  | `--ave-duration-slower`  | `450ms` | `150ms`        | Page transitions and large layout changes.                             |
+
+{/* /tokens */}
+
+### Easings (`easing`)
+
+{/* tokens:easing */}
+
+| Token             | CSS variable            | Value                                                                                                                                                                                                                       | Description                                                                                                                                                                                                                                                                        |
+| ----------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `easing.standard` | `--ave-easing-standard` | `cubic-bezier(0.2, 0, 0, 1)`                                                                                                                                                                                                | On-screen movement and state changes.                                                                                                                                                                                                                                              |
+| `easing.enter`    | `--ave-easing-enter`    | `cubic-bezier(0, 0, 0, 1)`                                                                                                                                                                                                  | Elements entering.                                                                                                                                                                                                                                                                 |
+| `easing.exit`     | `--ave-easing-exit`     | `cubic-bezier(0.3, 0, 1, 1)`                                                                                                                                                                                                | Elements exiting.                                                                                                                                                                                                                                                                  |
+| `easing.spring`   | `--ave-easing-spring`   | `linear(0, 0.0496, 0.1693, 0.3231,`<br />`0.4845, 0.6359, 0.7669, 0.8727, 0.9525,`<br />`1.0082, 1.0432, 1.0617, 1.068, 1.0657,`<br />`1.0581, 1.0479, 1.0369, 1.0264, 1.0173,`<br />`1.0098, 1.004, 1, 0.9974, 0.9959, 1)` | Switch thumb and toast only. A damped spring (damping ratio 0.65, about 7% overshoot, settled at the end), emitted as CSS linear() from the stops in $extensions. DTCG 2025.10 has no linear() easing; the cubic-bezier value is the fallback for tools that ignore the extension. |
+
+{/* /tokens */}
+
+### Distances, scales and travel (`motion`)
+
+Entry offsets of the catalog. Reduced motion sets every distance to 0 and every scale to 1.
+
+{/* tokens:motion */}
+
+| Token                | CSS variable               | Value  | Reduced motion | Description                                                                                                                                                                          |
+| -------------------- | -------------------------- | ------ | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `motion.distance.sm` | `--ave-motion-distance-sm` | `4px`  | `0px`          | Tooltips, away from the anchor.                                                                                                                                                      |
+| `motion.distance.md` | `--ave-motion-distance-md` | `8px`  | `0px`          |                                                                                                                                                                                      |
+| `motion.distance.lg` | `--ave-motion-distance-lg` | `16px` | `0px`          | Toasts, from their edge.                                                                                                                                                             |
+| `motion.scale.enter` | `--ave-motion-scale-enter` | `0.97` | `1`            | Initial scale of popping elements: menus, popovers, dialogs.                                                                                                                         |
+| `motion.travel.edge` | `--ave-motion-travel-edge` | `1`    | `0`            | The share of its own size an element slides in from a screen edge: a drawer travels its whole width (1). Under reduced motion 0, and the drawer fades in where it stands (ADR 0067). |
+
+{/* /tokens */}
+
+### Timings (`timing`)
+
+Delays, holds and the periods of looping animations that are not transition durations.
+
+{/* tokens:timing */}
+
+| Token                        | CSS variable                       | Value    | Reduced motion | Description                                                                                                                                                                                                                                 |
+| ---------------------------- | ---------------------------------- | -------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `timing.tooltip-delay`       | `--ave-timing-tooltip-delay`       | `500ms`  |                | A tooltip appears after this hover or focus time; it hides without delay.                                                                                                                                                                   |
+| `timing.spinner-delay`       | `--ave-timing-spinner-delay`       | `300ms`  |                | A spinner appears only after this much waiting.                                                                                                                                                                                             |
+| `timing.spinner-min-visible` | `--ave-timing-spinner-min-visible` | `500ms`  |                | Once shown, a spinner stays at least this long, so it never flashes.                                                                                                                                                                        |
+| `timing.stagger`             | `--ave-timing-stagger`             | `30ms`   | `0ms`          | Delay between list items entering, for the first five items at most.                                                                                                                                                                        |
+| `timing.shimmer-period`      | `--ave-timing-shimmer-period`      | `1400ms` | `0ms`          | One sweep of the skeleton shimmer, linear, infinite.                                                                                                                                                                                        |
+| `timing.spin-period`         | `--ave-timing-spin-period`         | `800ms`  |                | One spinner revolution, linear, infinite.                                                                                                                                                                                                   |
+| `timing.search-delay`        | `--ave-timing-search-delay`        | `300ms`  |                | How long typing pauses before a search goes to the server: a combobox's query waits this long after the last key (ADR 0056). Not motion: the same under reduced motion.                                                                     |
+| `timing.slide`               | `--ave-timing-slide`               | `120ms`  | `0ms`          | How long a part of a control slides to show its new state: the switch thumb, and later the tabs indicator, on easing.spring or easing.standard. The same 120ms as duration.fast; 0ms under reduced motion, where the part jumps (ADR 0045). |
+| `timing.expand`              | `--ave-timing-expand`              | `200ms`  | `0ms`          | How long a part opens to its height or closes to none: an accordion's panel, a list's row coming or going, on easing.standard (brief §6.3). The same 200ms as duration.normal; 0ms under reduced motion, where it opens at once (ADR 0084). |
+| `timing.toast`               | `--ave-timing-toast`               | `6000ms` |                | How long a toast stays on screen: paused while the pointer or focus is on the notifications, and restarted from what was left (ADR 0068). Not motion: the same under reduced motion.                                                        |
+
+{/* /tokens */}

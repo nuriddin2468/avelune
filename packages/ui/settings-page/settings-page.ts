@@ -78,7 +78,11 @@ export class AveSettingsPage {
   /** What the settings are about, muted under the heading; none by default. */
   readonly description = input('');
 
-  /** The sections, in order: each a page of the application with its own address. */
+  /**
+   * The sections, in order: each a page of the application with its own address. A section is an
+   * `AveSettingsSection`: its `label` in the list ("Оформление"), its `link`, the route of its page
+   * ("/settings/appearance"), and an optional `icon` before the name ("palette").
+   */
   readonly sections = input.required<readonly AveSettingsSection[]>();
 
   /** Names the navigation of the sections: the kit's "Разделы настроек" by default. */

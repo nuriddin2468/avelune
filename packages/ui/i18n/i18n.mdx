@@ -1,0 +1,226 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guides/Messages and formats" />
+
+# Messages and formats
+
+`@avelune/ui/i18n` holds the words the kit's components say themselves (`AveMessages`) and the formats of dates, numbers and file sizes, in four locales: Russian, English, Uzbek in Latin script and Uzbek in Cyrillic (ADR 0047, ADR 0048, ADR 0050). The application's `LOCALE_ID` picks the locale; `provideAveMessages()` replaces any message; `injectAveMessages()` reads them.
+
+## Setup
+
+```ts
+import { ApplicationConfig, LOCALE_ID } from '@angular/core';
+import { provideAvelune } from '@avelune/ui/theme';
+import { provideAveMessages } from '@avelune/ui/i18n';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideAvelune(),
+    { provide: LOCALE_ID, useValue: 'ru' },
+    provideAveMessages({ noResults: 'Контрагент не найден' }),
+  ],
+};
+```
+
+## When to use
+
+- Always set `LOCALE_ID` to the application's locale: components choose their words and their date, number and file-size formats from it.
+- Use `provideAveMessages()` for a wording of the product's own ("Контрагент не найден" instead of "Ничего не найдено"), or for a locale the kit does not ship.
+- Use the format functions wherever the product shows a date, a number or a file size that a kit component also shows, so both read alike.
+
+## When not to use
+
+- Not for the product's own texts: they belong to the application's translation system. `AveMessages` holds only what kit components say.
+- Not to write dates with `toLocaleDateString` where a kit calendar shows the same date: Chromium has no data for Uzbek in Latin script and writes `2026 M09 23`. `aveDateFormat()` and `aveNumberFormat()` write it right.
+
+## The messages
+
+`AveMessages` is an interface of read-only members: a string, or a function that takes the values a sentence needs and returns a string. The kit ships four full sets:
+
+- `aveMessagesRu`: Russian.
+- `aveMessagesEn`: English, the fallback for any locale the kit does not know.
+- `aveMessagesUzLatn`: Uzbek, Latin script.
+- `aveMessagesUzCyrl`: Uzbek, Cyrillic script.
+
+`aveMessagesFor(locale: string): AveMessages` returns the set for a BCP 47 tag: Russian for `ru` and its regions, Uzbek in Cyrillic for `uz-Cyrl`, Uzbek in Latin script for any other `uz`, English otherwise.
+
+`provideAveMessages(messages: Partial<AveMessages>): Provider` replaces some of them. Put it in the application's, a route's or a component's providers; the nearest one wins as a whole (an outer one is not merged in), over the kit's messages for `LOCALE_ID`. A message you do not name stays as the kit says it. For a locale the kit does not ship, English fills what you do not name, so list every message you want in that language:
+
+```ts
+import { LOCALE_ID } from '@angular/core';
+import { provideAveMessages, type AveMessages } from '@avelune/ui/i18n';
+
+const kazakh: Partial<AveMessages> = { noResults: 'Ештеңе табылмады', cancel: 'Бас тарту' };
+
+export const providers = [
+  { provide: LOCALE_ID, useValue: 'kk' },
+  // Messages the set does not name fall back to English through aveMessagesFor('kk').
+  provideAveMessages(kazakh),
+];
+```
+
+`injectAveMessages(): AveMessages` returns the messages for the caller's injector: the kit's for `LOCALE_ID`, with the nearest `provideAveMessages()` over them. Call it in an injection context.
+
+```ts
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { injectAveMessages } from '@avelune/ui/i18n';
+
+@Component({
+  selector: 'app-upload-hint',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `<p>{{ messages.tooManyFiles(3) }}</p>`,
+})
+export class UploadHint {
+  protected readonly messages = injectAveMessages();
+}
+```
+
+### Every message
+
+The Russian text is what `aveMessagesRu` says. A function is shown as its signature with an example.
+
+| Key                | What it is for                                                                                                | Russian text                                                                                                                                             |
+| ------------------ | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `noResults`        | A combobox's list when no option matches what was typed.                                                      | "Ничего не найдено"                                                                                                                                      |
+| `loading`          | A list whose options a server is sending (ADR 0056).                                                          | "Загрузка…"                                                                                                                                              |
+| `loadFailed`       | A list whose options did not come from the server.                                                            | "Список не загрузился."                                                                                                                                  |
+| `retry`            | The button that asks the server for a list's options again.                                                   | "Повторить"                                                                                                                                              |
+| `retryWithEnter`   | Said to screen readers after a list failed: Enter in its input asks again.                                    | "Нажмите Enter, чтобы повторить."                                                                                                                        |
+| `optionsFound`     | Said to screen readers once a list has loaded, with the number of its options.                                | `(count: number) => string`: `optionsFound(3)` gives "Найдено вариантов: 3"                                                                              |
+| `chooseDate`       | The button of a date field that opens its calendar.                                                           | "Выбрать дату"                                                                                                                                           |
+| `previousMonth`    | The calendar's button to the month before.                                                                    | "Предыдущий месяц"                                                                                                                                       |
+| `nextMonth`        | The calendar's button to the month after.                                                                     | "Следующий месяц"                                                                                                                                        |
+| `previousYear`     | The calendar's button to the year before, among the months.                                                   | "Предыдущий год"                                                                                                                                         |
+| `nextYear`         | The calendar's button to the year after, among the months.                                                    | "Следующий год"                                                                                                                                          |
+| `previousYears`    | The calendar's button to the twelve years before, among the years.                                            | "Предыдущие годы"                                                                                                                                        |
+| `nextYears`        | The calendar's button to the twelve years after, among the years.                                             | "Следующие годы"                                                                                                                                         |
+| `chooseMonth`      | Describes the calendar's heading among the days: pressing it shows the months.                                | "Выбрать месяц"                                                                                                                                          |
+| `chooseYear`       | Describes the calendar's heading among the months: pressing it shows the years.                               | "Выбрать год"                                                                                                                                            |
+| `rangeStart`       | The first date of a date range field.                                                                         | "Дата начала"                                                                                                                                            |
+| `rangeEnd`         | The last date of a date range field.                                                                          | "Дата окончания"                                                                                                                                         |
+| `rangePresets`     | The name of a date range field's list of presets.                                                             | "Периоды"                                                                                                                                                |
+| `rangeToday`       | A date range preset: today.                                                                                   | "Сегодня"                                                                                                                                                |
+| `rangeYesterday`   | A date range preset: yesterday.                                                                               | "Вчера"                                                                                                                                                  |
+| `rangeThisWeek`    | A date range preset: this week, from the locale's first day.                                                  | "Эта неделя"                                                                                                                                             |
+| `rangeLastWeek`    | A date range preset: the week before this one.                                                                | "Прошлая неделя"                                                                                                                                         |
+| `rangeThisMonth`   | A date range preset: this month, whole.                                                                       | "Этот месяц"                                                                                                                                             |
+| `rangeLastMonth`   | A date range preset: the month before this one.                                                               | "Прошлый месяц"                                                                                                                                          |
+| `rangeThisQuarter` | A date range preset: this quarter, whole.                                                                     | "Этот квартал"                                                                                                                                           |
+| `rangeThisYear`    | A date range preset: this year, whole.                                                                        | "Этот год"                                                                                                                                               |
+| `rangeLast7Days`   | A date range preset: the last 7 days, today among them.                                                       | "Последние 7 дней"                                                                                                                                       |
+| `rangeLast30Days`  | A date range preset: the last 30 days, today among them.                                                      | "Последние 30 дней"                                                                                                                                      |
+| `chooseFile`       | The button of a file upload that takes one file.                                                              | "Выбрать файл"                                                                                                                                           |
+| `chooseFiles`      | The button of a file upload that takes several files.                                                         | "Выбрать файлы"                                                                                                                                          |
+| `dropFile`         | Next to the button: the file can be dropped instead.                                                          | "или перетащите его сюда"                                                                                                                                |
+| `dropFiles`        | Next to the button: the files can be dropped instead.                                                         | "или перетащите их сюда"                                                                                                                                 |
+| `files`            | The name of a file upload's list of files.                                                                    | "Файлы"                                                                                                                                                  |
+| `removeFile`       | The button that takes a file off the list, with the file's name.                                              | `(name: string) => string`: `removeFile('Договор.pdf')` gives "Удалить «Договор.pdf»"                                                                    |
+| `fileTooLarge`     | Why a file was not taken: it is larger than the limit, written as a size ("20 МБ").                           | `(limit: string) => string`: `fileTooLarge('20 МБ')` gives "Файл больше 20 МБ. Выберите файл поменьше."                                                  |
+| `fileTypeRejected` | Why a file was not taken: its type is not one the field accepts.                                              | "Файлы этого типа не принимаются."                                                                                                                       |
+| `tooManyFiles`     | Why a file was not taken: the field already holds the most files it takes.                                    | `(max: number) => string`: `tooManyFiles(1)` gives "Можно прикрепить не больше 1 файла."; `tooManyFiles(5)` gives "Можно прикрепить не больше 5 файлов." |
+| `filesAdded`       | Said to screen readers after files were taken, with their number.                                             | `(count: number) => string`: `filesAdded(2)` gives "Прикреплено файлов: 2"                                                                               |
+| `required`         | Describes a required control that ARIA cannot mark `aria-required`, such as a file upload's button.           | "Обязательное поле"                                                                                                                                      |
+| `lowerValue`       | The thumb of a range slider that sets the lower end.                                                          | "Минимум"                                                                                                                                                |
+| `upperValue`       | The thumb of a range slider that sets the upper end.                                                          | "Максимум"                                                                                                                                               |
+| `clear`            | The button that takes a selection field's value away; screen readers hear the field's label after it.         | "Очистить"                                                                                                                                               |
+| `close`            | The button that closes or dismisses a banner, a dialog or a notification.                                     | "Закрыть"                                                                                                                                                |
+| `remove`           | The button of a tag that takes its value away; screen readers hear the tag's words after it.                  | "Убрать"                                                                                                                                                 |
+| `chosenValues`     | Describes a searchable multiselect's input with the labels of what is chosen, which its tags show (ADR 0081). | `(labels: string) => string`: `chosenValues('Ташкент, Самарканд')` gives "Выбрано: Ташкент, Самарканд"                                                   |
+| `alertInfo`        | Names the icon of a message that informs: an alert, a banner or a notification.                               | "Информация"                                                                                                                                             |
+| `alertSuccess`     | Names the icon of a message that confirms a success.                                                          | "Успешно"                                                                                                                                                |
+| `alertWarning`     | Names the icon of a message that warns.                                                                       | "Предупреждение"                                                                                                                                         |
+| `alertDanger`      | Names the icon of a message that reports an error.                                                            | "Ошибка"                                                                                                                                                 |
+| `cancel`           | The button of a confirmation that keeps things as they are.                                                   | "Отмена"                                                                                                                                                 |
+| `notifications`    | The name of the region of the page where notifications (toasts) appear.                                       | "Уведомления"                                                                                                                                            |
+| `breadcrumbs`      | The name of a page's breadcrumbs: the path from the top of the product to the page.                           | "Навигационная цепочка"                                                                                                                                  |
+| `opensInNewTab`    | Names the icon after a link that opens a new tab; screen readers hear it with the link's words.               | "откроется в новой вкладке"                                                                                                                              |
+| `pagination`       | The name of a list's pagination: the landmark of its pages.                                                   | "Страницы"                                                                                                                                               |
+| `previousPage`     | The button of a pagination to the page before.                                                                | "Предыдущая страница"                                                                                                                                    |
+| `nextPage`         | The button of a pagination to the page after.                                                                 | "Следующая страница"                                                                                                                                     |
+| `page`             | A page's button in a pagination, with its number written for the locale.                                      | `(page: string) => string`: `page('3')` gives "Страница 3"                                                                                               |
+| `pageOf`           | A narrow pagination's words between its arrows: the current page and how many there are.                      | `(page: string, count: string) => string`: `pageOf('3', '12')` gives "Страница 3 из 12"                                                                  |
+| `itemRange`        | Which items a page shows, and how many there are in all.                                                      | `(from: string, to: string, total: string) => string`: `itemRange('1', '20', '240')` gives "1–20 из 240"                                                 |
+| `pageSize`         | Names a pagination's page-size select, and stands before it.                                                  | "На странице"                                                                                                                                            |
+| `pagesOf`          | The name of a table's pagination, with the table's name, so two tables' landmarks differ (ADR 0087).          | `(list: string) => string`: `pagesOf('Договоры')` gives "Договоры: страницы"                                                                             |
+| `selectRow`        | Said before a row's title by its checkbox in a table: "Выбрать ДК-2026/114".                                  | "Выбрать"                                                                                                                                                |
+| `selectPage`       | The checkbox in a table's header that chooses every row of the page.                                          | "Выбрать строки страницы"                                                                                                                                |
+| `columnWidth`      | The control that sets a table column's width, with the column's header.                                       | `(header: string) => string`: `columnWidth('Номер')` gives "Ширина столбца «Номер»"                                                                      |
+| `noRecords`        | A table without rows, when the application gives no empty state of its own.                                   | "Записей нет"                                                                                                                                            |
+| `recordsFailed`    | A table whose rows did not come from the server.                                                              | "Записи не загрузились."                                                                                                                                 |
+| `stepComplete`     | Names the mark of a step that is done; screen readers hear it with the step's words.                          | "Выполнен"                                                                                                                                               |
+| `stepError`        | Names the mark of a step that needs attention before the steps after it.                                      | "Требует внимания"                                                                                                                                       |
+| `skipToContent`    | The application shell's first link, which moves focus past the bar and the navigation to the page (ADR 0092). | "Перейти к содержимому"                                                                                                                                  |
+| `navigation`       | Names the product's navigation, and its button and drawer on a phone, when the application gives no name.     | "Навигация"                                                                                                                                              |
+| `filters`          | A list's filters: the filter panel's heading and its button in a search header (ADR 0094).                    | "Фильтры"                                                                                                                                                |
+| `clearFilters`     | The button that takes every applied filter away.                                                              | "Сбросить фильтры"                                                                                                                                       |
+| `showResults`      | The button that closes the filters' drawer over the list they narrowed.                                       | "Показать результаты"                                                                                                                                    |
+| `appliedFilters`   | Names the list of the filters applied to a list, shown as tags above it.                                      | "Применённые фильтры"                                                                                                                                    |
+| `backToList`       | The button over a record on a narrow list–detail page that goes back to the list (ADR 0096).                  | "Назад к списку"                                                                                                                                         |
+| `settingsSections` | Names the navigation of a settings page's sections (ADR 0099).                                                | "Разделы настроек"                                                                                                                                       |
+| `allSettings`      | The link over a settings section on a narrow page that goes back to the list of sections.                     | "Все настройки"                                                                                                                                          |
+
+## Dates
+
+A date without a time or a time zone is an `AvePlainDate`: an ISO 8601 string such as `2026-09-23`. It survives JSON and time zones unchanged, and it is the value of the date picker.
+
+- `toPlainDate(year, month, day): AvePlainDate` builds one from its parts (month 1 to 12): `toPlainDate(2026, 9, 23)` is `'2026-09-23'`.
+- `plainDateParts(date): { year: number; month: number; day: number } | null` reads one back. It returns `null` when the string is not an ISO date or not a real date: `plainDateParts('2026-02-30')` is `null`.
+- `aveDateFormat(locale: string): AveDateFormat` returns how dates are written and named in a locale. Uzbek in Latin script is written by the kit itself, from CLDR.
+
+`AveDateFormat` has these fields:
+
+| Field                    | Type                                                           | What it is                                                                                                                                                         |
+| ------------------------ | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `locale`                 | `string`                                                       | The locale the format is for.                                                                                                                                      |
+| `firstDayOfWeek`         | `1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7`                              | The first day of the week: 1 is Monday, 7 is Sunday. Sunday for English in the United States (and English without a region), Monday for the rest.                  |
+| `weekdays`               | `readonly { readonly long: string; readonly short: string }[]` | The weekday names, Sunday first: in full ("понедельник") and abbreviated with a capital ("Пн").                                                                    |
+| `months`                 | `readonly string[]`                                            | The month names as they stand alone, January first, with a capital ("Сентябрь").                                                                                   |
+| `placeholder`            | `string`                                                       | What a date field shows while empty: the order and the separators, in the locale's letters ("дд.мм.гггг").                                                         |
+| `numeric(date)`          | `(date: AvePlainDate) => string`                               | A date as people type it: `23.09.2026` (ru), `23/09/2026` (uz), `09/23/2026` (en).                                                                                 |
+| `long(date)`             | `(date: AvePlainDate) => string`                               | A date in words: "23 сентября 2026 г.", "23-sentabr, 2026", "September 23, 2026".                                                                                  |
+| `monthYear(year, month)` | `(year: number, month: number) => string`                      | A month and its year, as a calendar's heading: "Сентябрь 2026 г.", "Sentabr, 2026".                                                                                |
+| `parse(text)`            | `(text: string) => AvePlainDate \| null`                       | Reads a typed date in the locale's order, with any of `.`, `/`, `-` or a space between the parts, and a two-digit year as 20xx. `null` when it is not a real date. |
+
+```ts
+import { aveDateFormat, plainDateParts, toPlainDate } from '@avelune/ui/i18n';
+
+const ru = aveDateFormat('ru');
+const date = toPlainDate(2026, 9, 23); // '2026-09-23'
+
+ru.numeric(date); // '23.09.2026'
+ru.long(date); // '23 сентября 2026 г.'
+ru.monthYear(2026, 9); // 'Сентябрь 2026 г.'
+ru.placeholder; // 'дд.мм.гггг'
+ru.parse('23.9.26'); // '2026-09-23'
+ru.parse('31.02.2026'); // null
+aveDateFormat('en').numeric(date); // '09/23/2026'
+plainDateParts(date); // { year: 2026, month: 9, day: 23 }
+```
+
+## Numbers
+
+`aveNumberFormat(locale: string, options?: Intl.NumberFormatOptions): Intl.NumberFormat` is `Intl.NumberFormat` with Uzbek in Latin script written right: plain numbers and percentages in it use the symbols of Uzbek in Cyrillic, which are the same in every browser. Other styles (currency, units) keep the locale.
+
+```ts
+import { aveNumberFormat } from '@avelune/ui/i18n';
+
+aveNumberFormat('uz-Latn', { maximumFractionDigits: 1 }).format(1234.56); // '1\u00a0234,6'
+aveNumberFormat('ru').format(1234567.8); // '1\u00a0234\u00a0567,8'
+```
+
+## File sizes
+
+`aveFileSize(bytes: number, locale: string): string` writes a file size as people read it: bytes, kilobytes, megabytes or gigabytes of 1024, with one decimal under 10 and none above, and a no-break space before the unit. Russian and Uzbek in Cyrillic use `Б`, `кБ`, `МБ`, `ГБ`; the other locales use `B`, `kB`, `MB`, `GB`. A negative size is written as 0 bytes.
+
+```ts
+import { aveFileSize } from '@avelune/ui/i18n';
+
+aveFileSize(2_516_582, 'ru'); // '2,4\u00a0МБ'
+aveFileSize(2_516_582, 'uz-Latn'); // '2,4\u00a0MB'
+aveFileSize(2_516_582, 'en'); // '2.4\u00a0MB'
+aveFileSize(512, 'ru'); // '512\u00a0Б'
+```
+
+## Keyboard and accessibility
+
+This entry point has no interface of its own, so it has no keyboard behaviour. Messages are what screen readers hear: the names of buttons and landmarks, and the sentences said after a list loads or files are attached. A replacement keeps each message's job, as the table says: a name that stands before a value ("Удалить «Договор.pdf»") must still read well with it.

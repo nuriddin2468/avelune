@@ -39,13 +39,13 @@ The button, as a Button of its variant and size with a `chevron-down` after its 
 />
 ```
 
-Items are data (`AveMenuEntry<V>`): `{ value, label, icon?, danger?, disabled? }`, or `{ separator: true }`. Register their icons with `provideAveIcons`.
+Items are data (`AveMenuEntry<V>`): an `AveMenuItem` is `{ value, label, icon?, danger?, disabled? }`, and an `AveMenuSeparator` is `{ separator: true }`. Register their icons with `provideAveIcons`.
 
 ## Variants
 
 <Canvas of={MenuStories.Variants} />
 
-The button takes Button's `variant` (`secondary` by default, `ghost` in rows and toolbars, `primary` for a region's main action with choices), `size` and `disabled`.
+The button takes Button's `variant` (`secondary` by default, `ghost` in rows and toolbars, `primary` for a region's main action with choices, `danger` for the confirming action of a destructive flow), `size` and `disabled`.
 
 <Canvas of={MenuStories.IconOnly} />
 

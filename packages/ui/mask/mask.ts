@@ -43,8 +43,9 @@ import type { AveMaskInput } from './types';
 })
 export class AveMask implements ControlValueAccessor {
   /**
-   * What the person types: a preset (`'phone'`, `'stir'`, `'pinfl'`, `'passport'`, `'card'`, `'account'`, `'mfo'`,
-   * `'postcode'`), a pattern (`{ pattern: '00-000' }`), or a `RegExp` the whole text must match after every change.
+   * What the person types: an `AveMaskPreset` (`'phone'`, `'stir'`, `'pinfl'`, `'passport'`, `'card'`, `'account'`,
+   * `'mfo'`, `'postcode'`), an `AveMaskPattern` (`{ pattern: '00-000' }`, with `value` and `inputMode` as options), or
+   * a `RegExp` the whole text must match after every change.
    */
   readonly aveMask = input.required<AveMaskInput>();
 

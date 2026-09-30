@@ -278,7 +278,7 @@ export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: '<ave-select [options]="kinds" placeholder="Выберите вид договора" [formField]="contract.kind" />',
+        code: '<ave-select label="Вид договора" [options]="kinds" size="md" placeholder="Выберите вид договора" />',
         language: 'html',
       },
     },
@@ -298,7 +298,9 @@ export const Open: Story = {
     template: `<ave-select label="Вид договора" lang="ru" [options]="kinds" value="services" />`,
   }),
   parameters: {
-    docs: { source: { code: '<ave-select [options]="kinds" [formField]="contract.kind" />', language: 'html' } },
+    docs: {
+      source: { code: '<ave-select label="Вид договора" [options]="kinds" value="services" />', language: 'html' },
+    },
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -320,7 +322,16 @@ export const Open: Story = {
 /** Each size next to an Input of that size: the same box. */
 export const Sizes: Story = {
   render: frame('sizes'),
-  parameters: { docs: { source: { code: '<ave-select size="sm" [options]="kinds" />', language: 'html' } } },
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-select label="Kind, sm" placeholder="Choose a kind" [options]="kinds" size="sm" />
+<ave-select label="Kind, md" placeholder="Choose a kind" [options]="kinds" size="md" />
+<ave-select label="Kind, lg" placeholder="Choose a kind" [options]="kinds" size="lg" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     for (const row of canvasElement.querySelectorAll('.row')) {
       const input = row.querySelector('input');
@@ -338,8 +349,11 @@ export const States: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-select [options]="kinds" readonly />
-<ave-select [options]="kinds" disabled />`,
+        code: `<ave-select label="Empty" placeholder="Выберите вид" [options]="kinds" />
+<ave-select label="Chosen" [options]="kinds" value="services" />
+<ave-select label="Focused" [options]="kinds" value="supply" />
+<ave-select label="Readonly" [options]="kinds" value="lease" readonly />
+<ave-select label="Disabled" [options]="kinds" value="works" disabled />`,
         language: 'html',
       },
     },
@@ -361,8 +375,8 @@ export const Forms: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-select [options]="kinds" [formField]="contract.kind" />
-<ave-select [options]="kinds" [formControl]="kind" />`,
+        code: `<ave-select label="Kind (Signal Forms)" placeholder="Choose a kind" [options]="kinds" [formField]="contract.kind" />
+<ave-select label="Kind (Reactive Forms)" placeholder="Choose a kind" [options]="kinds" [formControl]="kind" />`,
         language: 'html',
       },
     },
@@ -389,7 +403,15 @@ export const Forms: Story = {
 export const LongText: Story = {
   name: 'Long text',
   render: frame('long'),
-  parameters: { docs: { source: { code: '<ave-select [options]="kinds" />', language: 'html' } } },
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-select label="Вид договора" [options]="longKinds" value="framework" />
+<ave-select label="Shartnoma turi" lang="uz-Latn" [options]="longKinds" value="uz" />`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const column = canvasElement.querySelector('.narrow');
     if (column === null) throw new Error('No column');
@@ -412,7 +434,9 @@ export const Compact: Story = {
     docs: {
       source: {
         code: `<div data-density="compact">
-  <ave-select [options]="kinds" />
+  <ave-select label="Kind, sm" [options]="kinds" value="supply" size="sm" />
+  <ave-select label="Kind, md" [options]="kinds" value="supply" size="md" />
+  <ave-select label="Kind, lg" [options]="kinds" value="supply" size="lg" />
 </div>`,
         language: 'html',
       },
@@ -435,7 +459,14 @@ export const Clearing: Story = {
   decorators: [locale('ru')],
   render: () => ({ template: '<ave-select-clearing />', moduleMetadata: { imports: [SelectClearing] } }),
   parameters: {
-    docs: { source: { code: '<ave-select [options]="kinds" [formField]="contract.kind" />', language: 'html' } },
+    docs: {
+      source: {
+        code: `<ave-select label="Вид договора" placeholder="Выберите вид" [options]="kinds" [(value)]="kind" />
+<ave-select label="Вид договора (обязательный)" [options]="kinds" [formField]="contract.kind" />
+<ave-select label="Вид договора (только чтение)" [options]="kinds" value="services" readonly />`,
+        language: 'html',
+      },
+    },
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -472,9 +503,44 @@ export const RichOptions: Story = {
   parameters: {
     docs: {
       source: {
-        code: `{ value: 'uz', label: 'Узбекистан', description: 'Ташкент', meta: 'UZ', image: 'assets/flags/uz.svg' }
-<ave-select [options]="countries" [formField]="company.country" />`,
-        language: 'html',
+        code: `import { Component } from '@angular/core';
+import { AveSelect, type AveOption } from '@avelune/ui/select';
+
+@Component({
+  selector: 'app-company-country',
+  imports: [AveSelect],
+  template: \`
+    <ave-select label="Страна" [options]="countries" value="uz" />
+    <ave-select label="Исполнитель" [options]="employees" [value]="2" />
+  \`,
+})
+export class CompanyCountry {
+  protected readonly countries: readonly AveOption<string>[] = [
+    { value: 'uz', label: 'Узбекистан', description: 'Ташкент', meta: 'UZ', image: 'assets/flags/uz.svg' },
+    { value: 'kz', label: 'Казахстан', description: 'Астана', meta: 'KZ', image: 'assets/flags/kz.svg' },
+    { value: 'kg', label: 'Киргизия', description: 'Бишкек', meta: 'KG', image: 'assets/flags/kg.svg' },
+    { value: 'tj', label: 'Таджикистан', description: 'Душанбе', meta: 'TJ', image: 'assets/flags/tj.svg' },
+    { value: 'tm', label: 'Туркменистан', description: 'Ашхабад', meta: 'TM', image: 'assets/flags/tm.svg', disabled: true },
+    { value: 'ru', label: 'Россия', description: 'Москва', meta: 'RU', image: 'assets/flags/ru.svg' },
+    { value: 'tr', label: 'Турция', description: 'Анкара', meta: 'TR', image: 'assets/flags/tr.svg' },
+    { value: 'de', label: 'Германия', description: 'Берлин', meta: 'DE', image: 'assets/flags/de.svg' },
+    { value: 'jp', label: 'Япония', description: 'Токио', meta: 'JP', image: 'assets/flags/jp.svg' },
+    {
+      value: 'gb',
+      label: 'Соединённое Королевство Великобритании и Северной Ирландии',
+      description: 'Лондон',
+      meta: 'GB',
+      image: 'assets/flags/gb.svg',
+    },
+  ];
+  protected readonly employees: readonly AveOption<number>[] = [
+    { value: 1, label: 'Каримов Алишер', description: 'Юридический отдел', image: 'assets/avatars/karimov.svg' },
+    { value: 2, label: 'Юсупова Дилноза', description: 'Финансовый отдел', image: 'assets/avatars/yusupova.svg' },
+    { value: 3, label: 'Рахимов Бахтиёр', description: 'Служба безопасности', image: 'assets/avatars/rahimov.svg' },
+    { value: 4, label: 'Ахмедова Нигора', description: 'Отдел закупок', image: 'assets/avatars/akhmedova.svg' },
+  ];
+}`,
+        language: 'typescript',
       },
     },
   },
@@ -512,11 +578,49 @@ export const Templates: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-select [options]="accounts" [formField]="payment.account">
-  <ng-template aveOption [aveOptionOf]="accounts" let-option>…</ng-template>
-  <ng-template aveSelectValue [aveSelectValueOf]="accounts" let-option>…</ng-template>
-</ave-select>`,
-        language: 'html',
+        code: `import { Component, signal } from '@angular/core';
+import {
+  AveOptionTemplate,
+  AveSelect,
+  AveSelectValueTemplate,
+  type AveOption,
+} from '@avelune/ui/select';
+
+interface Account {
+  readonly number: string;
+  readonly bank: string;
+  readonly balance: string;
+}
+
+@Component({
+  selector: 'app-payment-account',
+  imports: [AveOptionTemplate, AveSelect, AveSelectValueTemplate],
+  template: \`
+    <ave-select label="Счёт списания" placeholder="Выберите счёт" [options]="accounts" [(value)]="account">
+      <ng-template aveOption [aveOptionOf]="accounts" let-option>
+        <span>{{ option.value.number }}</span>
+        <span>{{ option.value.bank }} · {{ option.value.balance }} сум</span>
+      </ng-template>
+      <ng-template aveSelectValue [aveSelectValueOf]="accounts" let-option>
+        {{ option.value.bank }}, …{{ option.value.number.slice(-4) }}
+      </ng-template>
+    </ave-select>
+  \`,
+})
+export class PaymentAccount {
+  protected readonly accounts: readonly AveOption<Account>[] = [
+    {
+      value: { number: '2020 8000 1234 5678 9012', bank: 'Oʻzmilliybank', balance: '125 400 000,00' },
+      label: 'Расчётный счёт в Oʻzmilliybank, …9012',
+    },
+    {
+      value: { number: '2020 8000 9876 5432 1098', bank: 'Kapitalbank', balance: '8 250 000,00' },
+      label: 'Расчётный счёт в Kapitalbank, …1098',
+    },
+  ];
+  protected readonly account = signal<Account | null>(this.accounts[0]?.value ?? null);
+}`,
+        language: 'typescript',
       },
     },
   },

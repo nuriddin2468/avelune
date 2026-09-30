@@ -43,6 +43,30 @@ this.toaster.show({
 
 `show()` also takes the message alone, as an `info` toast, and returns a reference whose `dismiss()` closes the toast early.
 
+## Types
+
+`show()` takes an `AveToastOptions`: its `message`, its `variant` and its `action`. The `variant` is an `AveToastVariant`: `info` (default), `success`, `warning` or `danger`. The `action` is an `AveToastAction`: its `label`, a verb, and its `run`, the function that runs when the action is chosen. `show()` returns an `AveToastRef`, and its `dismiss()` closes the toast or takes it out of the queue.
+
+```ts
+import { Injectable, inject } from '@angular/core';
+import { AveToaster, type AveToastOptions, type AveToastRef } from '@avelune/ui/toast';
+
+@Injectable({ providedIn: 'root' })
+export class ContractNotices {
+  private readonly toaster = inject(AveToaster);
+  private shown: AveToastRef | undefined;
+
+  deleted(number: string): void {
+    const options: AveToastOptions = { message: `Договор ${number} удалён`, variant: 'success' };
+    this.shown = this.toaster.show(options);
+  }
+
+  restored(): void {
+    this.shown?.dismiss();
+  }
+}
+```
+
 ## Variants
 
 <Canvas of={ToastStories.Variants} />

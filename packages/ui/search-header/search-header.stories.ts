@@ -145,7 +145,20 @@ export const Default: Story = {
   </div>
   <input aveInput aveSearchHeaderSearch type="search" aria-label="Поиск договоров" placeholder="Номер, предмет или контрагент" (input)="search($event)" />
 </ave-search-header>
-<ave-filter-panel #filters …>…</ave-filter-panel>`,
+<ave-filter-panel #filters [count]="applied().length" (clear)="clearFilters()">
+  <ng-template aveFilterPanelContent>
+    <fieldset aveChoiceGroup legend="Статус">
+      <label aveChoice>
+        <input type="checkbox" aveCheckbox [checked]="signedShown()" (change)="toggleSigned()" />
+        Подписан
+      </label>
+      <label aveChoice>
+        <input type="checkbox" aveCheckbox [checked]="approvalShown()" (change)="toggleApproval()" />
+        На согласовании
+      </label>
+    </fieldset>
+  </ng-template>
+</ave-filter-panel>`,
         language: 'html',
       },
     },
@@ -198,9 +211,15 @@ export const Loading: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<ave-search-header heading="Договоры" [summary]="loading() ? 'Загрузка договоров…' : summary()" [filters]="filters">
-  …
-</ave-search-header>`,
+        code: `<ave-search-header heading="Договоры" summary="Загрузка договоров…" [filters]="filters">
+  <div aveSearchHeaderActions>
+    <a aveButton variant="primary" routerLink="/contracts/new">Новый договор</a>
+  </div>
+  <input aveInput aveSearchHeaderSearch type="search" aria-label="Поиск договоров" />
+</ave-search-header>
+<ave-filter-panel #filters [count]="applied().length" (clear)="clearFilters()">
+  <!-- the filters' content, as in the default story -->
+</ave-filter-panel>`,
         language: 'html',
       },
     },

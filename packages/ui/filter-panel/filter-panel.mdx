@@ -60,6 +60,9 @@ The "Collapsed", "Drawer" and "Long text" stories show the other forms, each on 
 - Filters apply as they change, in the column and in the drawer. There is no Apply button: the list and the search header's count follow at once.
 - `count` is how many filters are applied. The search header's button counts them, and the panel offers "Сбросить фильтры" while it is above 0.
 - `clear` emits for both "Сбросить фильтры" buttons, the panel's and the applied filters'. `remove` on the applied filters emits a filter's key.
+- `open` is a model: bind it with `[(open)]="filtersOpen"` to start the column open or closed, and to read it. The panel is closed by default, so a page that shows the filters from the start sets `filtersOpen` to `true`.
+- `[filters]` of `<ave-applied-filters>` takes `AveAppliedFilter` values: `key` is what the application knows the filter by (`remove` emits it), and `label` is the filter's field and value in words. `label` on `<ave-applied-filters>` names the list of tags, "Применённые фильтры" by default, like `label` on the panel names its heading.
+- `AveFilterPanelState` is what a page that lays out the column sees of a panel, through `AVE_FILTER_PANEL_LAYOUT`: `open` says whether the filters are shown, and `modal` whether they open in a drawer rather than in a column. The panel itself has both as signals, `open()` and `modal()`.
 
 ## Content
 

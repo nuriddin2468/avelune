@@ -1,6 +1,6 @@
 # 0090. Storybook MCP: the components manifest, the kit's component in every story file, snippets an application writes
 
-- Status: Accepted (2026-09-30, technical decision within Wave 6; the product owner chose Storybook MCP in place of a Figma library)
+- Status: Accepted (2026-09-30, technical decision within Wave 6; the product owner chose Storybook MCP in place of a Figma library); decision 3's "A story rendered from its args keeps the snippet Storybook derives" superseded by 0101
 - Date: 2026-09-30
 - Related: 0007, 0008, 0025, 0034, 0035, 0089
 

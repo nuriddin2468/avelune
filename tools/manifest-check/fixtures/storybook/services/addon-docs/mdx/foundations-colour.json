@@ -1,0 +1,15 @@
+{
+  "components": {
+    "foundations-colour": {
+      "id": "foundations-colour",
+      "docs": {
+        "foundations-colour--docs": {
+          "id": "foundations-colour--docs",
+          "name": "Docs",
+          "path": "./src/foundations/colour.mdx",
+          "content": "# Colour\n\n| `color.bg.surface` | `--ave-color-bg-surface` | Content surfaces. |\n\nFigures line up in columns with `ave-tabular-nums`.\n"
+        }
+      }
+    }
+  }
+}

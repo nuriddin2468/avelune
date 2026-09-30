@@ -1,0 +1,53 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as IconCheckStories from './icon-check.stories';
+
+<Meta of={IconCheckStories} />
+
+# Custom icons
+
+An application registers its own SVG as an icon with `defineAveIcon`, and the kit draws it as it draws Lucide's icons: in the colour of the surrounding text, on the kit's sizes and stroke widths. This page is a tool: paste an SVG and see how it will look, and which of Lucide's design rules it follows.
+
+## What the tool checks
+
+The preview shows the icon next to three Lucide icons in every size (`sm`, `md`, `lg`) and in both themes, and measures its padding once drawn. It then checks the rules of Lucide's design guide that can be read from the markup:
+
+1. A 24 × 24 canvas (`viewBox="0 0 24 24"`).
+2. Strokes 2px wide. The kit draws strokes at its own width for each size anyway, so a different width shows a difference but does not break the icon.
+3. Round caps and joins.
+4. Outlines, not fills. Lucide fills only small dots.
+5. One colour. The kit paints the icon in the text colour, so a design tool's black is fine.
+
+A failed rule is advice, not an error: any static SVG works.
+
+## How to register your own icon
+
+`defineAveIcon(name, svg, options?)` reads the SVG once and returns a definition. `provideAveIcons` registers it, like Lucide's icons, in an injector: the application's, a route's or a component's.
+
+```ts
+import { defineAveIcon, provideAveIcons } from '@avelune/ui/icon';
+import certificateSvg from './icons/certificate.svg';
+
+// Declare the name, so that templates accept it.
+declare module '@avelune/icons' {
+  interface IconNames {
+    certificate: true;
+  }
+}
+
+export const certificate = defineAveIcon('certificate', certificateSvg);
+
+providers: [provideAveIcons([certificate])];
+```
+
+```html
+<ave-icon name="certificate" label="Certificate" />
+```
+
+To import `.svg` files as text, add `"loader": { ".svg": "text" }` to the application's build options and declare the module once: `declare module '*.svg' { const svg: string; export default svg; }`.
+
+The options are `{ colors: 'current' | 'original', strokes: 'kit' | 'original' }`, both defaulting to the first:
+
+- `colors: 'original'` keeps the icon's own colours. Check it in both themes: they do not follow the theme.
+- `strokes: 'original'` keeps the strokes as drawn, scaled with the icon, for fine lines drawn on purpose.
+
+An icon may contain shapes, groups, gradients, clip paths, masks and `use` of an id inside the icon, with presentation attributes or `style`. Scripts, `<style>` sheets, `class`, event handlers, embedded HTML or images, text, filters, animation and references outside the icon are refused, with every problem listed. Every `<ave-icon>` needs a `label` or `decorative`. See the Icon component page for the full API.

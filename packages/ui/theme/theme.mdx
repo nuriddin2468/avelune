@@ -1,0 +1,150 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guides/Theme" />
+
+# Theme
+
+`@avelune/ui/theme` sets the kit up in an application and holds the page's preferences: the colour theme, the control density, the motion preference and the brand (ADR 0032, ADR 0089). `provideAvelune()` goes in the application's providers, `AveTheme` is what a settings screen injects, and `aveColorScheme()` tells a component which theme the page shows.
+
+```ts
+import { ApplicationConfig } from '@angular/core';
+import { provideAvelune } from '@avelune/ui/theme';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideAvelune({ theme: 'system', density: 'comfortable', motion: 'system', persist: true, brand: 'blue' }),
+  ],
+};
+```
+
+## When to use
+
+- Always: call `provideAvelune()` once in the application's providers. It creates `AveTheme` at bootstrap, so the `data-theme`, `data-density` and `data-motion` attributes are on `<html>` before the first render and the page does not flash.
+- Inject `AveTheme` to build the settings that change the theme, the density, the motion or the brand.
+- Call `aveColorScheme()` in a component that must know whether the page is light or dark (a chart, a canvas, an image that has a dark variant).
+
+## When not to use
+
+- Not to style a component by hand: colours, spacing and radii come from tokens, which read the attributes this entry point writes.
+- Not to force full motion. `AveMotionPreference` has no such member, because a page cannot override a system that asks for less motion.
+- Not to make the theme of one region of a page: a `[data-theme]` island does not change what `aveColorScheme()` reports.
+
+## `provideAvelune(options)`
+
+`provideAvelune(options?: AveOptions): EnvironmentProviders` sets the defaults that apply until the user chooses otherwise, and creates `AveTheme` in an environment initializer. Every field of `AveOptions` is optional and read-only.
+
+| Field     | Type                    | Default         | Effect                                                                                                                                                                   |
+| --------- | ----------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `theme`   | `AveThemePreference`    | `'system'`      | The theme until the user chooses one.                                                                                                                                    |
+| `density` | `AveDensity`            | `'comfortable'` | The control density until the user chooses one.                                                                                                                          |
+| `motion`  | `AveMotionPreference`   | `'system'`      | The motion preference until the user chooses one.                                                                                                                        |
+| `persist` | `boolean`               | `true`          | Whether the user's choices are kept in `localStorage` for later visits and shared across tabs. `false` keeps nothing.                                                    |
+| `brand`   | `AveBrandInput \| null` | none            | The brand until `AveTheme.setBrand()` sets one: a preset's name or a `#rrggbb` colour. Without it the page has the kit's colours, or the product's own brand stylesheet. |
+
+A choice the user made and the kit stored wins over these defaults. A brand kept on the device wins over `brand` while the kit generates that brand the same way (the same fingerprint).
+
+## The preference types
+
+- `AveThemePreference`: `'light'`, `'dark'` or `'system'`. `'system'` follows the operating system's `prefers-color-scheme`.
+- `AveDensity`: `'comfortable'` or `'compact'`. `'compact'` shortens controls and their padding through the component tokens.
+- `AveMotionPreference`: `'system'` or `'reduced'`. `'system'` follows `prefers-reduced-motion`; `'reduced'` reduces motion whatever the system says.
+- `AveColorScheme`: `'light'` or `'dark'`, the theme a page shows. It is never `'system'`, which is a preference and not a state.
+
+## `AveTheme`
+
+`AveTheme` is a root service. It writes the preferences to `<html>` as `data-theme`, `data-density` and `data-motion`, which `tokens.css` reads, and keeps them in `localStorage` under `avelune:preferences`. It follows a choice made in another tab. A preference that follows the system (`'system'` theme, `'system'` motion) and the default density remove their attribute, so the media queries decide. Where there is no `localStorage`, or it throws (a sandboxed frame, blocked storage), a choice lasts for the visit. Nothing is stored on the server, where there is no `localStorage`; the attributes are still set on the server's `<html>`.
+
+| Member                | Type                                                                | What it does                                                                                              |
+| --------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `theme`               | `Signal<AveThemePreference>`                                        | The theme preference.                                                                                     |
+| `density`             | `Signal<AveDensity>`                                                | The density.                                                                                              |
+| `motion`              | `Signal<AveMotionPreference>`                                       | The motion preference.                                                                                    |
+| `brand`               | `Signal<AveBrandInput \| null>`                                     | The brand the page shows: a preset's name or a colour; `null` for the kit's or the product's own colours. |
+| `brandReport`         | `Signal<AveBrandReport \| null>`                                    | What the generator adapted for that brand, for a settings screen to explain. `null` without a brand.      |
+| `setTheme(theme)`     | `(theme: AveThemePreference) => void`                               | Sets the theme, writes `data-theme` and keeps the choice.                                                 |
+| `setDensity(density)` | `(density: AveDensity) => void`                                     | Sets the density, writes `data-density` and keeps the choice.                                             |
+| `setMotion(motion)`   | `(motion: AveMotionPreference) => void`                             | Sets the motion preference, writes `data-motion` and keeps the choice.                                    |
+| `setBrand(input)`     | `(input: AveBrandInput \| null) => Promise<AveBrandReport \| null>` | Sets the brand, or removes it with `null`. See below.                                                     |
+
+`setBrand()` loads the brand generator the first time a device needs it, applies the generated stylesheet after the kit's own and keeps it in `localStorage` (under `avelune:brand`) for the next visit, shared across tabs. It resolves with the report of what the generator adapted, or `null` for `null`, and it rejects an input that is neither a preset's name nor a `#rrggbb` colour. When two calls overlap, the later one wins.
+
+```ts
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { AveTheme, type AveBrandPresetName, type AveThemePreference } from '@avelune/ui/theme';
+
+@Component({
+  selector: 'app-appearance',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <p>Theme: {{ theme.theme() }}, density: {{ theme.density() }}, brand: {{ theme.brand() ?? 'kit' }}</p>
+    <button type="button" (click)="choose('dark')">Dark</button>
+    <button type="button" (click)="theme.setDensity('compact')">Compact</button>
+    <button type="button" (click)="theme.setMotion('reduced')">Reduce motion</button>
+    <button type="button" (click)="pick('teal')">Teal brand</button>
+    <button type="button" (click)="theme.setBrand(null)">Kit colours</button>
+  `,
+})
+export class Appearance {
+  protected readonly theme = inject(AveTheme);
+  protected adapted = false;
+
+  protected choose(preference: AveThemePreference): void {
+    this.theme.setTheme(preference);
+  }
+
+  protected async pick(name: AveBrandPresetName): Promise<void> {
+    const report = await this.theme.setBrand(name);
+    this.adapted = report !== null && !report.exact;
+  }
+}
+```
+
+## `aveColorScheme()`
+
+`aveColorScheme(): Signal<AveColorScheme>` returns the theme the page shows: the `data-theme` attribute on `<html>`, which `AveTheme` writes, or the system's `prefers-color-scheme` while there is none. It follows either as it changes and never writes, so it agrees with whatever set the attribute. It is `'light'` on the server. Call it in an injection context, such as a field initializer.
+
+```ts
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { aveColorScheme } from '@avelune/ui/theme';
+
+@Component({
+  selector: 'app-logo',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `<img [src]="source()" alt="Company logo" />`,
+})
+export class Logo {
+  private readonly scheme = aveColorScheme();
+  protected readonly source = computed(() => (this.scheme() === 'dark' ? 'logo-dark.svg' : 'logo-light.svg'));
+}
+```
+
+## Brand
+
+A brand is a colour the product wears: a preset's name or any `#rrggbb` colour goes to the generator, which returns the colour tokens of both themes, checked for contrast, and a report of what it had to adapt. Foundations, Brand shows the generator's output on real controls and how it picks the fill, the neutrals and danger. The types and values below are re-exported from `@avelune/tokens`, so an application imports them from `@avelune/ui/theme`.
+
+- `AveBrandInput`: a preset's name (`AveBrandPresetName`) or a colour written as `#rrggbb`. What `provideAvelune({ brand })` and `AveTheme.setBrand()` take, and what `AveTheme.brand` holds.
+- `AveBrandPresetName`: the name of a preset: `'orange'`, `'red'`, `'yellow'`, `'green'`, `'teal'`, `'cyan'`, `'blue'`, `'navy'`, `'indigo'`, `'purple'`, `'magenta'` or `'graphite'`. `'orange'` is the kit's own.
+- `aveBrandPresetNames`: every preset's name, in the order a settings screen lists them.
+- `aveBrandPresets`: each preset's exact colour, a record from `AveBrandPresetName` to `#rrggbb` (for example `blue` is `#1f6fd6`).
+- `AveBrandReport`: what `setBrand()` resolves with and `AveTheme.brandReport` holds. `exact` says whether the exact colour is itself a step of the accent, not only the brand mark. `adjustments` is a list of `AveBrandAdjustment`.
+- `AveBrandAdjustment`: one thing the generator changed, told apart by `kind`:
+  - `'fill'`: the accent fill (buttons, checked controls) is another step than the exact colour, for its text. Fields `theme`, `step`, `hex` and `text` (`'light'` or `'dark'`).
+  - `'chroma'`: a step lost chroma until its pairs passed. Fields `family`, `step`, `from` and `to`.
+  - `'danger'`: danger moved away from the brand within the red range, so an action never looks destructive. Fields `fromHue` and `toHue`.
+  - `'near-status'`: the accent is close to a status colour; the status still says itself with its icon and words. Fields `status` (`'info'`, `'success'` or `'warning'`) and `theme`.
+- `AveBrandTheme`: `'light'` or `'dark'`, the theme an adjustment applies to.
+- `AveBrandFamily`: `'accent'`, `'neutral'` or `'danger'`, the scale a chroma adjustment changed.
+- `AveBrandStep`: a step of a colour scale: `50`, `100`, `200`, `300`, `400`, `500`, `600`, `700`, `800`, `850`, `900` or `950`.
+
+```ts
+import type { AveBrandAdjustment, AveBrandReport } from '@avelune/ui/theme';
+
+function describe(report: AveBrandReport): string {
+  if (report.exact && report.adjustments.length === 0) return 'The colour is used as it is.';
+  return report.adjustments.map((adjustment: AveBrandAdjustment) => adjustment.kind).join(', ');
+}
+```
+
+## Keyboard and accessibility
+
+This entry point has no interface of its own, so it has no keyboard behaviour. The controls a settings screen builds from it follow their own pages. `'reduced'` motion and `'compact'` density reach every component through tokens; nothing else needs wiring.

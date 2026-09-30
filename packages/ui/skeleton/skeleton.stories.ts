@@ -157,6 +157,8 @@ export const Shapes: Story = {
       source: {
         code: `<ave-skeleton />
 <ave-skeleton lines="4" />
+<ave-skeleton shape="block" />
+<!-- A block the application's CSS makes taller, such as 160px for a chart: the same element with a height rule. -->
 <ave-skeleton shape="block" />`,
         language: 'html',
       },

@@ -32,8 +32,10 @@ let nextShell = 0;
  *
  * ```html
  * <ave-app-shell product="Документооборот" [logo]="logo" [navigation]="pages" navigationLabel="Разделы">
- *   <div aveAppShellActions>…</div>
- *   <ave-banner aveAppShellBanner variant="warning">…</ave-banner>
+ *   <div aveAppShellActions>
+ *     <button aveIconButton type="button" variant="ghost" icon="moon" label="Тёмная тема"></button>
+ *   </div>
+ *   <ave-banner aveAppShellBanner variant="warning">В субботу система будет недоступна.</ave-banner>
  *   <router-outlet />
  * </ave-app-shell>
  * ```
@@ -96,7 +98,11 @@ export class AveAppShell {
   /** The product's name at the start of the bar, after the logo: the words of the link home. */
   readonly product = input.required<string>();
 
-  /** The product's or the tenant's logo before its name, with a source for the dark bar; none by default. */
+  /**
+   * The product's or the tenant's logo before its name; none by default. An `AveAppLogo`: `src`, the image's address
+   * on the light bar (a URL, or a `data:` URL); `darkSrc`, optionally, its address on the dark bar; and `alt`, what the
+   * logo says to someone who cannot see it, or `''` when the product's name beside it says the same.
+   */
   readonly logo = input<AveAppLogo | null>(null);
 
   /** Where the logo and the name lead: the product's home page, `/` by default. */

@@ -39,8 +39,16 @@ import { AveDashboard, AveDashboardActions, AveDashboardMetric, AveDashboardWide
   @for (figure of figures; track figure.label) {
   <ave-dashboard-metric [label]="figure.label" [value]="figure.value" [note]="figure.note" />
   }
-  <ave-card>…</ave-card>
-  <div aveDashboardWide><ave-card>…</ave-card></div>
+  <ave-card>
+    <h2 aveCardTitle>Ждут согласования</h2>
+    <p>ДК-2026/114 · Поставка серверного оборудования</p>
+  </ave-card>
+  <div aveDashboardWide>
+    <ave-card>
+      <h2 aveCardTitle>Подписаны недавно</h2>
+      <p>ДК-2026/113 · Перевозка грузов</p>
+    </ave-card>
+  </div>
 </ave-dashboard>
 ```
 

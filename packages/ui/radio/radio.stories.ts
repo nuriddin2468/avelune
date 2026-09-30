@@ -116,8 +116,12 @@ export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<label aveChoice><input type="radio" aveRadio name="delivery" value="courier" /> Courier</label>
-<label aveChoice><input type="radio" aveRadio name="delivery" value="pickup" /> Pickup point</label>`,
+        code: `<fieldset>
+  <legend>Delivery</legend>
+  <label aveChoice><input type="radio" aveRadio name="delivery" value="courier" checked /> Courier</label>
+  <label aveChoice><input type="radio" aveRadio name="delivery" value="pickup" /> Pickup point</label>
+  <label aveChoice><input type="radio" aveRadio name="delivery" value="post" /> Post</label>
+</fieldset>`,
         language: 'html',
       },
     },
@@ -140,8 +144,15 @@ export const States: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<input type="radio" aveRadio aria-invalid="true" />
-<input type="radio" aveRadio disabled />`,
+        code: `<fieldset>
+  <legend>States</legend>
+  <label aveChoice><input type="radio" aveRadio name="states" value="a" /> Unchecked</label>
+  <label aveChoice><input type="radio" aveRadio name="other" value="b" checked /> Checked</label>
+  <label aveChoice><input type="radio" aveRadio name="focus" value="c" /> Focused</label>
+  <label aveChoice><input type="radio" aveRadio name="invalid" value="d" aria-invalid="true" /> Invalid</label>
+  <label aveChoice><input type="radio" aveRadio name="off" value="e" disabled /> Disabled</label>
+  <label aveChoice><input type="radio" aveRadio name="off-on" value="f" checked disabled /> Disabled, checked</label>
+</fieldset>`,
         language: 'html',
       },
     },
@@ -163,8 +174,21 @@ export const Forms: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<input type="radio" aveRadio value="courier" [formField]="order.delivery" />
-<input type="radio" aveRadio value="courier" formControlName="delivery" />`,
+        code: `<fieldset>
+  <legend>Delivery (Signal Forms)</legend>
+  <label aveChoice><input type="radio" aveRadio value="courier" [formField]="order.delivery" /> Courier</label>
+  <label aveChoice><input type="radio" aveRadio value="pickup" [formField]="order.delivery" /> Pickup point</label>
+  <label aveChoice><input type="radio" aveRadio value="post" [formField]="order.delivery" /> Post</label>
+</fieldset>
+<fieldset>
+  <legend>Delivery (Reactive Forms)</legend>
+  <label aveChoice>
+    <input type="radio" aveRadio name="reactive" value="courier" [formControl]="delivery" /> Courier
+  </label>
+  <label aveChoice>
+    <input type="radio" aveRadio name="reactive" value="pickup" [formControl]="delivery" /> Pickup point
+  </label>
+</fieldset>`,
         language: 'html',
       },
     },
@@ -189,14 +213,17 @@ export const LongText: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<label aveChoice>
-  <input type="radio" aveRadio name="signing" value="digital" checked />
-  Электронная цифровая подпись руководителя организации через систему электронного документооборота
-</label>
-<label aveChoice lang="uz-Latn">
-  <input type="radio" aveRadio name="signing" value="paper" />
-  Qogʻozda, tashkilot rahbarining shaxsiy imzosi va muhri bilan, ofisda
-</label>`,
+        code: `<fieldset>
+  <legend>Способ подписания</legend>
+  <label aveChoice>
+    <input type="radio" aveRadio name="signing" value="digital" checked />
+    Электронная цифровая подпись руководителя организации через систему электронного документооборота
+  </label>
+  <label aveChoice lang="uz-Latn">
+    <input type="radio" aveRadio name="signing" value="paper" />
+    Qogʻozda, tashkilot rahbarining shaxsiy imzosi va muhri bilan, ofisda
+  </label>
+</fieldset>`,
         language: 'html',
       },
     },

@@ -168,7 +168,7 @@ export class AveCombobox<V> implements ControlValueAccessor {
   /** A hint inside the empty input ("Start typing a name"). It never replaces a label. */
   readonly placeholder = input('');
 
-  /** The size: the box of an Input of that size. */
+  /** The size, the box of an Input of that size: `sm`, `md` (default) or `lg`. */
   readonly size = input<AveSelectSize>('md');
 
   /** Whether the combobox is disabled. A form binding sets it too. */

@@ -129,9 +129,52 @@ export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: `{ value: 'legal', label: 'Юридический департамент', children: [ … ] }
-<ave-tree label="Подразделения" [nodes]="departments" [(selected)]="department" />`,
-        language: 'html',
+        code: `import { Component, signal } from '@angular/core';
+import { lucideBuilding } from '@avelune/icons/lucide';
+import { provideAveIcons } from '@avelune/ui/icon';
+import { AveTree, type AveTreeNode } from '@avelune/ui/tree';
+
+@Component({
+  selector: 'app-departments',
+  imports: [AveTree],
+  providers: [provideAveIcons([lucideBuilding])],
+  template: \`
+    <ave-tree label="Подразделения" [nodes]="departments" [(selected)]="department" />
+    <p role="status">Выбрано: {{ department() ?? 'ничего' }}</p>
+  \`,
+})
+export class Departments {
+  protected readonly departments: readonly AveTreeNode<string>[] = [
+    {
+      value: 'board',
+      label: 'Правление',
+      icon: 'building',
+      expanded: true,
+      children: [
+        {
+          value: 'legal',
+          label: 'Юридический департамент',
+          children: [
+            { value: 'contracts', label: 'Отдел договоров' },
+            { value: 'claims', label: 'Отдел претензионной работы' },
+          ],
+        },
+        {
+          value: 'finance',
+          label: 'Финансовый департамент',
+          children: [
+            { value: 'accounting', label: 'Бухгалтерия' },
+            { value: 'treasury', label: 'Казначейство' },
+          ],
+        },
+        { value: 'security', label: 'Служба безопасности' },
+        { value: 'archive', label: 'Архив (закрыт)', disabled: true },
+      ],
+    },
+  ];
+  protected readonly department = signal<string | undefined>(undefined);
+}`,
+        language: 'typescript',
       },
     },
   },
@@ -174,9 +217,38 @@ export const Folders: Story = {
   parameters: {
     docs: {
       source: {
-        code: `{ value: '2026', label: 'Номенклатура дел 2026', icon: 'folder', expanded: true, children: [ … ] }
-<ave-tree label="Номенклатура дел" [nodes]="folders" [(selected)]="folder" />`,
-        language: 'html',
+        code: `import { Component, signal } from '@angular/core';
+import { lucideFolder } from '@avelune/icons/lucide';
+import { provideAveIcons } from '@avelune/ui/icon';
+import { AveTree, type AveTreeNode } from '@avelune/ui/tree';
+
+@Component({
+  selector: 'app-case-register',
+  imports: [AveTree],
+  providers: [provideAveIcons([lucideFolder])],
+  template: \`<ave-tree label="Номенклатура дел" [nodes]="folders" [(selected)]="folder" />\`,
+})
+export class CaseRegister {
+  protected readonly folders: readonly AveTreeNode<string>[] = [
+    {
+      value: '2026',
+      label: 'Номенклатура дел 2026',
+      icon: 'folder',
+      expanded: true,
+      children: [
+        {
+          value: '01',
+          label: '01 Руководство',
+          icon: 'folder',
+          children: [{ value: '01-01', label: '01-01 Приказы по основной деятельности', icon: 'folder' }],
+        },
+        { value: '02', label: '02 Договорная работа', icon: 'folder' },
+      ],
+    },
+  ];
+  protected readonly folder = signal<string | undefined>('02');
+}`,
+        language: 'typescript',
       },
     },
   },
@@ -196,9 +268,32 @@ export const LongText: Story = {
   parameters: {
     docs: {
       source: {
-        code: `{ value: 'department', label: 'Davlat moliyaviy nazorati departamentining Toshkent shahri boʻyicha boshqarmasi', children: [ … ] }
-<ave-tree label="Tashkilot tuzilmasi" [nodes]="structure" selected="unit" />`,
-        language: 'html',
+        code: `import { Component } from '@angular/core';
+import { AveTree, type AveTreeNode } from '@avelune/ui/tree';
+
+@Component({
+  selector: 'app-structure',
+  imports: [AveTree],
+  template: \`<ave-tree label="Tashkilot tuzilmasi" [nodes]="structure" selected="unit" />\`,
+})
+export class Structure {
+  protected readonly structure: readonly AveTreeNode<string>[] = [
+    {
+      value: 'ministry',
+      label: 'Oʻzbekiston Respublikasi Moliya vazirligi',
+      expanded: true,
+      children: [
+        {
+          value: 'department',
+          label: 'Davlat moliyaviy nazorati departamentining Toshkent shahri boʻyicha boshqarmasi',
+          expanded: true,
+          children: [{ value: 'unit', label: 'Hisobga olish va hisobot boʻlimi' }],
+        },
+      ],
+    },
+  ];
+}`,
+        language: 'typescript',
       },
     },
   },

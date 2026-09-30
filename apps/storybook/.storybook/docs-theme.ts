@@ -2,7 +2,8 @@
 // alone leaves the stories' text on Storybook's white. Each kit theme gets a Storybook docs theme built from the kit's
 // semantic colours, and the container picks it from the globals; the docs page re-renders when a global changes.
 import { DocsContainer, type DocsContainerProps } from '@storybook/addon-docs/blocks';
-import { createElement, type PropsWithChildren, type ReactElement } from 'react';
+import { createElement, useEffect, useReducer, type PropsWithChildren, type ReactElement } from 'react';
+import { GLOBALS_UPDATED, SET_GLOBALS } from 'storybook/internal/core-events';
 import { create, type ThemeVars } from 'storybook/theming';
 import { cssValue, type Theme } from '../src/foundations/token-data';
 
@@ -47,10 +48,33 @@ function themeIn(globals: unknown): Theme {
     : 'light';
 }
 
+/**
+ * The globals the channel last carried, for a docs page without stories: a guide of an entry point without a story
+ * file (ADR 0101). The channel keeps each event's last arguments; a payload of either event holds `globals`.
+ */
+function lastGlobals(channel: DocsContainerProps['context']['channel']): unknown {
+  for (const event of [GLOBALS_UPDATED, SET_GLOBALS]) {
+    const args: unknown = channel.last(event);
+    const payload: unknown = Array.isArray(args) ? args[0] : undefined;
+    if (typeof payload === 'object' && payload !== null && 'globals' in payload) return payload.globals;
+  }
+  return undefined;
+}
+
 /** Storybook's docs container, in the docs theme of the toolbar's kit theme. */
 export function ThemedDocsContainer({ context, children }: PropsWithChildren<DocsContainerProps>): ReactElement {
-  // Globals are read through a story; every docs page is attached to its stories (<Meta of>), so there is one.
+  // A page attached to its stories (<Meta of>) reads the globals through a story and re-renders with them. A page
+  // without stories reads them from the channel, and re-renders itself when they change.
   const [story] = context.componentStories();
-  const globals: unknown = story === undefined ? undefined : context.getStoryContext(story)['globals'];
+  const [, update] = useReducer((count: number) => count + 1, 0);
+  useEffect(() => {
+    if (story !== undefined) return;
+    context.channel.on(GLOBALS_UPDATED, update);
+    return () => {
+      context.channel.off(GLOBALS_UPDATED, update);
+    };
+  }, [context.channel, story]);
+  const globals: unknown =
+    story === undefined ? lastGlobals(context.channel) : context.getStoryContext(story)['globals'];
   return createElement(DocsContainer, { context, theme: docsThemes[themeIn(globals)] }, children);
 }

@@ -43,7 +43,7 @@ Each chosen value is a tag (`sm`, ADR 0080) inside the field. Its remove button 
 
 ## Rich options
 
-Options take the same fields and templates as a select's (ADR 0055); the tags show the chosen labels, as text.
+Options take the same fields (`value`, `label`, `disabled`, `description`, `icon` or `image`, `meta`) and templates (`<ng-template aveOption [aveOptionOf]="options" let-option>`) as a select's (ADR 0055); the tags show the chosen labels, as text.
 
 <Canvas of={MultiselectStories.RichOptions} />
 

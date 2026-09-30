@@ -218,19 +218,6 @@ async function settled(): Promise<void> {
   await waitFor(() => expect(dialog.getAnimations({ subtree: true })).toHaveLength(0));
 }
 
-const snippet = `<ave-list-page>
-  <ave-search-header heading="Договоры" [summary]="summary()" [filters]="filters">
-    <div aveSearchHeaderActions>…</div>
-    <input aveInput aveSearchHeaderSearch type="search" aria-label="Поиск договоров" />
-  </ave-search-header>
-  <ave-alert aveListPageNotice variant="warning" heading="Есть истёкшие договоры">…</ave-alert>
-  <ave-applied-filters [filters]="applied()" (remove)="removeFilter($event)" (clear)="clearFilters()" />
-  <ave-filter-panel #filters [count]="applied().length" (clear)="clearFilters()">
-    <ng-template aveFilterPanelContent>…</ng-template>
-  </ave-filter-panel>
-  <ave-data-table label="Договоры подразделения" [rows]="rows()" [columns]="columns" [rowKey]="byNumber" />
-</ave-list-page>`;
-
 const meta: Meta<ListPageStories> = {
   title: 'Patterns/List page',
   component: AveListPage,
@@ -242,7 +229,50 @@ export default meta;
 export const Default: Story = {
   tags: ['forced-colors'],
   render: frame('default'),
-  parameters: { docs: { source: { code: snippet, language: 'html' } } },
+  parameters: {
+    docs: {
+      source: {
+        code: `<!-- filtersOpen starts true: the filters' column shows beside the table. -->
+<ave-list-page>
+  <ave-search-header heading="Договоры" [summary]="summary()" [filters]="filters">
+    <div aveSearchHeaderActions>
+      <button aveButton type="button">Выгрузить в Excel</button>
+      <button aveButton type="button" variant="primary">Новый договор</button>
+    </div>
+    <input
+      aveInput
+      aveSearchHeaderSearch
+      type="search"
+      aria-label="Поиск договоров"
+      placeholder="Номер, предмет или контрагент"
+    />
+  </ave-search-header>
+  <ave-alert aveListPageNotice variant="warning" heading="Есть истёкшие договоры">
+    Договор ДК-2025/109 истёк 31.08.2026. Продлите или закройте его.
+  </ave-alert>
+  <ave-applied-filters [filters]="applied()" (remove)="removeFilter($event)" (clear)="clearFilters()" />
+  <ave-filter-panel #filters [count]="applied().length" [(open)]="filtersOpen" (clear)="clearFilters()">
+    <ng-template aveFilterPanelContent>
+      <fieldset aveChoiceGroup legend="Статус">
+        @for (status of statusList; track status) {
+          <label aveChoice>
+            <input type="checkbox" aveCheckbox [checked]="shown().has(status)" (change)="toggle(status)" />
+            {{ statuses[status] }}
+          </label>
+        }
+      </fieldset>
+    </ng-template>
+  </ave-filter-panel>
+  <ave-data-table label="Договоры подразделения" [rows]="rows()" [columns]="columns" [rowKey]="byNumber">
+    <ng-template aveCell="status" [aveCellOf]="rows()" let-contract>
+      <ave-badge [variant]="variants[contract.status]">{{ statuses[contract.status] }}</ave-badge>
+    </ng-template>
+  </ave-data-table>
+</ave-list-page>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('heading', { level: 1, name: 'Договоры' })).toBeVisible();
@@ -260,7 +290,50 @@ export const Default: Story = {
 /** The filters closed, as the register opens: the table takes the page's width. */
 export const Collapsed: Story = {
   render: frame('collapsed'),
-  parameters: { docs: { source: { code: snippet, language: 'html' } } },
+  parameters: {
+    docs: {
+      source: {
+        code: `<!-- filtersOpen starts false: the table takes the page's width. -->
+<ave-list-page>
+  <ave-search-header heading="Договоры" [summary]="summary()" [filters]="filters">
+    <div aveSearchHeaderActions>
+      <button aveButton type="button">Выгрузить в Excel</button>
+      <button aveButton type="button" variant="primary">Новый договор</button>
+    </div>
+    <input
+      aveInput
+      aveSearchHeaderSearch
+      type="search"
+      aria-label="Поиск договоров"
+      placeholder="Номер, предмет или контрагент"
+    />
+  </ave-search-header>
+  <ave-alert aveListPageNotice variant="warning" heading="Есть истёкшие договоры">
+    Договор ДК-2025/109 истёк 31.08.2026. Продлите или закройте его.
+  </ave-alert>
+  <ave-applied-filters [filters]="applied()" (remove)="removeFilter($event)" (clear)="clearFilters()" />
+  <ave-filter-panel #filters [count]="applied().length" [(open)]="filtersOpen" (clear)="clearFilters()">
+    <ng-template aveFilterPanelContent>
+      <fieldset aveChoiceGroup legend="Статус">
+        @for (status of statusList; track status) {
+          <label aveChoice>
+            <input type="checkbox" aveCheckbox [checked]="shown().has(status)" (change)="toggle(status)" />
+            {{ statuses[status] }}
+          </label>
+        }
+      </fieldset>
+    </ng-template>
+  </ave-filter-panel>
+  <ave-data-table label="Договоры подразделения" [rows]="rows()" [columns]="columns" [rowKey]="byNumber">
+    <ng-template aveCell="status" [aveCellOf]="rows()" let-contract>
+      <ave-badge [variant]="variants[contract.status]">{{ statuses[contract.status] }}</ave-badge>
+    </ng-template>
+  </ave-data-table>
+</ave-list-page>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const table = canvasElement.querySelector('ave-data-table');
     const page = canvasElement.querySelector('ave-list-page');
@@ -277,7 +350,50 @@ export const Collapsed: Story = {
 /** A page narrower than container.lg: the filters open in a drawer from the start, over the table. */
 export const Narrow: Story = {
   render: frame('narrow'),
-  parameters: { docs: { source: { code: snippet, language: 'html' } } },
+  parameters: {
+    docs: {
+      source: {
+        code: `<!-- Below container.lg the filters open in a drawer; filtersOpen starts false. -->
+<ave-list-page>
+  <ave-search-header heading="Договоры" [summary]="summary()" [filters]="filters">
+    <div aveSearchHeaderActions>
+      <button aveButton type="button">Выгрузить в Excel</button>
+      <button aveButton type="button" variant="primary">Новый договор</button>
+    </div>
+    <input
+      aveInput
+      aveSearchHeaderSearch
+      type="search"
+      aria-label="Поиск договоров"
+      placeholder="Номер, предмет или контрагент"
+    />
+  </ave-search-header>
+  <ave-alert aveListPageNotice variant="warning" heading="Есть истёкшие договоры">
+    Договор ДК-2025/109 истёк 31.08.2026. Продлите или закройте его.
+  </ave-alert>
+  <ave-applied-filters [filters]="applied()" (remove)="removeFilter($event)" (clear)="clearFilters()" />
+  <ave-filter-panel #filters [count]="applied().length" [(open)]="filtersOpen" (clear)="clearFilters()">
+    <ng-template aveFilterPanelContent>
+      <fieldset aveChoiceGroup legend="Статус">
+        @for (status of statusList; track status) {
+          <label aveChoice>
+            <input type="checkbox" aveCheckbox [checked]="shown().has(status)" (change)="toggle(status)" />
+            {{ statuses[status] }}
+          </label>
+        }
+      </fieldset>
+    </ng-template>
+  </ave-filter-panel>
+  <ave-data-table label="Договоры подразделения" [rows]="rows()" [columns]="columns" [rowKey]="byNumber">
+    <ng-template aveCell="status" [aveCellOf]="rows()" let-contract>
+      <ave-badge [variant]="variants[contract.status]">{{ statuses[contract.status] }}</ave-badge>
+    </ng-template>
+  </ave-data-table>
+</ave-list-page>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Фильтры 2' });
     await expect(button).toHaveAttribute('aria-haspopup', 'dialog');
@@ -293,7 +409,50 @@ export const Narrow: Story = {
 export const Empty: Story = {
   name: 'No results',
   render: frame('empty'),
-  parameters: { docs: { source: { code: snippet, language: 'html' } } },
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-list-page>
+  <ave-search-header heading="Договоры" [summary]="summary()" [filters]="filters">
+    <div aveSearchHeaderActions>
+      <button aveButton type="button">Выгрузить в Excel</button>
+      <button aveButton type="button" variant="primary">Новый договор</button>
+    </div>
+    <input
+      aveInput
+      aveSearchHeaderSearch
+      type="search"
+      aria-label="Поиск договоров"
+      placeholder="Номер, предмет или контрагент"
+      value="Кадастр"
+    />
+  </ave-search-header>
+  <ave-applied-filters [filters]="applied()" (remove)="removeFilter($event)" (clear)="clearFilters()" />
+  <ave-filter-panel #filters [count]="applied().length" [(open)]="filtersOpen" (clear)="clearFilters()">
+    <ng-template aveFilterPanelContent>
+      <fieldset aveChoiceGroup legend="Статус">
+        @for (status of statusList; track status) {
+          <label aveChoice>
+            <input type="checkbox" aveCheckbox [checked]="shown().has(status)" (change)="toggle(status)" />
+            {{ statuses[status] }}
+          </label>
+        }
+      </fieldset>
+    </ng-template>
+  </ave-filter-panel>
+  <ave-data-table label="Договоры подразделения" [rows]="rows()" [columns]="columns" [rowKey]="byNumber">
+    <ave-empty-state aveDataTableEmpty icon="search" heading="Ничего не найдено">
+      <p>Ни один договор не подходит под поиск «Кадастр» и выбранные статусы.</p>
+      <div aveEmptyStateActions>
+        <button aveButton type="button">Сбросить поиск и фильтры</button>
+      </div>
+    </ave-empty-state>
+  </ave-data-table>
+</ave-list-page>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(await canvas.findByText('Ничего не найдено')).toBeVisible();
@@ -304,7 +463,42 @@ export const Empty: Story = {
 /** The register on its way: the count says so, and the table holds skeleton rows. */
 export const Loading: Story = {
   render: frame('loading'),
-  parameters: { docs: { source: { code: snippet, language: 'html' } } },
+  parameters: {
+    docs: {
+      source: {
+        code: `<ave-list-page>
+  <ave-search-header heading="Договоры" summary="Загрузка договоров…" [filters]="filters">
+    <div aveSearchHeaderActions>
+      <button aveButton type="button">Выгрузить в Excel</button>
+      <button aveButton type="button" variant="primary">Новый договор</button>
+    </div>
+    <input
+      aveInput
+      aveSearchHeaderSearch
+      type="search"
+      aria-label="Поиск договоров"
+      placeholder="Номер, предмет или контрагент"
+    />
+  </ave-search-header>
+  <ave-applied-filters [filters]="applied()" (remove)="removeFilter($event)" (clear)="clearFilters()" />
+  <ave-filter-panel #filters [count]="applied().length" [(open)]="filtersOpen" (clear)="clearFilters()">
+    <ng-template aveFilterPanelContent>
+      <fieldset aveChoiceGroup legend="Статус">
+        @for (status of statusList; track status) {
+          <label aveChoice>
+            <input type="checkbox" aveCheckbox [checked]="shown().has(status)" (change)="toggle(status)" />
+            {{ statuses[status] }}
+          </label>
+        }
+      </fieldset>
+    </ng-template>
+  </ave-filter-panel>
+  <ave-data-table label="Договоры подразделения" [rows]="rows()" [columns]="columns" [rowKey]="byNumber" [loading]="true" />
+</ave-list-page>`,
+        language: 'html',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     await expect(canvasElement.querySelector('ave-search-header [role="status"]')).toHaveTextContent(
       'Загрузка договоров…',

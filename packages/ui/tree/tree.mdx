@@ -30,10 +30,15 @@ A named `tree` of rows of the control height. A row is 8px from the start and 24
 ```ts
 readonly departments: AveTreeNode<string>[] = [
   { value: 'board', label: 'Правление', icon: 'building', expanded: true, children: [
-    { value: 'legal', label: 'Юридический департамент', children: [ … ] },
+    { value: 'legal', label: 'Юридический департамент', children: [
+      { value: 'contracts', label: 'Отдел договоров' },
+    ] },
+    { value: 'archive', label: 'Архив (закрыт)', disabled: true },
   ] },
 ];
 ```
+
+A node (`AveTreeNode`) has a `value`, a `label`, an optional `icon`, an optional `children` array, and two flags: `expanded` opens it when the tree first shows it, and `disabled` shows it but keeps it from being chosen.
 
 ```html
 <ave-tree label="Подразделения" [nodes]="departments" [(selected)]="department" />

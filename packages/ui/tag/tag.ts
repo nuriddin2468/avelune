@@ -32,9 +32,7 @@ export const AVE_TAG_FIELD = new InjectionToken<true>('AVE_TAG_FIELD');
  * gone, focus moves to the remove button of the tag after it, or of the one before.
  *
  * ```html
- * @for (region of regions(); track region.value) {
- *   <ave-tag removable (remove)="drop(region)">{{ region.label }}</ave-tag>
- * }
+ * <ave-tag removable (remove)="drop(region)">{{ region.label }}</ave-tag>
  * ```
  *
  * @beta

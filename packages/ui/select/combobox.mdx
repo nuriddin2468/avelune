@@ -78,7 +78,7 @@ For thousands of options that live on the server (ADR 0056), `search="server"` h
 
 ## Rich options
 
-Options take the same fields and templates as a select's (ADR 0055): a description, an icon or an image, meta text, or `<ng-template aveOption let-option>`. The search reads the label only; the input shows the chosen label, as text.
+Options take the same fields and templates as a select's (ADR 0055): a description, an icon or an image, meta text, or `<ng-template aveOption [aveOptionOf]="options" let-option>`, which draws the inside of every option (see the select's Templates). The option's fields are `value`, `label`, `disabled`, `description`, `icon` or `image`, and `meta`. The search reads the label only; the input shows the chosen label, as text.
 
 <Canvas of={ComboboxStories.RichOptions} />
 

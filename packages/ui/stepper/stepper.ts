@@ -74,13 +74,13 @@ export class AveStepper {
   /** Names the list of steps: what they make up ("Оформление договора", "Маршрут согласования"). */
   readonly label = input.required<string>();
 
-  /** The steps, in order. */
+  /** The steps, in order: each an `AveStep` with a `label`, an optional `description` under it, and an optional `error`. */
   readonly steps = input.required<readonly AveStep[]>();
 
   /** The index of the current step, from 0: the steps before it are done, those after it ahead. */
   readonly current = input(0, { transform: numberAttribute });
 
-  /** The steps in a row (default) or in a column; a row lays out as a column in a container under 480px. */
+  /** The steps in a row, `horizontal` (default), or in a column, `vertical`; a row lays out as a column in a container under 480px. */
   readonly orientation = input<AveStepperOrientation>('horizontal');
 
   /** Makes each done step a button back to it, which emits `stepSelected`: for the steps of a form. */

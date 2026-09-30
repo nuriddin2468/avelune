@@ -132,8 +132,13 @@ export const States: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<label aveChoice><input type="checkbox" aveCheckbox [indeterminate]="someChecked()" /> Select all</label>
-<label aveChoice><input type="checkbox" aveCheckbox disabled /> Disabled</label>`,
+        code: `<label aveChoice><input type="checkbox" aveCheckbox /> Unchecked</label>
+<label aveChoice><input type="checkbox" aveCheckbox checked /> Checked</label>
+<label aveChoice><input type="checkbox" aveCheckbox [indeterminate]="true" /> Mixed</label>
+<label aveChoice><input type="checkbox" aveCheckbox aria-invalid="true" /> Invalid</label>
+<label aveChoice><input type="checkbox" aveCheckbox disabled /> Disabled</label>
+<label aveChoice><input type="checkbox" aveCheckbox checked disabled /> Disabled, checked</label>
+<label aveChoice><input type="checkbox" aveCheckbox [indeterminate]="true" disabled /> Disabled, mixed</label>`,
         language: 'html',
       },
     },
@@ -154,19 +159,41 @@ export const Forms: Story = {
     docs: {
       source: {
         language: 'typescript',
-        code: `readonly terms = form(signal({ notify: true, confirm: false }), (path) => {
-  required(path.confirm);
-});
+        code: `import { Component, signal } from '@angular/core';
+import { FormField, form, required } from '@angular/forms/signals';
+import { AveCheckbox, AveChoice } from '@avelune/ui/checkbox';
+import { lucideCircleAlert } from '@avelune/icons/lucide';
+import { AveIcon, provideAveIcons } from '@avelune/ui/icon';
 
-// <label aveChoice>
-//   <input type="checkbox" aveCheckbox aria-describedby="confirm-error" [formField]="terms.confirm" />
-//   I confirm the data is correct
-// </label>
-// <div id="confirm-error">
-//   @if (terms.confirm().invalid() && terms.confirm().touched()) {
-//     <p><ave-icon name="circle-alert" decorative />Confirm the data to send the contract for approval.</p>
-//   }
-// </div>`,
+@Component({
+  selector: 'app-contract-terms',
+  imports: [AveCheckbox, AveChoice, AveIcon, FormField],
+  providers: [provideAveIcons([lucideCircleAlert])],
+  template: \`
+    <label aveChoice>
+      <input type="checkbox" aveCheckbox [formField]="terms.notify" />
+      Notify the counterparty by email
+    </label>
+    <label aveChoice>
+      <input type="checkbox" aveCheckbox aria-describedby="confirm-error" [formField]="terms.confirm" />
+      I confirm the data is correct
+    </label>
+    <div id="confirm-error">
+      @if (terms.confirm().invalid() && terms.confirm().touched()) {
+        <p>
+          <ave-icon name="circle-alert" decorative />
+          Confirm the data to send the contract for approval.
+        </p>
+      }
+    </div>
+  \`,
+})
+export class ContractTerms {
+  protected readonly model = signal({ notify: true, confirm: false });
+  protected readonly terms = form(this.model, (path) => {
+    required(path.confirm);
+  });
+}`,
       },
     },
   },
@@ -189,7 +216,14 @@ export const LongText: Story = {
   parameters: {
     docs: {
       source: {
-        code: '<label aveChoice><input type="checkbox" aveCheckbox /> Архивировать документы…</label>',
+        code: `<label aveChoice lang="ru">
+  <input type="checkbox" aveCheckbox checked />
+  Архивировать документы старше трёх лет вместе с приложениями и листами согласования
+</label>
+<label aveChoice lang="uz-Latn">
+  <input type="checkbox" aveCheckbox />
+  Kontragentga hujjatning imzolangan nusxasi haqida elektron pochta orqali xabar yuborish
+</label>`,
         language: 'html',
       },
     },

@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as GlobalStylesStories from './global-styles.stories';
+
+<Meta of={GlobalStylesStories} />
+
+# Global styles
+
+`@avelune/ui/styles.css` is loaded once by the application's bundler (ADR 0030). It declares the layer order, resets browser defaults, gives plain HTML the kit's type and colours, draws the one focus ring and offers a utility for figures.
+
+## What it does
+
+- **Layers.** `reset`, `tokens`, `base`, `components`, `patterns`, `utilities`, `app`, lowest first; a later layer wins. Unlayered CSS beats every layer, so an application puts its own styles in the `app` layer.
+- **Reset.** Border-box sizing, no default margins, media sized to their container, form controls inheriting the font, and long words breaking instead of overflowing.
+- **Base text.** The root and every `[data-theme]` island take `color.bg.canvas` and `color.fg.default`. Text is `font.body-md`; `h1` to `h4` take `font.heading-xl` to `font.heading-sm`; `pre` takes `font.code`; `code`, `kbd` and `samp` use the mono family; `b` and `strong` are semibold; `a` takes `color.fg.link`.
+- **Focus ring.** One rule on `:focus-visible` for everything: a `focus-ring.width` outline in `color.border.focus`, offset by `focus-ring.offset`. It is never removed and never animated. An element inside a container that clips its overflow sets `data-focus-ring="inset"` to draw the ring inside its own edge. Do not write your own `outline` rule; if a ring needs to change, change it for the whole kit.
+
+## Utility class
+
+`ave-tabular-nums` sets `font-variant-numeric: tabular-nums`, so figures have one width and line up in tables and numeric columns. Put it on any element that shows numbers that are compared or summed.
+
+```html
+<td class="ave-tabular-nums">1 204 500,00</td>
+```
+
+## Token reference
+
+### Focus ring (`focus-ring`)
+
+One focus ring for everything, on `:focus-visible` only, in `color.border.focus`. Components that clip their content use an inset ring.
+
+{/* tokens:focus-ring */}
+
+| Token               | CSS variable              | Value | Description |
+| ------------------- | ------------------------- | ----- | ----------- |
+| `focus-ring.width`  | `--ave-focus-ring-width`  | `2px` |             |
+| `focus-ring.offset` | `--ave-focus-ring-offset` | `2px` |             |
+
+{/* /tokens */}
