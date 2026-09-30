@@ -1,14 +1,8 @@
-/* The register of contracts: the page's heading and actions, the export under way, and the table. Tokens only. */
+/* The register of contracts: the list page lays it out (ADR 0095); here, the export's box and the contract's card.
+   Tokens only. */
 @layer app {
   :host {
     display: block;
-  }
-
-  .page {
-    display: grid;
-    gap: var(--ave-space-6);
-    max-inline-size: var(--ave-container-lg);
-    margin-inline: auto;
   }
 
   /* The export: its name and state in a row over the bar. */
@@ -38,17 +32,6 @@
     &[data-done] {
       color: var(--ave-color-success-fg);
     }
-  }
-
-  /* The filters' column at the list's start while it is open, until the list page pattern lays it out. */
-  .layout {
-    display: grid;
-    align-items: start;
-    gap: var(--ave-space-6);
-  }
-
-  .layout[data-filters='open'] {
-    grid-template-columns: auto minmax(0, 1fr);
   }
 
   /* A contract's card in the drawer: each fact under its name. */

@@ -1,0 +1,13 @@
+/* The frame of the List page stories: a register inside the shell's padding. Stories only; the page's styles are
+   list-page.css. */
+@layer patterns {
+  :host {
+    display: block;
+    padding: var(--ave-space-6);
+  }
+
+  /* A page narrower than container.lg: the filters open in a drawer at every width. */
+  .frame[data-narrow] {
+    max-inline-size: var(--ave-container-md);
+  }
+}

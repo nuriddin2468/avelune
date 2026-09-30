@@ -20,6 +20,7 @@ import {
 import { AveChoiceGroup, AveFormField } from '@avelune/ui/form-field';
 import { AveInput } from '@avelune/ui/input';
 import { AveLink } from '@avelune/ui/link';
+import { AveListPage, AveListPageNotice } from '@avelune/ui/list-page';
 import { AveMenu, type AveMenuEntry } from '@avelune/ui/menu';
 import { AveRadio } from '@avelune/ui/radio';
 import { AveSearchHeader, AveSearchHeaderActions, AveSearchHeaderSearch } from '@avelune/ui/search-header';
@@ -71,6 +72,8 @@ const exportInterval = 400;
     AveFormField,
     AveInput,
     AveLink,
+    AveListPage,
+    AveListPageNotice,
     AveMenu,
     AveProgress,
     AveRadio,
@@ -81,7 +84,7 @@ const exportInterval = 400;
   ],
   providers: [provideAveIcons([lucideCopy, lucideEllipsis, lucideFileText, lucideSearch, lucideTrash])],
   template: `
-    <div class="page" lang="ru">
+    <ave-list-page lang="ru">
       <ave-search-header
         heading="Договоры"
         searchLabel="Поиск договоров"
@@ -114,7 +117,7 @@ const exportInterval = 400;
       </ave-search-header>
 
       @if (exported() !== null) {
-        <section class="export" aria-label="Выгрузка реестра">
+        <section aveListPageNotice class="export" aria-label="Выгрузка реестра">
           <div class="export-head">
             <label for="export-progress">Выгрузка реестра договоров</label>
             <span class="export-value" role="status" [attr.data-done]="exported() === 1 ? '' : null">
@@ -131,7 +134,7 @@ const exportInterval = 400;
       }
 
       @if (expired().length > 0) {
-        <ave-alert variant="warning" heading="Есть истёкшие договоры">
+        <ave-alert aveListPageNotice variant="warning" heading="Есть истёкшие договоры">
           @for (contract of expired(); track contract.id) {
             Договор <a aveLink [routerLink]="['/contracts', contract.id]">{{ contract.number }}</a> истёк
             {{ dates.numeric(contract.endsOn) }}.
@@ -142,68 +145,61 @@ const exportInterval = 400;
 
       <ave-applied-filters [filters]="applied()" (remove)="removeFilter($event)" (clear)="clearFilters()" />
 
-      <div class="layout" [attr.data-filters]="filters.open() && !filters.modal() ? 'open' : null">
-        <ave-filter-panel #filters [count]="applied().length" (clear)="clearFilters()">
-          <ng-template aveFilterPanelContent>
-            <fieldset aveChoiceGroup legend="Статус">
-              @for (status of statusList; track status) {
-                <label aveChoice>
-                  <input
-                    type="checkbox"
-                    aveCheckbox
-                    [checked]="shownStatuses().has(status)"
-                    (change)="toggle(status)"
-                  />
-                  {{ statuses[status] }}
-                </label>
-              }
-            </fieldset>
-            <ave-form-field label="Действует до">
-              <ave-date-range-picker [(value)]="term" />
-            </ave-form-field>
-          </ng-template>
-        </ave-filter-panel>
+      <ave-filter-panel #filters [count]="applied().length" (clear)="clearFilters()">
+        <ng-template aveFilterPanelContent>
+          <fieldset aveChoiceGroup legend="Статус">
+            @for (status of statusList; track status) {
+              <label aveChoice>
+                <input type="checkbox" aveCheckbox [checked]="shownStatuses().has(status)" (change)="toggle(status)" />
+                {{ statuses[status] }}
+              </label>
+            }
+          </fieldset>
+          <ave-form-field label="Действует до">
+            <ave-date-range-picker [(value)]="term" />
+          </ave-form-field>
+        </ng-template>
+      </ave-filter-panel>
 
-        <ave-data-table
-          label="Договоры подразделения"
-          selectable
-          [rows]="shown()"
-          [columns]="columns"
-          [rowKey]="byId"
-          [loading]="loading()"
-          [(sort)]="sort"
-          [(selected)]="selected"
-          [(page)]="page"
-          [(pageSize)]="pageSize"
-        >
-          <ng-template aveCell="subject" [aveCellOf]="shown()" let-contract>
-            <a aveLink [routerLink]="['/contracts', contract.id]">{{ contract.subject }}</a>
-          </ng-template>
-          <ng-template aveCell="status" [aveCellOf]="shown()" let-contract>
-            <ave-badge [variant]="variants[contract.status]">{{ statuses[contract.status] }}</ave-badge>
-          </ng-template>
-          <ng-template aveCell="endsOn" [aveCellOf]="shown()" let-contract>
-            <time [attr.datetime]="contract.endsOn">{{ dates.numeric(contract.endsOn) }}</time>
-          </ng-template>
-          <ng-template aveCell="actions" [aveCellOf]="shown()" let-contract>
-            <ave-menu
-              icon="ellipsis"
-              variant="ghost"
-              size="sm"
-              [label]="'Действия с договором ' + contract.number"
-              [items]="rowActions"
-              (itemSelected)="act(contract, $event)"
-            />
-          </ng-template>
-          <ave-empty-state aveDataTableEmpty icon="search" heading="Ничего не найдено">
-            <p>Ни один договор не подходит под поиск и выбранные статусы.</p>
-            <div aveEmptyStateActions>
-              <button aveButton type="button" (click)="resetSearch()">Сбросить поиск и фильтры</button>
-            </div>
-          </ave-empty-state>
-        </ave-data-table>
-      </div>
-    </div>
+      <ave-data-table
+        label="Договоры подразделения"
+        selectable
+        [rows]="shown()"
+        [columns]="columns"
+        [rowKey]="byId"
+        [loading]="loading()"
+        [(sort)]="sort"
+        [(selected)]="selected"
+        [(page)]="page"
+        [(pageSize)]="pageSize"
+      >
+        <ng-template aveCell="subject" [aveCellOf]="shown()" let-contract>
+          <a aveLink [routerLink]="['/contracts', contract.id]">{{ contract.subject }}</a>
+        </ng-template>
+        <ng-template aveCell="status" [aveCellOf]="shown()" let-contract>
+          <ave-badge [variant]="variants[contract.status]">{{ statuses[contract.status] }}</ave-badge>
+        </ng-template>
+        <ng-template aveCell="endsOn" [aveCellOf]="shown()" let-contract>
+          <time [attr.datetime]="contract.endsOn">{{ dates.numeric(contract.endsOn) }}</time>
+        </ng-template>
+        <ng-template aveCell="actions" [aveCellOf]="shown()" let-contract>
+          <ave-menu
+            icon="ellipsis"
+            variant="ghost"
+            size="sm"
+            [label]="'Действия с договором ' + contract.number"
+            [items]="rowActions"
+            (itemSelected)="act(contract, $event)"
+          />
+        </ng-template>
+        <ave-empty-state aveDataTableEmpty icon="search" heading="Ничего не найдено">
+          <p>Ни один договор не подходит под поиск и выбранные статусы.</p>
+          <div aveEmptyStateActions>
+            <button aveButton type="button" (click)="resetSearch()">Сбросить поиск и фильтры</button>
+          </div>
+        </ave-empty-state>
+      </ave-data-table>
+    </ave-list-page>
 
     <dialog aveDialog size="sm" heading="Выгрузка реестра" [(open)]="exportOpen" lang="ru">
       <form class="export-form" id="export-form" (submit)="startExport($event)">

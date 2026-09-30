@@ -100,6 +100,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0092](0092-app-shell.md) | App shell: the application bar with the logo, the navigation as a column or a drawer, one main | Accepted |
 | [0093](0093-search-header.md) | SearchHeader: a list page's heading, count and main action over the search and the filters' button | Accepted |
 | [0094](0094-filter-panel.md) | FilterPanel: a list's filters in a column that opens beside it, or in a drawer; the applied ones as tags | Accepted |
+| [0095](0095-list-page.md) | ListPage: a register's header, notices, applied filters, and the filters' column beside the list | Accepted |
 
 ## Template
 

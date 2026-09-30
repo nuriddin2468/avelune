@@ -19,6 +19,7 @@ import { AveDialogActions, AveDrawer } from '@avelune/ui/dialog';
 import { injectAveMessages } from '@avelune/ui/i18n';
 import type { AveSearchFilters } from '@avelune/ui/search-header';
 import { AveFilterPanelContent } from './content';
+import { AVE_FILTER_PANEL_LAYOUT } from './layout';
 
 let nextPanel = 0;
 
@@ -111,6 +112,14 @@ export class AveFilterPanel implements AveSearchFilters {
     const document = inject(DOCUMENT);
     const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
     const destroyRef = inject(DestroyRef);
+    // A page that lays out the column (ListPage) learns the panel is there.
+    const layout = inject(AVE_FILTER_PANEL_LAYOUT, { optional: true });
+    if (layout !== null) {
+      layout.panel.set(this);
+      destroyRef.onDestroy(() => {
+        layout.panel.set(null);
+      });
+    }
     if (!isPlatformBrowser(inject(PLATFORM_ID))) return;
     // The width is the token's, read from the page (ADR 0091); the container is the element the page puts it in.
     afterNextRender(() => {

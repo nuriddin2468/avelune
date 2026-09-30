@@ -7,7 +7,13 @@
 import * as _angular_core from '@angular/core';
 import * as _avelune_ui_i18n from '@avelune/ui/i18n';
 import { AveSearchFilters } from '@avelune/ui/search-header';
+import { InjectionToken } from '@angular/core';
+import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
+import { WritableSignal } from '@angular/core';
+
+// @alpha
+export const AVE_FILTER_PANEL_LAYOUT: InjectionToken<AveFilterPanelLayout>;
 
 // @alpha
 export interface AveAppliedFilter {
@@ -59,6 +65,17 @@ export class AveFilterPanelContent {
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AveFilterPanelContent, "ng-template[aveFilterPanelContent]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AveFilterPanelContent, never>;
+}
+
+// @alpha
+export interface AveFilterPanelLayout {
+    readonly panel: WritableSignal<AveFilterPanelState | null>;
+}
+
+// @alpha
+export interface AveFilterPanelState {
+    readonly modal: Signal<boolean>;
+    readonly open: Signal<boolean>;
 }
 
 // (No @packageDocumentation comment for this package)

@@ -1,0 +1,34 @@
+@layer patterns {
+  /* A register's page (ADR 0095): its header, notices and list, 24px apart, as wide as its parent. */
+  :host {
+    display: grid;
+    gap: var(--ave-space-6);
+    min-inline-size: 0;
+    container-type: inline-size;
+  }
+
+  /* The applied filters 16px over the list: they belong to it. */
+  .list {
+    display: grid;
+    gap: var(--ave-space-4);
+    min-inline-size: 0;
+  }
+
+  /* The list alone, or the filters' column at its start and the list beside it, 24px apart. */
+  .body {
+    display: grid;
+    align-items: start;
+    gap: var(--ave-space-6);
+    min-inline-size: 0;
+  }
+
+  .body[data-filters='open'] {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .content {
+    display: grid;
+    gap: var(--ave-space-4);
+    min-inline-size: 0;
+  }
+}

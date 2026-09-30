@@ -1,0 +1,85 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ListPageStories from './list-page.stories';
+
+<Meta of={ListPageStories} />
+
+# List page
+
+`<ave-list-page>` lays out a register: the search header with the page's heading, the notices about the list, the applied filters over it, the filters' column at its start while it is open, and the list (ADR 0095).
+
+```ts
+import { AveListPage, AveListPageNotice } from '@avelune/ui/list-page';
+```
+
+<Canvas of={ListPageStories.Default} />
+
+## When to use
+
+- For a page whose content is one list of records people search, filter and open: a register of contracts, a directory of counterparties.
+
+## When not to use
+
+- For a list beside the record it opens: use the List–detail pattern.
+- For a page of several groups of facts: cards on a Dashboard, or a Form page.
+
+## Anatomy
+
+The page places what it holds, recognised by element and marker:
+
+- `ave-search-header`, first: the `h1`, the count, the main action, the search and the filters' button;
+- `[aveListPageNotice]` on alerts and progress about the whole list, under the header;
+- `ave-applied-filters`, 16px over the list;
+- `ave-filter-panel`, whose column stands at the list's start, 24px from it, while it is open and not a drawer;
+- the list itself, a DataTable or a List: the rest of the content.
+
+Parts are 24px apart, and a part that is absent or draws nothing leaves no gap. The page is as wide as its parent gives it, since a table uses the width it has.
+
+```html
+<ave-list-page>
+  <ave-search-header heading="Договоры" [summary]="summary()" [filters]="filters">
+    <div aveSearchHeaderActions>…</div>
+    <input aveInput aveSearchHeaderSearch type="search" aria-label="Поиск договоров" />
+  </ave-search-header>
+  <ave-alert aveListPageNotice variant="warning" heading="Есть истёкшие договоры">…</ave-alert>
+  <ave-applied-filters [filters]="applied()" (remove)="removeFilter($event)" (clear)="clearFilters()" />
+  <ave-filter-panel #filters [count]="applied().length" (clear)="clearFilters()">
+    <ng-template aveFilterPanelContent>…</ng-template>
+  </ave-filter-panel>
+  <ave-data-table label="Договоры подразделения" [rows]="rows()" [columns]="columns" [rowKey]="byNumber" />
+</ave-list-page>
+```
+
+## States
+
+Each state is the list's own, and the page keeps its layout through all of them:
+
+- **Loading:** the count says so, and the table holds skeleton rows ("Loading" story).
+- **No results:** the table's empty state says why and offers to reset the search and the filters ("No results" story).
+- **Filters closed or in a drawer:** the list takes the page's width ("Collapsed" and "Narrow" stories).
+
+The docs page shows one register: every story draws a page with its own heading, search and pagination, so their landmarks would repeat here.
+
+## Content
+
+- The notices are about the whole list: records that need attention, an export under way. A notice about one record belongs in its row.
+- Reset the page to the first page when a search or a filter changes the list (GUIDELINES.md, "Navigation").
+
+## Keyboard
+
+The page adds no keys of its own. Tab moves through the header, the notices, the applied filters, the column while it is open, then the list.
+
+## Accessibility
+
+- One `h1`, the search header's. The shell draws `main` around the page.
+- The column is a region named "Фильтры"; on a narrow page it is a modal drawer.
+- The count is a status, heard after each search or filter.
+
+## Motion
+
+None of its own; the filters' drawer uses the catalog's drawer classes.
+
+## Do and don't
+
+- Do put the register's main action in the search header, and a record's actions in its row's menu.
+- Do keep the applied filters in sight while the column is closed.
+- Don't cap the page's width: a table beside the column needs it.
