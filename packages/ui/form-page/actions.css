@@ -1,0 +1,36 @@
+@layer patterns {
+  /* The form's actions (ADR 0097): a bar on the surface over a subtle line, 16px past the content at each side so
+     its buttons line up with the fields; it sticks to the window's bottom while the form reaches past it. */
+  :host {
+    position: sticky;
+    inset-block-end: 0;
+    z-index: var(--ave-z-index-sticky);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ave-space-2) var(--ave-space-4);
+    margin-inline: calc(-1 * var(--ave-space-4));
+    padding: var(--ave-space-3) var(--ave-space-4);
+    border-block-start: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
+    background-color: var(--ave-color-bg-surface);
+  }
+
+  /* A secondary action and the form's status at the start; the buttons at the inline end, the primary last. */
+  .start,
+  .end {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ave-space-2);
+    min-inline-size: 0;
+  }
+
+  .end {
+    justify-content: flex-end;
+    margin-inline-start: auto;
+  }
+
+  .start:empty {
+    display: none;
+  }
+}

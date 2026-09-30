@@ -1,0 +1,28 @@
+@layer patterns {
+  /* A form's page (ADR 0097): the heading over the application's parts, 24px apart, at most container.lg wide, at the
+     page's start; an inline-size container for the form's own columns. */
+  :host {
+    display: grid;
+    gap: var(--ave-space-6);
+    min-inline-size: 0;
+    max-inline-size: var(--ave-container-lg);
+    margin: 0;
+    container-type: inline-size;
+  }
+
+  .header {
+    display: grid;
+    gap: var(--ave-space-1);
+  }
+
+  .heading {
+    margin: 0;
+    font: var(--ave-font-heading-xl);
+  }
+
+  .description {
+    margin: 0;
+    color: var(--ave-color-fg-muted);
+    font: var(--ave-font-body-md);
+  }
+}

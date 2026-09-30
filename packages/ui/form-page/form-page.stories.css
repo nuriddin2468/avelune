@@ -1,0 +1,27 @@
+/* The frame of the Form page stories: a form inside the shell's padding, its fields in two columns where the form is
+   wide enough. Stories only; the page's styles are form-page.css. */
+@layer patterns {
+  :host {
+    display: block;
+    padding: var(--ave-space-6) var(--ave-space-4);
+  }
+
+  .fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--ave-container-xs)), 1fr));
+    gap: var(--ave-space-4) var(--ave-space-6);
+    align-items: start;
+  }
+
+  .wide {
+    grid-column: 1 / -1;
+  }
+
+  .status {
+    display: flex;
+    align-items: center;
+    gap: var(--ave-space-2);
+    margin: 0;
+    color: var(--ave-color-success-fg);
+  }
+}

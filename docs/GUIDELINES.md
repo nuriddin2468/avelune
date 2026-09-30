@@ -57,6 +57,7 @@ Every screen of a product sits in the application shell (`<ave-app-shell>`, ADR 
 - The bar holds the product: its logo and name, which lead home, and at most three of the application's items (the view's switches, notifications, the person's menu). A page's actions belong to the page's header, never to the bar.
 - The logo is the product's or the tenant's image: give it a dark source when its dark parts would vanish on the dark bar, and an `alt` that names the organisation, or `''` when the product's name says the same.
 - One `main`, one banner landmark and one navigation per screen: the shell draws them, and a page never draws them again. A page's heading is its `h1`.
+- A record people create or change at length is a form page (ADR 0097): its actions stay at hand in a bar at the window's bottom, the primary last, the status of the last action at its start.
 - A hierarchy or a short list whose records people read one at a time is a list–detail page (ADR 0096); a register people search is a list page whose records open on their own pages.
 - A list people narrow by several fields has a filter panel (ADR 0094): its filters apply as they change, and each applied one shows as a tag above the list, in words that name its field ("Статус: Подписан").
 - A list people search starts with the search header (ADR 0093): the heading, the count in words ("34 договора", declined by the application), the main action last, then the search and its filters. The count changes after every search.

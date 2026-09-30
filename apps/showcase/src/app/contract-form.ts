@@ -4,6 +4,7 @@ import { AveButton } from '@avelune/ui/button';
 import { AveCheckbox, AveChoice } from '@avelune/ui/checkbox';
 import { AveDatePicker, AveDateRangePicker, type AveDateRange, type AveDateRangePreset } from '@avelune/ui/date-picker';
 import { AveFileUpload } from '@avelune/ui/file-upload';
+import { AveFormPage, AveFormPageActions, AveFormPageActionsStart } from '@avelune/ui/form-page';
 import { AveChoiceGroup, AveError, AveFormField, AveHint } from '@avelune/ui/form-field';
 import { AveIcon } from '@avelune/ui/icon';
 import { AveInput } from '@avelune/ui/input';
@@ -65,9 +66,10 @@ const termPresets: readonly AveDateRangePreset[] = [
 const sendDelay = 1500;
 
 /**
- * A realistic form of the kit's controls: every field in a FormField, required and optional, a hint on each, errors
- * once a field is left or the form is sent, a textarea across both columns, a group of radios and a group of
- * checkboxes, and the form's actions, primary last.
+ * A realistic form of the kit's controls on the kit's form page (ADR 0097): every field in a FormField, required and
+ * optional, a hint on each, errors once a field is left or the form is sent, a textarea across both columns, a group
+ * of radios and a group of checkboxes, and the form's actions in the bar that sticks to the window's bottom, primary
+ * last.
  */
 @Component({
   selector: 'ave-showcase-contract-form',
@@ -82,6 +84,9 @@ const sendDelay = 1500;
     AveError,
     AveFileUpload,
     AveFormField,
+    AveFormPage,
+    AveFormPageActions,
+    AveFormPageActionsStart,
     AveHint,
     AveIcon,
     AveInput,
@@ -93,12 +98,14 @@ const sendDelay = 1500;
     FormField,
   ],
   template: `
-    <form class="card" lang="ru" novalidate (submit)="send($event)">
-      <header class="header">
-        <h1 class="title">Новый договор</h1>
-        <p class="note">* — обязательные поля</p>
-      </header>
-
+    <form
+      aveFormPage
+      heading="Новый договор"
+      description="* — обязательные поля"
+      lang="ru"
+      novalidate
+      (submit)="send($event)"
+    >
       <div class="fields">
         <ave-form-field label="Номер договора">
           <input aveInput type="text" autocomplete="off" [formField]="contract.number" />
@@ -235,22 +242,26 @@ const sendDelay = 1500;
         </fieldset>
       </div>
 
-      <footer class="actions">
-        <div class="buttons">
-          <button aveButton type="button" variant="ghost" [disabled]="sending()" (click)="saveDraft()">
-            Сохранить черновик
-          </button>
-          <span class="spacer"></span>
-          <button aveButton type="button" [disabled]="sending()" (click)="reset()">Отмена</button>
-          <button aveButton type="submit" variant="primary" [loading]="sending()">Отправить на согласование</button>
-        </div>
-        <p class="status" role="status">
+      <div aveFormPageActions>
+        <button
+          aveButton
+          aveFormPageActionsStart
+          type="button"
+          variant="ghost"
+          [disabled]="sending()"
+          (click)="saveDraft()"
+        >
+          Сохранить черновик
+        </button>
+        <p aveFormPageActionsStart class="status" role="status">
           @if (status(); as message) {
             <ave-icon name="circle-check" decorative />
             {{ message }}
           }
         </p>
-      </footer>
+        <button aveButton type="button" [disabled]="sending()" (click)="reset()">Отмена</button>
+        <button aveButton type="submit" variant="primary" [loading]="sending()">Отправить на согласование</button>
+      </div>
     </form>
   `,
   styleUrl: './contract-form.css',

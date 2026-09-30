@@ -1,0 +1,80 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as FormPageStories from './form-page.stories';
+
+<Meta of={FormPageStories} />
+
+# Form page
+
+`form[aveFormPage]` makes the application's `<form>` a page: its heading and what it asks for over the fields, and its actions in a bar that sticks to the bottom of the window while the form is longer than it (ADR 0097).
+
+```ts
+import { AveFormPage, AveFormPageActions, AveFormPageActionsStart } from '@avelune/ui/form-page';
+```
+
+<Canvas of={FormPageStories.Default} />
+
+## When to use
+
+- For a record people create or change at length, on a page of its own: a new contract, a counterparty's card.
+
+## When not to use
+
+- For a few fields next to a list: a drawer (GUIDELINES.md, "Dialog, drawer or page").
+- For settings that save as they change, without a Save button: the Settings page.
+- For a form inside a card or a dialog: the card's footer or `aveDialogActions`.
+
+## Anatomy
+
+- The page's `h1` from `heading`, which names the form (a `form` landmark), and `description` muted under it ("\* — обязательные поля").
+- The application's parts, 24px apart: fields in its own columns (the form is an inline-size container), groups of choices, sections with `h2`. The form is at most `container.lg` wide, at the page's start.
+- `[aveFormPageActions]`, the bar: on the surface over a subtle line, 12px of padding and 16px past the content at each side, so its buttons line up with the fields. Its buttons stand at the inline end, the primary last. `[aveFormPageActionsStart]` goes at its start: a secondary action such as "Сохранить черновик", and the form's status.
+
+```html
+<form aveFormPage heading="Новый договор" description="* — обязательные поля" novalidate (submit)="send($event)">
+  <div class="fields">…</div>
+  <div aveFormPageActions>
+    <button aveButton aveFormPageActionsStart type="button" variant="ghost" (click)="saveDraft()">
+      Сохранить черновик
+    </button>
+    <p aveFormPageActionsStart role="status">{{ status() }}</p>
+    <button aveButton type="button" (click)="cancel()">Отмена</button>
+    <button aveButton type="submit" variant="primary">Отправить на согласование</button>
+  </div>
+</form>
+```
+
+## The bar
+
+While the form reaches past the window's bottom, the bar sticks there, so the actions are always at hand. Once the form's end is in sight, the bar rests under the last field, 24px from it. On a narrow page its buttons wrap in rows, the primary last.
+
+<Canvas of={FormPageStories.Short} />
+
+A field focused near the window's bottom scrolls above the bar: `base.css` gives the document a scroll padding as tall as the bar's row while a form page is on it (WCAG 2.4.11).
+
+## Content
+
+- The heading names what the form makes: "Новый договор", "Карточка контрагента".
+- Buttons say what happens: "Отправить на согласование", never "OK" (GUIDELINES.md, "Writing").
+- The form's status after an action ("Черновик сохранён.") goes at the bar's start, in a `role="status"` element that is always there.
+
+<Canvas of={FormPageStories.LongText} />
+
+## Keyboard
+
+The page adds no keys of its own: Enter in a field submits the form, as a native form does, and Tab reaches the bar's actions after the last field.
+
+## Accessibility
+
+- The form is a landmark named by its heading.
+- The bar is in the form, after its fields, so the reading and focus order is the visual one.
+- Errors: focus the first invalid field on submit (Signal Forms' `submit()` with `focusBoundControl()`); the scroll padding keeps it above the bar.
+
+## Motion
+
+None: the bar sticks without moving.
+
+## Do and don't
+
+- Do keep one primary action in the bar.
+- Do say the result of the last action at the bar's start.
+- Don't put the form in a raised card: the page is its surface, and the bar is what floats.

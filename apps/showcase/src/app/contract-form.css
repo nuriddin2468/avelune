@@ -1,36 +1,11 @@
-/* The contract form: a surface card with its fields in a grid, its choices, and its actions. Tokens only. */
+/* The contract form: the form page lays it out (ADR 0097); here, its fields in two columns and its choices. Tokens
+   only. */
 @layer app {
   :host {
     display: block;
   }
 
-  .card {
-    display: grid;
-    gap: var(--ave-space-6);
-    max-inline-size: var(--ave-container-lg);
-    margin-inline: auto;
-    padding: var(--ave-space-6);
-    border: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
-    border-radius: var(--ave-radius-lg);
-    background-color: var(--ave-color-bg-surface);
-    box-shadow: var(--ave-elevation-raised);
-  }
-
-  .header {
-    display: grid;
-    gap: var(--ave-space-1);
-  }
-
-  .title {
-    font: var(--ave-font-heading-lg);
-  }
-
-  .note {
-    color: var(--ave-color-fg-muted);
-    font: var(--ave-font-body-sm);
-  }
-
-  /* Two columns where the card is wide enough, one on a phone; form fields 16px apart. */
+  /* Two columns where the form is wide enough, one on a phone; form fields 16px apart. */
   .fields {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--ave-container-xs)), 1fr));
@@ -49,52 +24,13 @@
     gap: var(--ave-space-6);
   }
 
-  /* The actions: stacked at full width in a narrow card, in DOM order so the focus order is the visual one; in a
-     row from the medium container width on, the primary action last. The status of the last action goes under
-     them and takes room only when it has a message. */
-  .actions {
-    display: grid;
-    padding-block-start: var(--ave-space-4);
-    border-block-start: var(--ave-border-width-default) solid var(--ave-color-border-subtle);
-    container-type: inline-size;
-  }
-
-  .buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--ave-space-2);
-  }
-
-  .spacer {
-    display: none;
-  }
-
-  @container (inline-size >= 640px) {
-    .buttons {
-      flex-direction: row;
-      align-items: center;
-    }
-
-    .spacer {
-      display: block;
-      flex: 1;
-    }
-  }
-
+  /* The status of the last action, at the start of the actions' bar. */
   .status {
     display: flex;
-    align-items: start;
+    align-items: center;
     gap: var(--ave-space-2);
+    margin: 0;
     color: var(--ave-color-success-fg);
     font: var(--ave-font-body-md);
-  }
-
-  .status:not(:empty) {
-    margin-block-start: var(--ave-space-3);
-  }
-
-  .status ave-icon {
-    margin-block-start: calc(var(--ave-space-1) / 2);
   }
 }
