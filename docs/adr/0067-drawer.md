@@ -28,3 +28,11 @@ Brief §6.3: a drawer slides 100% from its edge, `slow` in and `normal` out. Bri
 
 - The motion token set grows by one number, which `tokens-check` and the reduced-motion file cover; brief §6.2's durations and easings are unchanged.
 - A later element that slides in from an edge (a mobile navigation sheet) takes the same classes.
+
+## Addendum: the dialog clips without scrolling, so a drawer from the end slides (2026-09-30)
+
+The product owner saw a drawer from the inline end open without its slide. Recorded frame by frame in Chromium (the Default story, 1280 px): the panel's `translate` ran from 100% to 0, yet its box stayed at its place, and the dialog's `scrollLeft` equalled the panel's offset at every frame (324px at the first). A drawer from the start slid as it should.
+
+- **Cause.** `dialog.css` clipped the dialog with `overflow: hidden`, which makes it a scroll container. `showModal()` focuses the first control in the panel, which is still beyond the dialog's inline end, and the browser scrolls a scroll container to the element it focuses. The scroll took up the slide, and the panel only faded in with the backdrop. Overflow at the start is negative and cannot be scrolled to, so that side kept its slide.
+- **Decision.** The dialog clips with `overflow: clip`, which is not a scroll container (Chrome 90, Firefox 81, Safari 16, below the floor). The panel scrolls its own body as before. The centred dialog is unchanged; it has nothing beyond its edges.
+- **Check.** The Drawer's Default story pauses the slide at its first frame and requires the dialog's `scrollLeft` to be 0. With `overflow: hidden` it read 480.

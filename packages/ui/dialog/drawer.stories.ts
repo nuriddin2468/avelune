@@ -133,6 +133,13 @@ export const Default: Story = {
     const opener = within(canvasElement).getByRole('button', { name: 'Открыть договор' });
     const drawer = await openDrawer(canvasElement, 'Открыть договор');
     await expect(within(canvasElement).getByRole('dialog', { name: 'Договор ДК-2026/114' })).toBe(drawer);
+    // At the slide's first frame the panel is still beyond the inline end, and the dialog has not scrolled to it: the
+    // panel slides in rather than standing at its place (ADR 0067, addendum).
+    const slide = drawer.querySelector('.panel')?.getAnimations()[0];
+    slide?.pause();
+    if (slide !== undefined) slide.currentTime = 0;
+    await expect(drawer.scrollLeft).toBe(0);
+    slide?.play();
     await userEvent.click(within(drawer).getByRole('button', { name: 'Закрыть' }));
     await waitFor(() => expect(drawer.open).toBe(false));
     await expect(opener).toHaveFocus();

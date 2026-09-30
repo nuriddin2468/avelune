@@ -3,7 +3,9 @@
      viewport in color.bg.backdrop, with the panel centred in its one cell (so the panel's height can be capped by the
      viewport's) and 16px around it. ::backdrop inherits no custom
      property before Chrome 122, below the browser floor, so it stays transparent and the element draws the scrim.
-     Closed, the element is not displayed at all (the browser's own rule). */
+     Closed, the element is not displayed at all (the browser's own rule). It clips what slides in without being a
+     scroll container: the browser scrolls a scroll container to the element it focuses, and a drawer's panel, still
+     beyond the inline end as it opens, would then stand still (ADR 0067, addendum). */
   :host([open]) {
     position: fixed;
     inset: 0;
@@ -17,7 +19,7 @@
     margin: 0;
     padding: var(--ave-space-4);
     border: 0;
-    overflow: hidden;
+    overflow: clip;
     background-color: var(--ave-color-bg-backdrop);
     color: var(--ave-color-fg-default);
     font: var(--ave-font-body-md);
