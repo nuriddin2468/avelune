@@ -15,7 +15,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0007](0007-versioning-release-api-reports.md) | Versioning: changesets, semver, API reports, `ng update` | Accepted |
 | [0008](0008-storybook-angular-vite.md) | Storybook on `@storybook/angular-vite` | Accepted; addendum's AOT point superseded by 0025 |
 | [0009](0009-stylelint-logical-css-plugin.md) | Logical-properties lint: `stylelint-plugin-logical-css` | Accepted |
-| [0010](0010-visual-test-determinism.md) | Visual-test determinism: pinned image, amd64, fonts | Accepted |
+| [0010](0010-visual-test-determinism.md) | Visual-test determinism: pinned image, amd64, fonts | Accepted; the font check leaves white space out since 0088 |
 | [0011](0011-color-generation-and-contrast.md) | Colour generation in OKLCH and contrast maths | Accepted; accent fill replaced by 0019, restored by 0021 |
 | [0012](0012-pnpm-11.md) | Package manager: pnpm 11 | Accepted; the addendum's release age superseded by 0042 |
 | [0013](0013-vitest-4-now-5-later.md) | Vitest 4 now, Vitest 5 after Angular 22.2 | Accepted |
@@ -93,6 +93,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0085](0085-tree.md) | Tree: Angular Aria's tree from data, one chosen node, rows indented by level, a chevron at the start | Accepted |
 | [0086](0086-list.md) | List: records on one surface between lines, and rows that fade and open as they come and go | Accepted |
 | [0087](0087-data-table.md) | DataTable: columns as data, header buttons that sort, checkboxes that choose, a page size in the pagination | Accepted |
+| [0088](0088-font-check-without-white-space.md) | The visual suite's font check leaves white space out of the text it checks | Accepted |
 
 ## Template
 

@@ -92,14 +92,16 @@ export async function expectKitFonts(page: Page): Promise<void> {
     await document.fonts.ready;
     const unquote = (family: string) => family.replace(/^["']|["']$/g, '');
     const body = getComputedStyle(document.body);
-    const text = document.body.innerText.trim();
+    const glyphs = document.body.innerText.replace(/\s/gu, '');
     return {
       bodyFamily: body.fontFamily,
       faces: [...document.fonts]
         .filter((face) => unquote(face.family).startsWith('Avelune '))
         .map((face) => ({ family: unquote(face.family), status: face.status, range: face.unicodeRange })),
-      // check() is true when every face that matches the font and the text has loaded.
-      textRendered: text === '' || document.fonts.check(`${body.fontSize} "Avelune Sans"`, text),
+      // check() is true when every face that matches the font and the text has loaded. White space is left out: the
+      // Latin subset holds it, and Chromium loads no face for it, so a page without a Latin letter or digit would fail
+      // though every glyph it shows has its face (ADR 0088).
+      textRendered: glyphs === '' || document.fonts.check(`${body.fontSize} "Avelune Sans"`, glyphs),
     };
   });
   expect(state.bodyFamily, 'the body font stack starts with Avelune Sans').toMatch(/^"?Avelune Sans"?(,|$)/);
