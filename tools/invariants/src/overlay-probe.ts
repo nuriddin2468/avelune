@@ -109,14 +109,19 @@ async function closed(overlay: Opened): Promise<boolean> {
   );
 }
 
-/** A point outside the overlay and its control where a press reaches nothing interactive: the page, or a backdrop. */
+/**
+ * A point outside the overlay and its control where a press reaches nothing interactive: the page, or a backdrop. An
+ * element only a script focuses (`tabindex="-1"`, as the shell's `main`, ADR 0092) activates nothing when pressed, so
+ * it does not count (ADR 0069, addendum).
+ */
 async function outsidePoint(
   overlay: Opened,
   trigger: ElementHandle<Element>,
 ): Promise<{ x: number; y: number } | null> {
   return overlay.surface.evaluate(
     (surface, [root, control, modal]) => {
-      const interactive = 'a, button, input, select, textarea, label, summary, [role], [tabindex], [contenteditable]';
+      const interactive =
+        'a, button, input, select, textarea, label, summary, [role], [tabindex]:not([tabindex="-1"]), [contenteditable]';
       for (let y = 0.95; y > 0; y -= 0.1) {
         for (let x = 0.05; x < 1; x += 0.1) {
           const point = { x: Math.round(innerWidth * x), y: Math.round(innerHeight * y) };

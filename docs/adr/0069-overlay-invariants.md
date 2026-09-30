@@ -32,3 +32,10 @@ Brief §8.2: all overlays share elevation, radius, enter and exit animation, Esc
 ## Addendum: the largest corner (2026-09-29)
 
 Wave 4 opens a drawer from a control for the first time: the showcase's navigation, from the start edge on a phone (ADR 0072). A drawer rounds only its corners away from its edge (ADR 0067), so the probe's top-left corner read 0px for a drawer from the start and would have called it square. The probe now records the largest of the four corners: a surface with square corners still reads 0px, and one with another radius still differs.
+
+## Addendum: a script's focus target is not interactive (2026-09-30)
+
+Wave 6's first run of the invariants failed two overlays at 390 px: the page size's list on `/contracts` and the multiselect's list on `/contracts/new`, each "does not close on a press outside it". The probe had found no point to press. Since the application shell (ADR 0092), every screen is inside `main`, which has `tabindex="-1"` so the skip link can focus it. The probe counted any `[tabindex]` as interactive, so on a phone every point outside a list scrolled to the page's end was skipped.
+
+- Decision: `outsidePoint` counts `[tabindex]` only when it is not `-1`. A script's focus target activates nothing when pressed, and a person's press on it closes an overlay like any press on the page. Links, buttons, fields, labels, any `[role]` and a keyboard-focusable scroller still count.
+- Checked on the host first: at the point the probe now finds (the pagination's text on `/contracts`, the form's bar on `/contracts/new`), a real press closes both lists.
