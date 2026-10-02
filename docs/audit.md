@@ -24,7 +24,7 @@ The product owner's document archive (`~/Desktop/archive project`, read only), w
 - The scan covered 3 stylesheets, 10 component styles, 163 templates (one HTML file, the rest inline) and 257 scripts. `@avelune/ui` is not installed.
 - Not counted: Tailwind's utility classes, which the tool does not scan, and `public/`, which holds the vendored PDF viewer. Counted with it, the viewer added 892 raw colours and 1815 raw pixel values.
 - Where the counts are: `src/styles/app.css` holds 29 of the raw colours and 57 of the raw pixel values. The raw elements are mostly `<button>`s in the feature components, for example 16 in `bayonnoma-panel.ts` (checked against the source), 27 in `digitisation-workspace.ts`.
-- What it means for the pilot: the pilot is a new repository on the kit, so its own baseline is zero, and `--ratchet` against that zero keeps it there. Migrating the archive itself would replace about 500 native controls with the kit's directives and move the 36 colours and 72 lengths of its stylesheet onto tokens.
+- What it means for the pilot: the pilot is a new repository on the kit, so its own baseline is zero (scanned on 2026-10-02, `adoption-baseline.json` in `~/Desktop/avelune-pilot`), and `--ratchet` against that zero keeps it there. Migrating the archive itself would replace about 500 native controls with the kit's directives and move the 36 colours and 72 lengths of its stylesheet onto tokens.
 
 ## 2. Design source
 
