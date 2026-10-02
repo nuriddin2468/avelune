@@ -1,4 +1,5 @@
-/* Runs directly in Node 24 through type stripping (ADR 0015); ESLint loads src/index.ts from eslint.config.mjs. */
+/* Type-checks the tests, which import the built dist/index.js as an application does (ADR 0015, 0104). The source is
+   tools/lint-rules/src/consumers, type-checked with that project. */
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
@@ -10,5 +11,5 @@
     "verbatimModuleSyntax": true,
     "types": ["node"]
   },
-  "include": ["src/**/*.ts", "scripts/**/*.ts"]
+  "include": ["tests/**/*.ts"]
 }

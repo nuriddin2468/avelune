@@ -1,6 +1,8 @@
 # lint-rules
 
-The `avelune` ESLint plugin (`src/index.ts`), the `avelune` Stylelint rules (`src/stylelint/`), and the tests that prove the workspace ESLint and Stylelint configs (ADR 0023, 0024). The root configs load them from source; `@avelune/eslint-config` and `@avelune/stylelint-config` will bundle them for consumers (Phase 6).
+The `avelune` ESLint plugin (`src/index.ts`), the `avelune` Stylelint rules (`src/stylelint/`), and the tests that prove the workspace ESLint and Stylelint configs (ADR 0023, 0024). The root configs load them from source.
+
+An application's configs are `src/consumers/eslint-config.ts` and `src/consumers/stylelint-config.ts`; `@avelune/eslint-config` and `@avelune/stylelint-config` bundle them, with the rules they import, through `scripts/build-package.ts` (ADR 0104). The settings both levels apply live once: `src/application-rules.ts` (restricted imports, template rules) and `src/stylelint/application-rules.ts` (token-only values, escape hatches, motion, focus ring, logical properties, breakpoints).
 
 | Rule | Applies to | Rejects |
 |---|---|---|
@@ -19,6 +21,8 @@ When a component that enhances a native element lands, add its attribute to `kit
 | `avelune/component-layer` | `packages/ui/<entry>/**/*.css`; `packages/ui/styles/*.css` | a rule outside `@layer components`, or `@layer patterns` for an entry point whose `entry.json` says `patterns` (ADR 0091); in the global stylesheets, outside `@layer reset`, `base` or `utilities` |
 | `avelune/pattern-layout-only` | the stylesheets of a `patterns` entry point | a property other than display, position, inset, grid and flex placement, margins and sizes on a kit element (`ave-*`, `[ave…]`): a pattern places components, never restyles them (ADR 0091) |
 | `avelune/layer-order` | `packages/ui/styles/styles.css` | a first statement other than the kit's layer order, a second layer statement (ADR 0030) |
+| `avelune/no-token-declarations` | applications (in this repo: the showcase) | any `--ave-*` declaration, a token or a component's private property (ADR 0089, 0104) |
+| `avelune/known-tokens` | applications (in this repo: the showcase) | a `var(--ave-*)` whose name is not a token of `tokens.css` (ADR 0104) |
 
 ## Tests
 

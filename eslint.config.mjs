@@ -7,7 +7,12 @@ import angular from 'angular-eslint';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import { kitElements, plugin as avelune } from './tools/lint-rules/src/index.ts';
+import {
+  applicationTemplateRules,
+  kitElements,
+  plugin as avelune,
+  restrictedImports,
+} from './tools/lint-rules/src/index.ts';
 
 /** Layers from lowest to highest. A project may depend only on its own layer or a lower one (ADR 0001). */
 const layers = ['layer:tokens', 'layer:foundations', 'layer:components', 'layer:composites', 'layer:patterns'];
@@ -19,27 +24,6 @@ const depConstraints = [
   { sourceTag: 'type:tool', onlyDependOnLibsWithTags: ['layer:tokens', 'type:tool'] },
   { sourceTag: 'type:config', onlyDependOnLibsWithTags: ['layer:tokens', 'type:tool', 'type:config'] },
 ];
-
-const animations = '@angular/animations is deprecated and banned; motion is CSS plus animate.enter/leave (ADR 0005).';
-const material = 'Angular Material is not used; behaviour comes from native HTML, Angular Aria and the CDK (ADR 0002).';
-
-/** Imports nobody may use, and deep imports into @avelune/ui entry points (ADR 0001, 0002, 0005). */
-const restrictedImports = {
-  paths: [
-    { name: '@angular/animations', message: animations },
-    { name: '@angular/platform-browser/animations', message: animations },
-    { name: '@angular/platform-browser/animations/async', message: animations },
-    { name: '@angular/material', message: material },
-  ],
-  patterns: [
-    { group: ['@angular/animations/*'], message: animations },
-    { group: ['@angular/material/*'], message: material },
-    {
-      regex: '^@avelune/ui/[^/]+/(?!testing$).+',
-      message: 'Import @avelune/ui/<name> or @avelune/ui/<name>/testing; entry-point internals are private (ADR 0001).',
-    },
-  ],
-};
 
 /** Angular rules beyond `recommended` that encode brief §9.1 and ADR 0004 (signal API, host object, encapsulation). */
 const angularRules = {
@@ -85,14 +69,14 @@ const angularRules = {
   ],
 };
 
-/** Template rules beyond `recommended` and `accessibility`: brief §5.2 (inline styles), typing and a11y. */
+/**
+ * Template rules beyond `recommended` and `accessibility`: an application's (ADR 0104), then the kit's own typing and
+ * control-flow conventions.
+ */
 const templateRules = {
-  '@angular-eslint/template/no-inline-styles': 'error',
-  '@angular-eslint/template/button-has-type': 'error',
+  ...applicationTemplateRules,
   '@angular-eslint/template/no-any': 'error',
   '@angular-eslint/template/no-non-null-assertion': 'error',
-  '@angular-eslint/template/no-positive-tabindex': 'error',
-  '@angular-eslint/template/no-duplicate-attributes': 'error',
   '@angular-eslint/template/no-interpolation-in-attributes': 'error',
   '@angular-eslint/template/no-nested-tags': 'error',
   '@angular-eslint/template/no-outerhtml': 'error',
@@ -106,9 +90,6 @@ const templateRules = {
   '@angular-eslint/template/prefer-style-binding': 'error',
   '@angular-eslint/template/prefer-ngsrc': 'error',
   '@angular-eslint/template/require-switch-default': 'error',
-  // An icon button has no content by design: its required `label` input is its name (ADR 0038). Every other
-  // button, link and heading still needs content or one of the rule's default attributes.
-  '@angular-eslint/template/elements-content': ['error', { allowList: ['aveIconButton'] }],
 };
 
 export default defineConfig(

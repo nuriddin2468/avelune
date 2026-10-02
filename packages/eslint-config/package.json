@@ -2,6 +2,29 @@
   "name": "@avelune/eslint-config",
   "version": "0.0.0",
   "private": true,
-  "description": "Shared ESLint configuration for applications that consume Avelune.",
-  "license": "UNLICENSED"
+  "description": "Avelune's ESLint rules for applications: accessible templates on the kit's elements, named icons, and no banned or deep imports.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24"
+  },
+  "peerDependencies": {
+    "angular-eslint": "^22.5.0",
+    "eslint": "^10.0.0",
+    "typescript-eslint": "^8.70.1"
+  },
+  "dependencies": {
+    "@typescript-eslint/utils": "^8.70.1"
+  }
 }

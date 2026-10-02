@@ -1,0 +1,8 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: avelune/no-token-declarations */
+
+.note {
+  --ave-color-bg-canvas: var(--ave-color-bg-surface-sunken);
+
+  background-color: var(--ave-color-bg-canvas);
+}

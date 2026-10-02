@@ -1,89 +1,18 @@
 // Root Stylelint config (brief §5.3, ADR 0009, 0024). Every value that has a token is a token: colours, lengths,
 // durations and easings may not appear raw. tools/lint-rules proves each rule with a failing fixture.
 import { join } from 'node:path';
+import {
+  applicationRules,
+  keywords,
+  motionShorthands,
+  strictValues,
+} from './tools/lint-rules/src/stylelint/application-rules.ts';
 import { plugins as avelune } from './tools/lint-rules/src/stylelint/index.ts';
 
 const tokensCss = join(import.meta.dirname, 'packages', 'tokens', 'dist', 'tokens.css');
 
-/** Length and time units that only tokens may carry. %, fr, deg and logical viewport units stay allowed. */
-const tokenUnits = [
-  'px',
-  'rem',
-  'em',
-  'ex',
-  'ch',
-  'cap',
-  'ic',
-  'lh',
-  'rlh',
-  'pt',
-  'pc',
-  'cm',
-  'mm',
-  'in',
-  'q',
-  'ms',
-  's',
-];
-
-/** Colour constructors and easing functions: a raw colour or curve is always a missing token. */
-const rawFunctions = [
-  'rgb',
-  'rgba',
-  'hsl',
-  'hsla',
-  'hwb',
-  'lab',
-  'lch',
-  'oklab',
-  'oklch',
-  'color',
-  'color-mix',
-  'cubic-bezier',
-  'linear',
-  'steps',
-];
-
 /** The cascade layers, lowest first; styles.css declares them in this order (brief §6.1, ADR 0004, 0030). */
 const layerOrder = ['reset', 'tokens', 'base', 'components', 'patterns', 'utilities', 'app'];
-
-/** Motion shorthands hide their parts from strict values; the focus ring's properties belong to focus.css alone. */
-const motionShorthands = ['transition', 'animation'];
-const focusRing = ['outline', 'outline-color', 'outline-style', 'outline-width', 'outline-offset'];
-
-/** Keywords allowed in place of a token, including the system colours that forced-colors styles need. */
-const keywords = [
-  '0',
-  'auto',
-  'none',
-  'inherit',
-  'initial',
-  'unset',
-  'revert',
-  'transparent',
-  'currentColor',
-  '/^(Canvas|CanvasText|LinkText|VisitedText|ActiveText|ButtonFace|ButtonText|ButtonBorder|Field|FieldText|Highlight|HighlightText|SelectedItem|SelectedItemText|Mark|MarkText|GrayText|AccentColor|AccentColorText)$/',
-];
-
-/** Properties that take only a token or one of `allowed` (brief §5.3). */
-function strictValues(allowed) {
-  return [
-    [
-      '/color$/',
-      'fill',
-      'stroke',
-      '/^font(-family|-size|-weight)?$/',
-      'line-height',
-      '/radius$/',
-      'box-shadow',
-      'z-index',
-      '/^(transition|animation)-(duration|timing-function|delay)$/',
-      '/^(margin|padding)(-|$)/',
-      '/gap$/',
-    ],
-    { ignoreValues: allowed, expandShorthand: true, disableFix: true },
-  ];
-}
 
 export default {
   extends: ['stylelint-config-standard'],
@@ -107,35 +36,12 @@ export default {
     'packages/ui/styles/fonts/fonts.css',
   ],
   rules: {
-    'color-no-hex': true,
-    'color-named': 'never',
-    'function-disallowed-list': rawFunctions,
-    'unit-disallowed-list': [tokenUnits, { ignoreMediaFeatureNames: { px: ['width', 'min-width', 'max-width'] } }],
-    'scale-unlimited/declaration-strict-value': strictValues(keywords),
+    // Every CSS file's rules, an application's too: @avelune/stylelint-config applies the same (ADR 0104).
+    ...applicationRules(tokensCss),
+    // A custom property is a token of tokens.css or declared in the same file, as a component's private ones are.
     'csstools/value-no-unknown-custom-properties': [true, { importFrom: [tokensCss] }],
-    'declaration-no-important': true,
-    'selector-max-id': 0,
     // A host with variant, size and state attributes plus one pseudo-class: :host([a][b]:hover) is 0,4,0.
     'selector-max-specificity': '0,4,0',
-    'selector-disallowed-list': ['/::ng-deep/', '/\\/deep\\//', '/>>>/'],
-    // Motion longhands only, so that strict values check each part; never `all`. The focus ring is one rule in
-    // packages/ui/styles/focus.css: nothing else sets an outline, animates one or styles :focus (ADR 0030).
-    'property-disallowed-list': [...motionShorthands, ...focusRing],
-    'declaration-property-value-disallowed-list': { 'transition-property': ['all', '/outline/'] },
-    'selector-pseudo-class-disallowed-list': ['focus'],
-    'at-rule-disallowed-list': ['keyframes'],
-    // Angular's emulated shim scopes only the outer selector of a nested rule, so a nested rule may refine the same
-    // element (&:hover, &[aria-disabled='true'], &::before) but never reach another one (ADR 0024).
-    'avelune/nesting-same-element': true,
-    // Physical properties and keywords stay allowed only where the logical form is missing at the browser floor.
-    // tools/lint-rules derives both lists from MDN browser-compat-data and .browserslistrc and fails if they drift.
-    'logical-css/require-logical-keywords': [true, { ignore: ['caption-side', 'offset-anchor', 'offset-position'] }],
-    'logical-css/require-logical-properties': [
-      true,
-      { ignore: ['overflow-x', 'overflow-y', 'overscroll-behavior-x', 'overscroll-behavior-y'] },
-    ],
-    'logical-css/require-logical-units': true,
-    'avelune/media-query-tokens': [true, { tokens: tokensCss }],
   },
   overrides: [
     {
@@ -165,6 +71,15 @@ export default {
       // The entry point declares the layer order, then imports the tokens, the fonts and the layered files.
       files: ['packages/ui/styles/styles.css'],
       rules: { 'avelune/component-layer': null, 'avelune/layer-order': [layerOrder] },
+    },
+    {
+      // The showcase is styled as an application: it declares no --ave-* property and reads tokens only, as
+      // @avelune/stylelint-config requires (ADR 0089, 0104).
+      files: ['apps/showcase/**/*.css'],
+      rules: {
+        'avelune/no-token-declarations': true,
+        'avelune/known-tokens': [true, { tokens: tokensCss }],
+      },
     },
     {
       // The one focus-ring rule (brief §6.1).

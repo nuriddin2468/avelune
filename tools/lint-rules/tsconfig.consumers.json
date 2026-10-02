@@ -1,0 +1,12 @@
+/* The declarations of src/consumers, which scripts/build-package.ts copies into each consumer package's dist (ADR 0104). */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "src",
+    "outDir": "../../dist/out-tsc/lint-rules"
+  },
+  "include": ["src/consumers/*.ts"]
+}

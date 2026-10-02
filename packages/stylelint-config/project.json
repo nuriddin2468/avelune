@@ -4,5 +4,52 @@
   "projectType": "library",
   "sourceRoot": "packages/stylelint-config",
   "tags": ["type:config"],
-  "targets": {}
+  "implicitDependencies": ["lint-rules"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "production",
+        "{workspaceRoot}/tools/lint-rules/src/**/*",
+        "{workspaceRoot}/tools/lint-rules/tsconfig*.json",
+        "!{workspaceRoot}/tools/lint-rules/src/**/*.spec.ts",
+        "{workspaceRoot}/tools/lint-rules/scripts/build-package.ts",
+        {
+          "externalDependencies": ["esbuild", "typescript"]
+        }
+      ],
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node ../../tools/lint-rules/scripts/build-package.ts"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "inputs": [
+        "default",
+        {
+          "dependentTasksOutputFiles": "**/dist/**/*"
+        },
+        {
+          "externalDependencies": ["stylelint", "stylelint-declaration-strict-value", "stylelint-plugin-logical-css"]
+        }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node --test \"tests/*.spec.ts\""
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "tsc -p tsconfig.json"
+      }
+    }
+  }
 }

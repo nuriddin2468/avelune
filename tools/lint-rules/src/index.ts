@@ -6,6 +6,7 @@ import { noAppearanceInputs } from './rules/no-appearance-inputs.ts';
 import { noRawElements } from './rules/no-raw-elements.ts';
 import { publicApiJsdoc } from './rules/public-api-jsdoc.ts';
 
+export { applicationTemplateRules, restrictedImports, type RestrictedImports } from './application-rules.ts';
 export { kitElements } from './kit-elements.ts';
 
 export const plugin = {

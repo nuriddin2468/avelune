@@ -2,6 +2,29 @@
   "name": "@avelune/stylelint-config",
   "version": "0.0.0",
   "private": true,
-  "description": "Shared Stylelint configuration for applications that consume Avelune.",
-  "license": "UNLICENSED"
+  "description": "Avelune's Stylelint rules for applications: values from the kit's tokens, its motion and focus ring left to the kit, logical properties.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "peerDependencies": {
+    "stylelint": "^17.0.0"
+  },
+  "dependencies": {
+    "@avelune/tokens": "workspace:*",
+    "stylelint-declaration-strict-value": "^1.12.1",
+    "stylelint-plugin-logical-css": "^2.1.0"
+  }
 }

@@ -1,5 +1,5 @@
 /* Lint as: apps/showcase/src/app/fixture.css
-   Expect: csstools/value-no-unknown-custom-properties */
+   Expect: avelune/known-tokens, csstools/value-no-unknown-custom-properties */
 
 .note {
   color: var(--ave-color-fg-defualt);

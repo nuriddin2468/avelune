@@ -102,6 +102,8 @@ catalog:
   '@size-limit/esbuild': 14.0.0
   # API reports
   '@microsoft/api-extractor': 7.59.2
+  # Bundles the consumer lint configs with tools/lint-rules (ADR 0104); the copy @angular/build resolves
+  esbuild: 0.28.2
   # Input masks (ADR 0100)
   '@maskito/core': 5.6.0
   '@maskito/kit': 5.6.0

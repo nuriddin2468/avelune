@@ -189,3 +189,35 @@ describe('avelune/nesting-same-element', () => {
     );
   });
 });
+
+describe('avelune/no-token-declarations', () => {
+  const rules = { 'avelune/no-token-declarations': true };
+
+  it('accepts an application property and a token read', async () => {
+    assert.deepEqual(await lint('a { --row-gap: var(--ave-space-4); gap: var(--row-gap); }', rules), []);
+  });
+
+  it('rejects every --ave-* declaration, a token or a private one', async () => {
+    const found = await lint('a { --ave-space-4: 2px; } b { --ave-badge-fill: red; }', rules);
+    assert.equal(found.length, 2);
+    assert.match(found[0] ?? '', /--ave-space-4 belongs to the kit; never declare an --ave-\* property/);
+    assert.match(found[1] ?? '', /--ave-badge-fill belongs to the kit/);
+  });
+});
+
+describe('avelune/known-tokens', () => {
+  const rules = { 'avelune/known-tokens': [true, { tokens }] };
+
+  it('accepts the tokens of tokens.css and any property of the application', async () => {
+    const code = 'a { inline-size: var(--ave-container-xs); gap: var(--gap, var(--ave-breakpoint-sm)); }';
+    assert.deepEqual(await lint(code, rules), []);
+  });
+
+  it('rejects any other --ave-* name, also as a fallback', async () => {
+    const found = await lint('a { gap: var(--ave-space-44); color: var(--x, var( --ave-badge-fill)); }', rules);
+    assert.deepEqual(found, [
+      'avelune/known-tokens: --ave-space-44 is not a token of @avelune/tokens; use a name from tokens.css, listed on the Foundations pages (ADR 0104). (avelune/known-tokens)',
+      'avelune/known-tokens: --ave-badge-fill is not a token of @avelune/tokens; use a name from tokens.css, listed on the Foundations pages (ADR 0104). (avelune/known-tokens)',
+    ]);
+  });
+});

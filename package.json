@@ -76,6 +76,7 @@
     "angular-eslint": "catalog:",
     "browserslist": "catalog:",
     "colorjs.io": "catalog:",
+    "esbuild": "catalog:",
     "eslint": "catalog:",
     "fontkit": "catalog:",
     "fontverter": "catalog:",

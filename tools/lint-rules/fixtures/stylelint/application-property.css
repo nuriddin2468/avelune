@@ -1,0 +1,8 @@
+/* Lint as: apps/showcase/src/app/fixture.css
+   Expect: none (an application's own property, set from a token, is its own) */
+
+.note {
+  --note-fill: var(--ave-color-bg-surface-sunken);
+
+  background-color: var(--note-fill);
+}
