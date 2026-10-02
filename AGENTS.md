@@ -57,6 +57,7 @@ Run from the repository root. `pnpm` switches itself to the pinned 11.27.1 (`pac
 | Stylelint (all CSS; builds the tokens first) | `pnpm nx run-many -t stylelint` |
 | Prove the ESLint and Stylelint configs and the `avelune` rules (rule tests + workspace fixtures) | `pnpm nx run lint-rules:test` |
 | Build and prove an application's lint configs (`@avelune/eslint-config`, `@avelune/stylelint-config`) | `pnpm nx run-many -t test -p eslint-config stylelint-config` (ADR 0104) |
+| Scan a consumer repository for adoption (JSON, summary, ratchet) / prove the scanner | `pnpm nx run adoption-metrics:scan -- <repository> --json report.json` / `pnpm nx run adoption-metrics:test` (ADR 0105) |
 | Fonts: check / rebuild (`packages/ui/styles/fonts`) | `pnpm nx run fonts:check` / `pnpm nx run fonts:check --update` |
 | Colour primitives: check / regenerate | `pnpm nx run tokens:colors` / `pnpm nx run tokens:colors --update` |
 | Brand generator data: check / regenerate (after a colour role, a pair or the generator changes) / size | `pnpm nx run tokens:roles` / `pnpm nx run tokens:roles --update` / `pnpm nx run tokens:size` (ADR 0089) |

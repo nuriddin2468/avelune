@@ -4,5 +4,37 @@
   "projectType": "library",
   "sourceRoot": "tools/adoption-metrics",
   "tags": ["type:tool"],
-  "targets": {}
+  "implicitDependencies": ["eslint-config", "stylelint-config"],
+  "targets": {
+    "scan": {
+      "executor": "nx:run-commands",
+      "dependsOn": [{ "projects": ["eslint-config", "stylelint-config"], "target": "build" }],
+      "options": {
+        "cwd": "{workspaceRoot}",
+        "command": "node tools/adoption-metrics/src/cli.ts"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "dependsOn": [{ "projects": ["eslint-config", "stylelint-config"], "target": "build" }],
+      "inputs": [
+        "default",
+        "{workspaceRoot}/packages/ui/package.json",
+        { "dependentTasksOutputFiles": "**/dist/**/*" },
+        { "externalDependencies": ["eslint", "stylelint", "typescript"] }
+      ],
+      "cache": true,
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "node --test \"src/**/*.spec.ts\""
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "tsc -p tsconfig.json"
+      }
+    }
+  }
 }

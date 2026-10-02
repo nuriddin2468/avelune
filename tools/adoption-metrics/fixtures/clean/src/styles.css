@@ -1,0 +1,15 @@
+/* Tokens, logical properties, the application's own property and a breakpoint token: nothing to count. */
+.page {
+  --page-gap: var(--ave-space-4);
+
+  display: grid;
+  gap: var(--page-gap);
+  padding-inline: var(--ave-space-6);
+  color: var(--ave-color-fg-default);
+}
+
+@media (min-width: 600px) {
+  .page {
+    grid-template-columns: 1fr 1fr;
+  }
+}

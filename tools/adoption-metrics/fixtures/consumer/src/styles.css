@@ -1,0 +1,28 @@
+/* Raw colours 4 (a hex, a named colour, a colour function, the hex of a token declared), raw pixel values 2, a raw
+   easing that is no colour, token overrides 2, local keyframes 1, ::ng-deep 1; a query width is allowed. */
+.banner {
+  --ave-color-accent-bg: #000000;
+
+  color: #e95420;
+  background-color: white;
+  border-color: rgb(0 0 0 / 10%);
+  padding: 12px 16px;
+  inline-size: var(--ave-size-unknown);
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (min-width: 600px) {
+  .banner {
+    display: grid;
+  }
+}
+
+@keyframes pulse {
+  to {
+    opacity: 0.5;
+  }
+}
+
+:host ::ng-deep .banner {
+  display: none;
+}

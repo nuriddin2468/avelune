@@ -6,6 +6,26 @@ Date: 2026-09-23. Phase 0.
 
 `EXISTING_REPOS: none`. There is no consumer code to audit yet, so there are no counts of raw colours, spacings, radii or duplicated components. When a consumer repo becomes available, run `tools/adoption-metrics` against it (Phase 6) and append the results here.
 
+### 1.1 e-archive `apps/web`, baseline (2026-10-02)
+
+The product owner's document archive (`~/Desktop/archive project`, read only), whose UI the pilot rebuilds on the kit in a new repository. It is an Angular 22 application on `@ijro-devs/ui-kit` and Tailwind. Scanned with `tools/adoption-metrics` (ADR 0105), `node tools/adoption-metrics/src/cli.ts "<archive>/apps/web"`, with no file written in the archive:
+
+| Metric | Count |
+|---|---:|
+| Raw colours | 36 |
+| Raw pixel values | 72 |
+| Raw interactive elements | 495 |
+| Local keyframes | 9 |
+| `::ng-deep` | 0 |
+| `--ave-*` declared or unknown | 0 |
+| Inline styles in templates | 12 |
+| Banned or deep imports | 0 |
+
+- The scan covered 3 stylesheets, 10 component styles, 163 templates (one HTML file, the rest inline) and 257 scripts. `@avelune/ui` is not installed.
+- Not counted: Tailwind's utility classes, which the tool does not scan, and `public/`, which holds the vendored PDF viewer. Counted with it, the viewer added 892 raw colours and 1815 raw pixel values.
+- Where the counts are: `src/styles/app.css` holds 29 of the raw colours and 57 of the raw pixel values. The raw elements are mostly `<button>`s in the feature components, for example 16 in `bayonnoma-panel.ts` (checked against the source), 27 in `digitisation-workspace.ts`.
+- What it means for the pilot: the pilot is a new repository on the kit, so its own baseline is zero, and `--ratchet` against that zero keeps it there. Migrating the archive itself would replace about 500 native controls with the kit's directives and move the 36 colours and 72 lengths of its stylesheet onto tokens.
+
 ## 2. Design source
 
 `DESIGN_SOURCE: none`. The stated direction is "inspired by Ubuntu". To keep that grounded in real values rather than memory, this section records what the Ubuntu desktop stack actually ships, read from source on 2026-09-23:

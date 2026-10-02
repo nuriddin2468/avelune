@@ -1,0 +1,8 @@
+{
+  "name": "fixture-consumer",
+  "private": true,
+  "dependencies": {
+    "@avelune/ui": "^0.1.0",
+    "tailwindcss": "^4.0.0"
+  }
+}
