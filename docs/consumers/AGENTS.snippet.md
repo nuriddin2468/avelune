@@ -13,6 +13,7 @@ This application is built on Avelune (`@avelune/ui`, `@avelune/icons`, `@avelune
 - Words: a button says what it does ("Save changes", "Delete document"), never "OK" or "Yes"; errors say what happened and how to fix it.
 - Check each screen in light and dark, comfortable and compact density, at 320 px wide, and with long Russian and Uzbek text.
 - The API: every public input, output and method has JSDoc in `node_modules/@avelune/ui/types/avelune-ui-<entry>.d.ts`. Which component to use when: https://github.com/nuriddin2468/avelune/blob/main/docs/GUIDELINES.md.
+- Moving an old screen onto the kit, and running the old styles beside the kit's meanwhile: https://github.com/nuriddin2468/avelune/blob/main/docs/consumers/migration.md.
 - A component or variant is missing: do not build a local one. Open an issue with the RFC template of https://github.com/nuriddin2468/avelune/blob/main/CONTRIBUTING.md, and use the nearest kit component meanwhile.
 
 ### Examples
