@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "description": "Avelune's Stylelint rules for applications: values from the kit's tokens, its motion and focus ring left to the kit, logical properties.",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": {

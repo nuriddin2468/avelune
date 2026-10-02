@@ -27,7 +27,7 @@ Resolved in Phase 0 (2026-09-23). Change them only through the product owner; re
 | Locales | uz-Latn, uz-Cyrl, ru, en |
 | Docs language | English |
 | Registry | npm, public packages; the product owner owns the `avelune` organisation that the `@avelune` scope needs (product owner, 2026-09-30); nothing published yet, and no package of the scope on npmjs.com (checked 2026-09-30) |
-| Licence | MIT, `Copyright (c) 2026 Yuldashev Nuriddin` (product owner, 2026-09-30), for public npm packages; the packages still say `UNLICENSED` until Phase 6 changes their `license` fields and adds the `LICENSE` files, before the first publish. Fonts stay under the OFL (ADR 0018), Lucide's icons under ISC |
+| Licence | MIT, `Copyright (c) 2026 Yuldashev Nuriddin` (product owner, 2026-09-30), for public npm packages; the repository and every package carry the `LICENSE` file since 2026-10-02. Fonts stay under the OFL (ADR 0018), Lucide's icons under ISC: `@avelune/ui` says `MIT AND OFL-1.1` and ships `styles/fonts/OFL.txt`, `@avelune/icons` says `MIT AND ISC` and ships `LICENSE-lucide.txt` |
 | Browsers | `Chrome >= 119, Edge >= 119, Firefox >= 129, Safari >= 17.5, iOS >= 17.5` (ADR 0014; changed 2026-09-23 from Chrome/Edge 117, product owner) |
 | Design source | none; visual direction "inspired by Ubuntu" ([audit.md](audit.md)); consumer teams have no designers in Figma, so there is no Figma library (product owner, 2026-09-30) |
 | Existing repos | none |

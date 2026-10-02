@@ -2,7 +2,7 @@
   "name": "@avelune/ui",
   "version": "0.0.0",
   "description": "Avelune Angular UI kit. Import components from their entry points, for example @avelune/ui/button.",
-  "license": "UNLICENSED",
+  "license": "MIT AND OFL-1.1",
   "peerDependencies": {
     "@angular/aria": "^22.2.0",
     "@angular/cdk": "^22.2.0",

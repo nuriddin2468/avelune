@@ -115,6 +115,16 @@ describe('an application’s CSS', () => {
   });
 });
 
+describe('the agent snippet', () => {
+  const snippet = readFileSync(join(packageDir, '..', '..', 'docs', 'consumers', 'AGENTS.snippet.md'), 'utf8');
+  const blocks = [...snippet.matchAll(/^```css\n([\s\S]*?)^```$/gm)].map(([, code = '']) => code);
+
+  it('has a style example, and each passes the config it teaches', async () => {
+    assert.ok(blocks.length > 0);
+    for (const code of blocks) assert.deepEqual(await lint(code, 'src/app/snippet.css'), []);
+  });
+});
+
 describe('the bundle', () => {
   it('is what an application gets for the package’s name', () => {
     assert.equal(

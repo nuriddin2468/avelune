@@ -112,6 +112,22 @@ describe('legacy paths', () => {
   });
 });
 
+describe('the agent snippet', () => {
+  const snippet = readFileSync(join(packageDir, '..', '..', 'docs', 'consumers', 'AGENTS.snippet.md'), 'utf8');
+  const blocks = [...snippet.matchAll(/^```(html|ts)\n([\s\S]*?)^```$/gm)];
+
+  it('has template and script examples', () => {
+    assert.ok(blocks.filter(([, language]) => language === 'html').length >= 3);
+    assert.ok(blocks.filter(([, language]) => language === 'ts').length >= 2);
+  });
+
+  for (const [index, [, language = '', code = '']] of blocks.entries()) {
+    it(`example ${String(index + 1)} (${language}) passes the config it teaches`, async () => {
+      assert.deepEqual(await lint(code, `src/app/snippet-${String(index + 1)}.${language}`), []);
+    });
+  }
+});
+
 describe('the bundle', () => {
   it('is what an application gets for the package’s name', () => {
     assert.equal(

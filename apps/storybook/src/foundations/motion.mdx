@@ -9,7 +9,7 @@ Five durations and four easings (brief §6.2), and a catalog of sixteen classes 
 
 ## Using motion in an application
 
-- Time your own transitions and animations with the duration and easing tokens: `transition: opacity var(--ave-duration-fast) var(--ave-easing-standard)`. Use `easing.enter` for elements that appear, `easing.exit` for elements that leave, and `easing.spring` for the switch thumb and toasts only.
+- Time your own transitions and animations with the duration and easing tokens, in longhands so that Stylelint checks each part: `transition-property: opacity; transition-duration: var(--ave-duration-fast); transition-timing-function: var(--ave-easing-standard)`. Use `easing.enter` for elements that appear, `easing.exit` for elements that leave, and `easing.spring` for the switch thumb and toasts only.
 - Name the properties you transition. Never write `transition: all`.
 - Never write your own `@keyframes`: the keyframes live in the kit's catalog. If an element needs a motion the catalog lacks, ask for a catalog entry.
 - Animate what the browser can composite (opacity, `translate`, `scale`); a size that changes is opened with the grid-rows technique the list classes use, not by animating `height`.

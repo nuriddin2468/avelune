@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "description": "Design tokens for Avelune: DTCG sources, the Style Dictionary build (CSS custom properties, typed TS) and the brand generator.",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": {

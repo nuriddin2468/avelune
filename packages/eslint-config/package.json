@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "description": "Avelune's ESLint rules for applications: accessible templates on the kit's elements, named icons, and no banned or deep imports.",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": {
