@@ -108,7 +108,7 @@ Status values: `Proposed` → `Accepted` → (`Superseded by NNNN` | `Deprecated
 | [0100](0100-input-mask.md) | Input mask: Maskito under a kit directive on the native input, the clean value in the form | Accepted |
 | [0101](0101-snippets-that-paste-and-the-whole-api-in-mcp.md) | Storybook MCP: snippets that paste, every export where an agent reads it | Accepted |
 | [0102](0102-foundations-docs-pages-and-the-token-reference.md) | Foundations in MCP: a docs page per Foundations story file, with a token reference generated from the tokens | Accepted |
-| [0103](0103-ng-add.md) | `ng add @avelune/ui`: dependencies, styles, build options, preload and pre-paint script, provider, lint configs, agent snippet; repeatable | Accepted |
+| [0103](0103-ng-add.md) | `ng add @avelune/ui`: dependencies, styles, build options, preload and pre-paint script, provider, lint configs, agent snippet; repeatable | Accepted; as built in addendum |
 | [0104](0104-consumer-lint-configs.md) | Consumer lint configs: `@avelune/eslint-config` and `@avelune/stylelint-config` bundled from `tools/lint-rules`; shared settings, two `--ave-*` rules, legacy warnings | Accepted |
 
 ## Template

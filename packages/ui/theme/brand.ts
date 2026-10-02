@@ -60,6 +60,11 @@ export function parseStoredBrand(json: string | null): StoredBrand | undefined {
   return { input, fingerprint, css, report: report as AveBrandReport };
 }
 
+/** Whether an adopted sheet is a brand stylesheet: one `@layer tokens` block, as the generator writes it. */
+function isBrandSheet(sheet: CSSStyleSheet): boolean {
+  return sheet.cssRules.length === 1 && /^@layer tokens\s*\{/.test(sheet.cssRules[0]?.cssText ?? '');
+}
+
 /**
  * The page's brand stylesheet: one constructed sheet adopted after the page's own, so its `@layer tokens` rules come
  * after `tokens.css` and win. A constructed sheet is not an inline style, so a strict `style-src` needs no nonce.
@@ -67,7 +72,11 @@ export function parseStoredBrand(json: string | null): StoredBrand | undefined {
 export class BrandSheet {
   private sheet: CSSStyleSheet | undefined;
 
-  constructor(private readonly document: Document) {}
+  constructor(private readonly document: Document) {
+    // The pre-paint script that ng add writes into index.html adopts the stored brand before the application runs
+    // (ADR 0103): that sheet becomes this one, to keep, replace or remove.
+    this.sheet = document.adoptedStyleSheets.find(isBrandSheet);
+  }
 
   /** Paints a brand stylesheet, if it is one the generator writes, in place of the one before. */
   apply(css: string): void {

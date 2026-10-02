@@ -9,6 +9,21 @@
       "type": "string",
       "description": "Name of the application to set up.",
       "$default": { "$source": "projectName" }
+    },
+    "preloadCyrillic": {
+      "type": "boolean",
+      "default": false,
+      "description": "Also preload the Cyrillic face of Avelune Sans, for screens in Russian or Uzbek Cyrillic."
+    },
+    "lint": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install @avelune/eslint-config and @avelune/stylelint-config, and write their configs where the workspace has none."
+    },
+    "agents": {
+      "type": "boolean",
+      "default": true,
+      "description": "Put the kit's rules for coding agents into AGENTS.md."
     }
   }
 }

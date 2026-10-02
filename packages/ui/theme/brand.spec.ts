@@ -186,6 +186,47 @@ describe('AveTheme brand', () => {
   });
 });
 
+describe('a brand the pre-paint script adopted', () => {
+  /** The sheet index.html's pre-paint script adopts before the application runs (ADR 0103). */
+  function prePaint(css: string): CSSStyleSheet {
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(css);
+    document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+    return sheet;
+  }
+
+  it('becomes the brand sheet AveTheme keeps, replaces and removes', async () => {
+    keep('blue');
+    const painted = prePaint(generateAveBrand('blue').css);
+    const theme = boot();
+    expect(theme.brand()).toBe('blue');
+    expect(document.adoptedStyleSheets).toEqual([painted]);
+    await theme.setBrand('green');
+    expect(document.adoptedStyleSheets).toEqual([painted]);
+    expect(accent()).toBe(generateAveBrand('green').css.match(/--ave-color-accent-bg: (#[0-9a-f]{6});/)?.[1]);
+    await theme.setBrand(null);
+    expect(document.adoptedStyleSheets).toEqual([]);
+  });
+
+  it('goes at bootstrap when the kit no longer generates it alike', () => {
+    const kit = accent();
+    keep('blue', 'stale');
+    prePaint(generateAveBrand('blue').css);
+    expect(accent()).not.toBe(kit);
+    const theme = boot();
+    expect(theme.brand()).toBeNull();
+    expect(document.adoptedStyleSheets).toEqual([]);
+    expect(accent()).toBe(kit);
+  });
+
+  it('is told from the application’s own adopted sheets, which stay', () => {
+    const own = prePaint('.report { display: grid; }');
+    const layered = prePaint('@layer app { .report { display: grid; } }');
+    boot();
+    expect(document.adoptedStyleSheets).toEqual([own, layered]);
+  });
+});
+
 describe('a stored brand', () => {
   it('is read only when well formed', () => {
     const brand = generateAveBrand('blue');

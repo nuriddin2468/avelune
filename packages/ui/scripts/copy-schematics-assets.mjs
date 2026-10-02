@@ -1,6 +1,7 @@
 // Finishes the schematics build: copies the JSON manifests (collections, option schemas) next to the compiled
-// factories and marks the folder as CommonJS, because the published package is "type": "module" and the Angular
-// CLI loads factories with require(). tsc emits only the .js files.
+// factories, and the agent snippet that ng add puts into an application's AGENTS.md (ADR 0103), and marks the folder
+// as CommonJS, because the published package is "type": "module" and the Angular CLI loads factories with require().
+// tsc emits only the .js files.
 import { cpSync, globSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -13,4 +14,6 @@ const skipped = (path) => path.includes('fixtures') || basename(path).startsWith
 for (const file of globSync('**/*.json', { cwd: source, exclude: skipped })) {
   cpSync(join(source, file), join(target, file));
 }
+const snippet = join(source, '..', '..', '..', 'docs', 'consumers', 'AGENTS.snippet.md');
+cpSync(snippet, join(target, 'ng-add', 'files', 'AGENTS.snippet.md'));
 writeFileSync(join(target, 'package.json'), `${JSON.stringify({ type: 'commonjs' }, null, 2)}\n`);

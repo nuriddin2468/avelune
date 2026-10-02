@@ -46,3 +46,17 @@
 - An application whose first-visit theme is not `system` writes that `data-theme` on `<html>` in `index.html`, as the pilot does, and passes the same default to `provideAvelune`. The migration guide says so.
 - The script's text is a public contract. A test pins its hash; a change fails until an `ng update` migration that replaces the block is added with it.
 - Unhashed media cannot be cached as immutable (ADR 0030).
+
+## Addendum (2026-10-02): as built
+
+- **The script's place and form.** It follows the charset declaration, still before any stylesheet, under `<!-- prettier-ignore -->`, on one line. The Angular CLI runs Prettier over the files a schematic wrote, and Prettier would re-wrap the line whose hash a policy names.
+- **Repeatable after formatting.** That same Prettier pass re-wraps the HTML in the snippet's code blocks. A section of `AGENTS.md` that differs from the snippet in white space only is therefore left as it is. A lint config that already names the kit's package is left without a message. `CLAUDE.md` without `AGENTS.md` in it gets a hint to add `@AGENTS.md`.
+- **The lint configs' peers** (`eslint`, `angular-eslint`, `typescript-eslint`, `stylelint`) are added when missing, so their command-line tools are installed; a test keeps the ranges equal to the packages' `peerDependencies`.
+- **Tests, instead of decision 11's Chromium run of the script:** `ui:test` cannot import the schematic's source, which is another build and outside every entry point.
+  - `ui:test-schematics` runs the script in a Node sandbox. It covers every stored choice, unknown values, broken JSON, blocked storage, every preset's stylesheet with a stale fingerprint, and six tampered stylesheets. It also pins the script's SHA-256.
+  - `ui:test` covers the handover in Chromium: keep, replace and remove, a stale brand dropped at bootstrap, and the application's own adopted sheets left alone.
+  - The CSP test found that the policy's quoted sources ended the attribute early; the attribute is read whole now.
+- **Checked as a consumer (2026-10-02).** The setup: a fresh `ng new` application (CLI 22.2.0, Angular 22.2.1 installed) and the five packages packed as tarballs.
+  - `ng add` cannot read a local tarball's metadata, so the package was installed and its `ng-add` schematic run through `ng generate`. A second run printed "Nothing to be done."
+  - The written configs failed a raw `<button>`, an unnamed icon and a `rem` value. The production build kept the script first, linked the stylesheet without inlining, preloaded the face, and the built script's hash matched the logged one.
+  - In the browser pane's Chromium, a copy of the page without Angular showed the stored light theme over a dark system and the teal brand, from the script alone. The application kept one brand sheet, and dropped it at bootstrap once its fingerprint was stale.

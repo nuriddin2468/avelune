@@ -161,8 +161,13 @@ export class AveTheme {
     // The last brand of this device applies at once, without the generator, while the kit still generates it alike.
     this.brandSheet = browser ? new BrandSheet(inject(DOCUMENT)) : undefined;
     const cached = this.storedBrand();
-    if (cached !== undefined) this.showBrand(cached);
-    else if (options.brand !== undefined && options.brand !== null) void this.setBrand(options.brand);
+    if (cached !== undefined) {
+      this.showBrand(cached);
+    } else {
+      // A sheet the pre-paint script adopted from a brand the kit no longer generates alike goes (ADR 0103).
+      this.brandSheet?.remove();
+      if (options.brand !== undefined && options.brand !== null) void this.setBrand(options.brand);
+    }
 
     if (this.storage !== null && view !== null) {
       const storage = this.storage;

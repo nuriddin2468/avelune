@@ -9,7 +9,7 @@
     "importHelpers": false,
     "declaration": false,
     "sourceMap": false,
-    "types": []
+    "types": ["node"]
   },
   "include": ["schematics/**/*.ts"],
   "exclude": ["schematics/**/*.spec.ts", "schematics/**/fixtures/**"]

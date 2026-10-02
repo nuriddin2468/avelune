@@ -30,6 +30,7 @@
     "build": {
       "executor": "nx:run-commands",
       "dependsOn": ["build-lib", "^build"],
+      "inputs": ["production", "^production", "{workspaceRoot}/docs/consumers/AGENTS.snippet.md"],
       "outputs": ["{workspaceRoot}/dist/packages/ui/schematics"],
       "options": {
         "cwd": "packages/ui",
@@ -156,8 +157,10 @@
         "{workspaceRoot}/dist/packages/ui/package.json",
         "{projectRoot}/schematics/tests/**/*",
         "{workspaceRoot}/packages/*/package.json",
+        "{workspaceRoot}/docs/consumers/AGENTS.snippet.md",
+        "{workspaceRoot}/packages/tokens/dist/brand/**/*",
         {
-          "externalDependencies": ["@angular-devkit/schematics"]
+          "externalDependencies": ["@angular-devkit/schematics", "@schematics/angular"]
         }
       ],
       "cache": true,
