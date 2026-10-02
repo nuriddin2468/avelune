@@ -206,9 +206,10 @@ Wave 2 build (2026-09-25), before the product owner's corrections and the wave's
   - Its lint configs pass, and its adoption scan counts zero (`adoption-baseline.json`).
   - Checked in the browser pane: both themes, 375 px, validation, refusals, the batch numbering, the discard question.
   - Where it differs from the archive, and seven findings for the kit, are in its `docs/findings.md`; the kit's are the items below.
-- [ ] From the pilot: a drawer and a dialog ask before closing over unsaved changes, on every way out (Escape, the close button, the backdrop, the application's cancel). The archive asks "Kiritilganlar saqlanmaydi" with "Yopish" and "Tahrirni davom ettirish"; the kit's drawer closes on the first three at once. Needs an ADR: the API, and the kit's words in four locales
-- [ ] From the pilot: a toast never covers a drawer's or a dialog's actions. An error toast sat over a drawer's "Saqlash" for its six seconds. Needs the product owner's choice of where toasts go while a drawer is open
+- [ ] From the pilot: a drawer and a dialog let the application ask before they close over unsaved changes, on every way out (Escape, the close button, the backdrop). The archive asks "Kiritilganlar saqlanmaydi" with "Yopish" and "Tahrirni davom ettirish"; the kit's drawer closes on all three at once. The product owner chose an event the application answers with its own question, over a question the kit asks in its own words (2026-10-02). Needs an ADR for the event
+- [ ] From the pilot: a toast never covers a drawer's actions. An error toast sat over a drawer's "Saqlash" for its six seconds. While a drawer is open at the inline end, the toasts go to the bottom inline start, over the backdrop (product owner, 2026-10-02); without one they stay at the bottom inline end
 - [ ] From the pilot: a FormField stretched by its grid row keeps its label on its control (its host is a grid without `align-content: start`). A bug fix, with the visual run of every story that places fields in a grid
+- [ ] From the pilot: dates in Uzbek, Latin and Cyrillic, are written with dots, `18.03.2026`, as the archive and the country's documents write them, not with CLDR's slashes (product owner, 2026-10-02). Needs an ADR over ADR 0048, and the visual run of every story that shows a date
 - [ ] From the pilot: a year field, or a year mask, for the years every register and drawer of the archive has
 - [ ] From the pilot: the theme page says that a switch reads `aveColorScheme()`, since `AveTheme.theme()` is `system` until a person chooses
 - [ ] A product's brand at build time: `ng add` wires the product's preset or colour into a stylesheet from the brand generator (ADR 0089, decision 6)
@@ -562,7 +563,6 @@ Consumers: internal work systems (names pending). For each consumer, when it onb
 
 - The systems that will use the kit after the pilot, for the adoption plan (the product is `avelune-ui`, 2026-09-30).
 - A host for the built Storybook and its MCP server: none for now (product owner, 2026-09-30).
-- Dates in Uzbek Latin: the kit writes `dd/mm/yyyy` (CLDR, placeholder `kk/oo/yyyy`); the archive, and the documents it describes, write `dd.mm.yyyy` (pilot, 2026-10-02). Which does the kit follow?
 - A rich tree row (badges, figures and actions beside the label) would let the archive's fond tree be rebuilt as it is; the pilot used a register instead. An RFC if the archive needs the tree.
 
 ## Out of scope
