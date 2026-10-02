@@ -182,7 +182,7 @@ Wave 2 build (2026-09-25), before the product owner's corrections and the wave's
   - `ng add` itself: the dependencies, the stylesheet first, unhashed media, no critical inlining, the preloads (`preloadCyrillic`), the pre-paint script with its policy hash, `provideAvelune()`, the lint configs where none exist, and the agent snippet. A second run changes nothing, also after the Angular CLI's Prettier pass. `AveTheme` takes the pre-painted brand sheet over.
   - Checked as a consumer in a fresh `ng new` application with the packed tarballs: build, lint, the first paint in Chromium (ADR 0103, addendum).
   - Found on the way: the Foundations motion page recommended a `transition` shorthand that Stylelint rejects; it names the longhands now.
-  - Publishing moved to the first publish of every package, after CI and changesets, as recommended to the product owner on 2026-10-02 (to be confirmed); consumers are checked with packed tarballs until then.
+  - Publishing moved to the first publish of every package, after CI on GitHub Actions and changesets (product owner, 2026-10-02); consumers are checked with packed tarballs until then.
   - Checks without Docker passed: lint, types and Stylelint on 16 projects, `compiler-check`, `repo-check`, `lint-rules:test` (189), the config packages' tests (12 and 23 with the snippet), `ui:test-schematics` (26), `ui:test` (508) and the API reports (unchanged). The visual suite was left for later (product owner, 2026-10-02); only one docs page's prose changed.
 - [ ] `tools/adoption-metrics` (JSON + CI summary)
 - [ ] `docs/consumers/migration.md`, `docs/consumers/AGENTS.snippet.md` (the snippet is done, with `ng add`, 2026-10-02)
